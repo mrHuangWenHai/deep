@@ -64,9 +64,13 @@ public class PicController {
         String fileName=pic.getBrand()+"_"+pic.getVaccine()+"_"+fileDate+"."+suffix;
         String fileAddress=filepath+fileName;
         if(!file.isEmpty()){
+            File saveFile=new File(fileAddress);
+            if(!saveFile.getParentFile().exists()){
+                saveFile.getParentFile().mkdirs();
+            }
             try {
                 BufferedOutputStream out =new BufferedOutputStream(
-                        new FileOutputStream(new File(fileAddress)));
+                        new FileOutputStream(saveFile));
                 out.write(file.getBytes());
                 out.flush();
                 out.close();
