@@ -39,6 +39,7 @@ public class RoleService {
 
     // 根据pktypeID获取相应的单个角色的信息
     public RoleModel getOneRoleByRolePkTypeID(Long id) {
+        System.out.println(id);
         return roleMapper.queryRoleByPkTypeId(id);
     }
 
@@ -74,7 +75,8 @@ public class RoleService {
      * @return
      */
     public Map findRolePermits(long id) {
-        long permit = roleMapper.queryRoleById(id).getDefaultPermit();
+        System.out.println(id);
+        long permit = roleMapper.queryRoleByPkTypeId(id).getDefaultPermit();
         Map map = new HashMap();
         // 位运算基础
         long basic = 1;

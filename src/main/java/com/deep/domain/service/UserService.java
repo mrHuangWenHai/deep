@@ -251,9 +251,10 @@ public class UserService {
         } else if (isFactory == 1){
             // 代表代理
             int agentId = (int) factoryId;
-            AgentModel agentFactoryEntity = agentService.getOneAgent(new Long(agentId));
-            mapperFactory.put("agentNum", agentFactoryEntity.getId());
-            mapperFactory.put("agentName", agentFactoryEntity.getAgentName());
+            AgentModel agentModel = agentService.getOneAgent(new Long(agentId));
+            mapperFactory.put("agentNum", agentModel.getId());
+            mapperFactory.put("agentName", agentModel.getAgentName());
+            mapperFactory.put("agentArea", agentModel.getAgentArea());
         }
         userLogin.setUserFactory(mapperFactory);
         return userLogin;

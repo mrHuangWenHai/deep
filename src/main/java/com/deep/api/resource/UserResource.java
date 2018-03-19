@@ -41,7 +41,7 @@ public class UserResource {
 
     /**
      * 通过用户的主键查找单个用户
-     * @param id 获取用户的信息
+     * @param id 获取用户的信息(简略信息)
      * @return
      */
 //    @Permit(modules = {
@@ -55,6 +55,31 @@ public class UserResource {
 //    })
     @GetMapping(value = "/{id:\\d+}")
     public Response getUserOne(@PathVariable("id")Long id) {
+        Response response = Responses.successResponse();
+
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("oneUser", userService.findOneUser(id));
+        response.setData(data);
+
+        return response;
+    }
+
+    /**
+     * 通过用户的主键查找单个用户
+     * @param id 获取用户的信息(简略信息)
+     * @return
+     */
+//    @Permit(modules = {
+//            "dongxiang_factory_administrator", "total_system_administrator", "province_agent_total_administrator",
+//            "province_agent_administrator", "city_agent_total_administrator", "city_agent_administrator",
+//            "county_agent_total_administrator", "county_agent_administrator", "sheep_farm_administrator",
+//            "dongxiang_factory_expert", "dongxiang_factory_technician", "province_agent_expert",
+//            "province_agent_technician", "city_agent_expert", "city_agent_technician",
+//            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
+//            "sheep_farm_supervisor", "tourist", "others"
+//    })
+    @GetMapping(value = "/{id:\\d+}")
+    public Response getUserOneDetail(@PathVariable("id")Long id) {
         Response response = Responses.successResponse();
 
         HashMap<String, Object> data = new HashMap<>();
@@ -161,8 +186,13 @@ public class UserResource {
             userModel.setUserRole(userModel.getUserRole());
             userModel.setUserPermit(userModel.getUserPermit());
             userModel.setIsExtended(userModel.getIsExtended());
-            userModel.setQuestionAnswer(userModel.getQuestionAnswer());
 
+            userModel.setQuestion_1(userModel.getAnswer_1());
+            userModel.setQuestion_2(userModel.getAnswer_2());
+            userModel.setQuestion_3(userModel.getAnswer_3());
+            userModel.setAnswer_1(userModel.getAnswer_1());
+            userModel.setAnswer_2(userModel.getAnswer_2());
+            userModel.setAnswer_3(userModel.getAnswer_3());
             // 基本信息
             userModel.setGmtCreate(new Timestamp(System.currentTimeMillis()));
             userModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
@@ -227,7 +257,13 @@ public class UserResource {
         userModel.setUserRole(userModel.getUserRole());
         userModel.setUserPermit(userModel.getUserPermit());
         userModel.setIsExtended(userModel.getIsExtended());
-        userModel.setQuestionAnswer(userModel.getQuestionAnswer());
+
+        userModel.setQuestion_1(userModel.getAnswer_1());
+        userModel.setQuestion_2(userModel.getAnswer_2());
+        userModel.setQuestion_3(userModel.getAnswer_3());
+        userModel.setAnswer_1(userModel.getAnswer_1());
+        userModel.setAnswer_2(userModel.getAnswer_2());
+        userModel.setAnswer_3(userModel.getAnswer_3());
 
         userModel.setGmtCreate(userService.getOneUser(id).getGmtCreate());
         userModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
