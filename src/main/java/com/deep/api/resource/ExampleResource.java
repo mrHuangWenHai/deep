@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 
 /**
  * Created by huangwenhai on 2018/1/31.
@@ -23,7 +26,10 @@ public class ExampleResource {
 
   @RequestMapping("/")
   String example() {
-    return "Hello World!";
+    String formats = "yyyy-MM-dd HH:mm:ss";
+    Long timestamp = Long.parseLong("1520859871") * 1000;
+    String date = new SimpleDateFormat(formats, Locale.CHINA).format(new Date(timestamp));
+    return date;
   }
 
   @RequestMapping("/greeting")
@@ -38,7 +44,7 @@ public class ExampleResource {
 
   @RequestMapping("/getTest")
   public Response getTestModel() {
-    TestModel model = testService.getTestModel("1");
+    TestModel model = testService.getTestModel(1);
     Response response = Responses.successResponse();
     HashMap<String, Object> data = new HashMap<>();
     data.put("test", model);
