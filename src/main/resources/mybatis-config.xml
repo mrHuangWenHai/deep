@@ -10,5 +10,6 @@
     <mappers>
         <mapper resource="mapper/TestMapper.xml"/>
         <mapper resource="mapper/PicMapper.xml"/>
+        <mapper resource="mapper/MessageMapper.xml"/>
     </mappers>
 </configuration>

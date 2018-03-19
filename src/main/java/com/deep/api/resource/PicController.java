@@ -16,7 +16,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.*;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,15 +26,15 @@ public class PicController {
     @Resource
     private PicService picService;
 
-    @RequestMapping(value = "/upload",method = RequestMethod.GET)
+    @RequestMapping(value = "/uploadfile",method = RequestMethod.GET)
     public String upload(){
 
-        return "upload";
+        return "uploadFile";
 
     }
 
 
-    @RequestMapping(value = "/upload",method = RequestMethod.POST)
+    @RequestMapping(value = "/uploadfile/upload",method = RequestMethod.POST)
     public @ResponseBody Response addPic(@Valid Pic pic,
                            @RequestParam("file")MultipartFile file,
                            HttpServletRequest request){
@@ -98,13 +97,13 @@ public class PicController {
         return response;
 
     }
-    @RequestMapping(value = "/searchByExpert",method = RequestMethod.GET)
-    public String searchByExpert(){
-
-        return "searchByExpert";
-
-    }
-    @RequestMapping(value = "/searchByExpert",method = RequestMethod.POST)
+//    @RequestMapping(value = "/searchFile/searchByExpert",method = RequestMethod.GET)
+//    public String searchByExpert(){
+//
+//        return "searchByExpert";
+//
+//    }
+    @RequestMapping(value = "/searchFile/searchByExpert",method = RequestMethod.POST)
     public @ResponseBody Response getByExpert(@RequestParam(value = "expert",required = true)String expert){
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
@@ -118,13 +117,13 @@ public class PicController {
         return response;
     }
 
-    @RequestMapping(value = "/searchByFilename",method = RequestMethod.GET)
-    public String searchByFilename(){
-
-        return "searchByFilename";
-
-    }
-    @RequestMapping(value = "/searchByFilename",method = RequestMethod.POST)
+//    @RequestMapping(value = "/searchFile/searchByFilename",method = RequestMethod.GET)
+//    public String searchByFilename(){
+//
+//        return "searchByFilename";
+//
+//    }
+    @RequestMapping(value = "/searchFile/searchByFilename",method = RequestMethod.POST)
     public @ResponseBody Response getByFilename(@RequestParam(value = "filename",required = true)String filename){
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
@@ -138,13 +137,13 @@ public class PicController {
         return response;
     }
 
-    @RequestMapping(value = "/searchBySymptom",method = RequestMethod.GET)
-    public String searchBySymptom(){
-
-        return "searchBySymptom";
-
-    }
-    @RequestMapping(value = "/searchBySymptom",method = RequestMethod.POST)
+//    @RequestMapping(value = "/searchFile/searchBySymptom",method = RequestMethod.GET)
+//    public String searchBySymptom(){
+//
+//        return "searchBySymptom";
+//
+//    }
+    @RequestMapping(value = "/searchFile/searchBySymptom",method = RequestMethod.POST)
     public @ResponseBody Response getBySymptom(@RequestParam(value = "symptom",required = true)String symptom){
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
@@ -158,13 +157,13 @@ public class PicController {
         return response;
     }
 
-    @RequestMapping(value = "/searchByUploader",method = RequestMethod.GET)
-    public String searchByUploader(){
-
-        return "searchByUploader";
-
-    }
-    @RequestMapping(value = "/searchByUploader",method = RequestMethod.POST)
+//    @RequestMapping(value = "/searchFile/searchByUploader",method = RequestMethod.GET)
+//    public String searchByUploader(){
+//
+//        return "searchByUploader";
+//
+//    }
+    @RequestMapping(value = "/searchFile/searchByUploader",method = RequestMethod.POST)
     public @ResponseBody Response getByUploader(@RequestParam(value = "uploader",required = true)String uploader){
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
