@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.hibernate:hibernate-validator:unknown">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.m2/repository/org/hibernate/hibernate-validator/unknown/hibernate-validator-unknown.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.m2/repository/org/hibernate/hibernate-validator/unknown/hibernate-validator-unknown-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.m2/repository/org/hibernate/hibernate-validator/unknown/hibernate-validator-unknown-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
