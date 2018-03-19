@@ -15,7 +15,7 @@ public interface AgentMapper {
     @Results ({
             @Result(property = "id", column = "id"),
             @Result(property = "gmtCreate", column = "gmt_create"),
-            @Result(property = "gmtModofied", column = "gmt_modified"),
+            @Result(property = "gmtModified", column = "gmt_modified"),
             @Result(property = "agentName", column = "agent_name"),
             @Result(property = "agentArea", column = "agent_area"),
             @Result(property = "agentFather", column = "agent_father")
@@ -28,6 +28,14 @@ public interface AgentMapper {
      * @return
      */
     @Select("select * from agent_factory where id = #{id}")
+    @Results ({
+            @Result(property = "id", column = "id"),
+            @Result(property = "gmtCreate", column = "gmt_create"),
+            @Result(property = "gmtModified", column = "gmt_modified"),
+            @Result(property = "agentName", column = "agent_name"),
+            @Result(property = "agentArea", column = "agent_area"),
+            @Result(property = "agentFather", column = "agent_father")
+    })
     AgentModel queryAgentByID(Long id);
 
     /**

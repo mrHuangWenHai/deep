@@ -250,8 +250,7 @@ public class UserService {
             mapperFactory.put("factoryName",factoryModel.getBreadName());
         } else if (isFactory == 1){
             // 代表代理
-            int agentId = (int) factoryId;
-            AgentModel agentModel = agentService.getOneAgent(new Long(agentId));
+            AgentModel agentModel = agentService.getOneAgent(factoryId);
             mapperFactory.put("agentNum", agentModel.getId());
             mapperFactory.put("agentName", agentModel.getAgentName());
             mapperFactory.put("agentArea", agentModel.getAgentArea());

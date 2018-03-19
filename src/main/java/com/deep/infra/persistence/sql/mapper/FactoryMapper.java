@@ -16,7 +16,7 @@ public interface FactoryMapper {
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "gmtCreate", column = "gmt_create"),
-            @Result(property = "gmtModofied", column = "gmt_modified"),
+            @Result(property = "gmtModified", column = "gmt_modified"),
             @Result(property = "pkNumber", column = "agent_name"),
             @Result(property = "breadName", column = "agent_area"),
             @Result(property = "breadLocation", column = "agent_father"),
@@ -34,6 +34,19 @@ public interface FactoryMapper {
      * @return
      */
     @Select("select * from factory_manage where id = #{id}")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "gmtCreate", column = "gmt_create"),
+            @Result(property = "gmtModified", column = "gmt_modified"),
+            @Result(property = "pkNumber", column = "agent_name"),
+            @Result(property = "breadName", column = "agent_area"),
+            @Result(property = "breadLocation", column = "agent_father"),
+            @Result(property = "createTime", column = "create_time"),
+            @Result(property = "responsiblePersonid", column = "responsible_personid"),
+            @Result(property = "remark", column = "remark"),
+            @Result(property = "disnfectP", column = "disnfect_p"),
+            @Result(property = "agent", column = "agent")
+    })
     FactoryModel queryFactoryByID(Long id);
 
     /**

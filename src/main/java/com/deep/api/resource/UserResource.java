@@ -78,7 +78,7 @@ public class UserResource {
 //            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
 //            "sheep_farm_supervisor", "tourist", "others"
 //    })
-    @GetMapping(value = "/{id:\\d+}")
+    @GetMapping(value = "/detail/{id:\\d+}")
     public Response getUserOneDetail(@PathVariable("id")Long id) {
         Response response = Responses.successResponse();
 
