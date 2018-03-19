@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5e1f382b-de44-45c4-b599-002ac7a7ee58" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__cn_afterturn_easypoi_annotation_unknown.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__cn_afterturn_easypoi_base_unknown.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__cn_afterturn_easypoi_web_unknown.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/deep/api/Utils/ExcelUtil.java" />
-      <change beforePath="$PROJECT_DIR$/Deep.iml" afterPath="$PROJECT_DIR$/Deep.iml" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/deep/api/resource/AgentResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/deep/api/resource/AgentResource.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/deep/application/WebSecurityConfig.java" afterPath="$PROJECT_DIR$/src/main/java/com/deep/application/WebSecurityConfig.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/deep/domain/service/AgentService.java" afterPath="$PROJECT_DIR$/src/main/java/com/deep/domain/service/AgentService.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/deep/domain/service/RoleService.java" afterPath="$PROJECT_DIR$/src/main/java/com/deep/domain/service/RoleService.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/deep/domain/service/UserService.java" afterPath="$PROJECT_DIR$/src/main/java/com/deep/domain/service/UserService.java" />
-    </list>
+    <list default="true" id="5e1f382b-de44-45c4-b599-002ac7a7ee58" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -835,7 +823,7 @@
       <workItem from="1521285056218" duration="668000" />
       <workItem from="1521286215561" duration="876000" />
       <workItem from="1521287811940" duration="6404000" />
-      <workItem from="1521380747902" duration="55000" />
+      <workItem from="1521380747902" duration="616000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;朱传波更改项目架构之后的第一次提交内容&quot;">
       <created>1521276535749</created>
@@ -848,7 +836,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="76522000" />
+    <option name="totallyTimeSpent" value="77083000" />
   </component>
   <component name="TodoView" selected-index="3">
     <todo-panel id="selected-file">
@@ -860,7 +848,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="441" y="-6" width="928" height="1050" extended-state="7" />
+    <frame x="65" y="-6" width="1855" height="1086" extended-state="7" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="16" side_tool="true" content_ui="tabs" />
@@ -881,7 +869,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32912722" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23343849" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25431034" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2393531" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Learn" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1217,8 +1205,8 @@
         <state relative-caret-position="594">
           <caret line="40" column="45" lean-forward="false" selection-start-line="40" selection-start-column="21" selection-end-line="40" selection-end-column="45" />
           <folding>
-            <element signature="e#1109#1110#0" expanded="true" />
-            <element signature="e#1166#1167#0" expanded="true" />
+            <element signature="e#1109#1110#0" expanded="false" />
+            <element signature="e#1166#1167#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1244,10 +1232,10 @@
         <state relative-caret-position="627">
           <caret line="27" column="23" lean-forward="false" selection-start-line="27" selection-start-column="16" selection-end-line="27" selection-end-column="28" />
           <folding>
-            <element signature="e#700#701#0" expanded="true" />
-            <element signature="e#734#735#0" expanded="true" />
-            <element signature="e#791#792#0" expanded="true" />
-            <element signature="e#837#838#0" expanded="true" />
+            <element signature="e#700#701#0" expanded="false" />
+            <element signature="e#734#735#0" expanded="false" />
+            <element signature="e#791#792#0" expanded="false" />
+            <element signature="e#837#838#0" expanded="false" />
           </folding>
         </state>
       </provider>
