@@ -1,12 +1,16 @@
 package com.deep.application;
 
-import org.apache.ibatis.annotations.Mapper;
+import com.github.pagehelper.PageHelper;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+
+import java.util.Properties;
 
 
 /**
@@ -19,6 +23,10 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 @MapperScan("com.deep.infra")
 public class DeepApplication {
   public static void main(String[] args) throws Exception {
+    //验证redis
+    //Jedis jedis = new Jedis("localhost");
+    //System.out.println("connecting");
+    //System.out.println("running"+jedis.ping());
     SpringApplication application1 = new SpringApplication(DeepApplication.class);
     application1.run(args);
   }

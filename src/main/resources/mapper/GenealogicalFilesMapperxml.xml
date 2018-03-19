@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--Mapper名称 对应infra中mapper类名-->
+<mapper namespace="com.deep.infra.persistence.sql.mapper.GenealogicalFilesMapper">
+    <insert id="setGenealogicalFilesModel" parameterType="com.deep.domain.model.GenealogicalFilesModel">
+        INSERT INTO genealogical_files(
+          self_eartag,
+          immune_eartag,
+          trademark_eartag,
+          breedingsheep_base,
+          birth_time,
+          birth_weight,
+          color,
+          sex,
+          eartag_of_father,
+          eartag_of_mother,
+          eartag_of_fathersfather,
+          eartag_of_fathersmother,
+          eartag_of_mothersfather,
+          eartag_of_mothersmother,
+          remark,
+          gmt_create
+        )
+        VALUES(
+          #{genealogicalFilesModel.selfEartag},
+          #{genealogicalFilesModel.immuneEartag},
+          #{genealogicalFilesModel.tradeMarkEartag},
+          #{genealogicalFilesModel.breedingSheepBase},
+          #{genealogicalFilesModel.birthTime},
+          #{genealogicalFilesModel.birthWeight},
+          #{genealogicalFilesModel.color},
+          #{genealogicalFilesModel.sex},
+          #{genealogicalFilesModel.eartagOfFather},
+          #{genealogicalFilesModel.eartagOfMother},
+          #{genealogicalFilesModel.eartagOfFathersFather},
+          #{genealogicalFilesModel.eartagOfFathersMother},
+          #{genealogicalFilesModel.eartagOfMothersFather},
+          #{genealogicalFilesModel.eartagOfMothersMother},
+          #{genealogicalFilesModel.remark},
+          #{genealogicalFilesModel.gmtCreate}
+        )
+    </insert>
+    <resultMap id="genealogicalFiles" type="com.deep.domain.model.GenealogicalFilesModel">
+        <id property="location" column="location"/>
+        <result property="selfEartag" column="self_eartag"/>
+        <result property="immuneEartag" column="immune_eartag"/>
+        <result property="tradeMarkEartag" column="trademark_eartag"/>
+        <result property="breedingSheepBase" column="breedingsheep_base"/>
+        <result property="birthTime" column="birth_time"/>
+        <result property="birthWeight" column="birth_weight"/>
+        <result property="color" column="color"/>
+        <result property="sex" column="sex"/>
+        <result property="eartagOfFather" column="eartag_of_father"/>
+        <result property="eartagOfMother" column="eartag_of_mother"/>
+        <result property="eartagOfFathersFather" column="eartag_of_fathersfather"/>
+        <result property="eartagOfFathersMother" column="eartag_of_fathersmother"/>
+        <result property="eartagOfMothersFather" column="eartag_of_mothersfather"/>
+        <result property="eartagOfMothersMother" column="eartag_of_mothersmother"/>
+        <result property="remark" column="remark"/>
+        <result property="gmtCreate" column="gmt_create"/>
+        <result property="gmtModified" column="gmt_modified"/>
+    </resultMap>
+    <select id="getGenealogicalFilesModel" resultMap="genealogicalFiles">
+        SELECT
+        self_eartag AS "selfEartag",
+        immune_eartag AS "immuneEartag",
+        trademark_eartag AS "tradeMarkEartag",
+        breedingsheep_base AS "breedingSheepBase",
+        birth_time AS "birthTime",
+        birth_weight AS "birthWeight",
+        color AS "color",
+        sex AS "sex",
+        eartag_of_father AS "eartagOfFather",
+        eartag_of_mother AS "eartagOfMother",
+        eartag_of_fathersfather AS "eartagOfFathersFather",
+        eartag_of_fathersmother AS "eartagOfFathersMother",
+        eartag_of_mothersfather AS "eartagOfMothersFather",
+        eartag_of_mothersmother AS "eartagOfMothersMother",
+        remark AS "remark",
+        gmt_create AS "gmtCreate",
+        gmt_modified AS "gmtModified"
+        FROM
+        genealogical_files
+        WHERE 1 = 1
+            <if test="selfEartag != null and selfEartag !='' ">
+                AND self_eartag = #{selfEartag}
+            </if>
+            <if test="immuneEartagStart != null and immuneEartagStart != '' ">
+                AND immune_eartag LIKE concat(#{immuneEartagStart},'%')
+            </if>
+            <if test="immuneEartagEnd != null and immuneEartagEnd != '' ">
+                AND immune_eartag LIKE concat('%',#{immuneEartagEnd})
+            </if>
+            <if test="tradeMarkEartag != null and tradeMarkEartag != '' ">
+                AND trademark_eartag = #{tradeMarkEartag}
+            </if>
+            <if test="breedingSheepBase != null and breedingSheepBase != '' ">
+                AND breedingsheep_base = #{breedingSheepBase}
+            </if>
+            <if test="birthTimeStart != null and birthTimeStart != '' and
+                        birthTimeEnd != null and birthTimeEnd != '' ">
+                AND birth_time BETWEEN #{birthTimeStart} AND #{birthTimeEnd}
+            </if>
+            <if test="birthWeightStart != null and birthWeightStart != '' and
+                        birthWeightEnd != null and birthWeightEnd != ''">
+                AND birth_weight BETWEEN #{birthWeightStart} AND #{birthWeightEnd}
+            </if>
+            <if test="color != null and color != '' ">
+                AND color = #{color}
+            </if>
+            <if test="sex != null and sex != '' ">
+                AND sex = #{sex}
+            </if>
+            <if test="eartagOfFather != null and eartagOfFather != '' ">
+                AND eartag_of_father = #{eartagOfFather}
+            </if>
+            <if test="eartagOfMother != null and eartagOfMother != '' ">
+                AND eartag_of_mother = #{eartagOfMother}
+            </if>
+            <if test="eartagOfFathersFather != null and eartagOfFathersFather != '' ">
+                AND eartag_of_fathersfather = #{eartagOfFathersFather}
+            </if>
+            <if test="eartagOfFathersMother != null and eartagOfFathersMother != '' ">
+                AND eartag_of_fathersmother = #{eartagOfFathersMother}
+            </if>
+            <if test="eartagOfMothersFather != null and eartagOfMothersFather != '' ">
+                AND eartag_of_mothersfather = #{eartagOfMothersFather}
+            </if>
+            <if test="eartagOfMothersMother != null and eartagOfMothersMother != '' ">
+                AND eartag_of_mothersmother = #{eartagOfMothersMother}
+            </if>
+    </select>
+
+
+    <select id="getGenealogicalFilesModelByimmuneEartag" resultType="com.deep.domain.model.GenealogicalFilesModel">
+        SELECT
+        self_eartag AS "selfEartag",
+        immune_eartag AS "immuneEartag",
+        trademark_eartag AS "tradeMarkEartag",
+        breedingsheep_base AS "breedingSheepBase",
+        birth_time AS "birthTime",
+        birth_weight AS "birthWeight",
+        color AS "color",
+        sex AS "sex",
+        eartag_of_father AS "eartagOfFather",
+        eartag_of_mother AS "eartagOfMother",
+        eartag_of_fathersfather AS "eartagOfFathersFather",
+        eartag_of_fathersmother AS "eartagOfFathersMother",
+        eartag_of_mothersfather AS "eartagOfMothersFather",
+        eartag_of_mothersmother AS "eartagOfMothersMother",
+        remark AS "remark",
+        gmt_create AS "gmtCreate",
+        gmt_modified AS "gmtModified"
+        FROM
+        genealogical_files
+        WHERE immune_eartag = #{immuneEartag}
+    </select>
+
+    <select id="getGenealogicalFilesModelBytradeMarkEartag" resultType="com.deep.domain.model.GenealogicalFilesModel">
+        SELECT
+        self_eartag AS "selfEartag",
+        immune_eartag AS "immuneEartag",
+        trademark_eartag AS "tradeMarkEartag",
+        breedingsheep_base AS "breedingSheepBase",
+        birth_time AS "birthTime",
+        birth_weight AS "birthWeight",
+        color AS "color",
+        sex AS "sex",
+        eartag_of_father AS "eartagOfFather",
+        eartag_of_mother AS "eartagOfMother",
+        eartag_of_fathersfather AS "eartagOfFathersFather",
+        eartag_of_fathersmother AS "eartagOfFathersMother",
+        eartag_of_mothersfather AS "eartagOfMothersFatherbirthTime",
+        eartag_of_mothersmother AS "eartagOfMothersMother",
+        remark AS "remark",
+        gmt_create AS "gmtCreate",
+        gmt_modified AS "gmtModified"
+        FROM
+        genealogical_files
+        WHERE trademark_eartag = #{tradeMarkEartag}
+    </select>
+
+    <delete id="deleteGenealogicalFilesModel" parameterType="String">
+        DELETE FROM
+          genealogical_files
+        WHERE
+          self_eartag = #{selfEartag}
+    </delete>
+</mapper>
