@@ -37,6 +37,14 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
      */
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response, Object handler) throws Exception {
+
+        // 加相关的回应头
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        response.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET, PUT, POST, DELETE");
+        response.setHeader("Access-Control-Expose-Headers", "Authorization");
+
         // 如果不是映射到方法可以直接通过
         if (!(handler instanceof HandlerMethod)) {
             return true;
@@ -66,10 +74,16 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             // Redis数据库中没有相关的信息, 返回false
             return false;
         } else if (jedis.get(String.valueOf(model.getUserId())) != model.getToken()){
-            // token guoqu
+            // 登录成功
             jedis.expire(String.valueOf(model.getUserId()),600);
 
             request.setAttribute(Constants.CURRENT_USER_ID, jedis.get(String.valueOf(model.getUserId())));
+
+
+            response.setHeader("Authorization", model.getUserId() + "_" + jedis.get(String.valueOf(model.getUserId())));
+
+//            response.setHeader("Authorization", model.getUserId() + );
+
             return true;
         }
 

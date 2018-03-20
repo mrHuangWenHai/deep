@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import redis.clients.jedis.Jedis;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -49,11 +50,11 @@ public class LoginResource {
 
     /**
      * 用户登录验证并且返回结果
-     * @param userModelTest
+     * @param userModelTest 用户登录加的模型
      * @return
      */
     @RequestMapping(value = "/loginresult", method = RequestMethod.POST)
-    public Response LoginResult(@RequestBody UserModel userModelTest){
+    public Response LoginResult(@RequestBody UserModel userModelTest, HttpServletResponse httpServletResponse){
         String username = userModelTest.getPkUserid();
         String password = userModelTest.getUserPwd();
         //System.out.println(username);
@@ -84,7 +85,11 @@ public class LoginResource {
                 Response response = Responses.successResponse();
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("successMessage", "登录成功!");
+                data.put("tokenValue", tokenModel.getToken());
                 response.setData(data);
+
+                httpServletResponse.setHeader("Authorization", userModel.getId() + ":" + tokenModel.getToken());
+
                 return response;
             }else {
                 Response response = Responses.errorResponse("密码错误");
@@ -167,11 +172,11 @@ public class LoginResource {
 
     /**
      *  通过电话号码找回并且返回相关的数据
-     * @param usernameP
+     * @param usernameP 用户名
      * @return
      */
     @RequestMapping(value = "/phonefind")
-    public String PhoneFind(@RequestParam("usernameP") String usernameP){
+    public Response PhoneFind(@RequestParam("usernameP") String usernameP){
         UserModel userModel = userService.getUserByPkuserID(usernameP);
         mobileAnnouncementModel = new MobileAnnouncementUtil(userModel.getUserTelephone());
 
@@ -182,9 +187,21 @@ public class LoginResource {
             String error_msg = jsonObj.getString("msg");
             if(error_code==0){
                 System.out.println("Send message success.");
-                return "LoginHTML/LoginVerifyCode";
+//                return "LoginHTML/LoginVerifyCode";
+                Response response = Responses.successResponse();
+                HashMap<String, Object> data = new HashMap<>();
+                data.put("successMessage", "验证码发送成功!");
+                response.setData(data);
+                return response;
             }else{
                 System.out.println("Send message failed,code is "+error_code+",msg is "+error_msg);
+
+                Response response = Responses.errorResponse("发送消息失败");
+                HashMap<String, Object> data = new HashMap<>();
+                data.put("successMessage", "Send message failed,code is "+error_code+",msg is "+error_msg);
+                response.setData(data);
+                return response;
+
             }
         } catch (JSONException ex) {
             Logger.getLogger(MobileAnnouncementUtil.class.getName()).log(Level.SEVERE, null, ex);
@@ -197,9 +214,23 @@ public class LoginResource {
             if( error_code == 0 ){
                 int deposit = jsonObj.getInt("deposit");
                 System.out.println("Fetch deposit success :"+deposit);
+
+                Response response = Responses.successResponse();
+                HashMap<String, Object> data = new HashMap<>();
+                data.put("successMessage", "验证码发送成功!");
+                response.setData(data);
+                return response;
+
             }else{
                 String error_msg = jsonObj.getString("msg");
                 System.out.println("Fetch deposit failed,code is "+error_code+",msg is "+error_msg);
+
+                Response response = Responses.errorResponse("发送消息失败");
+                HashMap<String, Object> data = new HashMap<>();
+                data.put("successMessage", "Fetch deposit failed,code is "+error_code+",msg is "+error_msg);
+                response.setData(data);
+                return response;
+
             }
         } catch (JSONException ex) {
             Logger.getLogger(MobileAnnouncementUtil.class.getName()).log(Level.SEVERE, null, ex);
@@ -211,7 +242,7 @@ public class LoginResource {
 
     /**
      * 验证短信验证码信息
-     * @param verifyCode
+     * @param verifyCode 验证码
      * @return
      */
     @RequestMapping(value = "/ensureverify")
@@ -268,7 +299,7 @@ public class LoginResource {
 
     /**
      * user logout for himself
-     * @param id
+     * @param id 用户名
      * @return
      */
     @DeleteMapping

@@ -14,5 +14,5 @@ public class ServiceConfiguration {
 //    TestService testService = new TestService();
 //
 //  }
-    public static String redisServer = "localhost:6379";
+    public static String redisServer = "localhost";
 }
