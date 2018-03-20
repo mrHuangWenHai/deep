@@ -12,7 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +36,8 @@ public class MessageController {
 
     @RequestMapping(value = "/messageboard/insert",method = RequestMethod.POST)
     public @ResponseBody
-    Response addMessage(@Valid Message message)
+    Response addMessage(@Valid Message message,
+                        HttpServletRequest request)
     {
         message.setUsername(message.getUsername());
         message.setContact(message.getContact());
@@ -43,11 +48,48 @@ public class MessageController {
         message.setAttitude(message.getAttitude());
         message.setIntention(message.getIntention());
 
+        //留言追加写入到message.txt文件中用作数据分析
+        String path=request.getSession().getServletContext().getContextPath()+"../message/";
+
+        File f = new File(path);
+
+        if(!f.exists())
+        {
+            f.mkdirs();
+        }
+
+        String fileName = "message.txt";
+
+        File file = new File(path,fileName);
+
+        if (!file.exists()){
+            try{
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        String fileAddress = path+fileName;
+
+        try{
+            FileWriter writer = new FileWriter(fileAddress,true);
+            //由于在linux和windows中换行符的不同
+            //在程序我们应尽量使用System.getProperty("line.separator")来获取当前系统的换
+            //行符，而不是写/r/n或/n。
+            writer.write(message.getMessage()+"\n");
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
         messageService.insertMessage(message);
 
         MessageExample messageExample =new MessageExample();
         MessageExample.Criteria criteria=messageExample.createCriteria();
-        criteria.andMessageEqualTo(message.getMessage());
+        criteria.andIdEqualTo(message.getId());
         List<Message> select=messageService.findMessageSelective(messageExample);
 
         Response response= Responses.successResponse();
