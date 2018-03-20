@@ -16,4 +16,3 @@ public class ServiceConfiguration {
 //  }
     public static String redisServer = "localhost";
 }
-

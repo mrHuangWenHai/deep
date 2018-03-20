@@ -188,6 +188,14 @@ public class UserResource {
                 response.setData(data);
                 return response;
             }
+            if (userModel.getUserPwd().length() < 6 || userModel.getUserPwd().length() > 12) {
+                Response response = Responses.errorResponse("log in error");
+
+                HashMap<String, Object> data = new HashMap<>();
+                data.put("errorMessage", "user's password error");
+                response.setData(data);
+                return response;
+            }
 
             userModel.setUserPwd(MD5Util.encode(userModel.getUserPwd()));
 

@@ -79,8 +79,8 @@ public class UserModel {
             this.answer_3 = answer_3;
         }
 
-        @Min(0)
-        @Max(1)
+//        @Min(0)
+//        @Max(1)
         public byte getIsFactory() {
             return isFactory;
         }
@@ -142,7 +142,7 @@ public class UserModel {
 //            this.userPwd = userPwd;
         }
 
-        @NotBlank(message = "用户编号不能为含有空格的串")
+//        @NotBlank(message = "用户编号不能为含有空格的串")
         @JsonView(UserSimpleView.class)
         public String getUserNum() {
             return userNum;
@@ -170,7 +170,7 @@ public class UserModel {
             this.userRealname = userRealname;
         }
 
-        @NotBlank(message = "不能带有空格")
+//        @NotBlank(message = "不能带有空格")
         @JsonView(UserDetailView.class)
         public String getUserLocation() {
             return userLocation;
@@ -226,8 +226,8 @@ public class UserModel {
             this.userPermit = userPermit;
         }
 
-        @Max(1)
-        @Min(0)
+//        @Max(1)
+//        @Min(0)
         @JsonView(UserSimpleView.class)
         public byte getIsExtended() {
             return isExtended;

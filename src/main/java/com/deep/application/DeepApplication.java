@@ -22,6 +22,5 @@ public class DeepApplication {
     SpringApplication application1 = new SpringApplication(DeepApplication.class);
     application1.run(args);
     System.out.println("The project is starting up now");
-
   }
 }
