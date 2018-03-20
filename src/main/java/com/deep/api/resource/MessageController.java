@@ -83,12 +83,64 @@ public class MessageController {
     {
         MessageExample messageExample=new MessageExample();
         MessageExample.Criteria criteria=messageExample.createCriteria();
-        criteria.andMessageLike("%"+username+"%");
+        criteria.andUsernameLike("%"+username+"%");
         List<Message>select=messageService.findMessageSelectiveWithRowbounds(messageExample,pageNumb,limit);
 
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
         data.put("searchByUsername",select);
+        response.setData(data);
+        return response;
+    }
+
+    @RequestMapping(value = "/messageboard/searchByTag",method = RequestMethod.POST)
+    public @ResponseBody
+    Response searchByTag(@RequestParam(value = "tag",required = false,defaultValue = "")String tag,
+                              @RequestParam(value = "pageNumb",required = true)int pageNumb,
+                              @RequestParam(value = "limit",required = true)int limit)
+    {
+        MessageExample messageExample=new MessageExample();
+        MessageExample.Criteria criteria=messageExample.createCriteria();
+        criteria.andTagLike("%"+tag+"%");
+        List<Message>select=messageService.findMessageSelectiveWithRowbounds(messageExample,pageNumb,limit);
+
+        Response response = Responses.successResponse();
+        HashMap<String,Object>data = new HashMap<>();
+        data.put("searchByTag",select);
+        response.setData(data);
+        return response;
+    }
+    @RequestMapping(value = "/messageboard/searchByAttitude",method = RequestMethod.POST)
+    public @ResponseBody
+    Response searchByAttitude(@RequestParam(value = "attitude",required = false,defaultValue = "")String attitude ,
+                              @RequestParam(value = "pageNumb",required = true)int pageNumb,
+                              @RequestParam(value = "limit",required = true)int limit)
+    {
+        MessageExample messageExample=new MessageExample();
+        MessageExample.Criteria criteria=messageExample.createCriteria();
+        criteria.andAttitudeLike("%"+attitude+"%");
+        List<Message>select=messageService.findMessageSelectiveWithRowbounds(messageExample,pageNumb,limit);
+
+        Response response = Responses.successResponse();
+        HashMap<String,Object>data = new HashMap<>();
+        data.put("searchByAttitude",select);
+        response.setData(data);
+        return response;
+    }
+    @RequestMapping(value = "/messageboard/searchByIntention",method = RequestMethod.POST)
+    public @ResponseBody
+    Response searchByIntention(@RequestParam(value = "intention",required = false,defaultValue = "")String intention,
+                              @RequestParam(value = "pageNumb",required = true)int pageNumb,
+                              @RequestParam(value = "limit",required = true)int limit)
+    {
+        MessageExample messageExample=new MessageExample();
+        MessageExample.Criteria criteria=messageExample.createCriteria();
+        criteria.andIntentionLike("%"+intention+"%");
+        List<Message>select=messageService.findMessageSelectiveWithRowbounds(messageExample,pageNumb,limit);
+
+        Response response = Responses.successResponse();
+        HashMap<String,Object>data = new HashMap<>();
+        data.put("searchByIntention",select);
         response.setData(data);
         return response;
     }
