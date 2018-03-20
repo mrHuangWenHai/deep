@@ -435,6 +435,216 @@ public class MessageExample {
             return (Criteria) this;
         }
 
+        public Criteria andTagIsNull() {
+            addCriterion("tag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagIsNotNull() {
+            addCriterion("tag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagEqualTo(String value) {
+            addCriterion("tag =", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNotEqualTo(String value) {
+            addCriterion("tag <>", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagGreaterThan(String value) {
+            addCriterion("tag >", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagGreaterThanOrEqualTo(String value) {
+            addCriterion("tag >=", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagLessThan(String value) {
+            addCriterion("tag <", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagLessThanOrEqualTo(String value) {
+            addCriterion("tag <=", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagLike(String value) {
+            addCriterion("tag like", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNotLike(String value) {
+            addCriterion("tag not like", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagIn(List<String> values) {
+            addCriterion("tag in", values, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNotIn(List<String> values) {
+            addCriterion("tag not in", values, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagBetween(String value1, String value2) {
+            addCriterion("tag between", value1, value2, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNotBetween(String value1, String value2) {
+            addCriterion("tag not between", value1, value2, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttitudeIsNull() {
+            addCriterion("attitude is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttitudeIsNotNull() {
+            addCriterion("attitude is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttitudeEqualTo(String value) {
+            addCriterion("attitude =", value, "attitude");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttitudeNotEqualTo(String value) {
+            addCriterion("attitude <>", value, "attitude");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttitudeGreaterThan(String value) {
+            addCriterion("attitude >", value, "attitude");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttitudeGreaterThanOrEqualTo(String value) {
+            addCriterion("attitude >=", value, "attitude");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttitudeLessThan(String value) {
+            addCriterion("attitude <", value, "attitude");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttitudeLessThanOrEqualTo(String value) {
+            addCriterion("attitude <=", value, "attitude");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttitudeLike(String value) {
+            addCriterion("attitude like", value, "attitude");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttitudeNotLike(String value) {
+            addCriterion("attitude not like", value, "attitude");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttitudeIn(List<String> values) {
+            addCriterion("attitude in", values, "attitude");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttitudeNotIn(List<String> values) {
+            addCriterion("attitude not in", values, "attitude");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttitudeBetween(String value1, String value2) {
+            addCriterion("attitude between", value1, value2, "attitude");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttitudeNotBetween(String value1, String value2) {
+            addCriterion("attitude not between", value1, value2, "attitude");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntentionIsNull() {
+            addCriterion("intention is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntentionIsNotNull() {
+            addCriterion("intention is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntentionEqualTo(String value) {
+            addCriterion("intention =", value, "intention");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntentionNotEqualTo(String value) {
+            addCriterion("intention <>", value, "intention");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntentionGreaterThan(String value) {
+            addCriterion("intention >", value, "intention");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntentionGreaterThanOrEqualTo(String value) {
+            addCriterion("intention >=", value, "intention");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntentionLessThan(String value) {
+            addCriterion("intention <", value, "intention");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntentionLessThanOrEqualTo(String value) {
+            addCriterion("intention <=", value, "intention");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntentionLike(String value) {
+            addCriterion("intention like", value, "intention");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntentionNotLike(String value) {
+            addCriterion("intention not like", value, "intention");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntentionIn(List<String> values) {
+            addCriterion("intention in", values, "intention");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntentionNotIn(List<String> values) {
+            addCriterion("intention not in", values, "intention");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntentionBetween(String value1, String value2) {
+            addCriterion("intention between", value1, value2, "intention");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntentionNotBetween(String value1, String value2) {
+            addCriterion("intention not between", value1, value2, "intention");
+            return (Criteria) this;
+        }
+
         public Criteria andUsernameLikeInsensitive(String value) {
             addCriterion("upper(username) like", value.toUpperCase(), "username");
             return (Criteria) this;
@@ -447,6 +657,21 @@ public class MessageExample {
 
         public Criteria andMessageLikeInsensitive(String value) {
             addCriterion("upper(message) like", value.toUpperCase(), "message");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagLikeInsensitive(String value) {
+            addCriterion("upper(tag) like", value.toUpperCase(), "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttitudeLikeInsensitive(String value) {
+            addCriterion("upper(attitude) like", value.toUpperCase(), "attitude");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntentionLikeInsensitive(String value) {
+            addCriterion("upper(intention) like", value.toUpperCase(), "intention");
             return (Criteria) this;
         }
     }

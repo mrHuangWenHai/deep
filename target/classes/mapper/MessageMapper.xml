@@ -7,6 +7,9 @@
     <result column="contact" property="contact" jdbcType="VARCHAR" />
     <result column="message" property="message" jdbcType="VARCHAR" />
     <result column="inserttime" property="inserttime" jdbcType="TIMESTAMP" />
+    <result column="tag" property="tag" jdbcType="VARCHAR" />
+    <result column="attitude" property="attitude" jdbcType="VARCHAR" />
+    <result column="intention" property="intention" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -67,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, username, contact, message, inserttime
+    id, username, contact, message, inserttime, tag, attitude, intention
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.deep.domain.model.MessageExample" >
     select
@@ -84,7 +87,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from message
     where id = #{id,jdbcType=INTEGER}
@@ -100,10 +103,12 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.deep.domain.model.Message" >
-    insert into message (id, username, contact, 
-      message, inserttime)
-    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, 
-      #{message,jdbcType=VARCHAR}, #{inserttime,jdbcType=TIMESTAMP})
+    insert into message (id, username, contact,
+    message, inserttime, tag,
+    attitude, intention)
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR},
+    #{message,jdbcType=VARCHAR}, #{inserttime,jdbcType=TIMESTAMP}, #{tag,jdbcType=VARCHAR},
+    #{attitude,jdbcType=VARCHAR}, #{intention,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.deep.domain.model.Message" >
     insert into message
@@ -123,6 +128,15 @@
       <if test="inserttime != null" >
         inserttime,
       </if>
+      <if test="tag != null" >
+        tag,
+      </if>
+      <if test="attitude != null" >
+        attitude,
+      </if>
+      <if test="intention != null" >
+        intention,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -139,6 +153,15 @@
       </if>
       <if test="inserttime != null" >
         #{inserttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tag != null" >
+        #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="attitude != null" >
+        #{attitude,jdbcType=VARCHAR},
+      </if>
+      <if test="intention != null" >
+        #{intention,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -166,6 +189,15 @@
       <if test="record.inserttime != null" >
         inserttime = #{record.inserttime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.tag != null" >
+        tag = #{record.tag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.attitude != null" >
+        attitude = #{record.attitude,jdbcType=VARCHAR},
+      </if>
+      <if test="record.intention != null" >
+        intention = #{record.intention,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -174,10 +206,13 @@
   <update id="updateByExample" parameterType="map" >
     update message
     set id = #{record.id,jdbcType=INTEGER},
-      username = #{record.username,jdbcType=VARCHAR},
-      contact = #{record.contact,jdbcType=VARCHAR},
-      message = #{record.message,jdbcType=VARCHAR},
-      inserttime = #{record.inserttime,jdbcType=TIMESTAMP}
+    username = #{record.username,jdbcType=VARCHAR},
+    contact = #{record.contact,jdbcType=VARCHAR},
+    message = #{record.message,jdbcType=VARCHAR},
+    inserttime = #{record.inserttime,jdbcType=TIMESTAMP},
+    tag = #{record.tag,jdbcType=VARCHAR},
+    attitude = #{record.attitude,jdbcType=VARCHAR},
+    intention = #{record.intention,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -197,6 +232,15 @@
       <if test="inserttime != null" >
         inserttime = #{inserttime,jdbcType=TIMESTAMP},
       </if>
+      <if test="tag != null" >
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="attitude != null" >
+        attitude = #{attitude,jdbcType=VARCHAR},
+      </if>
+      <if test="intention != null" >
+        intention = #{intention,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -205,7 +249,10 @@
     set username = #{username,jdbcType=VARCHAR},
       contact = #{contact,jdbcType=VARCHAR},
       message = #{message,jdbcType=VARCHAR},
-      inserttime = #{inserttime,jdbcType=TIMESTAMP}
+      inserttime = #{inserttime,jdbcType=TIMESTAMP},
+      tag = #{tag,jdbcType=VARCHAR},
+      attitude = #{attitude,jdbcType=VARCHAR},
+      intention = #{intention,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select resultMap="BaseResultMap" parameterType="com.deep.domain.model.MessageExample" id="selectByExampleWithRowbounds" >

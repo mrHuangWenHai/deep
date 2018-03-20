@@ -38,6 +38,10 @@ public class MessageController {
         message.setContact(message.getContact());
         message.setMessage(message.getMessage());
         message.setInserttime(new Date());
+        //数据分析相关
+        message.setTag(message.getTag());
+        message.setAttitude(message.getAttitude());
+        message.setIntention(message.getIntention());
 
         messageService.insertMessage(message);
 

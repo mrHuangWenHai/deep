@@ -14,6 +14,12 @@ public class Message implements Serializable {
 
     private Date inserttime;
 
+    private String tag;
+
+    private String attitude;
+
+    private String intention;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -54,5 +60,29 @@ public class Message implements Serializable {
 
     public void setInserttime(Date inserttime) {
         this.inserttime = inserttime;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag == null ? null : tag.trim();
+    }
+
+    public String getAttitude() {
+        return attitude;
+    }
+
+    public void setAttitude(String attitude) {
+        this.attitude = attitude == null ? null : attitude.trim();
+    }
+
+    public String getIntention() {
+        return intention;
+    }
+
+    public void setIntention(String intention) {
+        this.intention = intention == null ? null : intention.trim();
     }
 }
