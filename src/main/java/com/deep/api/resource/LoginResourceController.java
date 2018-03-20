@@ -4,7 +4,7 @@ import com.deep.domain.model.MobileAnnouncementModel;
 import com.deep.domain.model.RoleModel;
 import com.deep.domain.model.TokenModel;
 import com.deep.domain.model.UserModel;
-import com.deep.domain.service.MD5Util;
+import com.deep.domain.util.MD5Util;
 import com.deep.domain.service.RoleService;
 import com.deep.domain.service.UserService;
 import org.json.JSONException;
@@ -56,6 +56,10 @@ public class LoginResourceController {
         }else {
             if(userModel.getPassword().equals(md5Util.encode(password))){
                 TokenModel tokenModel = new TokenModel(userModel.getUserId());
+
+                /*System.out.println("运行到该模块：");
+                System.out.println(username);
+                System.out.println(password);*/
                 //tokenModel存入redis
                 //10分钟后过期 需要重新登陆
                 Jedis jedis = new Jedis("localhost");

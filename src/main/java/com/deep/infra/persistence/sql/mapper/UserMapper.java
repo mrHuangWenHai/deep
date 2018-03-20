@@ -14,5 +14,5 @@ public interface UserMapper {
     UserModel getUserModelByusername(@Param("username") String username);
     List<UserModel> getAllUserModel();
 
-    int deleteUserModelByid(@Param("id")BigInteger id);
+    int deleteUserModelByid(@Param("id")Long id);
 }

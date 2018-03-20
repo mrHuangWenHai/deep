@@ -1,10 +1,9 @@
 package com.deep.domain.model;
 
-import java.math.BigInteger;
 import java.sql.Timestamp;
 
 public class UserModel {
-    private long userId;
+    private Integer userId;
     private String username;
     private String password;
     private String name;
@@ -18,7 +17,7 @@ public class UserModel {
     private Timestamp gmtCreate;
     private Timestamp gmtModified;
 
-    public UserModel(long userId, String username, String password, String name, String telephone, String question_1, String answer_1, String question_2, String answer_2, String question_3, String answer_3, Timestamp gmtCreate, Timestamp gmtModified) {
+    public UserModel(Integer  userId, String username, String password, String name, String telephone, String question_1, String answer_1, String question_2, String answer_2, String question_3, String answer_3, Timestamp gmtCreate, Timestamp gmtModified) {
         this.userId = userId;
         this.username = username;
         this.password = password;
@@ -47,11 +46,11 @@ public class UserModel {
         this.gmtCreate = gmtCreate;
     }
 
-    public long getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 

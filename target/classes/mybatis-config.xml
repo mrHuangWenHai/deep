@@ -27,6 +27,7 @@
         <mapper resource="mapper/DisinfectFilesMapperxml.xml" />
         <mapper resource="mapper/ImmunePlanMapperxml.xml"/>
         <mapper resource="mapper/RepellentPlanMapperxml.xml"/>
+        <mapper resource="mapper/GenealogicalFilesTransMapper.xml"/>
     </mappers>
 </configuration>
 

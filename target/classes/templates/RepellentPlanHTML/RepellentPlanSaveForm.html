@@ -5,7 +5,7 @@
     <title>Save</title>
 </head>
 <body>
-<form action="/allfunction/rp/saveshow" method="post">
+<form action="/allfunction/rp/saveshow" method="get" enctype="multipart/form-data">
     <table>
         <tr>
             <td><label>工厂编号</label></td>
@@ -17,7 +17,7 @@
         </tr>
         <tr>
             <td><label>耳牌附件号</label></td>
-            <td><input type="text" id="repellentEartag" name="repellentEartag"/></td>
+            <td><input type="file" id="repellentEartag" name="repellentEartag"/></td>
         </tr>
         <tr>
             <td><label>驱虫时间</label></td>

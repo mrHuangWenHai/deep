@@ -24,12 +24,21 @@ public class GenealogicalFilesResourceController {
     private GenealogicalFilesService genealogicalFilesService;
 
     //localhost:9090/allfunction/gf/function
-    @RequestMapping(value = "/function")
-    public String GenealogicalFilesFunctionChoice(){
 
+    /**
+     * METHOD:GET
+     * @return
+     */
+    @RequestMapping(value = "/function",method = RequestMethod.POST)
+    public String GenealogicalFilesFunctionChoice(){
         return "GenealogicalFilesHTML/GenealogicalFilesFunctionChoiceForm";
     }
-    @RequestMapping(value = "/save")
+
+    /**
+     * METHOD:GET
+     * @return
+     */
+    @RequestMapping(value = "/save",method = RequestMethod.GET)
     public String Save(){
         /*Jedis jedis = new Jedis("localhost");
         jedis.get("userId");
@@ -38,6 +47,15 @@ public class GenealogicalFilesResourceController {
         System.out.println("查看userId的剩余生存时间："+jedis.ttl("userId"));*/
         return "GenealogicalFilesHTML/GenealogicalFilesSaveForm";
     }
+
+    /**
+     * 返回插入结果
+     * 成功：success
+     * 失败：返回对应失败错误
+     * METHOD:POST
+     * @param genealogicalFilesModel
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "/saveshow",method = RequestMethod.POST)
     public Response SaveShow(@Valid GenealogicalFilesModel genealogicalFilesModel) {
@@ -83,14 +101,36 @@ public class GenealogicalFilesResourceController {
         }
 
     }
+
     //localhost:8080/allfunction/gf/find
-    @RequestMapping(value = "/find")
+
+    /**
+     * METHOD:POST
+     * @return
+     */
+    @RequestMapping(value = "/find",method = RequestMethod.POST)
     public String Find(){
         return "GenealogicalFilesHTML/GenealogicalFilesFindForm";
     }
 
+
+    /**
+     * 返回查询结果
+     * 以json格式返回前端
+     * 分页查询
+     * METHOD:POST
+     * @param genealogicalFilesModel
+     * @param immuneEartagStart
+     * @param immuneEartagEnd
+     * @param birthTimeStart
+     * @param birthTimeEnd
+     * @param birthWeightStart
+     * @param birthWeightEnd
+     * @param pageNum
+     * @return
+     */
     @ResponseBody
-    @RequestMapping(value = "/findshow")
+    @RequestMapping(value = "/findshow",method = RequestMethod.POST)
     public Response FindSelfEartagShow(@Valid GenealogicalFilesModel genealogicalFilesModel,
                                        @RequestParam("immuneEartagStart") String immuneEartagStart,
                                        @RequestParam("immuneEartagEnd") String immuneEartagEnd,
@@ -114,13 +154,25 @@ public class GenealogicalFilesResourceController {
         //System.out.println(genealogicalFilesModel.getTradeMarkEartag());
     }
 
+    /**
+     * METHOD:GET
+     * @return
+     */
     @RequestMapping(value = "delete",method = RequestMethod.POST)
     public String Delete(){
         return "GenealogicalFilesHTML/GenealogicalFilesDeleteForm";
     }
 
+    /**
+     * 返回删除内容行号
+     * 以json格式返回前端
+     * METHOD:DELETE
+     * @param selfEartag
+     * @return
+     * @throws Exception
+     */
     @ResponseBody
-    @RequestMapping(value = "/deleteshow",method = RequestMethod.POST)
+    @RequestMapping(value = "/deleteshow",method = RequestMethod.DELETE)
     public Response DeleteShow(@RequestParam("selfEartag") String selfEartag)throws Exception{
         try {
             int row = genealogicalFilesService.deleteGenealogicalFilesModel(selfEartag);
@@ -132,7 +184,4 @@ public class GenealogicalFilesResourceController {
         return new Response().addData("Delete Fail!","Error");
     }
 
-
-    private class Jedis {
-    }
 }

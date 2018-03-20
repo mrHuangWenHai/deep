@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--Mapper名称 对应infra中mapper类名-->
+<mapper namespace="com.deep.infra.persistence.sql.mapper.GenealogicalFilesTransMapper">
+    <insert id="setGenealogicalFilesTransModel" parameterType="com.deep.domain.model.GenealogicalFilesTransModel">
+        INSERT INTO genealogical_files_trans(
+        trademark_eartag,
+        trans_time,
+        trans_weight,
+        next_owner,
+        gmt_create
+        )
+        VALUES(
+        #{genealogicalFilesTransModel.trademarkEartag},
+        #{genealogicalFilesTransModel.transTime},
+        #{genealogicalFilesTransModel.transWeight},
+        #{genealogicalFilesTransModel.nextOwner},
+        #{genealogicalFilesTransModel.gmtCreate}
+        )
+    </insert>
+    <select id="getGenealogicalFilesTransModelBytrademarkEartag" resultType="com.deep.domain.model.GenealogicalFilesTransModel">
+        SELECT
+        *
+        FROM
+        genealogical_files_trans
+        WHERE
+        trademark_eartag = #{trademarkEartag}
+    </select>
+
+    <resultMap id="genealogicalFilesTrans" type="com.deep.domain.model.GenealogicalFilesTransModel">
+        <result property="trademarkEartag" column="trademark_eartag"/>
+        <result property="transTime" column="trans_time"/>
+        <result property="transWeight" column="trans_weight"/>
+        <result property="gmtCreate" column="gmt_create"/>
+    </resultMap>
+
+    <select id="getAllGenealogicalFilesTransModel" resultMap="genealogicalFilesTrans">
+        SELECT
+        *
+        FROM
+        genealogical_files_trans
+    </select>
+
+    <delete id="deleteGenealogicalFilesTransModelBytrademarkEartag" >
+        DELETE FROM
+        genealogical_files_trans
+        WHERE
+        trademark_eartag = #{trademarkEartag}
+    </delete>
+
+</mapper>

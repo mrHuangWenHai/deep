@@ -1,5 +1,6 @@
 package com.deep.domain.service;
 
+import com.deep.domain.util.WebInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;

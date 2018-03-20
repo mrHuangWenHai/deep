@@ -3,7 +3,7 @@ package com.deep.domain.model;
 import java.sql.Timestamp;
 
 public class RoleModel {
-    private long id;
+    private Integer id;
     private String authority;
     private Timestamp gmtCreate;
     private Timestamp gmtModified;
@@ -11,18 +11,18 @@ public class RoleModel {
     public RoleModel() {
     }
 
-    public RoleModel(long id, String authority, Timestamp gmtCreate, Timestamp gmtModified) {
+    public RoleModel(Integer id, String authority, Timestamp gmtCreate, Timestamp gmtModified) {
         this.id = id;
         this.authority = authority;
         this.gmtCreate = gmtCreate;
         this.gmtModified = gmtModified;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

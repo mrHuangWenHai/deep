@@ -23,21 +23,37 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/allfunction/df")
+@RequestMapping(value = "/allfunction/df",method = RequestMethod.GET)
 public class DisinfectFilesResourceController {
     @Resource
     private DisinfectFilesService disinfectFilesService;
 
-    @RequestMapping(value = "/function")
+    /**
+     * METHOD:GET
+     * @return
+     */
+    @RequestMapping(value = "/function",method = RequestMethod.POST)
     public String DisinfectFilesFunctionChoice(){
         return "DisinfectFilesHTML/DisinfectFilesFunctionChoiceForm";
     }
 
-    @RequestMapping(value = "/save")
+    /**
+     * METHOD:GET
+     * @return
+     */
+    @RequestMapping(value = "/save",method = RequestMethod.GET)
     public String Save(){
         return "DisinfectFilesHTML/DisinfectFilesSaveForm";
     }
 
+    /**
+     * 返回插入结果
+     * 成功：success
+     * 失败：返回对应失败错误
+     * METHOD:POST
+     * @param disinfectFilesModel
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "/saveshow",method = RequestMethod.POST)
     public Response SaveShow(@Valid DisinfectFilesModel disinfectFilesModel
@@ -78,11 +94,26 @@ public class DisinfectFilesResourceController {
     }
 
 
+    /**
+     * METHOD:GET
+     * @return
+     */
     @RequestMapping(value = "/find")
     public String Find(){
         return "DisinfectFilesHTML/DisinfectFilesFindForm";
     }
 
+    /**
+     * 返回查询结果
+     * 以json格式返回前端
+     * 分页查询
+     * METHOD:POST
+     * @param disinfectFilesModel
+     * @param disinfectTimeStart
+     * @param disinfectTimeEnd
+     * @param pageNum
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
     public Response FindShow(@Valid DisinfectFilesModel disinfectFilesModel,

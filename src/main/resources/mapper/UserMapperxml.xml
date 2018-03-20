@@ -31,7 +31,22 @@
         #{userModel.gmtCreate}
         )
     </insert>
-    <select id="getUserModelByusername" parameterType="String" resultType="com.deep.domain.model.UserModel">
+
+    <resultMap id="user" type="com.deep.domain.model.UserModel">
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="name" column="name"/>
+        <result property="telephone" column="telephone"/>
+        <result property="question_1" column="question_1"/>
+        <result property="answer_1" column="answer_1"/>
+        <result property="question_2" column="question_2"/>
+        <result property="answer_2" column="answer_2"/>
+        <result property="question_3" column="question_3"/>
+        <result property="answer_3" column="answer_3"/>
+        <result property="gmtCreate" column="gmt_create"/>
+    </resultMap>
+
+    <select id="getUserModelByusername" resultMap="user">
         SELECT
         *
         FROM
@@ -39,16 +54,6 @@
         WHERE
         username = #{username}
     </select>
-
-    <resultMap id="user" type="com.deep.domain.model.UserModel">
-        <result property="id" column="id"/>
-        <result property="username" column="username"/>
-        <result property="password" column="password"/>
-        <result property="name" column="name"/>
-        <result property="telephone" column="telephone"/>
-        <result property="gmtCreate" column="gmt_create"/>
-        <result property="gmtModified" column="gmt_modified"/>
-    </resultMap>
 
     <select id="getAllUserModel" resultMap="user">
         SELECT

@@ -26,7 +26,7 @@ public class UserService {
         return userModels;
     }
 
-    public int deleteUserModelByid(BigInteger id){
+    public int deleteUserModelByid(Long id){
         int row = this.userMapper.deleteUserModelByid(id);
         return row;
     }
