@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.deep.infra.persistence.sql.mapper.BreedingPlanMapper" >
+  <resultMap id="BaseResultMap" type="com.deep.domain.model.BreedingPlan" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+    <result column="gmt_supervised" property="gmtSupervised" jdbcType="TIMESTAMP" />
+    <result column="factory_num" property="factoryNum" jdbcType="BIGINT" />
+    <result column="building" property="building" jdbcType="VARCHAR" />
+    <result column="m_et_i" property="mEtI" jdbcType="VARCHAR" />
+    <result column="m_et_b" property="mEtB" jdbcType="VARCHAR" />
+    <result column="f_et_i" property="fEtI" jdbcType="VARCHAR" />
+    <result column="f_et_b" property="fEtB" jdbcType="VARCHAR" />
+    <result column="Breeding_t" property="breedingT" jdbcType="TIMESTAMP" />
+    <result column="gestation_t" property="gestationT" jdbcType="TIMESTAMP" />
+    <result column="Prenatal_i_t" property="prenatalIT" jdbcType="TIMESTAMP" />
+    <result column="cub_t" property="cubT" jdbcType="TIMESTAMP" />
+    <result column="quantity" property="quantity" jdbcType="INTEGER" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="professor" property="professor" jdbcType="VARCHAR" />
+    <result column="supervisor" property="supervisor" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="is_pass" property="isPass" jdbcType="TINYINT" />
+    <result column="upass_reason" property="upassReason" jdbcType="VARCHAR" />
+    <result column="is_pass1" property="isPass1" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, gmt_create, gmt_modified, gmt_supervised, factory_num, building, m_et_i, m_et_b, 
+    f_et_i, f_et_b, Breeding_t, gestation_t, Prenatal_i_t, cub_t, quantity, operator, 
+    professor, supervisor, remark, is_pass, upass_reason, is_pass1
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.deep.domain.model.BreedingPlanExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from breeding_plan
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from breeding_plan
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from breeding_plan
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.deep.domain.model.BreedingPlanExample" >
+    delete from breeding_plan
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.deep.domain.model.BreedingPlan" >
+    insert into breeding_plan (id, gmt_create, gmt_modified, 
+      gmt_supervised, factory_num, building, 
+      m_et_i, m_et_b, f_et_i, f_et_b, 
+      Breeding_t, gestation_t, Prenatal_i_t, 
+      cub_t, quantity, operator, 
+      professor, supervisor, remark, 
+      is_pass, upass_reason, is_pass1
+      )
+    values (#{id,jdbcType=INTEGER}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, 
+      #{gmtSupervised,jdbcType=TIMESTAMP}, #{factoryNum,jdbcType=BIGINT}, #{building,jdbcType=VARCHAR}, 
+      #{mEtI,jdbcType=VARCHAR}, #{mEtB,jdbcType=VARCHAR}, #{fEtI,jdbcType=VARCHAR}, #{fEtB,jdbcType=VARCHAR}, 
+      #{breedingT,jdbcType=TIMESTAMP}, #{gestationT,jdbcType=TIMESTAMP}, #{prenatalIT,jdbcType=TIMESTAMP}, 
+      #{cubT,jdbcType=TIMESTAMP}, #{quantity,jdbcType=INTEGER}, #{operator,jdbcType=VARCHAR}, 
+      #{professor,jdbcType=VARCHAR}, #{supervisor,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{isPass,jdbcType=TINYINT}, #{upassReason,jdbcType=VARCHAR}, #{isPass1,jdbcType=TINYINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.deep.domain.model.BreedingPlan" >
+    insert into breeding_plan
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create,
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified,
+      </if>
+      <if test="gmtSupervised != null" >
+        gmt_supervised,
+      </if>
+      <if test="factoryNum != null" >
+        factory_num,
+      </if>
+      <if test="building != null" >
+        building,
+      </if>
+      <if test="mEtI != null" >
+        m_et_i,
+      </if>
+      <if test="mEtB != null" >
+        m_et_b,
+      </if>
+      <if test="fEtI != null" >
+        f_et_i,
+      </if>
+      <if test="fEtB != null" >
+        f_et_b,
+      </if>
+      <if test="breedingT != null" >
+        Breeding_t,
+      </if>
+      <if test="gestationT != null" >
+        gestation_t,
+      </if>
+      <if test="prenatalIT != null" >
+        Prenatal_i_t,
+      </if>
+      <if test="cubT != null" >
+        cub_t,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="professor != null" >
+        professor,
+      </if>
+      <if test="supervisor != null" >
+        supervisor,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="isPass != null" >
+        is_pass,
+      </if>
+      <if test="upassReason != null" >
+        upass_reason,
+      </if>
+      <if test="isPass1 != null" >
+        is_pass1,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="gmtCreate != null" >
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtSupervised != null" >
+        #{gmtSupervised,jdbcType=TIMESTAMP},
+      </if>
+      <if test="factoryNum != null" >
+        #{factoryNum,jdbcType=BIGINT},
+      </if>
+      <if test="building != null" >
+        #{building,jdbcType=VARCHAR},
+      </if>
+      <if test="mEtI != null" >
+        #{mEtI,jdbcType=VARCHAR},
+      </if>
+      <if test="mEtB != null" >
+        #{mEtB,jdbcType=VARCHAR},
+      </if>
+      <if test="fEtI != null" >
+        #{fEtI,jdbcType=VARCHAR},
+      </if>
+      <if test="fEtB != null" >
+        #{fEtB,jdbcType=VARCHAR},
+      </if>
+      <if test="breedingT != null" >
+        #{breedingT,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gestationT != null" >
+        #{gestationT,jdbcType=TIMESTAMP},
+      </if>
+      <if test="prenatalIT != null" >
+        #{prenatalIT,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cubT != null" >
+        #{cubT,jdbcType=TIMESTAMP},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="professor != null" >
+        #{professor,jdbcType=VARCHAR},
+      </if>
+      <if test="supervisor != null" >
+        #{supervisor,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isPass != null" >
+        #{isPass,jdbcType=TINYINT},
+      </if>
+      <if test="upassReason != null" >
+        #{upassReason,jdbcType=VARCHAR},
+      </if>
+      <if test="isPass1 != null" >
+        #{isPass1,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.deep.domain.model.BreedingPlanExample" resultType="java.lang.Integer" >
+    select count(*) from breeding_plan
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update breeding_plan
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.gmtCreate != null" >
+        gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.gmtModified != null" >
+        gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.gmtSupervised != null" >
+        gmt_supervised = #{record.gmtSupervised,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.factoryNum != null" >
+        factory_num = #{record.factoryNum,jdbcType=BIGINT},
+      </if>
+      <if test="record.building != null" >
+        building = #{record.building,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mEtI != null" >
+        m_et_i = #{record.mEtI,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mEtB != null" >
+        m_et_b = #{record.mEtB,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fEtI != null" >
+        f_et_i = #{record.fEtI,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fEtB != null" >
+        f_et_b = #{record.fEtB,jdbcType=VARCHAR},
+      </if>
+      <if test="record.breedingT != null" >
+        Breeding_t = #{record.breedingT,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.gestationT != null" >
+        gestation_t = #{record.gestationT,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.prenatalIT != null" >
+        Prenatal_i_t = #{record.prenatalIT,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.cubT != null" >
+        cub_t = #{record.cubT,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.quantity != null" >
+        quantity = #{record.quantity,jdbcType=INTEGER},
+      </if>
+      <if test="record.operator != null" >
+        operator = #{record.operator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.professor != null" >
+        professor = #{record.professor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.supervisor != null" >
+        supervisor = #{record.supervisor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isPass != null" >
+        is_pass = #{record.isPass,jdbcType=TINYINT},
+      </if>
+      <if test="record.upassReason != null" >
+        upass_reason = #{record.upassReason,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isPass1 != null" >
+        is_pass1 = #{record.isPass1,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update breeding_plan
+    set id = #{record.id,jdbcType=INTEGER},
+      gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+      gmt_supervised = #{record.gmtSupervised,jdbcType=TIMESTAMP},
+      factory_num = #{record.factoryNum,jdbcType=BIGINT},
+      building = #{record.building,jdbcType=VARCHAR},
+      m_et_i = #{record.mEtI,jdbcType=VARCHAR},
+      m_et_b = #{record.mEtB,jdbcType=VARCHAR},
+      f_et_i = #{record.fEtI,jdbcType=VARCHAR},
+      f_et_b = #{record.fEtB,jdbcType=VARCHAR},
+      Breeding_t = #{record.breedingT,jdbcType=TIMESTAMP},
+      gestation_t = #{record.gestationT,jdbcType=TIMESTAMP},
+      Prenatal_i_t = #{record.prenatalIT,jdbcType=TIMESTAMP},
+      cub_t = #{record.cubT,jdbcType=TIMESTAMP},
+      quantity = #{record.quantity,jdbcType=INTEGER},
+      operator = #{record.operator,jdbcType=VARCHAR},
+      professor = #{record.professor,jdbcType=VARCHAR},
+      supervisor = #{record.supervisor,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      is_pass = #{record.isPass,jdbcType=TINYINT},
+      upass_reason = #{record.upassReason,jdbcType=VARCHAR},
+      is_pass1 = #{record.isPass1,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.deep.domain.model.BreedingPlan" >
+    update breeding_plan
+    <set >
+      <if test="gmtCreate != null" >
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtSupervised != null" >
+        gmt_supervised = #{gmtSupervised,jdbcType=TIMESTAMP},
+      </if>
+      <if test="factoryNum != null and factoryNum != ''" >
+        factory_num = #{factoryNum,jdbcType=BIGINT},
+      </if>
+      <if test="building != null and building != ''" >
+        building = #{building,jdbcType=VARCHAR},
+      </if>
+      <if test="mEtI != null and mEtI != ''" >
+        m_et_i = #{mEtI,jdbcType=VARCHAR},
+      </if>
+      <if test="mEtB != null and mEtB != ''" >
+        m_et_b = #{mEtB,jdbcType=VARCHAR},
+      </if>
+      <if test="fEtI != null and fEtI != ''" >
+        f_et_i = #{fEtI,jdbcType=VARCHAR},
+      </if>
+      <if test="fEtB != null and fEtB != ''" >
+        f_et_b = #{fEtB,jdbcType=VARCHAR},
+      </if>
+      <if test="breedingT != null" >
+        Breeding_t = #{breedingT,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gestationT != null" >
+        gestation_t = #{gestationT,jdbcType=TIMESTAMP},
+      </if>
+      <if test="prenatalIT != null" >
+        Prenatal_i_t = #{prenatalIT,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cubT != null" >
+        cub_t = #{cubT,jdbcType=TIMESTAMP},
+      </if>
+      <if test="quantity != null and quantity != ''" >
+        quantity = #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="operator != null and operator != ''" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="professor != null and professor != ''" >
+        professor = #{professor,jdbcType=VARCHAR},
+      </if>
+      <if test="supervisor != null and supervisor != ''" >
+        supervisor = #{supervisor,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null and remark != ''" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isPass != null and isPass != ''" >
+        is_pass = #{isPass,jdbcType=TINYINT},
+      </if>
+      <if test="upassReason != null and upassReason != ''" >
+        upass_reason = #{upassReason,jdbcType=VARCHAR},
+      </if>
+      <if test="isPass1 != null and isPass1 != ''" >
+        is_pass1 = #{isPass1,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.deep.domain.model.BreedingPlan" >
+    update breeding_plan
+    set gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      gmt_supervised = #{gmtSupervised,jdbcType=TIMESTAMP},
+      factory_num = #{factoryNum,jdbcType=BIGINT},
+      building = #{building,jdbcType=VARCHAR},
+      m_et_i = #{mEtI,jdbcType=VARCHAR},
+      m_et_b = #{mEtB,jdbcType=VARCHAR},
+      f_et_i = #{fEtI,jdbcType=VARCHAR},
+      f_et_b = #{fEtB,jdbcType=VARCHAR},
+      Breeding_t = #{breedingT,jdbcType=TIMESTAMP},
+      gestation_t = #{gestationT,jdbcType=TIMESTAMP},
+      Prenatal_i_t = #{prenatalIT,jdbcType=TIMESTAMP},
+      cub_t = #{cubT,jdbcType=TIMESTAMP},
+      quantity = #{quantity,jdbcType=INTEGER},
+      operator = #{operator,jdbcType=VARCHAR},
+      professor = #{professor,jdbcType=VARCHAR},
+      supervisor = #{supervisor,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      is_pass = #{isPass,jdbcType=TINYINT},
+      upass_reason = #{upassReason,jdbcType=VARCHAR},
+      is_pass1 = #{isPass1,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select resultMap="BaseResultMap" parameterType="com.deep.domain.model.BreedingPlanExample" id="selectByExampleWithRowbounds" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from breeding_plan
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

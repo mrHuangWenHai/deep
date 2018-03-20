@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>修改档案</title>
+</head>
+<body>
+<a>逐条修改信息：</a>
+<form action="/DiagnosisUpdateByProfessor/show" method="get">
+    <table>
+        <tr>
+            <td><label>记录号</label></td>
+            <td><input type="text" id="id" name="id" /></td>
+        </tr>
+        <tr>
+            <td><label>工厂编号</label></td>
+            <td><input type="text" id="factoryNum" name="factoryNum" /></td>
+        </tr>
+        <tr>
+            <td><label>栋号</label></td>
+            <td><input type="text" id="building" name="building" /></td>
+        </tr>
+        <tr>
+            <td><label>诊疗日期</label></td>
+            <td><input type="text" id="s_diagnosisT" name="s_diagnosisT" /></td>
+        </tr>
+        <tr>
+            <td><label>商标耳牌号</label></td>
+            <td><input type="text" id="etB" name="etB" /></td>
+        </tr>
+        <tr>
+            <td><label>诊断结果</label></td>
+            <td><input type="text" id="diagnosisC" name="diagnosisC" /></td>
+        </tr>
+        <tr>
+            <td><label>治疗方案</label></td>
+            <td><input type="text" id="diagnosisM" name="diagnosisM" /></td>
+        </tr>
+        <tr>
+            <td><label>用药剂量</label></td>
+            <td><input type="text" id="drugQ" name="drugQ" /></td>
+        </tr>
+        <!--<tr>
+            <td><label>操作员</label></td>
+            <td><input type="text" id="operator" name="operator" /></td>
+        </tr>-->
+        <tr>
+            <td><label>技术审核</label></td>
+            <td><input type="text" id="professor" name="professor" /></td>
+        </tr>
+        <!--<tr>
+            <td><label>监督员</label></td>
+            <td><input type="text" id="supervisor" name="supervisor" /></td>
+        </tr>-->
+        <tr>
+            <td><label>备注信息</label></td>
+            <td><input type="text" id="remark" name="remark" /></td>
+        </tr>
+        <tr>
+            <td><label>是否通过审核</label></td>
+            <td><input type="text" id="isPass" name="isPass" /></td>
+        </tr>
+        <tr>
+            <td><label>未通过审核原因</label></td>
+            <td><input type="text" id="upassReason" name="upassReason" /></td>
+        </tr>
+        <tr>
+            <td><input type="submit" id="submit" value="提交"/></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>
