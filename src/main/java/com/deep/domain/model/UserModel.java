@@ -1,10 +1,12 @@
 package com.deep.domain.model;
 
+import com.deep.api.Utils.MD5Util;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.*;
 import java.sql.Timestamp;
-
+@Component
 public class UserModel {
         private long id;
         private Timestamp gmtCreate;;
@@ -115,7 +117,7 @@ public class UserModel {
         }
 
         @NotBlank(message = "用户名不能为空!")
-        @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "用户名只能由大小写字母以及数字组成")
+        @Pattern(regexp = "^[0-9a-z]+$", message = "用户名只能由a-z以及数字组成")
         @Size(min = 4, max = 20, message = "用户名最小长度为4, 最大长度为20")
         @JsonView(UserSimpleView.class)
         public String getPkUserid() {
@@ -126,16 +128,18 @@ public class UserModel {
             this.pkUserid = pkUserid;
         }
 
-        @NotBlank(message = "密码中不能含有空格")
-        @Pattern(regexp = "^[0-9a-zA-Z_.*@#]+$", message = "用户密码必须由数字, 26个英文字母或者',', '.', '@', '#'组成的字符串")
-        @Size(min = 4, message = "密码最小长度为4")
+//        @NotBlank(message = "密码中不能含有空格")
+//        @Pattern(regexp = "^[0-9a-z]+$", message = "用户密码必须由数字, 26个英文字母或者',', '.', '@', '#'组成的字符串")
+//        @Size(min = 6, max = 20, message = "ｍｕｓｔ　ｂｅ　６－２０")
         @JsonView(UserDetailView.class)
         public String getUserPwd() {
             return userPwd;
         }
 
         public void setUserPwd(String userPwd) {
+
             this.userPwd = userPwd;
+//            this.userPwd = userPwd;
         }
 
         @NotBlank(message = "用户编号不能为含有空格的串")

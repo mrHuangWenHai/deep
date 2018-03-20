@@ -1,5 +1,7 @@
 package com.deep.api.authorization.token;
 
+import java.util.UUID;
+
 /**
  * Token的Model类, 可以增加字段以提高安全性, 例如时间戳, URL签名
  */
@@ -9,7 +11,15 @@ public class TokenModel {
     // 随机生成的uuid
     private String token;
 
-    public TokenModel(long userId, String token) {
+    public TokenModel () {
+
+    }
+    public TokenModel(Long userId) {
+        this.userId = userId;
+        this.token = UUID.randomUUID().toString();
+    }
+
+    public TokenModel(Long userId, String token) {
         this.userId = userId;
         this.token = token;
     }
@@ -18,7 +28,7 @@ public class TokenModel {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

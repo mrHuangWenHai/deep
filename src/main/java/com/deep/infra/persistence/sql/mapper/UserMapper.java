@@ -29,7 +29,12 @@ public interface UserMapper {
             @Result(property = "userPermit", column = "user_permit"),
             @Result(property = "isExtended", column = "is_extended"),
             @Result(property = "isFactory", column = "is_factory"),
-            @Result(property = "questionAnswer", column = "question_answer")
+            @Result(property = "question_1", column = "question_1"),
+            @Result(property = "question_2", column = "question_2"),
+            @Result(property = "question_3", column = "question_3"),
+            @Result(property = "answer_1", column = "answer_1"),
+            @Result(property = "answer_2", column = "answer_2"),
+            @Result(property = "answer_3", column = "answer_3")
     })
     List<UserModel> queryAllUser();
 
@@ -56,7 +61,12 @@ public interface UserMapper {
             @Result(property = "userPermit", column = "user_permit"),
             @Result(property = "isExtended", column = "is_extended"),
             @Result(property = "isFactory", column = "is_factory"),
-            @Result(property = "questionAnswer", column = "question_answer")
+            @Result(property = "question_1", column = "question_1"),
+            @Result(property = "question_2", column = "question_2"),
+            @Result(property = "question_3", column = "question_3"),
+            @Result(property = "answer_1", column = "answer_1"),
+            @Result(property = "answer_2", column = "answer_2"),
+            @Result(property = "answer_3", column = "answer_3")
     })
     UserModel queryUserById(Long userId);
 
@@ -83,7 +93,12 @@ public interface UserMapper {
             @Result(property = "userPermit", column = "user_permit"),
             @Result(property = "isExtended", column = "is_extended"),
             @Result(property = "isFactory", column = "is_factory"),
-            @Result(property = "questionAnswer", column = "question_answer")
+            @Result(property = "question_1", column = "question_1"),
+            @Result(property = "question_2", column = "question_2"),
+            @Result(property = "question_3", column = "question_3"),
+            @Result(property = "answer_1", column = "answer_1"),
+            @Result(property = "answer_2", column = "answer_2"),
+            @Result(property = "answer_3", column = "answer_3")
     })
     UserModel queryUserByPkuserID(String pkUserid);
 
@@ -110,7 +125,12 @@ public interface UserMapper {
             @Result(property = "userPermit", column = "user_permit"),
             @Result(property = "isExtended", column = "is_extended"),
             @Result(property = "isFactory", column = "is_factory"),
-            @Result(property = "questionAnswer", column = "question_answer")
+            @Result(property = "question_1", column = "question_1"),
+            @Result(property = "question_2", column = "question_2"),
+            @Result(property = "question_3", column = "question_3"),
+            @Result(property = "answer_1", column = "answer_1"),
+            @Result(property = "answer_2", column = "answer_2"),
+            @Result(property = "answer_3", column = "answer_3")
     })
     UserModel queryUserByRealnameLike(String userRealname);
 
@@ -135,7 +155,12 @@ public interface UserMapper {
             "user_permit," +
             "is_extended," +
             "is_factory," +
-            "question_answer)" +
+            "question_1," +
+            "question_2," +
+            "question_3, " +
+            "answer_1," +
+            "answer_2," +
+            "answer_3)" +
             "values(" +
             "#{gmtCreate}," +
             "#{gmtModified}," +
@@ -152,7 +177,12 @@ public interface UserMapper {
             "#{userPermit}," +
             "#{isExtended}," +
             "#{isFactory}," +
-            "#{questionAnswer}" +
+            "#{question_1}," +
+            "#{question_2}," +
+            "#{question_3}," +
+            "#{answer_1}," +
+            "#{answer_2}," +
+            "#{answer_3}" +
             ")")
     Long insertUser(UserModel userModel);
 
@@ -178,6 +208,12 @@ public interface UserMapper {
             "is_extended = #{isExtended}," +
             "is_factory = #{isFactory}," +
             "question_answer = #{questionAnswer}" +
+            "question_1 = #{question_1}, " +
+            "question_2 = #{question_2}, " +
+            "question_3 = #{question_3}, " +
+            "answer_1 = #{answer_1}, " +
+            "answer_2 = #{answer_2}, " +
+            "answer_3 = #{answer_3}" +
             " where id=#{id}")
     Long updateUser(UserModel userModel);
 

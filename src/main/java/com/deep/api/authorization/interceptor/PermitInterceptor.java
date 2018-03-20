@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
@@ -21,9 +22,9 @@ import java.util.Set;
 
 @Component
 public class PermitInterceptor extends HandlerInterceptorAdapter{
-    @Autowired
+    @Resource
     private TokenManager tokenManager;
-    @Autowired
+    @Resource
     private UserService userService;
     // static修饰的代码块在类进行初始化的时候肯定会执行
 
@@ -133,6 +134,9 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
 
         // 从请求头中获取用户的ID
         String authorization = request.getHeader(Constants.AUTHORIZATION);
+        if (authorization == null) {
+            return false;
+        }
         TokenModel model = tokenManager.getToken(authorization);
 
         // 取出方法上的Permit注解

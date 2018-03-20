@@ -1,5 +1,6 @@
 package com.deep.api.resource;
 
+import com.deep.api.Utils.MD5Util;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.UserModel;
@@ -11,9 +12,10 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 @RestController
-@RequestMapping(value = "user")
+//@RequestMapping(value = "user")
 public class UserResource {
 
     @Resource
@@ -28,7 +30,7 @@ public class UserResource {
 //            "province_agent_administrator", "city_agent_total_administrator", "city_agent_administrator",
 //            "county_agent_total_administrator", "county_agent_administrator", "sheep_farm_administrator",
 //    })
-    @GetMapping(value = "/")
+    @GetMapping(value = "user/")
     public Response userList() {
         Response response = Responses.successResponse();
 
@@ -53,7 +55,7 @@ public class UserResource {
 //            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
 //            "sheep_farm_supervisor", "tourist", "others"
 //    })
-    @GetMapping(value = "/{id:\\d+}")
+    @GetMapping(value = "user/{id:\\d+}")
     public Response getUserOne(@PathVariable("id")Long id) {
         Response response = Responses.successResponse();
 
@@ -78,7 +80,7 @@ public class UserResource {
 //            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
 //            "sheep_farm_supervisor", "tourist", "others"
 //    })
-    @GetMapping(value = "/detail/{id:\\d+}")
+    @GetMapping(value = "user/detail/{id:\\d+}")
     public Response getUserOneDetail(@PathVariable("id")Long id) {
         Response response = Responses.successResponse();
 
@@ -103,7 +105,7 @@ public class UserResource {
 //            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
 //            "sheep_farm_supervisor", "tourist", "others"
 //    })
-    @GetMapping(value = "/name/{realname}")
+    @GetMapping(value = "user/name/{realname}")
     public Response getUserByUserRealname(@PathVariable("realname") String realname) {
         Response response = Responses.successResponse();
 
@@ -128,7 +130,7 @@ public class UserResource {
 //            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
 //            "sheep_farm_supervisor", "tourist", "others"
 //    })
-    @GetMapping(value = "/id/{pkUserid}")
+    @GetMapping(value = "user/id/{pkUserid}")
     public Response getUserByUserID(@PathVariable("pkUserid") String pkUserid) {
         Response response = Responses.successResponse();
 
@@ -154,7 +156,7 @@ public class UserResource {
 //            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
 //            "sheep_farm_supervisor", "tourist", "others"
 //    })
-    @PostMapping("/add")
+    @PostMapping("/userAdd")
     public Response addUser(@RequestBody @Valid UserModel userModel, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("添加用户信息失败");
@@ -175,7 +177,20 @@ public class UserResource {
 
             // 待添加的用户信息
             userModel.setPkUserid(userModel.getPkUserid());
-            userModel.setUserPwd(userModel.getUserPwd());
+
+            //
+            System.out.println(userModel.getUserPwd());
+            // user's password validator
+            if (!Pattern.matches("^[0-9a-z]+$", userModel.getUserPwd())) {
+                Response response = Responses.errorResponse("log in error");
+                HashMap<String, Object> data = new HashMap<>();
+                data.put("errorMessage", "user's password error");
+                response.setData(data);
+                return response;
+            }
+
+            userModel.setUserPwd(MD5Util.encode(userModel.getUserPwd()));
+
             userModel.setUserNum(userModel.getUserNum());
             userModel.setUserPic(userModel.getUserPic());
             userModel.setUserRealname(userModel.getUserRealname());
@@ -187,12 +202,12 @@ public class UserResource {
             userModel.setUserPermit(userModel.getUserPermit());
             userModel.setIsExtended(userModel.getIsExtended());
 
-            userModel.setQuestion_1(userModel.getAnswer_1());
-            userModel.setQuestion_2(userModel.getAnswer_2());
-            userModel.setQuestion_3(userModel.getAnswer_3());
-            userModel.setAnswer_1(userModel.getAnswer_1());
-            userModel.setAnswer_2(userModel.getAnswer_2());
-            userModel.setAnswer_3(userModel.getAnswer_3());
+            userModel.setQuestion_1(userModel.getQuestion_1());
+            userModel.setQuestion_2(userModel.getQuestion_2());
+            userModel.setQuestion_3(userModel.getQuestion_3());
+            userModel.setAnswer_1(MD5Util.encode(userModel.getAnswer_1()));
+            userModel.setAnswer_2(MD5Util.encode(userModel.getAnswer_2()));
+            userModel.setAnswer_3(MD5Util.encode(userModel.getAnswer_3()));
             // 基本信息
             userModel.setGmtCreate(new Timestamp(System.currentTimeMillis()));
             userModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
@@ -222,7 +237,7 @@ public class UserResource {
 //            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
 //            "sheep_farm_supervisor", "tourist", "others"
 //    })
-    @PutMapping(value = "/{id:\\d+}")
+    @PutMapping(value = "user/{id:\\d+}")
     public Response modifyUser(@RequestBody @Valid UserModel userModel, @PathVariable("id") Long id, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("修改用户信息失败");
@@ -258,12 +273,12 @@ public class UserResource {
         userModel.setUserPermit(userModel.getUserPermit());
         userModel.setIsExtended(userModel.getIsExtended());
 
-        userModel.setQuestion_1(userModel.getAnswer_1());
-        userModel.setQuestion_2(userModel.getAnswer_2());
-        userModel.setQuestion_3(userModel.getAnswer_3());
-        userModel.setAnswer_1(userModel.getAnswer_1());
-        userModel.setAnswer_2(userModel.getAnswer_2());
-        userModel.setAnswer_3(userModel.getAnswer_3());
+        userModel.setQuestion_1(userModel.getQuestion_1());
+        userModel.setQuestion_2(userModel.getQuestion_2());
+        userModel.setQuestion_3(userModel.getQuestion_3());
+        userModel.setAnswer_1(MD5Util.encode(userModel.getAnswer_1()));
+        userModel.setAnswer_2(MD5Util.encode(userModel.getAnswer_2()));
+        userModel.setAnswer_3(MD5Util.encode(userModel.getAnswer_3()));
 
         userModel.setGmtCreate(userService.getOneUser(id).getGmtCreate());
         userModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
@@ -290,7 +305,7 @@ public class UserResource {
 //            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
 //            "sheep_farm_supervisor", "tourist", "others"
 //    })
-    @DeleteMapping("{id:\\d+}")
+    @DeleteMapping("user/{id:\\d+}")
     public Response deleteUser(@PathVariable("id") Long id) {
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
