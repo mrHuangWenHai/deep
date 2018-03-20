@@ -21,5 +21,7 @@ public class DeepApplication {
   public static void main(String[] args) throws Exception {
     SpringApplication application1 = new SpringApplication(DeepApplication.class);
     application1.run(args);
+    System.out.println("The project is starting up now");
+
   }
 }
