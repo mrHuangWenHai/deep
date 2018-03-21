@@ -1,5 +1,6 @@
 package com.deep.domain.util;
 
+import com.deep.domain.model.MobileAnnouncementModel;
 import redis.clients.jedis.Jedis;
 
 /**
