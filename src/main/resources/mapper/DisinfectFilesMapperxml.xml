@@ -122,6 +122,24 @@
         factory_num = #{factoryNum} AND disinfect_time = #{disinfectTime} AND disinfect_name = #{disinfectName}
     </select>
 
+    <update id="updateDisinfectFilesModelByProfessor">
+        UPDATE genealogical_files
+        SET  professor = #{professor},
+        is_pass1 = #{isPass1},
+        unpass_reason1 = #{unpassReason1},
+        gmt_professor = #{gmtProfessor}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateDisinfectFilesModelBySupervisor">
+        UPDATE genealogical_files
+        SET  supervisor = #{supervisor},
+        is_pass2 = #{isPass2},
+        unpass_reason2 = #{unpassReason2},
+        gmt_supervise = #{gmtSupervise}
+        WHERE id = #{id}
+    </update>
+
     <delete id="deleteDisinfectFilesModelByfactoryNum" >
         DELETE FROM
         disinfection_files

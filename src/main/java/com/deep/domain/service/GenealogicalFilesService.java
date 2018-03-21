@@ -2,6 +2,7 @@ package com.deep.domain.service;
 
 import com.deep.domain.model.GenealogicalFilesModel;
 import com.deep.infra.persistence.sql.mapper.GenealogicalFilesMapper;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -37,13 +38,14 @@ public class  GenealogicalFilesService {
                                                                   String eartagOfFathersFather,
                                                                   String eartagOfFathersMother,
                                                                   String eartagOfMothersFather,
-                                                                  String eartagOfMothersMother) {
+                                                                  String eartagOfMothersMother,
+                                                                  RowBounds bounds) {
         List<GenealogicalFilesModel> model = this.genealogicalFilesMapper.getGenealogicalFilesModel(selfEartag,immuneEartagStart,immuneEartagEnd,tradeMarkEartag,
                                                                                         breedingSheepBase,birthTimeStart,birthTimeEnd,
                                                                                         birthWeightStart,birthWeightEnd,color,
                                                                                         sex,eartagOfFather,eartagOfMother,
                                                                                         eartagOfFathersFather,eartagOfFathersMother,
-                                                                                        eartagOfMothersFather, eartagOfMothersMother);
+                                                                                        eartagOfMothersFather, eartagOfMothersMother,bounds);
         return model;
     }
 

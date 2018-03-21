@@ -3,6 +3,7 @@ package com.deep.infra.persistence.sql.mapper;
 import com.deep.domain.model.ImmunePlanModel;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 
 import java.math.BigInteger;
 import java.util.Date;
@@ -29,12 +30,29 @@ public interface ImmunePlanMapper {
                                              @Param("isPass1") String  isPass1,
                                              @Param("unpassReason1") String unpassReason1,
                                              @Param("isPass2") String isPass2,
-                                             @Param("unpassReason2") String unpassReason2
-                                             );
+                                             @Param("unpassReason2") String unpassReason2,
+                                             RowBounds bounds);
 
     ImmunePlanModel getImmunePlanModelByfactoryNumAndcrowdNumAndimmuneTime(@Param("factoryNum") BigInteger factoryNum,
                                                                            @Param("crowdNum") String crowdNum,
                                                                            @Param("immuneTime") String immuneTime);
+
+    List<ImmunePlanModel> getImmunePlanModelByProfessor(RowBounds bounds);
+
+
+    int updateImmunePlanModelByProfessor(@Param("professor") String professor,
+                                         @Param("isPass1") String  isPass1,
+                                         @Param("unpassReason1") String unpassReason1,
+                                         @Param("gmtProfessor") String gmtProfessor);
+
+
+    int updateImmunePlanModelBySupervisor(@Param("supervisor") String supervisor,
+                                         @Param("isPass2") String  isPass2,
+                                         @Param("unpassReason2") String unpassReason2,
+                                         @Param("gmtSupervise") String gmtSupervise);
+
+
+
     int deleteImmunePlanModelByfactoryNum(@Param("factoryNum") BigInteger factoryNum);
     int deleteImmunePlanModelByfactoryNumAndimmuneTime(@Param("factoryNum") BigInteger factoryNum,
                                                        @Param("immuneTime") String immuneTime);

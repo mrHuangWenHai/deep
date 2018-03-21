@@ -3,13 +3,17 @@ package com.deep.api.resource;
 import com.deep.api.response.Response;
 import com.deep.domain.model.ImmunePlanModel;
 import com.deep.domain.service.ImmunePlanService;
+import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.UploadUtil;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import redis.clients.jedis.Jedis;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigInteger;
@@ -23,6 +27,8 @@ public class ImmunePlanResourceController {
 
     @Resource
     private ImmunePlanService immunePlanService;
+
+    private JedisUtil jedisUtil = new JedisUtil();
 
     /**
      * METHOD:GET
@@ -46,6 +52,10 @@ public class ImmunePlanResourceController {
      * 返回插入结果
      * 成功：success
      * 失败：返回对应失败错误
+     * 插入时mysql 在Redis插入数据 用于提醒专家/监督员完成审核任务
+     * Key:"factory_num+模块名+专家/监督员"
+     * Value:未审核条数
+     *
      * METHOD:POST
      * @param factoryNum
      * @param crowdNum
@@ -110,8 +120,15 @@ public class ImmunePlanResourceController {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-
+                        Jedis jedis = new Jedis("localhost");
+                        //数据插入redis
+                        String professorKey = factoryNum+"_immunePlan_professor";
+                        String supervisorKey = factoryNum+"_immunePlan_supervisor";
+                        System.out.println("插入前的redis:"+professorKey+" "+jedis.get(professorKey));
+                        jedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
+                        jedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
                         //数据插入数据库
+                        System.out.println("mysql执行前");
                         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                         String isPass = "0";
                         immunePlanService.setImmunePlanModel(new ImmunePlanModel(factoryNum,crowdNum,uploadUtil.getFilename(),immuneTime,
@@ -202,10 +219,29 @@ public class ImmunePlanResourceController {
                                  @RequestParam("unpassReason1") String unpassReason1,
                                  @RequestParam("isPass2") String isPass2,
                                  @RequestParam("unpassReason2") String unpassReason2) {
-        List<ImmunePlanModel> immunePlanModels =immunePlanService.getImmunePlanModel(factoryNum,crowdNum, immuneEartagStart,
+        //前台传参数
+        RowBounds bounds = new RowBounds(0,2);
+        List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModel(factoryNum,crowdNum, immuneEartagStart,
                                                     immuneEartagEnd,immuneTimeStart,immuneTimeEnd,immuneKind,immuneWay,immuneQuality,
                                                     immuneDuring,operator,professor,supervisor,remark,
-                                                    isPass1,unpassReason1,isPass2,unpassReason2);
+                                                    isPass1,unpassReason1,isPass2,unpassReason2,bounds);
+        return new Response().addData("List<immunePlanModels>",immunePlanModels);
+    }
+
+
+    /**
+     * 专家入口 展示所有isPass1 = 0的数据
+     * 审核
+     * METHOD:GET
+     * @return
+     */
+
+    @ResponseBody
+    @RequestMapping(value = "updateprofessor",method = RequestMethod.GET)
+    public Response UpdateProfessor(){
+        //
+        RowBounds bounds = new RowBounds(0,20);
+        List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModelByProfessor(bounds);
         return new Response().addData("List<immunePlanModels>",immunePlanModels);
     }
 

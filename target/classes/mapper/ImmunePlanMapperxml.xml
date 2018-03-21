@@ -120,9 +120,6 @@
     </select>
 
 
-
-
-
     <select id="getImmunePlanModelByfactoryNumAndcrowdNumAndimmuneTime" resultMap="ImmunePlan">
         SELECT
         *
@@ -131,6 +128,35 @@
         WHERE
         factory_num = #{factoryNum} AND crowd_num = #{crowdNum} AND immune_time = #{immuneTime}
     </select>
+
+    <select id="getImmunePlanModelByProfessor" resultMap="ImmunePlan">
+        SELECT
+        *
+        FROM
+        immune_plan
+        WHERE
+        is_pass1 = "0"
+    </select>
+
+
+
+    <update id="updateImmunePlanModelByProfessor">
+        UPDATE immune_plan
+        SET  professor = #{professor},
+             is_pass1 = #{isPass1},
+             unpass_reason1 = #{unpassReason1},
+             gmt_professor = #{gmtProfessor}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateImmunePlanModelBySupervisor">
+        UPDATE immune_plan
+        SET  supervisor = #{supervisor},
+        is_pass2 = #{isPass2},
+        unpass_reason2 = #{unpassReason2},
+        gmt_supervise = #{gmtSupervise}
+        WHERE id = #{id}
+    </update>
 
     <delete id="deleteImmunePlanModelByfactoryNum" >
         DELETE FROM
@@ -144,4 +170,6 @@
         WHERE
         factory_num = #{factoryNum} AND immune_time = #{immuneTime}
     </delete>
+
+
 </mapper>

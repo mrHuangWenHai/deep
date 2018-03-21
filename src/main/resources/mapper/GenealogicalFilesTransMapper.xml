@@ -5,17 +5,17 @@
 <mapper namespace="com.deep.infra.persistence.sql.mapper.GenealogicalFilesTransMapper">
     <insert id="setGenealogicalFilesTransModel" parameterType="com.deep.domain.model.GenealogicalFilesTransModel">
         INSERT INTO genealogical_files_trans(
+        next_owner_factory,
         trademark_eartag,
         trans_time,
         trans_weight,
-        next_owner,
         gmt_create
         )
         VALUES(
+        #{genealogicalFilesTransModel.nextOwnerFactory},
         #{genealogicalFilesTransModel.trademarkEartag},
         #{genealogicalFilesTransModel.transTime},
         #{genealogicalFilesTransModel.transWeight},
-        #{genealogicalFilesTransModel.nextOwner},
         #{genealogicalFilesTransModel.gmtCreate}
         )
     </insert>
@@ -25,10 +25,11 @@
         FROM
         genealogical_files_trans
         WHERE
-        trademark_eartag = #{trademarkEartag}
+        next_owner_factory = #{nextOwnerFactory}
     </select>
 
     <resultMap id="genealogicalFilesTrans" type="com.deep.domain.model.GenealogicalFilesTransModel">
+        <result property="nextOwnerFactory" column="next_owner_factory"/>
         <result property="trademarkEartag" column="trademark_eartag"/>
         <result property="transTime" column="trans_time"/>
         <result property="transWeight" column="trans_weight"/>
@@ -41,12 +42,5 @@
         FROM
         genealogical_files_trans
     </select>
-
-    <delete id="deleteGenealogicalFilesTransModelBytrademarkEartag" >
-        DELETE FROM
-        genealogical_files_trans
-        WHERE
-        trademark_eartag = #{trademarkEartag}
-    </delete>
 
 </mapper>

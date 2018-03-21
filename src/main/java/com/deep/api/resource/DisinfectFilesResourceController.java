@@ -4,6 +4,7 @@ import com.deep.api.response.Response;
 import com.deep.domain.model.DisinfectFilesModel;
 import com.deep.domain.service.DisinfectFilesService;
 import com.github.pagehelper.PageHelper;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -111,24 +112,24 @@ public class DisinfectFilesResourceController {
      * @param disinfectFilesModel
      * @param disinfectTimeStart
      * @param disinfectTimeEnd
-     * @param pageNum
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
     public Response FindShow(@Valid DisinfectFilesModel disinfectFilesModel,
                              @RequestParam("disinfectTimeStart") String disinfectTimeStart,
-                             @RequestParam("disinfectTimeEnd") String disinfectTimeEnd,
-                             @RequestParam(defaultValue = "1") int pageNum){
-        PageHelper.startPage(pageNum,2);
+                             @RequestParam("disinfectTimeEnd") String disinfectTimeEnd){
+        RowBounds bounds = new RowBounds(0,2);
         List<DisinfectFilesModel> disinfectFilesModel1 = disinfectFilesService.getDisinfectFilesModel(disinfectFilesModel.getFactoryNum(),
                 disinfectTimeStart,disinfectTimeEnd,disinfectFilesModel.getDisinfectName(),disinfectFilesModel.getDisinfectQuality(),
                 disinfectFilesModel.getDisinfectWay(),disinfectFilesModel.getOperator(),disinfectFilesModel.getProfessor(),
                 disinfectFilesModel.getSupervisor(),disinfectFilesModel.getRemark(),disinfectFilesModel.getIsPass1(),disinfectFilesModel.getUnpassReason1(),
-                disinfectFilesModel.getIsPass2(),disinfectFilesModel.getUnpassReason2());
+                disinfectFilesModel.getIsPass2(),disinfectFilesModel.getUnpassReason2(),bounds);
         return new Response().addData("List<DisinfectionFilesModel>",disinfectFilesModel1);
     }
 
+    //更新接口
+    //权限仅为专家和监督员
 
     //////删除数据在查询中再修改
 

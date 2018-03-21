@@ -3,6 +3,7 @@ package com.deep.infra.persistence.sql.mapper;
 import com.deep.domain.model.GenealogicalFilesModel;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
 
@@ -28,7 +29,8 @@ public interface GenealogicalFilesMapper {
                                                            @Param("eartagOfFathersFather") String eartagOfFathersFather,
                                                            @Param("eartagOfFathersMother") String eartagOfFathersMother,
                                                            @Param("eartagOfMothersFather") String eartagOfMothersFather,
-                                                           @Param("eartagOfMothersMother") String eartagOfMothersMother
+                                                           @Param("eartagOfMothersMother") String eartagOfMothersMother,
+                                                           RowBounds rowBounds
                                                            );
 
 

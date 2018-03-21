@@ -63,10 +63,11 @@ public class LoginResourceController {
                 //tokenModel存入redis
                 //10分钟后过期 需要重新登陆
                 Jedis jedis = new Jedis("localhost");
+                //key:userId value:token
                 jedis.set("userId",tokenModel.getUserId().toString());
-                jedis.expire("userId",10*60);
+                jedis.expire(tokenModel.getUserId().toString(),10*60);
                 jedis.set("token",tokenModel.getToken());
-                jedis.expire("token",10*60);
+                jedis.expire(tokenModel.getToken(),10*60);
                 //System.out.println("in login"+" userId: "+tokenModel.getUserId()+"  token: "+tokenModel.getToken());
                 //System.out.println(md5Util.encode(password));
                 return "AllFunctionChoiceForm";

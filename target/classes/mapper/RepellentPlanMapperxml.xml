@@ -117,6 +117,24 @@
         factory_num = #{factoryNum} AND repellent_time = #{repellentTime} AND repellent_name = #{repellentName}
     </select>
 
+    <update id="updateRepellentPlanModelByProfessor">
+        UPDATE repellent_plan
+        SET  professor = #{professor},
+        is_pass1 = #{isPass1},
+        unpass_reason1 = #{unpassReason1},
+        gmt_professor = #{gmtProfessor}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateRepellentPlanModelBySupervisor">
+        UPDATE repellent_plan
+        SET  supervisor = #{supervisor},
+        is_pass2 = #{isPass2},
+        unpass_reason2 = #{unpassReason2},
+        gmt_supervise = #{gmtSupervise}
+        WHERE id = #{id}
+    </update>
+
     <delete id="deleteRepellentPlanModelByfactoryNum" >
         DELETE FROM
         repellent_plan

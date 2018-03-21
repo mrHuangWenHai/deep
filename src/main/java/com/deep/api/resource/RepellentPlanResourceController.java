@@ -5,6 +5,7 @@ import com.deep.domain.model.RepellentPlanModel;
 import com.deep.domain.service.RepellentPlanService;
 import com.deep.domain.util.UploadUtil;
 import com.github.pagehelper.PageHelper;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -147,25 +148,22 @@ public class RepellentPlanResourceController {
      * @param repellentPlanModel
      * @param repellentTimeStart
      * @param repellentTimeEnd
-     * @param pageNum
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
     public Response FindShow(@Valid RepellentPlanModel repellentPlanModel,
                                  @RequestParam("repellentTimeStart") String repellentTimeStart,
-                                 @RequestParam("repellentTimeEnd") String repellentTimeEnd,
-                                 @RequestParam(defaultValue = "1") int pageNum){
-        PageHelper.startPage(pageNum,2);
+                                 @RequestParam("repellentTimeEnd") String repellentTimeEnd){
+        RowBounds bounds = new RowBounds(0,10);
         List<RepellentPlanModel> repellentPlanModels =repellentPlanService.getRepellentPlanModel(repellentPlanModel.getFactoryNum(),
                                                             repellentPlanModel.getCrowdNum(),repellentPlanModel.getRepellentEartag(),
                                                             repellentTimeStart ,repellentTimeEnd,repellentPlanModel.getRepellentName(),
                                                             repellentPlanModel.getRepellentWay(),repellentPlanModel.getRepellentQuality(),
                                                             repellentPlanModel.getOperator(),repellentPlanModel.getProfessor(),repellentPlanModel.getSupervisor(),
                                                             repellentPlanModel.getRemark(),repellentPlanModel.getIsPass1(),repellentPlanModel.getUnpassReason1(),
-                                                            repellentPlanModel.getIsPass2(),repellentPlanModel.getUnpassReason2());
+                                                            repellentPlanModel.getIsPass2(),repellentPlanModel.getUnpassReason2(),bounds);
 
-        System.out.println(repellentPlanModels.get(0).getIsPass1()+repellentPlanModels.get(0).getIsPass2());
         return new Response().addData("List<repellentPlanModels>",repellentPlanModels);
 
     }

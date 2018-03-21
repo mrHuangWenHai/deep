@@ -4,6 +4,7 @@ import com.deep.api.response.Response;
 import com.deep.domain.model.GenealogicalFilesModel;
 import com.deep.domain.service.GenealogicalFilesService;
 import com.github.pagehelper.PageHelper;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -126,7 +127,6 @@ public class GenealogicalFilesResourceController {
      * @param birthTimeEnd
      * @param birthWeightStart
      * @param birthWeightEnd
-     * @param pageNum
      * @return
      */
     @ResponseBody
@@ -137,17 +137,16 @@ public class GenealogicalFilesResourceController {
                                        @RequestParam("birthTimeStart") String birthTimeStart,
                                        @RequestParam("birthTimeEnd") String birthTimeEnd,
                                        @RequestParam("birthWeightStart") String birthWeightStart,
-                                       @RequestParam("birthWeightEnd") String birthWeightEnd,
-                                       @RequestParam(defaultValue = "1") int pageNum) {
+                                       @RequestParam("birthWeightEnd") String birthWeightEnd) {
         //if ("".equals(selfEartag) || selfEartag == null) selfEartag = "";
         //System.out.println("selfeartag："+selfEartag);eartag_of_fathersfather
-        PageHelper.startPage(pageNum,2);
+        RowBounds bounds = new RowBounds(0,2);
         List<GenealogicalFilesModel> genealogicalFilesModels = genealogicalFilesService.getGenealogicalFilesModel(genealogicalFilesModel.getSelfEartag(),immuneEartagStart,immuneEartagEnd,
                                                                                                         genealogicalFilesModel.getTradeMarkEartag(),genealogicalFilesModel.getBreedingSheepBase(),
                                                                                                         birthTimeStart,birthTimeEnd,birthWeightStart,birthWeightEnd,genealogicalFilesModel.getColor(),
                                                                                                         genealogicalFilesModel.getSex(),genealogicalFilesModel.getEartagOfFather(),genealogicalFilesModel.getEartagOfMother(),
                                                                                                         genealogicalFilesModel.getEartagOfFathersFather(),genealogicalFilesModel.getEartagOfFathersMother(),
-                                                                                                        genealogicalFilesModel.getEartagOfMothersFather(), genealogicalFilesModel.getEartagOfMothersMother());
+                                                                                                        genealogicalFilesModel.getEartagOfMothersFather(), genealogicalFilesModel.getEartagOfMothersMother(),bounds);
         return new Response().addData("List<GenealogicalFilesModel>",genealogicalFilesModels);
 
         //System.out.println(genealogicalFilesModel.getImmuneEartag());
