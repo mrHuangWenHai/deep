@@ -11,6 +11,12 @@ public class RoleModel {
     public RoleModel() {
     }
 
+    public RoleModel(String authority, Timestamp gmtCreate, Timestamp gmtModified) {
+        this.authority = authority;
+        this.gmtCreate = gmtCreate;
+        this.gmtModified = gmtModified;
+    }
+
     public RoleModel(Integer id, String authority, Timestamp gmtCreate, Timestamp gmtModified) {
         this.id = id;
         this.authority = authority;

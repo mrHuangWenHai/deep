@@ -8,6 +8,7 @@
         username,
         password,
         name,
+        factory_num,
         telephone,
         question_1,
         answer_1,
@@ -21,6 +22,7 @@
         #{userModel.username},
         #{userModel.password},
         #{userModel.name},
+        #{userModel.factoryNum},
         #{userModel.telephone},
         #{userModel.question_1},
         #{userModel.answer_1},
@@ -36,6 +38,7 @@
         <result property="username" column="username"/>
         <result property="password" column="password"/>
         <result property="name" column="name"/>
+        <result property="factoryNum" column="factory_num"/>
         <result property="telephone" column="telephone"/>
         <result property="question_1" column="question_1"/>
         <result property="answer_1" column="answer_1"/>
@@ -45,6 +48,15 @@
         <result property="answer_3" column="answer_3"/>
         <result property="gmtCreate" column="gmt_create"/>
     </resultMap>
+
+    <select id="getUserTelephoneByfactoryNum" resultMap="user">
+        SELECT
+        *
+        FROM
+        user
+        WHERE
+        factory_num = #{factoryNum}
+    </select>
 
     <select id="getUserModelByusername" resultMap="user">
         SELECT

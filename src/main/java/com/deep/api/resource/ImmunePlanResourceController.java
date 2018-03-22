@@ -2,7 +2,10 @@ package com.deep.api.resource;
 
 import com.deep.api.response.Response;
 import com.deep.domain.model.ImmunePlanModel;
+import com.deep.domain.model.MobileAnnouncementModel;
+import com.deep.domain.model.UserModel;
 import com.deep.domain.service.ImmunePlanService;
+import com.deep.domain.service.UserService;
 import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.UploadUtil;
 import org.apache.ibatis.session.RowBounds;
@@ -12,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import redis.clients.jedis.Jedis;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +30,9 @@ public class ImmunePlanResourceController {
     @Resource
     private ImmunePlanService immunePlanService;
 
-    private JedisUtil jedisUtil = new JedisUtil();
+    //用于查询专家/监督员电话并抉择发送短信
+    @Resource
+    private UserService userService;
 
     /**
      * METHOD:GET
@@ -82,6 +86,7 @@ public class ImmunePlanResourceController {
                            @RequestParam("immuneDuring") String immuneDuring,
                            @RequestParam("operator") String operator,
                            @RequestParam("remark") String remark,
+                           @RequestParam("message") String message,
                            HttpServletRequest request)  {
         /*Jedis jedis = new Jedis("localhost");
         jedis.get("userId");
@@ -120,20 +125,54 @@ public class ImmunePlanResourceController {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        Jedis jedis = new Jedis("localhost");
-                        //数据插入redis
-                        String professorKey = factoryNum+"_immunePlan_professor";
-                        String supervisorKey = factoryNum+"_immunePlan_supervisor";
-                        System.out.println("插入前的redis:"+professorKey+" "+jedis.get(professorKey));
-                        jedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
-                        jedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
                         //数据插入数据库
-                        System.out.println("mysql执行前");
+                        //System.out.println("mysql执行前");
                         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                         String isPass = "0";
                         immunePlanService.setImmunePlanModel(new ImmunePlanModel(factoryNum,crowdNum,uploadUtil.getFilename(),immuneTime,
                                 immuneKind,immuneWay,immuneQuality,immuneDuring,operator,
                                 remark,isPass,isPass,timestamp,timestamp));
+
+                        //数据插入redis
+                        JedisUtil jedisUtil = new JedisUtil();
+                        String professorKey = factoryNum+"_immunePlan_professor";
+                        String supervisorKey = factoryNum+"_immunePlan_supervisor";
+
+
+                        jedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
+                        jedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
+                        //若未完成超过50条
+                        //System.out.println(jedisUtil.redisJudgeTime(professorKey));
+                        if(jedisUtil.redisJudgeTime(professorKey)){
+                            List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(factoryNum);
+
+                            //需完成:userModels.getTelephone()赋值给String
+                            //获得StringBuffer手机号
+                            StringBuffer phoneList = new StringBuffer("");
+                            for(int i = 0; i < userModels.size(); i++){
+                                phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
+                                jedisUtil.redisSendMessage(phoneList.toString(),message);
+                            }
+                            //System.out.println(phoneList);
+                        }
+
+                        if(jedisUtil.redisJudgeTime(supervisorKey)){
+                            List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(factoryNum);
+
+                            //需完成:userModels.getTelephone()赋值给String
+                            //获得StringBuffer手机号
+                            StringBuffer phoneList = new StringBuffer("");
+                            for(int i = 0; i < userModels.size(); i++){
+                                phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
+                                if(jedisUtil.redisSendMessage(phoneList.toString(),message)){
+                                    System.out.println("发送成功！");
+                                }
+                            }
+                            System.out.println("专家手机号"+phoneList);
+                        }
+                        //jedisUtil.redisSaveProfessorSupervisorWorks(professorKey,factoryNum);
+                        //jedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey,factoryNum);
+
                         return new Response().addData("Success","");
                         }catch (Exception e){
                             e.printStackTrace();

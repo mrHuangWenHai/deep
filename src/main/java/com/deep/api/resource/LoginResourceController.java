@@ -1,9 +1,11 @@
 package com.deep.api.resource;
 
+import com.deep.api.response.Response;
 import com.deep.domain.model.MobileAnnouncementModel;
 import com.deep.domain.model.RoleModel;
 import com.deep.domain.model.TokenModel;
 import com.deep.domain.model.UserModel;
+import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.MD5Util;
 import com.deep.domain.service.RoleService;
 import com.deep.domain.service.UserService;
@@ -17,7 +19,9 @@ import org.springframework.web.servlet.ModelAndView;
 import redis.clients.jedis.Jedis;
 
 import javax.annotation.Resource;
+import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,12 +66,10 @@ public class LoginResourceController {
                 System.out.println(password);*/
                 //tokenModel存入redis
                 //10分钟后过期 需要重新登陆
-                Jedis jedis = new Jedis("localhost");
                 //key:userId value:token
-                jedis.set("userId",tokenModel.getUserId().toString());
-                jedis.expire(tokenModel.getUserId().toString(),10*60);
-                jedis.set("token",tokenModel.getToken());
-                jedis.expire(tokenModel.getToken(),10*60);
+                JedisUtil jedisUtil1 = new JedisUtil("userId",tokenModel.getUserId().toString(),10*60);
+                JedisUtil jedisUtil2 = new JedisUtil("token",tokenModel.getToken(),10*60);
+
                 //System.out.println("in login"+" userId: "+tokenModel.getUserId()+"  token: "+tokenModel.getToken());
                 //System.out.println(md5Util.encode(password));
                 return "AllFunctionChoiceForm";
@@ -85,10 +87,11 @@ public class LoginResourceController {
     }
 
     @RequestMapping(value = "/registerresult",method = RequestMethod.POST)
-    public String RegiterResult(@RequestParam("username") String username,
+    public Response RegiterResult(@RequestParam("username") String username,
                                 @RequestParam("passwordFirst") String passwordFirst,
                                 @RequestParam("passwordSecond") String passwordSecond,
                                 @RequestParam("name") String name,
+                                @RequestParam("factoryNum") BigInteger factoryNum,
                                 @RequestParam("telephone") String telephone,
                                 @RequestParam("question_1") String question_1,
                                 @RequestParam("answer_1") String answer_1,
@@ -98,20 +101,23 @@ public class LoginResourceController {
                                 @RequestParam("answer_3") String answer_3){
         if(!passwordFirst.equals(passwordSecond)){
             ////第一次和第二次输入密码不一致
-            return null;
+            return new Response().addData("Error","Password is different");
         }else {
+
+            /*List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(factoryNum);
+            System.out.println(userModels.get(0).getTelephone()+"长度:"+userModels.size());*/
             UserModel userModel = userService.getUserModelByusername(username);
             if (userModel == null){
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-                UserModel userModel1 = new UserModel(username,md5Util.encode(passwordFirst),name,telephone,
+                UserModel userModel1 = new UserModel(username,md5Util.encode(passwordFirst),name,factoryNum,telephone,
                         question_1,md5Util.encode(answer_1),question_2,md5Util.encode(answer_2),
                         question_3,md5Util.encode(answer_3),timestamp);
                 userService.setUserModel(userModel1);
-                roleService.setRoleModel(new RoleModel(userModel1.getUserId(),"未分配权限",timestamp,timestamp));
-                return "LoginHTML/Login";
+                roleService.setRoleModel(new RoleModel("未分配权限",timestamp,timestamp));
+                return new Response().addData("Success","");
             }else {
                 ////用户名已存在
-                return null;
+                return new Response().addData("Error","Username already exist");
             }
         }
 
@@ -123,52 +129,21 @@ public class LoginResourceController {
     }
 
     @RequestMapping(value = "/phonefind")
-    public String PhoneFind(@RequestParam("usernameP") String usernameP){
+    public Response PhoneFind(@RequestParam("usernameP") String usernameP){
         UserModel userModel = userService.getUserModelByusername(usernameP);
         mobileAnnouncementModel = new MobileAnnouncementModel(userModel.getTelephone());
-
-        String httpResponse =  mobileAnnouncementModel.testSend();
-        try {
-            JSONObject jsonObj = new JSONObject( httpResponse );
-            int error_code = jsonObj.getInt("error");
-            String error_msg = jsonObj.getString("msg");
-            if(error_code==0){
-                System.out.println("Send message success.");
-                return "LoginHTML/LoginVerifyCode";
-            }else{
-                System.out.println("Send message failed,code is "+error_code+",msg is "+error_msg);
-            }
-        } catch (JSONException ex) {
-            Logger.getLogger(MobileAnnouncementModel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        httpResponse =  mobileAnnouncementModel.testStatus();
-        try {
-            JSONObject jsonObj = new JSONObject( httpResponse );
-            int error_code = jsonObj.getInt("error");
-            if( error_code == 0 ){
-                int deposit = jsonObj.getInt("deposit");
-                System.out.println("Fetch deposit success :"+deposit);
-            }else{
-                String error_msg = jsonObj.getString("msg");
-                System.out.println("Fetch deposit failed,code is "+error_code+",msg is "+error_msg);
-            }
-        } catch (JSONException ex) {
-            Logger.getLogger(MobileAnnouncementModel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        //System.out.println("Send Error");
-        //发送失败
-        return null;
+        JedisUtil jedisUtil = new JedisUtil();
+        return jedisUtil.oneMessageSendResult(mobileAnnouncementModel);
     }
 
     @RequestMapping(value = "/ensureverify")
-    public String EnsureVerify(@RequestParam("verifyCode") String verifyCode){
+    public Response EnsureVerify(@RequestParam("verifyCode") String verifyCode){
         if(verifyCode.equals(mobileAnnouncementModel.getIdentityCode())){
             System.out.println("验证成功");
-        }else{
-            System.out.println("验证失败");
+            return new Response().addData("Success","Continue input new password");
+        }else {
+            return new Response().addData("Error","Answer wrong");
         }
-        return null;
     }
 
     @RequestMapping(value = "/questionfind")
@@ -180,17 +155,19 @@ public class LoginResourceController {
     }
 
     @RequestMapping(value = "/ensurequestion")
-    public String EnsureQuestion(@RequestParam("answer_1") String answer_1,
+    public Response EnsureQuestion(@RequestParam("answer_1") String answer_1,
                                  @RequestParam("answer_2") String answer_2,
                                  @RequestParam("answer_3") String answer_3){
         if ( md5Util.encode(answer_1).equals(myuserModel.getAnswer_1()) &&
                 md5Util.encode(answer_2).equals(myuserModel.getAnswer_2()) &&
                 md5Util.encode(answer_3).equals(myuserModel.getAnswer_3())){
-            System.out.println("验证成功");
+            TokenModel tokenModel = new TokenModel("Identify","Success");
+            //记录找回名密码成功状态 时间：5分钟
+            JedisUtil jedisUtil = new JedisUtil(tokenModel.getIdentify(),tokenModel.getToken(),600);
+            return new Response().addData("Success","Continue input new password");
         }else {
-            System.out.println("验证失败");
+            return new Response().addData("Error","Answer wrong");
         }
-        return null;
     }
 
 }

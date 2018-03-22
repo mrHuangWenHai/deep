@@ -25,6 +25,10 @@ public class UserService {
         List<UserModel> userModels = this.userMapper.getAllUserModel();
         return userModels;
     }
+    public List<UserModel> getUserTelephoneByfactoryNum(BigInteger factoryNum){
+        List<UserModel> userModels = this.userMapper.getUserTelephoneByfactoryNum(factoryNum);
+        return userModels;
+    }
 
     public int deleteUserModelByid(Long id){
         int row = this.userMapper.deleteUserModelByid(id);

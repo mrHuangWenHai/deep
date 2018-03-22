@@ -1,5 +1,6 @@
 package com.deep.domain.model;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 
 public class UserModel {
@@ -7,6 +8,7 @@ public class UserModel {
     private String username;
     private String password;
     private String name;
+    private BigInteger factoryNum;
     private String telephone;
     private String question_1;
     private String answer_1;
@@ -17,11 +19,12 @@ public class UserModel {
     private Timestamp gmtCreate;
     private Timestamp gmtModified;
 
-    public UserModel(Integer  userId, String username, String password, String name, String telephone, String question_1, String answer_1, String question_2, String answer_2, String question_3, String answer_3, Timestamp gmtCreate, Timestamp gmtModified) {
+    public UserModel(Integer  userId, String username, String password, String name, Long factoryNum, String telephone, String question_1, String answer_1, String question_2, String answer_2, String question_3, String answer_3, Timestamp gmtCreate, Timestamp gmtModified) {
         this.userId = userId;
         this.username = username;
         this.password = password;
         this.name = name;
+        this.factoryNum = new BigInteger(factoryNum.toString());
         this.telephone = telephone;
         this.question_1 = question_1;
         this.answer_1 = answer_1;
@@ -32,10 +35,11 @@ public class UserModel {
         this.gmtCreate = gmtCreate;
         this.gmtModified = gmtModified;
     }
-    public UserModel( String username, String password, String name, String telephone, String question_1, String answer_1, String question_2, String answer_2, String question_3, String answer_3, Timestamp gmtCreate) {
+    public UserModel( String username, String password, String name, BigInteger factoryNum, String telephone, String question_1, String answer_1, String question_2, String answer_2, String question_3, String answer_3, Timestamp gmtCreate) {
         this.username = username;
         this.password = password;
         this.name = name;
+        this.factoryNum = factoryNum;
         this.telephone = telephone;
         this.question_1 = question_1;
         this.answer_1 = answer_1;
@@ -76,6 +80,14 @@ public class UserModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public BigInteger getFactoryNum() {
+        return factoryNum;
+    }
+
+    public void setFactoryNum(BigInteger factoryNum) {
+        this.factoryNum = factoryNum;
     }
 
     public String getTelephone() {

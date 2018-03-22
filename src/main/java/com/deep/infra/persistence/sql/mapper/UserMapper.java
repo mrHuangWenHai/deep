@@ -13,6 +13,7 @@ public interface UserMapper {
 
     UserModel getUserModelByusername(@Param("username") String username);
     List<UserModel> getAllUserModel();
+    List<UserModel> getUserTelephoneByfactoryNum(@Param("factoryNum") BigInteger factoryNum);
 
     int deleteUserModelByid(@Param("id")Long id);
 }
