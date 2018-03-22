@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Configuration
 public class WebSecurityConfig extends WebMvcConfigurerAdapter{
     public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(new PermitInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(new PermitInterceptor()).addPathPatterns("/**");
         registry.addInterceptor(new AuthorizationInterceptor()).addPathPatterns("/**");
     }
 }
