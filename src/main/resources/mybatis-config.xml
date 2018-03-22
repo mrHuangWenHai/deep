@@ -9,5 +9,6 @@
     </typeAliases>
     <mappers>
         <mapper resource="mapper/TestMapper.xml"/>
+        <mapper class="com.deep.infra.persistence.sql.mapper.UserMapper"/>
     </mappers>
 </configuration>
