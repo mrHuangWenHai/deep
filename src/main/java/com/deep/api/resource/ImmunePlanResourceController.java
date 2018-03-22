@@ -282,6 +282,7 @@ public class ImmunePlanResourceController {
         RowBounds bounds = new RowBounds(0,20);
         List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModelByProfessor(bounds);
         return new Response().addData("List<immunePlanModels>",immunePlanModels);
+        //
     }
 
 
