@@ -34,6 +34,7 @@
         </dependency>
 
 
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -58,6 +59,7 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.46</version>
+
         </dependency>
 
         <dependency>
@@ -124,6 +126,7 @@
             <artifactId>jersey-bundle</artifactId>
             <version>1.19.4</version>
         </dependency>
+
     </dependencies>
 
     <build>
@@ -147,10 +150,7 @@
             <url>http://repo.spring.io/milestone</url>
         </repository>
     </repositories>
-<<<<<<< HEAD
-=======
 
->>>>>>> a2a93b0bb268c3a36483239a21661107230349ae
     <pluginRepositories>
         <pluginRepository>
             <id>spring-snapshots</id>
@@ -161,8 +161,5 @@
             <url>http://repo.spring.io/milestone</url>
         </pluginRepository>
     </pluginRepositories>
-<<<<<<< HEAD
 
-=======
->>>>>>> a2a93b0bb268c3a36483239a21661107230349ae
 </project>
