@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.deep.infra.persistence.sql.mapper.DiagnosisPlanMapper" >
+  <resultMap id="BaseResultMap" type="com.deep.domain.model.DiagnosisPlan" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+    <result column="gmt_supervised" property="gmtSupervised" jdbcType="TIMESTAMP" />
+    <result column="factory_num" property="factoryNum" jdbcType="BIGINT" />
+    <result column="diagnosis_t" property="diagnosisT" jdbcType="TIMESTAMP" />
+    <result column="building" property="building" jdbcType="VARCHAR" />
+    <result column="et_b" property="etB" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="professor" property="professor" jdbcType="VARCHAR" />
+    <result column="supervisor" property="supervisor" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="is_pass" property="isPass" jdbcType="TINYINT" />
+    <result column="upass_reason" property="upassReason" jdbcType="VARCHAR" />
+    <result column="is_pass1" property="isPass1" jdbcType="TINYINT" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.deep.domain.model.DiagnosisPlanWithBLOBs" extends="BaseResultMap" >
+    <result column="diagnosis_c" property="diagnosisC" jdbcType="LONGVARCHAR" />
+    <result column="diagnosis_m" property="diagnosisM" jdbcType="LONGVARCHAR" />
+    <result column="drug_q" property="drugQ" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, gmt_create, gmt_modified, gmt_supervised, factory_num, diagnosis_t, building, 
+    et_b, operator, professor, supervisor, remark, is_pass, upass_reason, is_pass1
+  </sql>
+  <sql id="Blob_Column_List" >
+    diagnosis_c, diagnosis_m, drug_q
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.deep.domain.model.DiagnosisPlanExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from diagnosis_plan
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.deep.domain.model.DiagnosisPlanExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from diagnosis_plan
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from diagnosis_plan
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from diagnosis_plan
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.deep.domain.model.DiagnosisPlanExample" >
+    delete from diagnosis_plan
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.deep.domain.model.DiagnosisPlanWithBLOBs" >
+    insert into diagnosis_plan (id, gmt_create, gmt_modified, 
+      gmt_supervised, factory_num, diagnosis_t, 
+      building, et_b, operator, 
+      professor, supervisor, remark, 
+      is_pass, upass_reason, is_pass1, 
+      diagnosis_c, diagnosis_m, drug_q
+      )
+    values (#{id,jdbcType=INTEGER}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, 
+      #{gmtSupervised,jdbcType=TIMESTAMP}, #{factoryNum,jdbcType=BIGINT}, #{diagnosisT,jdbcType=TIMESTAMP}, 
+      #{building,jdbcType=VARCHAR}, #{etB,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, 
+      #{professor,jdbcType=VARCHAR}, #{supervisor,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{isPass,jdbcType=TINYINT}, #{upassReason,jdbcType=VARCHAR}, #{isPass1,jdbcType=TINYINT}, 
+      #{diagnosisC,jdbcType=LONGVARCHAR}, #{diagnosisM,jdbcType=LONGVARCHAR}, #{drugQ,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.deep.domain.model.DiagnosisPlanWithBLOBs" >
+    insert into diagnosis_plan
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create,
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified,
+      </if>
+      <if test="gmtSupervised != null" >
+        gmt_supervised,
+      </if>
+      <if test="factoryNum != null" >
+        factory_num,
+      </if>
+      <if test="diagnosisT != null" >
+        diagnosis_t,
+      </if>
+      <if test="building != null" >
+        building,
+      </if>
+      <if test="etB != null" >
+        et_b,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="professor != null" >
+        professor,
+      </if>
+      <if test="supervisor != null" >
+        supervisor,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="isPass != null" >
+        is_pass,
+      </if>
+      <if test="upassReason != null" >
+        upass_reason,
+      </if>
+      <if test="isPass1 != null" >
+        is_pass1,
+      </if>
+      <if test="diagnosisC != null" >
+        diagnosis_c,
+      </if>
+      <if test="diagnosisM != null" >
+        diagnosis_m,
+      </if>
+      <if test="drugQ != null" >
+        drug_q,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="gmtCreate != null" >
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtSupervised != null" >
+        #{gmtSupervised,jdbcType=TIMESTAMP},
+      </if>
+      <if test="factoryNum != null" >
+        #{factoryNum,jdbcType=BIGINT},
+      </if>
+      <if test="diagnosisT != null" >
+        #{diagnosisT,jdbcType=TIMESTAMP},
+      </if>
+      <if test="building != null" >
+        #{building,jdbcType=VARCHAR},
+      </if>
+      <if test="etB != null" >
+        #{etB,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="professor != null" >
+        #{professor,jdbcType=VARCHAR},
+      </if>
+      <if test="supervisor != null" >
+        #{supervisor,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isPass != null" >
+        #{isPass,jdbcType=TINYINT},
+      </if>
+      <if test="upassReason != null" >
+        #{upassReason,jdbcType=VARCHAR},
+      </if>
+      <if test="isPass1 != null" >
+        #{isPass1,jdbcType=TINYINT},
+      </if>
+      <if test="diagnosisC != null" >
+        #{diagnosisC,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="diagnosisM != null" >
+        #{diagnosisM,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="drugQ != null" >
+        #{drugQ,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.deep.domain.model.DiagnosisPlanExample" resultType="java.lang.Integer" >
+    select count(*) from diagnosis_plan
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update diagnosis_plan
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.gmtCreate != null" >
+        gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.gmtModified != null" >
+        gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.gmtSupervised != null" >
+        gmt_supervised = #{record.gmtSupervised,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.factoryNum != null" >
+        factory_num = #{record.factoryNum,jdbcType=BIGINT},
+      </if>
+      <if test="record.diagnosisT != null" >
+        diagnosis_t = #{record.diagnosisT,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.building != null" >
+        building = #{record.building,jdbcType=VARCHAR},
+      </if>
+      <if test="record.etB != null" >
+        et_b = #{record.etB,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operator != null" >
+        operator = #{record.operator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.professor != null" >
+        professor = #{record.professor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.supervisor != null" >
+        supervisor = #{record.supervisor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isPass != null" >
+        is_pass = #{record.isPass,jdbcType=TINYINT},
+      </if>
+      <if test="record.upassReason != null" >
+        upass_reason = #{record.upassReason,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isPass1 != null" >
+        is_pass1 = #{record.isPass1,jdbcType=TINYINT},
+      </if>
+      <if test="record.diagnosisC != null" >
+        diagnosis_c = #{record.diagnosisC,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.diagnosisM != null" >
+        diagnosis_m = #{record.diagnosisM,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.drugQ != null" >
+        drug_q = #{record.drugQ,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update diagnosis_plan
+    set id = #{record.id,jdbcType=INTEGER},
+      gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+      gmt_supervised = #{record.gmtSupervised,jdbcType=TIMESTAMP},
+      factory_num = #{record.factoryNum,jdbcType=BIGINT},
+      diagnosis_t = #{record.diagnosisT,jdbcType=TIMESTAMP},
+      building = #{record.building,jdbcType=VARCHAR},
+      et_b = #{record.etB,jdbcType=VARCHAR},
+      operator = #{record.operator,jdbcType=VARCHAR},
+      professor = #{record.professor,jdbcType=VARCHAR},
+      supervisor = #{record.supervisor,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      is_pass = #{record.isPass,jdbcType=TINYINT},
+      upass_reason = #{record.upassReason,jdbcType=VARCHAR},
+      is_pass1 = #{record.isPass1,jdbcType=TINYINT},
+      diagnosis_c = #{record.diagnosisC,jdbcType=LONGVARCHAR},
+      diagnosis_m = #{record.diagnosisM,jdbcType=LONGVARCHAR},
+      drug_q = #{record.drugQ,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update diagnosis_plan
+    set id = #{record.id,jdbcType=INTEGER},
+      gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+      gmt_supervised = #{record.gmtSupervised,jdbcType=TIMESTAMP},
+      factory_num = #{record.factoryNum,jdbcType=BIGINT},
+      diagnosis_t = #{record.diagnosisT,jdbcType=TIMESTAMP},
+      building = #{record.building,jdbcType=VARCHAR},
+      et_b = #{record.etB,jdbcType=VARCHAR},
+      operator = #{record.operator,jdbcType=VARCHAR},
+      professor = #{record.professor,jdbcType=VARCHAR},
+      supervisor = #{record.supervisor,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      is_pass = #{record.isPass,jdbcType=TINYINT},
+      upass_reason = #{record.upassReason,jdbcType=VARCHAR},
+      is_pass1 = #{record.isPass1,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.deep.domain.model.DiagnosisPlanWithBLOBs" >
+    update diagnosis_plan
+    <set >
+      <if test="gmtCreate != null" >
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtSupervised != null" >
+        gmt_supervised = #{gmtSupervised,jdbcType=TIMESTAMP},
+      </if>
+      <if test="factoryNum != null and factoryNum != ''" >
+        factory_num = #{factoryNum,jdbcType=BIGINT},
+      </if>
+      <if test="diagnosisT != null" >
+        diagnosis_t = #{diagnosisT,jdbcType=TIMESTAMP},
+      </if>
+      <if test="building != null and building != ''" >
+        building = #{building,jdbcType=VARCHAR},
+      </if>
+      <if test="etB != null and etB != ''" >
+        et_b = #{etB,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null and operator != ''" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="professor != null and professor != ''" >
+        professor = #{professor,jdbcType=VARCHAR},
+      </if>
+      <if test="supervisor != null and supervisor != ''" >
+        supervisor = #{supervisor,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null and remark != ''" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isPass != null and isPass != ''" >
+        is_pass = #{isPass,jdbcType=TINYINT},
+      </if>
+      <if test="upassReason != null and upassReason != ''" >
+        upass_reason = #{upassReason,jdbcType=VARCHAR},
+      </if>
+      <if test="isPass1 != null and isPass1 != ''" >
+        is_pass1 = #{isPass1,jdbcType=TINYINT},
+      </if>
+      <if test="diagnosisC != null and diagnosisC != ''" >
+        diagnosis_c = #{diagnosisC,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="diagnosisM != null and diagnosisM != ''" >
+        diagnosis_m = #{diagnosisM,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="drugQ != null and drugQ != ''" >
+        drug_q = #{drugQ,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.deep.domain.model.DiagnosisPlanWithBLOBs" >
+    update diagnosis_plan
+    set gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      gmt_supervised = #{gmtSupervised,jdbcType=TIMESTAMP},
+      factory_num = #{factoryNum,jdbcType=BIGINT},
+      diagnosis_t = #{diagnosisT,jdbcType=TIMESTAMP},
+      building = #{building,jdbcType=VARCHAR},
+      et_b = #{etB,jdbcType=VARCHAR},
+      operator = #{operator,jdbcType=VARCHAR},
+      professor = #{professor,jdbcType=VARCHAR},
+      supervisor = #{supervisor,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      is_pass = #{isPass,jdbcType=TINYINT},
+      upass_reason = #{upassReason,jdbcType=VARCHAR},
+      is_pass1 = #{isPass1,jdbcType=TINYINT},
+      diagnosis_c = #{diagnosisC,jdbcType=LONGVARCHAR},
+      diagnosis_m = #{diagnosisM,jdbcType=LONGVARCHAR},
+      drug_q = #{drugQ,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.deep.domain.model.DiagnosisPlan" >
+    update diagnosis_plan
+    set gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      gmt_supervised = #{gmtSupervised,jdbcType=TIMESTAMP},
+      factory_num = #{factoryNum,jdbcType=BIGINT},
+      diagnosis_t = #{diagnosisT,jdbcType=TIMESTAMP},
+      building = #{building,jdbcType=VARCHAR},
+      et_b = #{etB,jdbcType=VARCHAR},
+      operator = #{operator,jdbcType=VARCHAR},
+      professor = #{professor,jdbcType=VARCHAR},
+      supervisor = #{supervisor,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      is_pass = #{isPass,jdbcType=TINYINT},
+      upass_reason = #{upassReason,jdbcType=VARCHAR},
+      is_pass1 = #{isPass1,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select resultMap="ResultMapWithBLOBs" parameterType="com.deep.domain.model.DiagnosisPlanExample" id="selectByExampleWithBLOBsWithRowbounds" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from diagnosis_plan
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select resultMap="BaseResultMap" parameterType="com.deep.domain.model.DiagnosisPlanExample" id="selectByExampleWithRowbounds" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from diagnosis_plan
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

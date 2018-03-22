@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>查找档案</title>
+</head>
+<body>
+<a>按照条件查找信息 ：</a>
+<form action="/DiagnosisSelective/show" method="get">
+    <table>
+        <tr>
+            <td><label>主键</label></td>
+            <td><input type="text" id="id" name="id" /></td>
+        </tr>
+        <tr>
+            <td><label>工厂编号</label></td>
+            <td><input type="text" id="factoryNum" name="factoryNum" /></td>
+        </tr>
+        <tr>
+            <td><label>诊疗实施时间1---诊疗实施时间2</label></td>
+            <td><input type="text" id="s_diagnosisT1" name="s_diagnosisT1" /></td>
+            <td><label>------</label></td>
+            <td><input type="text" id="s_diagnosisT2" name="s_diagnosisT2" /></td>
+        </tr>
+        <tr>
+            <td><label>栋号</label></td>
+            <td><input type="text" id="building" name="building" /></td>
+        </tr>
+        <tr>
+            <td><label>商标耳牌号</label></td>
+            <td><input type="text" id="etB" name="etB" /></td>
+        </tr>
+        <tr>
+            <td><label>操作员</label></td>
+            <td><input type="text" id="operator" name="operator" /></td>
+        </tr>
+        <tr>
+            <td><label>技术审核</label></td>
+            <td><input type="text" id="professor" name="professor" /></td>
+        </tr>
+        <tr>
+            <td><label>监督员</label></td>
+            <td><input type="text" id="supervisor" name="supervisor" /></td>
+        </tr>
+        <tr>
+            <td><label>是否通过审核</label></td>
+            <td><input type="text" id="isPass" name="isPass" /></td>
+        </tr>
+        <tr>
+            <td><input type="submit" id="submit" value="查找"/></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>
