@@ -140,6 +140,9 @@ public class LoginResourceController {
     public Response EnsureVerify(@RequestParam("verifyCode") String verifyCode){
         if(verifyCode.equals(mobileAnnouncementModel.getIdentityCode())){
             System.out.println("验证成功");
+            TokenModel tokenModel = new TokenModel("Identify","Success");
+            //记录找回名密码成功状态 时间：5分钟
+            JedisUtil jedisUtil = new JedisUtil(tokenModel.getIdentify(),tokenModel.getToken(),5*60);
             return new Response().addData("Success","Continue input new password");
         }else {
             return new Response().addData("Error","Answer wrong");
@@ -163,7 +166,7 @@ public class LoginResourceController {
                 md5Util.encode(answer_3).equals(myuserModel.getAnswer_3())){
             TokenModel tokenModel = new TokenModel("Identify","Success");
             //记录找回名密码成功状态 时间：5分钟
-            JedisUtil jedisUtil = new JedisUtil(tokenModel.getIdentify(),tokenModel.getToken(),600);
+            JedisUtil jedisUtil = new JedisUtil(tokenModel.getIdentify(),tokenModel.getToken(),5*60);
             return new Response().addData("Success","Continue input new password");
         }else {
             return new Response().addData("Error","Answer wrong");

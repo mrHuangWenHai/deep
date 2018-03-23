@@ -15,7 +15,7 @@ public interface GenealogicalFilesTransMapper {
 
     void setGenealogicalFilesTransModel(@Param("genealogicalFilesTransModel") GenealogicalFilesTransModel genealogicalFilesTransModel);
 
-    GenealogicalFilesTransModel getGenealogicalFilesTransModelBytrademarkEartag(@Param("nextOwnerFactory") String nextOwnerFactory);
+    GenealogicalFilesTransModel getGenealogicalFilesTransModelBybeforeOwnerFactory(@Param("beforeOwnerFactory") String beforeOwnerFactory);
     List<GenealogicalFilesTransModel> getAllGenealogicalFilesTransModel();
 
 }

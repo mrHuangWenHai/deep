@@ -5,6 +5,7 @@
 <mapper namespace="com.deep.infra.persistence.sql.mapper.GenealogicalFilesTransMapper">
     <insert id="setGenealogicalFilesTransModel" parameterType="com.deep.domain.model.GenealogicalFilesTransModel">
         INSERT INTO genealogical_files_trans(
+        before_owner_factory,
         next_owner_factory,
         trademark_eartag,
         trans_time,
@@ -12,6 +13,7 @@
         gmt_create
         )
         VALUES(
+        #{genealogicalFilesTransModel.beforeOwnerFactory},
         #{genealogicalFilesTransModel.nextOwnerFactory},
         #{genealogicalFilesTransModel.trademarkEartag},
         #{genealogicalFilesTransModel.transTime},
@@ -29,6 +31,7 @@
     </select>
 
     <resultMap id="genealogicalFilesTrans" type="com.deep.domain.model.GenealogicalFilesTransModel">
+        <result property="beforeOwnerFactory" column="before_owner_factory"/>
         <result property="nextOwnerFactory" column="next_owner_factory"/>
         <result property="trademarkEartag" column="trademark_eartag"/>
         <result property="transTime" column="trans_time"/>

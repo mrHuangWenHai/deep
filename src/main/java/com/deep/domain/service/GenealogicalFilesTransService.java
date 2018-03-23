@@ -24,8 +24,8 @@ public class GenealogicalFilesTransService {
         genealogicalFilesTransMapper.setGenealogicalFilesTransModel(genealogicalFilesTransModel);
     }
 
-    public GenealogicalFilesTransModel getGenealogicalFilesTransModelByimmuneEartag(String nextOwnerFactory){
-        GenealogicalFilesTransModel genealogicalFilesTransModel = this.genealogicalFilesTransMapper.getGenealogicalFilesTransModelBytrademarkEartag(nextOwnerFactory);
+    public GenealogicalFilesTransModel getGenealogicalFilesTransModelByimmuneEartag(String beforeOwnerFactory){
+        GenealogicalFilesTransModel genealogicalFilesTransModel = this.genealogicalFilesTransMapper.getGenealogicalFilesTransModelBybeforeOwnerFactory(beforeOwnerFactory);
         return genealogicalFilesTransModel;
     }
     public List<GenealogicalFilesTransModel> getAllGenealogicalFilesTransModel(){

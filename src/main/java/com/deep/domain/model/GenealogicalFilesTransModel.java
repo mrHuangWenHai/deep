@@ -7,6 +7,7 @@ import java.sql.Timestamp;
  */
 public class GenealogicalFilesTransModel {
     private int id;
+    private String beforeOwnerFactory;    //上一任拥有人 工厂号 用于追溯
     private String nextOwnerFactory;    //下一任拥有人  工厂号
     private String immuneEartag;   //免疫耳牌
     private int transTime;    //转移次数
@@ -16,8 +17,9 @@ public class GenealogicalFilesTransModel {
     public GenealogicalFilesTransModel() {
     }
 
-    public GenealogicalFilesTransModel(int id, String nextOwnerFactory, String immuneEartag, int transTime, double transWeight, Timestamp gmtCreate) {
+    public GenealogicalFilesTransModel(int id,String beforeOwnerFactory, String nextOwnerFactory, String immuneEartag, int transTime, double transWeight, Timestamp gmtCreate) {
         this.id = id;
+        this.beforeOwnerFactory = beforeOwnerFactory;
         this.nextOwnerFactory = nextOwnerFactory;
         this.immuneEartag = immuneEartag;
         this.transTime = transTime;
@@ -31,6 +33,14 @@ public class GenealogicalFilesTransModel {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getBeforeOwnerFactory() {
+        return beforeOwnerFactory;
+    }
+
+    public void setBeforeOwnerFactory(String beforeOwnerFactory) {
+        this.beforeOwnerFactory = beforeOwnerFactory;
     }
 
     public String getNextOwnerFactory() {

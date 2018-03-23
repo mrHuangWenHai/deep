@@ -2,7 +2,6 @@ package com.deep.api.resource;
 
 import com.deep.api.response.Response;
 import com.deep.domain.model.ImmunePlanModel;
-import com.deep.domain.model.MobileAnnouncementModel;
 import com.deep.domain.model.UserModel;
 import com.deep.domain.service.ImmunePlanService;
 import com.deep.domain.service.UserService;
@@ -34,6 +33,7 @@ public class ImmunePlanResourceController {
     @Resource
     private UserService userService;
 
+
     /**
      * METHOD:GET
      * @return
@@ -43,6 +43,7 @@ public class ImmunePlanResourceController {
         return "ImmunePlanHTML/ImmunePlanFunctionChoiceForm";
     }
 
+
     /**
      * METHOD:GET
      * @return
@@ -51,6 +52,7 @@ public class ImmunePlanResourceController {
     public String Save(){
         return "ImmunePlanHTML/ImmunePlanSaveForm";
     }
+
 
     /**
      * 返回插入结果
@@ -93,7 +95,6 @@ public class ImmunePlanResourceController {
         jedis.get("token");
         System.out.println(jedis.get("userId")+ jedis.get("token"));
         System.out.println("查看userId的剩余生存时间："+jedis.ttl("userId"));*/
-        Map<String, Object> map = new HashMap<>();
         if ("".equals(factoryNum.toString()) ||
                 "".equals(crowdNum) ||
                 immuneEartag.isEmpty() ||
@@ -104,9 +105,7 @@ public class ImmunePlanResourceController {
                 "".equals(immuneDuring) ||
                 "".equals(operator) ||
                 "".equals(remark)) {
-            map.put("Result", "Fail");
-            map.put("type", "lack item");
-            return new Response().addData("Error", map);
+            return new Response().addData("Error", "Lack Item");
         } else {
             try{
                 ImmunePlanModel immunePlanModel = immunePlanService.getImmunePlanModelByfactoryNumAndcrowdNumAndimmuneTime(factoryNum,crowdNum,immuneTime);
@@ -166,6 +165,7 @@ public class ImmunePlanResourceController {
                                 phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
                                 if(jedisUtil.redisSendMessage(phoneList.toString(),message)){
                                     System.out.println("发送成功！");
+                                    return new Response().addData("Success","");
                                 }
                             }
                             System.out.println("专家手机号"+phoneList);
@@ -173,29 +173,24 @@ public class ImmunePlanResourceController {
                         //jedisUtil.redisSaveProfessorSupervisorWorks(professorKey,factoryNum);
                         //jedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey,factoryNum);
 
-                        return new Response().addData("Success","");
+                        return new Response().addData("Error","Send Error");
                         }catch (Exception e){
                             e.printStackTrace();
                         }
 
                     }else {
-                        map.put("Result","Fail");
-                        map.put("type","already exist");
-                        return new Response().addData("Error", map);
+                        return new Response().addData("Error", "Already exist");
                     }
                 }catch (Exception e){
 
                     e.printStackTrace();
-                map.put("Result", "Fail");
-                map.put("type", "IO Exception");
-                return new Response().addData("Error", map);
+                    return new Response().addData("Error", "IO Exception");
                 }
 
         }
-        map.put("Result", "Fail");
-        map.put("type", "NullPointer Exception");
-        return new Response().addData("Error", map);
+        return new Response().addData("Error", "NullPointer Exception");
     }
+
 
     /**
      * METHOD:GET
