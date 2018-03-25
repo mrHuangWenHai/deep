@@ -44,7 +44,7 @@ public class NoticeController {
     }
     @ResponseBody
     @RequestMapping(value = "/NoticeInsert/show",method = RequestMethod.POST)
-    public Response addPlan(@RequestBody @Valid NoticePlan insert){
+    public Response addPlan(@Valid NoticePlan insert){
         insert.setGmtCreate(new Date());
         insert.setProfessor(insert.getProfessor());
         insert.setType(insert.getType());
@@ -92,7 +92,7 @@ public class NoticeController {
     }
     @ResponseBody
     @RequestMapping(value = "/NoticeUpdate/show",method = RequestMethod.POST)
-    public Response changePlan(@RequestBody @Valid NoticePlan update,HttpServletRequest request){
+    public Response changePlan(@Valid NoticePlan update,HttpServletRequest request){
         update.setId(update.getId());
         update.setGmtModified(new Date());
         update.setType(update.getType());
@@ -147,7 +147,7 @@ public class NoticeController {
     }
     @ResponseBody
     @RequestMapping(value = "/NoticeSelective/show",method = RequestMethod.GET)
-    public Response findPlanSelective(@RequestBody @Valid NoticePlan noticePlan,
+    public Response findPlanSelective(@Valid NoticePlan noticePlan,
                                       @RequestParam ("s_gmtCreate1") String s_gmtCreate1,
                                       @RequestParam ("s_gmtCreate2") String s_gmtCreate2,
                                       @RequestParam ("s_gmtModified1") String s_gmtModified1,
