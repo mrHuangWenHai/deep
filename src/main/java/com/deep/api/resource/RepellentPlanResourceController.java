@@ -4,26 +4,16 @@ import com.deep.api.response.Response;
 import com.deep.domain.model.RepellentPlanModel;
 import com.deep.domain.service.RepellentPlanService;
 import com.deep.domain.util.UploadUtil;
-import com.github.pagehelper.PageHelper;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RequestMapping(value = "/allfunction/rp")
@@ -146,23 +136,18 @@ public class RepellentPlanResourceController {
      * 以json格式返回前端
      * METHOD:POST
      * @param repellentPlanModel
-     * @param repellentTimeStart
-     * @param repellentTimeEnd
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
-    public Response FindShow(@Valid RepellentPlanModel repellentPlanModel,
-                                 @RequestParam("repellentTimeStart") String repellentTimeStart,
-                                 @RequestParam("repellentTimeEnd") String repellentTimeEnd){
+    public Response FindShow(@RequestBody RepellentPlanModel repellentPlanModel){
         RowBounds bounds = new RowBounds(0,10);
         List<RepellentPlanModel> repellentPlanModels =repellentPlanService.getRepellentPlanModel(repellentPlanModel.getFactoryNum(),
-                                                            repellentPlanModel.getCrowdNum(),repellentPlanModel.getRepellentEartag(),
-                                                            repellentTimeStart ,repellentTimeEnd,repellentPlanModel.getRepellentName(),
-                                                            repellentPlanModel.getRepellentWay(),repellentPlanModel.getRepellentQuality(),
-                                                            repellentPlanModel.getOperator(),repellentPlanModel.getProfessor(),repellentPlanModel.getSupervisor(),
-                                                            repellentPlanModel.getRemark(),repellentPlanModel.getIsPass1(),repellentPlanModel.getUnpassReason1(),
-                                                            repellentPlanModel.getIsPass2(),repellentPlanModel.getUnpassReason2(),bounds);
+                repellentPlanModel.getCrowdNum(),repellentPlanModel.getRepellentEartag(), repellentPlanModel.getRepellentTimeStart() ,
+                repellentPlanModel.getRepellentTimeEnd(), repellentPlanModel.getRepellentName(), repellentPlanModel.getRepellentWay(),
+                repellentPlanModel.getRepellentQuality(), repellentPlanModel.getOperator(),repellentPlanModel.getProfessor(),
+                repellentPlanModel.getSupervisor(), repellentPlanModel.getRemark(),repellentPlanModel.getIsPass1(),
+                repellentPlanModel.getUnpassReason1(), repellentPlanModel.getIsPass2(),repellentPlanModel.getUnpassReason2(),bounds);
 
         return new Response().addData("List<repellentPlanModels>",repellentPlanModels);
 

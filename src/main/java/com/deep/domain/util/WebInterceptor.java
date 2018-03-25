@@ -11,7 +11,11 @@ public class WebInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //登录 登录结果 注册 注册结果 游客页面 不拦截
-        if(request.getRequestURI().equals("/login") || request.getRequestURI().equals("/register") ||
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        response.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET, PUT, POST, DELETE");
+        response.setHeader("Access-Control-Expose-Headers", "Authorization");
+        /*if(request.getRequestURI().equals("/login") || request.getRequestURI().equals("/register") ||
                 request.getRequestURI().equals("/allfunction") ||request.getRequestURI().equals("/loginresult")||
                 request.getRequestURI().equals("/registerresult") ||request.getRequestURI().equals("/ensurequestion")||
                 request.getRequestURI().equals("/phonefind") ||request.getRequestURI().equals("/questionfind")||
@@ -29,6 +33,7 @@ public class WebInterceptor implements HandlerInterceptor {
                 jedis.expire("token",600);
                 return true;
             }
-        }
+        }*/
+        return true;
     }
 }

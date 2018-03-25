@@ -41,8 +41,18 @@
           #{genealogicalFilesModel.gmtCreate}
         )
     </insert>
+
+    <select id="getGenealogicalFilesModelByid">
+        SELECT
+        *
+        FROM
+        genealogical_files
+        WHERE
+        id = #{id}
+    </select>
+
     <resultMap id="genealogicalFiles" type="com.deep.domain.model.GenealogicalFilesModel">
-        <id property="location" column="location"/>
+        <id property="id" column="id"/>
         <result property="selfEartag" column="self_eartag"/>
         <result property="immuneEartag" column="immune_eartag"/>
         <result property="tradeMarkEartag" column="trademark_eartag"/>
@@ -86,12 +96,17 @@
             <if test="selfEartag != null and selfEartag !='' ">
                 AND self_eartag = #{selfEartag}
             </if>
+            <if test="immuneEartag!= null and immuneEartag != '' ">
+                AND immune_eartag #{immuneEartag}
+            </if>
+            <!--
             <if test="immuneEartagStart != null and immuneEartagStart != '' ">
                 AND immune_eartag LIKE concat(#{immuneEartagStart},'%')
             </if>
             <if test="immuneEartagEnd != null and immuneEartagEnd != '' ">
                 AND immune_eartag LIKE concat('%',#{immuneEartagEnd})
             </if>
+            -->
             <if test="tradeMarkEartag != null and tradeMarkEartag != '' ">
                 AND trademark_eartag = #{tradeMarkEartag}
             </if>

@@ -5,7 +5,7 @@ import java.util.Date;
 import java.sql.Timestamp;
 
 public class DisinfectFilesModel {
-    //private int id;      //id
+    private int id;      //id
     private BigInteger factoryNum;     //工厂号
     private String disinfectTime;     //消毒时间
     private String disinfectName;     //消毒药品名称
@@ -23,6 +23,11 @@ public class DisinfectFilesModel {
     private Timestamp gmtModified;     //修改时间
     private Timestamp gmtProfessor;     //审核时间 可空
     private Timestamp gmtSupervise;     //监督确认时间 可空
+    //从前台传递的参数
+    //目标:json格式
+    private String disinfectTimeStart;
+    private String disinfectTimeEnd;
+
 
     public DisinfectFilesModel() {
     }
@@ -53,6 +58,14 @@ public class DisinfectFilesModel {
         this.isPass2 = isPass2;
         this.gmtCreate = gmtCreate;
 
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public BigInteger getFactoryNum() {
@@ -189,5 +202,21 @@ public class DisinfectFilesModel {
 
     public void setGmtSupervise(Timestamp gmtSupervise) {
         this.gmtSupervise = gmtSupervise;
+    }
+
+    public String getDisinfectTimeStart() {
+        return disinfectTimeStart;
+    }
+
+    public void setDisinfectTimeStart(String disinfectTimeStart) {
+        this.disinfectTimeStart = disinfectTimeStart;
+    }
+
+    public String getDisinfectTimeEnd() {
+        return disinfectTimeEnd;
+    }
+
+    public void setDisinfectTimeEnd(String disinfectTimeEnd) {
+        this.disinfectTimeEnd = disinfectTimeEnd;
     }
 }

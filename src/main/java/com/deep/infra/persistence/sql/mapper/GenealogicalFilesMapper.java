@@ -13,9 +13,9 @@ import java.util.List;
 @Mapper
 public interface GenealogicalFilesMapper {
 
+
     List<GenealogicalFilesModel> getGenealogicalFilesModel(@Param("selfEartag") String selfEartag,
-                                                           @Param("immuneEartagStart") String immuneEartagStart,
-                                                           @Param("immuneEartagEnd") String immuneEartagEnd,
+                                                           @Param("immuneEartag") String immuneEartag,
                                                            @Param("tradeMarkEartag") String tradeMarkEartag,
                                                            @Param("breedingSheepBase") String breedingSheepBase,
                                                            @Param("birthTimeStart") String birthTimeStart,
@@ -32,7 +32,7 @@ public interface GenealogicalFilesMapper {
                                                            @Param("eartagOfMothersMother") String eartagOfMothersMother,
                                                            RowBounds rowBounds
                                                            );
-
+    GenealogicalFilesModel getGenealogicalFilesModelByid(@Param("id") int id);
 
     GenealogicalFilesModel getGenealogicalFilesModelByimmuneEartag(@Param("immuneEartag") String immuneEartag);
     GenealogicalFilesModel getGenealogicalFilesModelBytradeMarkEartag(@Param("tradeMarkEartag") String tradeMarkEartag);

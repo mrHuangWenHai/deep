@@ -1,12 +1,13 @@
 package com.deep.domain.model;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 
 /**
  * create by zhongrui on 18-3-19.
  */
 public class GenealogicalFilesTransModel {
-    private int id;
+    private BigInteger id;
     private String beforeOwnerFactory;    //上一任拥有人 工厂号 用于追溯
     private String nextOwnerFactory;    //下一任拥有人  工厂号
     private String immuneEartag;   //免疫耳牌
@@ -17,8 +18,7 @@ public class GenealogicalFilesTransModel {
     public GenealogicalFilesTransModel() {
     }
 
-    public GenealogicalFilesTransModel(int id,String beforeOwnerFactory, String nextOwnerFactory, String immuneEartag, int transTime, double transWeight, Timestamp gmtCreate) {
-        this.id = id;
+    public GenealogicalFilesTransModel(String beforeOwnerFactory, String nextOwnerFactory, String immuneEartag, int transTime, double transWeight, Timestamp gmtCreate) {
         this.beforeOwnerFactory = beforeOwnerFactory;
         this.nextOwnerFactory = nextOwnerFactory;
         this.immuneEartag = immuneEartag;
@@ -27,11 +27,11 @@ public class GenealogicalFilesTransModel {
         this.gmtCreate = gmtCreate;
     }
 
-    public int getId() {
+    public BigInteger getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(BigInteger id) {
         this.id = id;
     }
 

@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 public class RepellentPlanModel {
-    //private BigInteger id;      //id
+    private BigInteger id;      //id
     private BigInteger factoryNum;   //工厂编号
     private String crowdNum;       //羊群号
     private String repellentEartag;    //耳牌附件号
@@ -25,6 +25,10 @@ public class RepellentPlanModel {
     private Timestamp gmtModified;
     private Timestamp gmtProfessor;
     private Timestamp gmtSupervise;
+
+    //
+    private String repellentTimeStart;
+    private String repellentTimeEnd;
 
     public RepellentPlanModel() {
     }
@@ -59,6 +63,14 @@ public class RepellentPlanModel {
         this.isPass1 = isPass1;
         this.isPass2 = isPass2;
         this.gmtCreate = gmtCreate;
+    }
+
+    public BigInteger getId() {
+        return id;
+    }
+
+    public void setId(BigInteger id) {
+        this.id = id;
     }
 
     public BigInteger getFactoryNum() {
@@ -211,5 +223,21 @@ public class RepellentPlanModel {
 
     public void setGmtSupervise(Timestamp gmtSupervise) {
         this.gmtSupervise = gmtSupervise;
+    }
+
+    public String getRepellentTimeStart() {
+        return repellentTimeStart;
+    }
+
+    public void setRepellentTimeStart(String repellentTimeStart) {
+        this.repellentTimeStart = repellentTimeStart;
+    }
+
+    public String getRepellentTimeEnd() {
+        return repellentTimeEnd;
+    }
+
+    public void setRepellentTimeEnd(String repellentTimeEnd) {
+        this.repellentTimeEnd = repellentTimeEnd;
     }
 }

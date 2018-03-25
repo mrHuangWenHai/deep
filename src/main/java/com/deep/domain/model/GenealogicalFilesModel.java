@@ -1,5 +1,6 @@
 package com.deep.domain.model;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 
 
@@ -8,7 +9,7 @@ import java.sql.Timestamp;
  **/
 public class GenealogicalFilesModel {
 
-    //private int id;      //id
+    private BigInteger id;
     private String selfEartag;  //8位表示原耳牌
     private String immuneEartag;  //免疫耳牌
     private String tradeMarkEartag;  //商标耳牌
@@ -26,6 +27,13 @@ public class GenealogicalFilesModel {
     private String remark;   //备注
     private Timestamp gmtCreate;     //建立时间
     private Timestamp gmtModified;   //修改时间
+
+    //从前台传递的参数
+    //目标:json格式
+    private String birthTimeStart;
+    private String birthTimeEnd;
+    private String birthWeightStart;
+    private String birthWeightEnd;
 
     public GenealogicalFilesModel() {
     }
@@ -66,6 +74,14 @@ public class GenealogicalFilesModel {
         this.eartagOfMothersMother = eartagOfMothersMother;
         this.remark = remark;
         this.gmtCreate = gmtCreate;
+    }
+
+    public BigInteger getId() {
+        return id;
+    }
+
+    public void setId(BigInteger id) {
+        this.id = id;
     }
 
     public String getSelfEartag() {
@@ -202,5 +218,37 @@ public class GenealogicalFilesModel {
 
     public void setGmtModified(Timestamp gmtModified) {
         this.gmtModified = gmtModified;
+    }
+
+    public String getBirthTimeStart() {
+        return birthTimeStart;
+    }
+
+    public void setBirthTimeStart(String birthTimeStart) {
+        this.birthTimeStart = birthTimeStart;
+    }
+
+    public String getBirthTimeEnd() {
+        return birthTimeEnd;
+    }
+
+    public void setBirthTimeEnd(String birthTimeEnd) {
+        this.birthTimeEnd = birthTimeEnd;
+    }
+
+    public String getBirthWeightStart() {
+        return birthWeightStart;
+    }
+
+    public void setBirthWeightStart(String birthWeightStart) {
+        this.birthWeightStart = birthWeightStart;
+    }
+
+    public String getBirthWeightEnd() {
+        return birthWeightEnd;
+    }
+
+    public void setBirthWeightEnd(String birthWeightEnd) {
+        this.birthWeightEnd = birthWeightEnd;
     }
 }

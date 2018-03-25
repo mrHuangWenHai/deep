@@ -9,10 +9,7 @@ import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.UploadUtil;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -213,52 +210,21 @@ public class ImmunePlanResourceController {
      * 以json格式返回前端
      * 分页查询
      * METHOD:POST
-     * @param factoryNum
-     * @param crowdNum
-     * @param immuneEartagStart
-     * @param immuneEartagEnd
-     * @param immuneTimeStart
-     * @param immuneTimeEnd
-     * @param immuneKind
-     * @param immuneWay
-     * @param immuneQuality
-     * @param immuneDuring
-     * @param operator
-     * @param professor
-     * @param supervisor
-     * @param remark
-     * @param isPass1
-     * @param unpassReason1
-     * @param isPass2
-     * @param unpassReason2
+     * @param immunePlanModel
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
-    public Response FindShow(@RequestParam("factoryNum") BigInteger factoryNum,
-                                 @RequestParam("crowdNum") String crowdNum,
-                                 @RequestParam("immuneEartagStart") String immuneEartagStart,
-                                 @RequestParam("immuneEartagEnd") String immuneEartagEnd,
-                                 @RequestParam("immuneTimeStart") String immuneTimeStart,
-                                 @RequestParam("immuneTimeEnd") String immuneTimeEnd,
-                                 @RequestParam("immuneKind") String immuneKind,
-                                 @RequestParam("immuneWay") String immuneWay,
-                                 @RequestParam("immuneQuality") String immuneQuality,
-                                 @RequestParam("immuneDuring") String immuneDuring,
-                                 @RequestParam("operator") String operator,
-                                 @RequestParam("professor") String professor,
-                                 @RequestParam("supervisor") String supervisor,
-                                 @RequestParam("remark") String remark,
-                                 @RequestParam("isPass1") String  isPass1,
-                                 @RequestParam("unpassReason1") String unpassReason1,
-                                 @RequestParam("isPass2") String isPass2,
-                                 @RequestParam("unpassReason2") String unpassReason2) {
+    public Response FindShow(@RequestBody ImmunePlanModel immunePlanModel) {
         //前台传参数
         RowBounds bounds = new RowBounds(0,2);
-        List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModel(factoryNum,crowdNum, immuneEartagStart,
-                                                    immuneEartagEnd,immuneTimeStart,immuneTimeEnd,immuneKind,immuneWay,immuneQuality,
-                                                    immuneDuring,operator,professor,supervisor,remark,
-                                                    isPass1,unpassReason1,isPass2,unpassReason2,bounds);
+        List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModel(immunePlanModel.getFactoryNum(),
+                immunePlanModel.getCrowdNum(),immunePlanModel.getImmuneEartag(),immunePlanModel.getImmuneEartag(),
+                immunePlanModel.getImmuneTimeStart(),immunePlanModel.getImmuneTimeEnd(),immunePlanModel.getImmuneKind(),
+                immunePlanModel.getImmuneWay(),immunePlanModel.getImmuneQuality(),immunePlanModel.getImmuneDuring(),
+                immunePlanModel.getOperator(),immunePlanModel.getProfessor(),immunePlanModel.getSupervisor(),
+                immunePlanModel.getRemark(),immunePlanModel.getIsPass1(),immunePlanModel.getUnpassReason1(),
+                immunePlanModel.getIsPass2(),immunePlanModel.getUnpassReason2(),bounds);
         return new Response().addData("List<immunePlanModels>",immunePlanModels);
     }
 

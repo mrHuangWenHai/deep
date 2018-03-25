@@ -23,8 +23,7 @@ public class  GenealogicalFilesService {
     }
 
     public List<GenealogicalFilesModel> getGenealogicalFilesModel(String selfEartag,
-                                                                  String immuneEartagStart,
-                                                                  String immuneEartagEnd,
+                                                                  String immuneEartag,
                                                                   String tradeMarkEartag,
                                                                   String breedingSheepBase,
                                                                   String birthTimeStart,
@@ -40,7 +39,7 @@ public class  GenealogicalFilesService {
                                                                   String eartagOfMothersFather,
                                                                   String eartagOfMothersMother,
                                                                   RowBounds bounds) {
-        List<GenealogicalFilesModel> model = this.genealogicalFilesMapper.getGenealogicalFilesModel(selfEartag,immuneEartagStart,immuneEartagEnd,tradeMarkEartag,
+        List<GenealogicalFilesModel> model = this.genealogicalFilesMapper.getGenealogicalFilesModel(selfEartag,immuneEartag,tradeMarkEartag,
                                                                                         breedingSheepBase,birthTimeStart,birthTimeEnd,
                                                                                         birthWeightStart,birthWeightEnd,color,
                                                                                         sex,eartagOfFather,eartagOfMother,
@@ -50,6 +49,11 @@ public class  GenealogicalFilesService {
     }
 
 
+
+    public GenealogicalFilesModel getGenealogicalFilesModelByid(int id){
+        GenealogicalFilesModel model = this.genealogicalFilesMapper.getGenealogicalFilesModelByid(id);
+        return model;
+    }
 
     public GenealogicalFilesModel getGenealogicalFilesModelByimmuneEartag(String immuneEartag) {
         GenealogicalFilesModel model = this.genealogicalFilesMapper.getGenealogicalFilesModelByimmuneEartag(immuneEartag);

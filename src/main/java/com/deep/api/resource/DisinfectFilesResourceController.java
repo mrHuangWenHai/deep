@@ -3,25 +3,16 @@ package com.deep.api.resource;
 import com.deep.api.response.Response;
 import com.deep.domain.model.DisinfectFilesModel;
 import com.deep.domain.service.DisinfectFilesService;
-import com.github.pagehelper.PageHelper;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
+
 
 @Controller
 @RequestMapping(value = "/allfunction/df",method = RequestMethod.GET)
@@ -110,19 +101,15 @@ public class DisinfectFilesResourceController {
      * 分页查询
      * METHOD:POST
      * @param disinfectFilesModel
-     * @param disinfectTimeStart
-     * @param disinfectTimeEnd
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
-    public Response FindShow(@Valid DisinfectFilesModel disinfectFilesModel,
-                             @RequestParam("disinfectTimeStart") String disinfectTimeStart,
-                             @RequestParam("disinfectTimeEnd") String disinfectTimeEnd){
+    public Response FindShow(@RequestBody DisinfectFilesModel disinfectFilesModel){
         RowBounds bounds = new RowBounds(0,2);
         List<DisinfectFilesModel> disinfectFilesModel1 = disinfectFilesService.getDisinfectFilesModel(disinfectFilesModel.getFactoryNum(),
-                disinfectTimeStart,disinfectTimeEnd,disinfectFilesModel.getDisinfectName(),disinfectFilesModel.getDisinfectQuality(),
-                disinfectFilesModel.getDisinfectWay(),disinfectFilesModel.getOperator(),disinfectFilesModel.getProfessor(),
+                disinfectFilesModel.getDisinfectTimeStart(),disinfectFilesModel.getDisinfectTimeEnd(),disinfectFilesModel.getDisinfectName(),
+                disinfectFilesModel.getDisinfectQuality(),disinfectFilesModel.getDisinfectWay(),disinfectFilesModel.getOperator(),disinfectFilesModel.getProfessor(),
                 disinfectFilesModel.getSupervisor(),disinfectFilesModel.getRemark(),disinfectFilesModel.getIsPass1(),disinfectFilesModel.getUnpassReason1(),
                 disinfectFilesModel.getIsPass2(),disinfectFilesModel.getUnpassReason2(),bounds);
         return new Response().addData("List<DisinfectionFilesModel>",disinfectFilesModel1);

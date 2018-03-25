@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 public class ImmunePlanModel {
-    //private BigInteger id;      //id
+    private BigInteger id;      //id
     private BigInteger factoryNum;  //工厂编号
     private String crowdNum;     //羊群号
     private String immuneEartag;    //耳牌附件号
@@ -28,6 +28,10 @@ public class ImmunePlanModel {
     private Timestamp gmtModified;  //修改时间
     private Timestamp gmtProfessor;    //技术审核时间 可空
     private Timestamp gmtSupervise;    //监督审核时间 可空
+
+    //
+    private String immuneTimeStart;
+    private String immuneTimeEnd;
 
     public ImmunePlanModel() {
     }
@@ -69,6 +73,14 @@ public class ImmunePlanModel {
         this.gmtProfessor = gmtProfessor;
         this.gmtSupervise = gmtSupervise;
 
+    }
+
+    public BigInteger getId() {
+        return id;
+    }
+
+    public void setId(BigInteger id) {
+        this.id = id;
     }
 
     public BigInteger getFactoryNum() {
@@ -228,5 +240,21 @@ public class ImmunePlanModel {
 
     public void setGmtSupervise(Timestamp gmtSupervise) {
         this.gmtSupervise = gmtSupervise;
+    }
+
+    public String getImmuneTimeStart() {
+        return immuneTimeStart;
+    }
+
+    public void setImmuneTimeStart(String immuneTimeStart) {
+        this.immuneTimeStart = immuneTimeStart;
+    }
+
+    public String getImmuneTimeEnd() {
+        return immuneTimeEnd;
+    }
+
+    public void setImmuneTimeEnd(String immuneTimeEnd) {
+        this.immuneTimeEnd = immuneTimeEnd;
     }
 }

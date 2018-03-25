@@ -3,18 +3,13 @@ package com.deep.api.resource;
 import com.deep.api.response.Response;
 import com.deep.domain.model.GenealogicalFilesModel;
 import com.deep.domain.service.GenealogicalFilesService;
-import com.github.pagehelper.PageHelper;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.sql.Timestamp;
-import java.util.List;
 
 @Controller
 @RequestMapping(value = "/allfunction/gf")
@@ -104,7 +99,6 @@ public class GenealogicalFilesResourceController {
     }
 
     //localhost:8080/allfunction/gf/find
-
     /**
      * METHOD:POST
      * @return
@@ -115,42 +109,27 @@ public class GenealogicalFilesResourceController {
     }
 
 
+    @ResponseBody
+    @RequestMapping(value = "/findshow",method = RequestMethod.POST)
+    public Response FindResult(@RequestBody GenealogicalFilesModel genealogicalFilesModel){
+        System.out.println("running:"+genealogicalFilesModel.getColor());
+        return new Response().addData("Success",genealogicalFilesModel.getColor());
+    }
+
     /**
-     * 返回查询结果
-     * 以json格式返回前端
-     * 分页查询
-     * METHOD:POST
-     * @param genealogicalFilesModel
-     * @param immuneEartagStart
-     * @param immuneEartagEnd
-     * @param birthTimeStart
-     * @param birthTimeEnd
-     * @param birthWeightStart
-     * @param birthWeightEnd
+     * 查询出满足若干条件后的结果
+     * 可由id进行操作
+     * @param id
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/findshow",method = RequestMethod.POST)
-    public Response FindSelfEartagShow(@Valid GenealogicalFilesModel genealogicalFilesModel,
-                                       @RequestParam("immuneEartagStart") String immuneEartagStart,
-                                       @RequestParam("immuneEartagEnd") String immuneEartagEnd,
-                                       @RequestParam("birthTimeStart") String birthTimeStart,
-                                       @RequestParam("birthTimeEnd") String birthTimeEnd,
-                                       @RequestParam("birthWeightStart") String birthWeightStart,
-                                       @RequestParam("birthWeightEnd") String birthWeightEnd) {
-        //if ("".equals(selfEartag) || selfEartag == null) selfEartag = "";
-        //System.out.println("selfeartag："+selfEartag);eartag_of_fathersfather
-        RowBounds bounds = new RowBounds(0,2);
-        List<GenealogicalFilesModel> genealogicalFilesModels = genealogicalFilesService.getGenealogicalFilesModel(genealogicalFilesModel.getSelfEartag(),immuneEartagStart,immuneEartagEnd,
-                                                                                                        genealogicalFilesModel.getTradeMarkEartag(),genealogicalFilesModel.getBreedingSheepBase(),
-                                                                                                        birthTimeStart,birthTimeEnd,birthWeightStart,birthWeightEnd,genealogicalFilesModel.getColor(),
-                                                                                                        genealogicalFilesModel.getSex(),genealogicalFilesModel.getEartagOfFather(),genealogicalFilesModel.getEartagOfMother(),
-                                                                                                        genealogicalFilesModel.getEartagOfFathersFather(),genealogicalFilesModel.getEartagOfFathersMother(),
-                                                                                                        genealogicalFilesModel.getEartagOfMothersFather(), genealogicalFilesModel.getEartagOfMothersMother(),bounds);
-        return new Response().addData("List<GenealogicalFilesModel>",genealogicalFilesModels);
+    @RequestMapping(value = "/findshowbyid",method = RequestMethod.POST)
+    public Response FindIdShow(@RequestParam("id") int id) {
 
-        //System.out.println(genealogicalFilesModel.getImmuneEartag());
-        //System.out.println(genealogicalFilesModel.getTradeMarkEartag());
+        RowBounds bounds = new RowBounds(0,2);
+        GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesService.getGenealogicalFilesModelByid(id);
+        return new Response().addData("GenealogicalFilesModel",genealogicalFilesModel);
+
     }
 
     /**
