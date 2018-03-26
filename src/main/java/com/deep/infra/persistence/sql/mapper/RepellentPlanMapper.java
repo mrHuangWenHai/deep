@@ -6,16 +6,27 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
 @Mapper
 public interface RepellentPlanMapper {
-    void setRepellentPlanModel(@Param("repellentPlanModel")RepellentPlanModel repellentPlanModel);
+    void setRepellentPlanModel(@Param("factoryNum")BigInteger factoryNum,
+                               @Param("crowdNum") String crowdNum,
+                               @Param("repellentEartag") String repellentEartag,
+                               @Param("repellentTime") String repellentTime,
+                               @Param("repellentName") String repellentName,
+                               @Param("repellentWay") String repellentWay,
+                               @Param("repellentQuality") String repellentQuality,
+                               @Param("operator") String operator,
+                               @Param("remark") String remark,
+                               @Param("isPass1") String  isPass1,
+                               @Param("isPass2") String isPass2,
+                               @Param("gmtCreate") Timestamp gmtCreate);
 
     List<RepellentPlanModel> getRepellentPlanModel(@Param("factoryNum")BigInteger factoryNum,
                                                    @Param("crowdNum") String crowdNum,
-                                                   @Param("repellentEartag") String repellentEartag,
                                                    @Param("repellentTimeStart") String repellentTimeStart,
                                                    @Param("repellentTimeEnd") String repellentTimeEnd,
                                                    @Param("repellentName") String repellentName,
