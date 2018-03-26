@@ -26,7 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Controller
-public class LoginResourceController {
+public class LoginResource {
 
     @Resource
     private UserService userService;
@@ -159,11 +159,11 @@ public class LoginResourceController {
 
     @RequestMapping(value = "/ensurequestion")
     public Response EnsureQuestion(@RequestParam("answer_1") String answer_1,
-                                 @RequestParam("answer_2") String answer_2,
-                                 @RequestParam("answer_3") String answer_3){
-        if ( md5Util.encode(answer_1).equals(myuserModel.getAnswer_1()) &&
-                md5Util.encode(answer_2).equals(myuserModel.getAnswer_2()) &&
-                md5Util.encode(answer_3).equals(myuserModel.getAnswer_3())){
+                                   @RequestParam("answer_2") String answer_2,
+                                   @RequestParam("answer_3") String answer_3){
+        if ( answer_1.equals(myuserModel.getAnswer_1()) &&
+                answer_2.equals(myuserModel.getAnswer_2()) &&
+                answer_3.equals(myuserModel.getAnswer_3())){
             TokenModel tokenModel = new TokenModel("Identify","Success");
             //记录找回名密码成功状态 时间：5分钟
             JedisUtil jedisUtil = new JedisUtil(tokenModel.getIdentify(),tokenModel.getToken(),5*60);
