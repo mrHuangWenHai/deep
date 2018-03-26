@@ -19,6 +19,7 @@ import redis.clients.jedis.Jedis;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -60,16 +61,16 @@ public class LoginResource {
         //System.out.println(username);
         //System.out.println(password);
         UserModel userModel = userService.getUserByPkuserID(username);
-        if(userModel == null){
+        if(userModel == null) {
             //数据库中未查到用户名
             Response response = Responses.errorResponse("没有找到用户名");
             HashMap<String, Object> data = new HashMap<>();
             data.put("errorMessage", "username error");
             response.setData(data);
             return response;
-        }else {
+        } else {
             // 验证密码信息
-            if(userModel.getUserPwd().equals(MD5Util.encode(password))){
+            if(userModel.getUserPwd().equals(MD5Util.encode(password))) {
                 // 用户表当中的主键
                 TokenModel tokenModel = new TokenModel(userModel.getId());
 
@@ -282,10 +283,10 @@ public class LoginResource {
     @RequestMapping(value = "/ensurequestion")
     public Response EnsureQuestion(@RequestParam("answer_1") String answer_1,
                                  @RequestParam("answer_2") String answer_2,
-                                 @RequestParam("answer_3") String answer_3){
+                                 @RequestParam("answer_3") String answer_3) {
         if ( MD5Util.encode(answer_1).equals(myuserModel.getAnswer_1()) &&
                 MD5Util.encode(answer_2).equals(myuserModel.getAnswer_2()) &&
-                MD5Util.encode(answer_3).equals(myuserModel.getAnswer_3())){
+                MD5Util.encode(answer_3).equals(myuserModel.getAnswer_3())) {
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("errorMessage", "valid success");

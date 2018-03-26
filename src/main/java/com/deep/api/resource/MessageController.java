@@ -33,7 +33,6 @@ public class MessageController {
         return "insertMessage";
     }
 
-
     @RequestMapping(value = "/messageboard/insert",method = RequestMethod.POST)
     public @ResponseBody
     Response addMessage(@Valid Message message,
@@ -105,10 +104,10 @@ public class MessageController {
                              @RequestParam(value = "pageNumb",required = true)int pageNumb,
                              @RequestParam(value = "limit",required = true)int limit)
     {
-        MessageExample messageExample=new MessageExample();
-        MessageExample.Criteria criteria=messageExample.createCriteria();
-        criteria.andMessageLike("%"+message+"%");
-        List<Message>select=messageService.findMessageSelectiveWithRowbounds(messageExample,pageNumb,limit);
+        MessageExample messageExample = new MessageExample();
+        MessageExample.Criteria criteria = messageExample.createCriteria();
+        criteria.andMessageLike("%" + message+"%");
+        List<Message>select = messageService.findMessageSelectiveWithRowbounds(messageExample,pageNumb,limit);
 
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
@@ -121,11 +120,11 @@ public class MessageController {
     public @ResponseBody
     Response searchByUsername(@RequestParam(value = "username",required = false,defaultValue = "")String username,
                               @RequestParam(value = "pageNumb",required = true)int pageNumb,
-                              @RequestParam(value = "limit",required = true)int limit)
-    {
-        MessageExample messageExample=new MessageExample();
-        MessageExample.Criteria criteria=messageExample.createCriteria();
-        criteria.andUsernameLike("%"+username+"%");
+                              @RequestParam(value = "limit",required = true)int limit) {
+
+        MessageExample messageExample = new MessageExample();
+        MessageExample.Criteria criteria = messageExample.createCriteria();
+        criteria.andUsernameLike("%" + username+"%");
         List<Message>select=messageService.findMessageSelectiveWithRowbounds(messageExample,pageNumb,limit);
 
         Response response = Responses.successResponse();

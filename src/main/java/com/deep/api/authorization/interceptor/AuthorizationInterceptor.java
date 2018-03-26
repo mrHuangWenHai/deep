@@ -73,8 +73,6 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
 
-
-
         return true;
     }
 }
