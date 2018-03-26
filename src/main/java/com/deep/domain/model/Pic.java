@@ -1,29 +1,42 @@
 package com.deep.domain.model;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
-public class    Pic implements Serializable {
+public class Pic implements Serializable {
     private Long id;
 
     private String address;
 
+    @NotNull(message = "商标耳牌不能为空")
+    @Size(min =15, max =15, message = "商标耳牌长度错误")
     private String brand;
 
+    @NotNull(message = "日期不能为空")
     private Date udate;
 
+    @NotNull(message = "专家不能为空")
     private String expert;
 
+    @NotNull(message = "性别不能为空")
     private String sex;
 
+    @NotNull(message = "解决方案不能为空")
     private String solution;
 
+    @NotNull(message = "症状不能为空")
     private String symptom;
 
+    @NotNull(message = "上传人不能为空")
     private String uploader;
 
+    @NotNull(message = "检疫耳牌不能为空")
+    @Size(min =15, max =15, message = "检疫耳牌长度错误")
     private String vaccine;
 
+    @NotNull(message = "文件名不能为空")
     private String filename;
 
     private static final long serialVersionUID = 1L;

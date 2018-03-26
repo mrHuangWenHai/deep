@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -22,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Controller
-public class MessageController {
+public class MessageResource {
 
     @Resource
     private MessageService messageService;
@@ -36,8 +37,7 @@ public class MessageController {
     @RequestMapping(value = "/messageboard/insert",method = RequestMethod.POST)
     public @ResponseBody
     Response addMessage(@Valid Message message,
-                        HttpServletRequest request)
-    {
+                        HttpServletRequest request) {
         message.setUsername(message.getUsername());
         message.setContact(message.getContact());
         message.setMessage(message.getMessage());
@@ -47,60 +47,65 @@ public class MessageController {
         message.setAttitude(message.getAttitude());
         message.setIntention(message.getIntention());
 
-        //留言追加写入到message.txt文件中用作数据分析
-        String path=request.getSession().getServletContext().getContextPath()+"../message/";
+//        //留言追加写入到message.txt文件中用作数据分析
+//        String path=request.getSession().getServletContext().getContextPath()+"../message/";
+//
+//        File f = new File(path);
+//
+//        if(!f.exists())
+//        {
+//            f.mkdirs();
+//        }
+//
+//        String fileName = "message.txt";
+//
+//        File file = new File(path,fileName);
+//
+//        if (!file.exists()){
+//            try{
+//                file.createNewFile();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        String fileAddress = path+fileName;
+//
+//        try{
+//            FileWriter writer = new FileWriter(fileAddress,true);
+//            //由于在linux和windows中换行符的不同
+//            //在程序我们应尽量使用System.getProperty("line.separator")来获取当前系统的换
+//            //行符，而不是写/r/n或/n。
+//            writer.write(message.getMessage()+"\n");
+//            writer.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
-        File f = new File(path);
 
-        if(!f.exists())
-        {
-            f.mkdirs();
+        int id = messageService.insertMessage(message);
+
+//        MessageExample messageExample =new MessageExample();
+//        MessageExample.Criteria criteria=messageExample.createCriteria();
+//        criteria.andIdEqualTo(message.getId());
+//        List<Message> select=messageService.findMessageSelective(messageExample);
+
+        if (id != 0) {
+            Response response = Responses.successResponse();
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("Message", id);
+            response.setData(data);
+            return response;
         }
-
-        String fileName = "message.txt";
-
-        File file = new File(path,fileName);
-
-        if (!file.exists()){
-            try{
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        else{
+            Response response = Responses.errorResponse("数据插入失败");
+            return  response;
         }
-
-        String fileAddress = path+fileName;
-
-        try{
-            FileWriter writer = new FileWriter(fileAddress,true);
-            //由于在linux和windows中换行符的不同
-            //在程序我们应尽量使用System.getProperty("line.separator")来获取当前系统的换
-            //行符，而不是写/r/n或/n。
-            writer.write(message.getMessage()+"\n");
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-
-        messageService.insertMessage(message);
-
-        MessageExample messageExample =new MessageExample();
-        MessageExample.Criteria criteria=messageExample.createCriteria();
-        criteria.andIdEqualTo(message.getId());
-        List<Message> select=messageService.findMessageSelective(messageExample);
-
-        Response response= Responses.successResponse();
-        HashMap<String,Object>data=new HashMap<>();
-        data.put("Message",select);
-        response.setData(data);
-        return response;
     }
 
     @RequestMapping(value = "/messageboard/searchByMessage",method = RequestMethod.POST)
     public @ResponseBody
-    Response searchByMessage(@RequestParam(value = "message",required = false,defaultValue = "")String message,
+    Response searchByMessage(@NotNull(message = "留言不能为空") @RequestParam(value = "message",required = false,defaultValue = "")String message,
                              @RequestParam(value = "pageNumb",required = true)int pageNumb,
                              @RequestParam(value = "limit",required = true)int limit)
     {
@@ -118,7 +123,7 @@ public class MessageController {
 
     @RequestMapping(value = "/messageboard/searchByUsername",method = RequestMethod.POST)
     public @ResponseBody
-    Response searchByUsername(@RequestParam(value = "username",required = false,defaultValue = "")String username,
+    Response searchByUsername(@NotNull(message = "用户名不能为空") @RequestParam(value = "username",required = false,defaultValue = "")String username,
                               @RequestParam(value = "pageNumb",required = true)int pageNumb,
                               @RequestParam(value = "limit",required = true)int limit) {
 
@@ -136,7 +141,7 @@ public class MessageController {
 
     @RequestMapping(value = "/messageboard/searchByTag",method = RequestMethod.POST)
     public @ResponseBody
-    Response searchByTag(@RequestParam(value = "tag",required = false,defaultValue = "")String tag,
+    Response searchByTag(@NotNull(message = "标签不能为空")  @RequestParam(value = "tag",required = false,defaultValue = "")String tag,
                               @RequestParam(value = "pageNumb",required = true)int pageNumb,
                               @RequestParam(value = "limit",required = true)int limit)
     {
@@ -153,7 +158,7 @@ public class MessageController {
     }
     @RequestMapping(value = "/messageboard/searchByAttitude",method = RequestMethod.POST)
     public @ResponseBody
-    Response searchByAttitude(@RequestParam(value = "attitude",required = false,defaultValue = "")String attitude ,
+    Response searchByAttitude(@NotNull(message = "态度不能为空")  @RequestParam(value = "attitude",required = false,defaultValue = "")String attitude ,
                               @RequestParam(value = "pageNumb",required = true)int pageNumb,
                               @RequestParam(value = "limit",required = true)int limit)
     {
@@ -170,7 +175,7 @@ public class MessageController {
     }
     @RequestMapping(value = "/messageboard/searchByIntention",method = RequestMethod.POST)
     public @ResponseBody
-    Response searchByIntention(@RequestParam(value = "intention",required = false,defaultValue = "")String intention,
+    Response searchByIntention(@NotNull(message = "购买意向不能为空")  @RequestParam(value = "intention",required = false,defaultValue = "")String intention,
                               @RequestParam(value = "pageNumb",required = true)int pageNumb,
                               @RequestParam(value = "limit",required = true)int limit)
     {
