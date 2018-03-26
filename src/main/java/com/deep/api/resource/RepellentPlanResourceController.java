@@ -45,57 +45,50 @@ public class RepellentPlanResourceController {
      * 成功：success
      * 失败：返回对应失败错误
      * METHOD:POST
-     * @param factoryNum
-     * @param crowdNum
-     * @param repellentEartag
-     * @param repellentTime
-     * @param repellentName
-     * @param repellentWay
-     * @param repellentQuality
-     * @param operator
-     * @param remark
+     * @param repellentPlanModel
      * @param request
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/saveshow",method = RequestMethod.POST)
-    public Response SaveShow(@RequestParam("factoryNum") BigInteger factoryNum,
-                             @RequestParam("crowdNum") String crowdNum,
-                             @RequestParam("repellentEartag") MultipartFile repellentEartag,
-                             @RequestParam("repellentTime") String repellentTime,
-                             @RequestParam("repellentName") String repellentName,
-                             @RequestParam("repellentWay") String repellentWay,
-                             @RequestParam("repellentQuality") String repellentQuality,
-                             @RequestParam("operator") String operator,
+    public Response SaveShow(@RequestBody RepellentPlanModel repellentPlanModel,
+                             //@RequestParam("factoryNum") BigInteger factoryNum,
+                             //@RequestParam("crowdNum") String crowdNum,
+                             //@RequestParam("repellentEartag") MultipartFile repellentEartag,
+                             //@RequestParam("repellentTime") String repellentTime,
+                             //@RequestParam("repellentName") String repellentName,
+                             //@RequestParam("repellentWay") String repellentWay,
+                             //@RequestParam("repellentQuality") String repellentQuality,
+                             //@RequestParam("operator") String operator,
                              //@RequestParam("professor") String professor, 审核时自动插入
                              //@RequestParam("supervisor") String supervisor, 审核时自动插入
-                             @RequestParam("remark") String remark,
+                             //@RequestParam("remark") String remark,
                              //@RequestParam("isPass") String isPass,  默认 未审核
                              //@RequestParam("unpassReason") String unpassReason, 默认 无
                              //@RequestParam("gmtCreate") Timestamp gmtCreate; 插入时自动生成
                              // 下同
                              HttpServletRequest request
     ) {
-        if ("".equals(factoryNum.toString()) ||
-                "".equals(crowdNum) ||
-                repellentEartag.isEmpty() ||
-                "".equals(repellentTime) ||
-                "".equals(repellentName) ||
-                "".equals(repellentWay) ||
-                "".equals(repellentQuality) ||
-                "".equals(operator) ||
-                "".equals(remark)) {
+        if ("".equals(repellentPlanModel.getFactoryNum().toString()) ||
+                "".equals(repellentPlanModel.getCrowdNum()) ||
+                repellentPlanModel.getRepellentEartag().isEmpty() ||
+                "".equals(repellentPlanModel.getRepellentTime()) ||
+                "".equals(repellentPlanModel.getRepellentName()) ||
+                "".equals(repellentPlanModel.getRepellentWay()) ||
+                "".equals(repellentPlanModel.getRepellentQuality()) ||
+                "".equals(repellentPlanModel.getOperator()) ||
+                "".equals(repellentPlanModel.getRemark())) {
             return new Response().addData("Error","Lack Item");
         } else {
             try{
-                RepellentPlanModel repellentPlanModel = repellentPlanService.getRepellentPlanModelByfactoryNumAndrepellentTimeAndrepellentName(factoryNum,repellentTime,repellentName);
-                if (repellentPlanModel == null){
+                RepellentPlanModel repellentPlanModel1 = repellentPlanService.getRepellentPlanModelByfactoryNumAndrepellentTimeAndrepellentName(repellentPlanModel.getFactoryNum(),repellentPlanModel.getRepellentTime(),repellentPlanModel.getRepellentName());
+                if (repellentPlanModel1 == null){
                     //上传文件
                     UploadUtil uploadUtil = new UploadUtil();
                     try{
                         String filepath = request.getSession().getServletContext().getContextPath()+"../EartagDocument/repellentEartag/"+"/";
                         try {
-                            uploadUtil.uploadFile(repellentEartag.getBytes(), filepath);
+                            uploadUtil.uploadFile(repellentPlanModel.getRepellentEartag().getBytes(), filepath);
                             //System.out.println("saving file");
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -103,11 +96,13 @@ public class RepellentPlanResourceController {
 
                         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                         String ispass = "0";
-                        repellentPlanService.setRepellentPlanModel(new RepellentPlanModel(factoryNum,crowdNum,uploadUtil.getFilename(),
-                                                                        repellentTime,repellentName,repellentWay,repellentQuality,
-                                                                        operator,remark,ispass,ispass,timestamp));
+
+                        repellentPlanService.setRepellentPlanModel(new RepellentPlanModel(repellentPlanModel.getFactoryNum(),repellentPlanModel.getCrowdNum(),uploadUtil.getFilename(),
+                                repellentPlanModel.getRepellentTime(),repellentPlanModel.getRepellentName(),repellentPlanModel.getRepellentWay(),repellentPlanModel.getRepellentQuality(),
+                                repellentPlanModel.getOperator(),repellentPlanModel.getRemark(),ispass,ispass,timestamp));
                         //RepellentPlanModel repellentPlanModel1 = repellentPlanService.getRepellentPlanModelByfactoryNumAndrepellentTimeAndrepellentName(factoryNum, repellentTime, repellentName);
                         //System.out.println("save before:"+ispass);
+
                         return new Response().addData("Success","");
                     }catch (Exception e){
                         e.printStackTrace();
@@ -141,7 +136,9 @@ public class RepellentPlanResourceController {
     @ResponseBody
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
     public Response FindShow(@RequestBody RepellentPlanModel repellentPlanModel){
+        //
         RowBounds bounds = new RowBounds(0,10);
+
         List<RepellentPlanModel> repellentPlanModels =repellentPlanService.getRepellentPlanModel(repellentPlanModel.getFactoryNum(),
                 repellentPlanModel.getCrowdNum(),repellentPlanModel.getRepellentEartag(), repellentPlanModel.getRepellentTimeStart() ,
                 repellentPlanModel.getRepellentTimeEnd(), repellentPlanModel.getRepellentName(), repellentPlanModel.getRepellentWay(),

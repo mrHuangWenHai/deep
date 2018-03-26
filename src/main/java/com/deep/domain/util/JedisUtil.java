@@ -84,7 +84,7 @@ public class JedisUtil {
         if (temValue == null){
             jedis.set(key,"1");
         }else {
-            System.out.println("断点1");
+            //System.out.println("断点1");
             Integer v = Integer.parseInt(temValue);
             v += 1;
             System.out.println("before :"+"redis key:"+key+" redis value:"+jedis.get(key));
@@ -202,6 +202,42 @@ public class JedisUtil {
      */
     public void redisInLoginExtend(String key, String value){
 
+    }
+
+    /**
+     * 获取redis中某一key的value
+     * @param key
+     * @return
+     */
+    public String getCertainKeyValue(String key){
+        Jedis jedis = new Jedis("localhost");
+        return jedis.get(key);
+    }
+
+    /**
+     * 存储某一key的value至redis
+     * @param key
+     * @param value
+     * @return
+     */
+    public void setCertainKeyValue(String key, String value){
+        Jedis jedis = new Jedis("localhost");
+        jedis.set(key, value);
+    }
+
+
+    /**
+     * 存储某一key的value至redis
+     * 存在过期时间
+     * @param key
+     * @param value
+     * @param expireTime
+     * @return
+     */
+    public void setCertainKeyValueWithExpireTime(String key, String value,int expireTime){
+        Jedis jedis = new Jedis("localhost");
+        jedis.set(key, value);
+        jedis.expire(key,expireTime);
     }
 
 

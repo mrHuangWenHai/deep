@@ -48,6 +48,10 @@ public class DisinfectFilesService {
         List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesMapper.getDisinfectFilesModelBydisinfectTime(disinfectTime);
         return disinfectFilesModels;
     }
+    public List<DisinfectFilesModel> getDisinfectFilesModelByfactoryNumAnddisinfectTime(BigInteger factoryNum, String gmtCreate, String gmtTrans){
+        List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesMapper.getDisinfectFilesModelByfactoryNumAnddisinfectTime(factoryNum, gmtCreate, gmtTrans);
+        return disinfectFilesModels;
+    }
     public DisinfectFilesModel getDisinfectFilesModelByfactoryNumAnddisinfectTimeAnddisinfectName(BigInteger factoryNum, String disinfectTime, String disinfectName){
         DisinfectFilesModel disinfectFilesModel = this.disinfectFilesMapper.getDisinfectFilesModelByfactoryNumAnddisinfectTimeAnddisinfectName(factoryNum,disinfectTime,disinfectName);
         return disinfectFilesModel;

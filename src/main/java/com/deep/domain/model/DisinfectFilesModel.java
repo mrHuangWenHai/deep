@@ -1,11 +1,13 @@
 package com.deep.domain.model;
 
+import org.apache.ibatis.session.RowBounds;
+
 import java.math.BigInteger;
 import java.util.Date;
 import java.sql.Timestamp;
 
 public class DisinfectFilesModel {
-    private int id;      //id
+    private BigInteger id;      //id
     private BigInteger factoryNum;     //工厂号
     private String disinfectTime;     //消毒时间
     private String disinfectName;     //消毒药品名称
@@ -27,6 +29,7 @@ public class DisinfectFilesModel {
     //目标:json格式
     private String disinfectTimeStart;
     private String disinfectTimeEnd;
+    private RowBounds bound;
 
 
     public DisinfectFilesModel() {
@@ -60,11 +63,11 @@ public class DisinfectFilesModel {
 
     }
 
-    public int getId() {
+    public BigInteger getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(BigInteger id) {
         this.id = id;
     }
 
@@ -218,5 +221,13 @@ public class DisinfectFilesModel {
 
     public void setDisinfectTimeEnd(String disinfectTimeEnd) {
         this.disinfectTimeEnd = disinfectTimeEnd;
+    }
+
+    public RowBounds getBound() {
+        return bound;
+    }
+
+    public void setBound(RowBounds bound) {
+        this.bound = bound;
     }
 }

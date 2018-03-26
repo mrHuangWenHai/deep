@@ -1,5 +1,7 @@
 package com.deep.domain.model;
 
+import org.apache.ibatis.session.RowBounds;
+
 import java.math.BigInteger;
 import java.sql.Timestamp;
 
@@ -34,6 +36,7 @@ public class GenealogicalFilesModel {
     private String birthTimeEnd;
     private String birthWeightStart;
     private String birthWeightEnd;
+    private RowBounds bounds;
 
     public GenealogicalFilesModel() {
     }
@@ -250,5 +253,13 @@ public class GenealogicalFilesModel {
 
     public void setBirthWeightEnd(String birthWeightEnd) {
         this.birthWeightEnd = birthWeightEnd;
+    }
+
+    public RowBounds getBounds() {
+        return bounds;
+    }
+
+    public void setBounds(RowBounds bounds) {
+        this.bounds = bounds;
     }
 }

@@ -119,6 +119,15 @@
         </if>
     </select>
 
+    <select id="getImmunePlanModelByfactoryNumAndimmuneTime" resultMap="ImmunePlan">
+        SELECT
+        *
+        FROM
+        immune_plan
+        WHERE
+        factory_num = #{facctoryNum} AND immune_time BETWEEN #{gmtCreate} AND #{gmtTrans}
+    </select>
+
 
     <select id="getImmunePlanModelByfactoryNumAndcrowdNumAndimmuneTime" resultMap="ImmunePlan">
         SELECT

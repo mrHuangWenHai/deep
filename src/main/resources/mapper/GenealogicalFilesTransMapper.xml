@@ -6,7 +6,7 @@
     <insert id="setGenealogicalFilesTransModel" parameterType="com.deep.domain.model.GenealogicalFilesTransModel">
         INSERT INTO genealogical_files_trans(
         before_owner_factory,
-        next_owner_factory,
+        now_owner_factory,
         trademark_eartag,
         trans_time,
         trans_weight,
@@ -14,32 +14,32 @@
         )
         VALUES(
         #{genealogicalFilesTransModel.beforeOwnerFactory},
-        #{genealogicalFilesTransModel.nextOwnerFactory},
+        #{genealogicalFilesTransModel.nowOwnerFactory},
         #{genealogicalFilesTransModel.trademarkEartag},
         #{genealogicalFilesTransModel.transTime},
         #{genealogicalFilesTransModel.transWeight},
         #{genealogicalFilesTransModel.gmtCreate}
         )
     </insert>
-    <select id="getGenealogicalFilesTransModelBytrademarkEartag" resultType="com.deep.domain.model.GenealogicalFilesTransModel">
-        SELECT
-        *
-        FROM
-        genealogical_files_trans
-        WHERE
-        next_owner_factory = #{nextOwnerFactory}
-    </select>
 
-    <resultMap id="genealogicalFilesTrans" type="com.deep.domain.model.GenealogicalFilesTransModel">
+    <resultMap id="GenealogicalFilesTrans" type="com.deep.domain.model.GenealogicalFilesTransModel">
         <result property="beforeOwnerFactory" column="before_owner_factory"/>
-        <result property="nextOwnerFactory" column="next_owner_factory"/>
+        <result property="nowOwnerFactory" column="now_owner_factory"/>
         <result property="trademarkEartag" column="trademark_eartag"/>
         <result property="transTime" column="trans_time"/>
         <result property="transWeight" column="trans_weight"/>
         <result property="gmtCreate" column="gmt_create"/>
     </resultMap>
+    <select id="getGenealogicalFilesTransModelBytrademarkEartag" resultMap="GenealogicalFilesTrans" >
+    SELECT
+    *
+    FROM
+    genealogical_files_trans
+    WHERE
+    trademark_eartag = #{trademarkEartag}
+</select>
 
-    <select id="getAllGenealogicalFilesTransModel" resultMap="genealogicalFilesTrans">
+    <select id="getAllGenealogicalFilesTransModel" resultMap="GenealogicalFilesTrans">
         SELECT
         *
         FROM

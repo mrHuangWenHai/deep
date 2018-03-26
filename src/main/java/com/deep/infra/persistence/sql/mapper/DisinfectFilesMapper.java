@@ -31,9 +31,13 @@ public interface DisinfectFilesMapper {
                                                      RowBounds bounds);
     List<DisinfectFilesModel> getDisinfectFilesModelByfactoryNum(@Param("factoryNum")BigInteger factoryNum);
     List<DisinfectFilesModel> getDisinfectFilesModelBydisinfectTime(@Param("disinfectTime")Date disinfectTime);
+    List<DisinfectFilesModel> getDisinfectFilesModelByfactoryNumAnddisinfectTime(@Param("factoryNum")BigInteger factoryNum,
+                                                                                 @Param("gmtCreate") String gmtCreate,
+                                                                                 @Param("gmtTrans") String gmtTrans);
     DisinfectFilesModel getDisinfectFilesModelByfactoryNumAnddisinfectTimeAnddisinfectName(@Param("factoryNum") BigInteger factoryNum,
                                                                                            @Param("disinfectTime") String disinfectTime,
                                                                                            @Param("disinfectName") String disinfectName);
+
 
 
     int updateDisinfectFilesModelByProfessor(@Param("professor") String professor,

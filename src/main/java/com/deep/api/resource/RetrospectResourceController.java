@@ -1,10 +1,18 @@
 package com.deep.api.resource;
 
+import com.deep.domain.model.DisinfectFilesModel;
 import com.deep.domain.model.GenealogicalFilesModel;
+import com.deep.domain.model.GenealogicalFilesTransModel;
 import com.deep.domain.service.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 /**
  * 用于追溯系统的查询
@@ -38,6 +46,28 @@ public class RetrospectResourceController {
     private ImmunePlanService immunePlanService;
     @Resource
     private RepellentPlanService repellentPlanService;
+
+    @ResponseBody
+    @RequestMapping(value = "/retro")
+    public String Retro(){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-MM-ss");
+        GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesService.getGenealogicalFilesModelBytradeMarkEartag("201102023456789");
+        List<GenealogicalFilesTransModel> genealogicalFilesTransModels = genealogicalFilesTransService.getGenealogicalFilesTransModelBytrademarkEartag(genealogicalFilesModel.getTradeMarkEartag());
+
+        List<DisinfectFilesModel> disinfectFilesModels;
+        for( int i = 0; i < genealogicalFilesTransModels.size(); i++){
+            //如果gmtTrans为空 说明该羊仍在该厂内
+            //时间间隔由gmtCreate到现在
+            if(genealogicalFilesTransModels.get(i).getGmtTrans() == null){
+                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                disinfectFilesModels = disinfectFilesService.getDisinfectFilesModelByfactoryNumAnddisinfectTime(
+                        new BigInteger(genealogicalFilesTransModels.get(i).getBeforeOwnerFactory()),
+                        simpleDateFormat.format(genealogicalFilesTransModels.get(i).getGmtCreate()),simpleDateFormat.format(timestamp));
+            }
+        }
+
+        return null;
+    }
 
 
 }

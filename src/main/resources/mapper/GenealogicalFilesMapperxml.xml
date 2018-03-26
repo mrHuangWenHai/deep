@@ -97,16 +97,8 @@
                 AND self_eartag = #{selfEartag}
             </if>
             <if test="immuneEartag!= null and immuneEartag != '' ">
-                AND immune_eartag #{immuneEartag}
+                AND immune_eartag = #{immuneEartag}
             </if>
-            <!--
-            <if test="immuneEartagStart != null and immuneEartagStart != '' ">
-                AND immune_eartag LIKE concat(#{immuneEartagStart},'%')
-            </if>
-            <if test="immuneEartagEnd != null and immuneEartagEnd != '' ">
-                AND immune_eartag LIKE concat('%',#{immuneEartagEnd})
-            </if>
-            -->
             <if test="tradeMarkEartag != null and tradeMarkEartag != '' ">
                 AND trademark_eartag = #{tradeMarkEartag}
             </if>

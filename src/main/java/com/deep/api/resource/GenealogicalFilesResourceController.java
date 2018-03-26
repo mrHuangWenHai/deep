@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/allfunction/gf")
@@ -54,7 +55,7 @@ public class GenealogicalFilesResourceController {
      */
     @ResponseBody
     @RequestMapping(value = "/saveshow",method = RequestMethod.POST)
-    public Response SaveShow(@Valid GenealogicalFilesModel genealogicalFilesModel) {
+    public Response SaveShow(@RequestBody GenealogicalFilesModel genealogicalFilesModel) {
         //System.out.println("传参数成功");
         if("".equals(genealogicalFilesModel.getSelfEartag())||
                 "".equals(genealogicalFilesModel.getImmuneEartag())||
@@ -109,11 +110,19 @@ public class GenealogicalFilesResourceController {
     }
 
 
+    //bound为必传参数
     @ResponseBody
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
     public Response FindResult(@RequestBody GenealogicalFilesModel genealogicalFilesModel){
-        System.out.println("running:"+genealogicalFilesModel.getColor());
-        return new Response().addData("Success",genealogicalFilesModel.getColor());
+        System.out.println("EartagOfFather:"+genealogicalFilesModel.getEartagOfFather());
+        List<GenealogicalFilesModel> genealogicalFilesModels = genealogicalFilesService.getGenealogicalFilesModel(genealogicalFilesModel.getSelfEartag(),
+                genealogicalFilesModel.getImmuneEartag(),genealogicalFilesModel.getTradeMarkEartag(),genealogicalFilesModel.getBreedingSheepBase(),
+                genealogicalFilesModel.getBirthTimeStart(),genealogicalFilesModel.getBirthTimeEnd(),genealogicalFilesModel.getBirthWeightStart(),
+                genealogicalFilesModel.getBirthWeightEnd(),genealogicalFilesModel.getColor(),genealogicalFilesModel.getSex(),genealogicalFilesModel.getEartagOfFather(),
+                genealogicalFilesModel.getEartagOfMother(),genealogicalFilesModel.getEartagOfFathersFather(),genealogicalFilesModel.getEartagOfFathersMother(),
+                genealogicalFilesModel.getEartagOfMothersFather(),genealogicalFilesModel.getEartagOfMothersMother(),new RowBounds(0,20));
+
+        return new Response().addData("Result",genealogicalFilesModels);
     }
 
     /**
@@ -136,7 +145,7 @@ public class GenealogicalFilesResourceController {
      * METHOD:GET
      * @return
      */
-    @RequestMapping(value = "delete",method = RequestMethod.POST)
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
     public String Delete(){
         return "GenealogicalFilesHTML/GenealogicalFilesDeleteForm";
     }
@@ -161,5 +170,8 @@ public class GenealogicalFilesResourceController {
         }
         return new Response().addData("Delete Fail!","Error");
     }
+
+
+    //update
 
 }

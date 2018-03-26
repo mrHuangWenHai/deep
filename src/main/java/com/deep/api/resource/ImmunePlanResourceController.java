@@ -60,55 +60,46 @@ public class ImmunePlanResourceController {
      * Value:未审核条数
      *
      * METHOD:POST
-     * @param factoryNum
-     * @param crowdNum
-     * @param immuneEartag
-     * @param immuneTime
-     * @param immuneKind
-     * @param immuneWay
-     * @param immuneQuality
-     * @param immuneDuring
-     * @param operator
-     * @param remark
+     * @param immunePlanModel
      * @param request
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/saveshow", method = RequestMethod.POST)
-    public Response SaveShow(@RequestParam("factoryNum") BigInteger factoryNum,
-                           @RequestParam("crowdNum") String crowdNum,
-                           @RequestParam("immuneEartag") MultipartFile immuneEartag,
-                           @RequestParam("immuneTime") String immuneTime,
-                           @RequestParam("immuneKind") String immuneKind,
-                           @RequestParam("immuneWay") String immuneWay,
-                           @RequestParam("immuneQuality") String immuneQuality,
-                           @RequestParam("immuneDuring") String immuneDuring,
-                           @RequestParam("operator") String operator,
-                           @RequestParam("remark") String remark,
-                           @RequestParam("message") String message,
-                           HttpServletRequest request)  {
+    public Response SaveShow(@RequestBody ImmunePlanModel immunePlanModel,
+                             //@RequestParam("factoryNum") BigInteger factoryNum,
+                             //@RequestParam("crowdNum") String crowdNum,
+                             //@RequestParam("immuneEartag") MultipartFile immuneEartag,
+                             //@RequestParam("immuneTime") String immuneTime,
+                             //@RequestParam("immuneKind") String immuneKind,
+                             //@RequestParam("immuneWay") String immuneWay,
+                             //@RequestParam("immuneQuality") String immuneQuality,
+                             //@RequestParam("immuneDuring") String immuneDuring,
+                             //@RequestParam("operator") String operator,
+                             //@RequestParam("remark") String remark,
+                             HttpServletRequest request)  {
         /*Jedis jedis = new Jedis("localhost");
         jedis.get("userId");
         jedis.get("token");
         System.out.println(jedis.get("userId")+ jedis.get("token"));
         System.out.println("查看userId的剩余生存时间："+jedis.ttl("userId"));*/
-        if ("".equals(factoryNum.toString()) ||
-                "".equals(crowdNum) ||
-                immuneEartag.isEmpty() ||
-                "".equals(immuneTime) ||
-                "".equals(immuneKind) ||
-                "".equals(immuneWay) ||
-                "".equals(immuneQuality) ||
-                "".equals(immuneDuring) ||
-                "".equals(operator) ||
-                "".equals(remark)) {
+        if ("".equals(immunePlanModel.getFactoryNum().toString()) ||
+                "".equals(immunePlanModel.getCrowdNum()) ||
+                immunePlanModel.getImmuneEartag().isEmpty() ||
+                "".equals(immunePlanModel.getImmuneTime()) ||
+                "".equals(immunePlanModel.getImmuneKind()) ||
+                "".equals(immunePlanModel.getImmuneWay()) ||
+                "".equals(immunePlanModel.getImmuneQuality()) ||
+                "".equals(immunePlanModel.getImmuneDuring()) ||
+                "".equals(immunePlanModel.getOperator()) ||
+                "".equals(immunePlanModel.getRemark())) {
             return new Response().addData("Error", "Lack Item");
         } else {
             try{
-                ImmunePlanModel immunePlanModel = immunePlanService.getImmunePlanModelByfactoryNumAndcrowdNumAndimmuneTime(factoryNum,crowdNum,immuneTime);
+                ImmunePlanModel immunePlanModel1 = immunePlanService.getImmunePlanModelByfactoryNumAndcrowdNumAndimmuneTime(immunePlanModel.getFactoryNum(), immunePlanModel.getCrowdNum(), immunePlanModel.getImmuneTime());
                 //文件上传并将数据保存到数据库中
                 //System.out.println("save before");
-                if(immunePlanModel == null) {
+                if(immunePlanModel1 == null) {
                     UploadUtil uploadUtil = new UploadUtil();
                     try{
                         String filepath = request.getSession().getServletContext().getContextPath()+"../EartagDocument/immuneEartag/"+"/";
@@ -116,7 +107,7 @@ public class ImmunePlanResourceController {
                         //if (!immuneEartag.isEmpty()) System.out.println("immuneEartag is ready");
                         //System.out.println(filepath);
                         try {
-                            uploadUtil.uploadFile(immuneEartag.getBytes(), filepath);
+                            uploadUtil.uploadFile(immunePlanModel.getImmuneEartag().getBytes(), filepath);
                             //System.out.println("saving file");
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -125,53 +116,74 @@ public class ImmunePlanResourceController {
                         //System.out.println("mysql执行前");
                         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                         String isPass = "0";
-                        immunePlanService.setImmunePlanModel(new ImmunePlanModel(factoryNum,crowdNum,uploadUtil.getFilename(),immuneTime,
-                                immuneKind,immuneWay,immuneQuality,immuneDuring,operator,
-                                remark,isPass,isPass,timestamp,timestamp));
+                        immunePlanService.setImmunePlanModel(new ImmunePlanModel(immunePlanModel.getFactoryNum(),immunePlanModel.getCrowdNum(),uploadUtil.getFilename(),
+                                immunePlanModel.getImmuneTime(), immunePlanModel.getImmuneKind(),immunePlanModel.getImmuneWay(),immunePlanModel.getImmuneQuality(),
+                                immunePlanModel.getImmuneDuring(),immunePlanModel.getOperator(),immunePlanModel.getRemark(), isPass,isPass,timestamp,timestamp));
 
                         //数据插入redis
                         JedisUtil jedisUtil = new JedisUtil();
-                        String professorKey = factoryNum+"_immunePlan_professor";
-                        String supervisorKey = factoryNum+"_immunePlan_supervisor";
-
+                        String professorKey = immunePlanModel.getFactoryNum() + "_immunePlan_professor";
+                        String supervisorKey = immunePlanModel.getFactoryNum() + "_immunePlan_supervisor";
+                        String testSendProfessor = immunePlanModel.getFactoryNum() + "_immunePlan_professor_AlreadySend";
+                        String testSendSupervisor = immunePlanModel.getFactoryNum() + "_immunePlan_supervisor_AlreadySend";
 
                         jedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
                         jedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
-                        //若未完成超过50条
-                        //System.out.println(jedisUtil.redisJudgeTime(professorKey));
-                        if(jedisUtil.redisJudgeTime(professorKey)){
-                            List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(factoryNum);
 
-                            //需完成:userModels.getTelephone()赋值给String
-                            //获得StringBuffer手机号
-                            StringBuffer phoneList = new StringBuffer("");
-                            for(int i = 0; i < userModels.size(); i++){
-                                phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
-                                jedisUtil.redisSendMessage(phoneList.toString(),message);
+                        //System.out.println("testSendProfessorValue:"+jedisUtil.getCertainKeyValue(testSendProfessor));
+                        //System.out.println("judge equal:"+"1".equals(jedisUtil.getCertainKeyValue(testSendProfessor)));
+
+                        //若redis中 若干天未发送短信
+                        //若未完成超过50条
+                        if(!("1".equals(jedisUtil.getCertainKeyValue(testSendProfessor)))){
+                            System.out.println("testSendProfessorValue:"+jedisUtil.getCertainKeyValue(testSendProfessor));
+                            if(jedisUtil.redisJudgeTime(professorKey)){
+
+                                //获取redis中存储的设定过期时间
+                                int expireTime = Integer.parseInt(jedisUtil.getCertainKeyValue("ExpireTime"));
+                                List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(immunePlanModel.getFactoryNum());
+
+                                //需完成:userModels.getTelephone()赋值给String
+                                //获得StringBuffer手机号
+                                StringBuffer phoneList = new StringBuffer("");
+                                for(int i = 0; i < userModels.size(); i++){
+                                    phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
+                                }
+
+                                //发送成功 更新redis中字段
+                                if(jedisUtil.redisSendMessage(phoneList.toString(),jedisUtil.getCertainKeyValue("Message"))){
+                                    jedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor,"1",expireTime*24*60*60);
+                                }
+
+                                //System.out.println(phoneList);
                             }
-                            //System.out.println(phoneList);
+                        }else {
+                            System.out.println("professor:3天内已发送");
                         }
 
-                        if(jedisUtil.redisJudgeTime(supervisorKey)){
-                            List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(factoryNum);
+                        if(!("1".equals(jedisUtil.getCertainKeyValue(testSendSupervisor)))){
+                            if(jedisUtil.redisJudgeTime(supervisorKey)){
+                                int expireTime = Integer.parseInt(jedisUtil.getCertainKeyValue("ExpireTime"));
+                                List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(immunePlanModel.getFactoryNum());
 
-                            //需完成:userModels.getTelephone()赋值给String
-                            //获得StringBuffer手机号
-                            StringBuffer phoneList = new StringBuffer("");
-                            for(int i = 0; i < userModels.size(); i++){
-                                phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
-                                if(jedisUtil.redisSendMessage(phoneList.toString(),message)){
+                                StringBuffer phoneList = new StringBuffer("");
+                                for(int i = 0; i < userModels.size(); i++){
+                                    phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
+                                }
+                                if(jedisUtil.redisSendMessage(phoneList.toString(),jedisUtil.getCertainKeyValue("Message"))){
                                     System.out.println("发送成功！");
-                                    return new Response().addData("Success","");
+                                    jedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",expireTime*24*60*60);
+                                    return new Response().addData("Success","Send ok");
                                 }
                             }
-                            System.out.println("专家手机号"+phoneList);
+                        }else {
+                            System.out.println("supervisor:3天内已发送");
                         }
+                        return new Response().addData("Success","Uneccessary send");
                         //jedisUtil.redisSaveProfessorSupervisorWorks(professorKey,factoryNum);
                         //jedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey,factoryNum);
-
-                        return new Response().addData("Error","Send Error");
                         }catch (Exception e){
+
                             e.printStackTrace();
                         }
 

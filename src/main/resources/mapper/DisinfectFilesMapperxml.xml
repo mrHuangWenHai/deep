@@ -48,6 +48,7 @@
         <result property="gmtProfessor" column="gmt_professor"/>
         <result property="gmtSupervise" column="gmt_supervise"/>
     </resultMap>
+
     <select id="getDisinfectFilesModel" resultMap="DisinfectFiles">
         SELECT
         *
@@ -95,8 +96,17 @@
         <if test="unpassReason2 != null and unpassReason2 != '' ">
             AND unpass_reason2 = #{unpassReason2}
         </if>
-
     </select>
+
+    <!--用于追溯时查询-->
+    <select id="getDisinfectFilesModelByfactoryNumAnddisinfectTime" resultMap="DisinfectFiles">
+        SELECT
+        *
+        FROM
+        disinfection_files
+        WHERE factory_num = #{factoryNum} AND disinfect_time BETWEEN #{gmtCreate} AND #{gmtTrans}
+    </select>
+
     <select id="getDisinfectFilesModelByfactoryNum" resultMap="DisinfectFiles">
         SELECT
         *

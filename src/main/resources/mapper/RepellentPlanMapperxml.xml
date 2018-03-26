@@ -106,7 +106,14 @@
         </if>
     </select>
 
-
+    <select id="getRepellentPlanModelByfactoryNumAndrepellentTime" resultMap="RepellentPlan">
+        SELECT
+        *
+        FROM
+        repellent_plan
+        WHERE
+        factory_num = #{factoryNum} AND repellent_time BETWEEN #{gmtCreate} AND #{gmtTrans}
+    </select>
 
     <select id="getRepellentPlanModelByfactoryNumAndrepellentTimeAndrepellentName" resultMap="RepellentPlan">
         SELECT

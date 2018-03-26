@@ -1,5 +1,6 @@
 package com.deep.domain.model;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
@@ -32,6 +33,7 @@ public class ImmunePlanModel {
     //
     private String immuneTimeStart;
     private String immuneTimeEnd;
+    private RowBounds bounds;
 
     public ImmunePlanModel() {
     }
@@ -256,5 +258,13 @@ public class ImmunePlanModel {
 
     public void setImmuneTimeEnd(String immuneTimeEnd) {
         this.immuneTimeEnd = immuneTimeEnd;
+    }
+
+    public RowBounds getBounds() {
+        return bounds;
+    }
+
+    public void setBounds(RowBounds bounds) {
+        this.bounds = bounds;
     }
 }

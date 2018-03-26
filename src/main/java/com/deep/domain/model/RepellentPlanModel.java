@@ -1,5 +1,7 @@
 package com.deep.domain.model;
 
+import org.apache.ibatis.session.RowBounds;
+
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -29,6 +31,7 @@ public class RepellentPlanModel {
     //
     private String repellentTimeStart;
     private String repellentTimeEnd;
+    private RowBounds bounds;
 
     public RepellentPlanModel() {
     }
@@ -239,5 +242,13 @@ public class RepellentPlanModel {
 
     public void setRepellentTimeEnd(String repellentTimeEnd) {
         this.repellentTimeEnd = repellentTimeEnd;
+    }
+
+    public RowBounds getBounds() {
+        return bounds;
+    }
+
+    public void setBounds(RowBounds bounds) {
+        this.bounds = bounds;
     }
 }
