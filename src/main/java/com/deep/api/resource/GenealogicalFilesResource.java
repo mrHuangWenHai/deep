@@ -1,20 +1,25 @@
 package com.deep.api.resource;
 
+import com.deep.api.response.RespMeta;
 import com.deep.api.response.Response;
+import com.deep.api.response.Responses;
 import com.deep.domain.model.GenealogicalFilesModel;
 import com.deep.domain.service.GenealogicalFilesService;
 import org.apache.ibatis.session.RowBounds;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/allfunction/gf")
-public class GenealogicalFilesResourceController {
+@RequestMapping(value = "/gf")
+public class GenealogicalFilesResource {
 
     //替代注册bean
     @Resource
@@ -101,43 +106,58 @@ public class GenealogicalFilesResourceController {
 
     //localhost:8080/allfunction/gf/find
     /**
-     * METHOD:POST
+     * METHOD:GET
      * @return
      */
-    @RequestMapping(value = "/find",method = RequestMethod.POST)
+    @RequestMapping(value = "/find",method = RequestMethod.GET)
     public String Find(){
         return "GenealogicalFilesHTML/GenealogicalFilesFindForm";
     }
 
 
+    /**
+     * 用于条件查找
+     * RowBounds为必传参数
+     * METHOD:GET
+     * @param genealogicalFilesModel
+     * @return
+     */
     //bound为必传参数
     @ResponseBody
-    @RequestMapping(value = "/findshow",method = RequestMethod.POST)
+    @RequestMapping(value = "/findshow",method = RequestMethod.GET)
     public Response FindResult(@RequestBody GenealogicalFilesModel genealogicalFilesModel){
-        System.out.println("EartagOfFather:"+genealogicalFilesModel.getEartagOfFather());
+        //System.out.println("EartagOfFather:"+genealogicalFilesModel.getEartagOfFather());
+
         List<GenealogicalFilesModel> genealogicalFilesModels = genealogicalFilesService.getGenealogicalFilesModel(genealogicalFilesModel.getSelfEartag(),
                 genealogicalFilesModel.getImmuneEartag(),genealogicalFilesModel.getTradeMarkEartag(),genealogicalFilesModel.getBreedingSheepBase(),
                 genealogicalFilesModel.getBirthTimeStart(),genealogicalFilesModel.getBirthTimeEnd(),genealogicalFilesModel.getBirthWeightStart(),
                 genealogicalFilesModel.getBirthWeightEnd(),genealogicalFilesModel.getColor(),genealogicalFilesModel.getSex(),genealogicalFilesModel.getEartagOfFather(),
                 genealogicalFilesModel.getEartagOfMother(),genealogicalFilesModel.getEartagOfFathersFather(),genealogicalFilesModel.getEartagOfFathersMother(),
                 genealogicalFilesModel.getEartagOfMothersFather(),genealogicalFilesModel.getEartagOfMothersMother(),new RowBounds(0,20));
+        System.out.println("ModelSize:"+genealogicalFilesModels.size());
+        System.out.println("ModelId:"+genealogicalFilesModels.get(0).getId());
 
-        return new Response().addData("Result",genealogicalFilesModels);
+        return new Response().addData("Success",genealogicalFilesModels);
     }
 
     /**
      * 查询出满足若干条件后的结果
      * 可由id进行操作
+     * METHOD:GET
      * @param id
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/findshowbyid",method = RequestMethod.POST)
-    public Response FindIdShow(@RequestParam("id") int id) {
-
-        RowBounds bounds = new RowBounds(0,2);
+    @RequestMapping(value = "/findshowbyid",method = RequestMethod.GET)
+    public Response FindIdShow(@RequestParam("id") BigInteger id ) {
+        System.out.println("id:"+id);
         GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesService.getGenealogicalFilesModelByid(id);
-        return new Response().addData("GenealogicalFilesModel",genealogicalFilesModel);
+        //System.out.println(genealogicalFilesModel.getSelfEartag());
+
+        if (genealogicalFilesModel == null){
+            Responses.successResponse();
+        }
+        return null;
 
     }
 
@@ -145,7 +165,7 @@ public class GenealogicalFilesResourceController {
      * METHOD:GET
      * @return
      */
-    @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
     public String Delete(){
         return "GenealogicalFilesHTML/GenealogicalFilesDeleteForm";
     }
@@ -173,5 +193,11 @@ public class GenealogicalFilesResourceController {
 
 
     //update
+    @ResponseBody
+    @RequestMapping(value = "/update",method = RequestMethod.PATCH)
+    public Response Update(@RequestBody GenealogicalFilesModel genealogicalFilesModel){
+        int row = genealogicalFilesService.updateGenealogicalFilesModel(genealogicalFilesModel);
+        return null;
+    }
 
 }
