@@ -28,24 +28,17 @@ public class MessageResource {
     @Resource
     private MessageService messageService;
 
-    @RequestMapping(value = "/messageboard",method = RequestMethod.GET)
-    public String upload(){
-
-        return "insertMessage";
-    }
-
-    @RequestMapping(value = "/messageboard/insert",method = RequestMethod.POST)
+    @RequestMapping(value = "/messageBoard/insert",method = RequestMethod.POST)
     public @ResponseBody
-    Response addMessage(@Valid Message message,
-                        HttpServletRequest request) {
-        message.setUsername(message.getUsername());
-        message.setContact(message.getContact());
-        message.setMessage(message.getMessage());
-        message.setInserttime(new Date());
-        //数据分析相关
-        message.setTag(message.getTag());
-        message.setAttitude(message.getAttitude());
-        message.setIntention(message.getIntention());
+    Response addMessage(@Valid Message message) {
+//        message.setUsername(message.getUsername());
+//        message.setContact(message.getContact());
+//        message.setMessage(message.getMessage());
+//        message.setInserttime(new Date());
+//        //数据分析相关
+//        message.setTag(message.getTag());
+//        message.setAttitude(message.getAttitude());
+//        message.setIntention(message.getIntention());
 
 //        //留言追加写入到message.txt文件中用作数据分析
 //        String path=request.getSession().getServletContext().getContextPath()+"../message/";
@@ -103,7 +96,7 @@ public class MessageResource {
         }
     }
 
-    @RequestMapping(value = "/messageboard/searchByMessage",method = RequestMethod.POST)
+    @RequestMapping(value = "/messageBoard/searchByMessage",method = RequestMethod.POST)
     public @ResponseBody
     Response searchByMessage(@NotNull(message = "留言不能为空") @RequestParam(value = "message",required = false,defaultValue = "")String message,
                              @RequestParam(value = "pageNumb",required = true)int pageNumb,
@@ -121,7 +114,7 @@ public class MessageResource {
         return response;
     }
 
-    @RequestMapping(value = "/messageboard/searchByUsername",method = RequestMethod.POST)
+    @RequestMapping(value = "/messageBoard/searchByUsername",method = RequestMethod.POST)
     public @ResponseBody
     Response searchByUsername(@NotNull(message = "用户名不能为空") @RequestParam(value = "username",required = false,defaultValue = "")String username,
                               @RequestParam(value = "pageNumb",required = true)int pageNumb,
@@ -139,7 +132,7 @@ public class MessageResource {
         return response;
     }
 
-    @RequestMapping(value = "/messageboard/searchByTag",method = RequestMethod.POST)
+    @RequestMapping(value = "/messageBoard/searchByTag",method = RequestMethod.POST)
     public @ResponseBody
     Response searchByTag(@NotNull(message = "标签不能为空")  @RequestParam(value = "tag",required = false,defaultValue = "")String tag,
                               @RequestParam(value = "pageNumb",required = true)int pageNumb,
@@ -156,7 +149,7 @@ public class MessageResource {
         response.setData(data);
         return response;
     }
-    @RequestMapping(value = "/messageboard/searchByAttitude",method = RequestMethod.POST)
+    @RequestMapping(value = "/messageBoard/searchByAttitude",method = RequestMethod.POST)
     public @ResponseBody
     Response searchByAttitude(@NotNull(message = "态度不能为空")  @RequestParam(value = "attitude",required = false,defaultValue = "")String attitude ,
                               @RequestParam(value = "pageNumb",required = true)int pageNumb,
@@ -173,7 +166,7 @@ public class MessageResource {
         response.setData(data);
         return response;
     }
-    @RequestMapping(value = "/messageboard/searchByIntention",method = RequestMethod.POST)
+    @RequestMapping(value = "/messageBoard/searchByIntention",method = RequestMethod.POST)
     public @ResponseBody
     Response searchByIntention(@NotNull(message = "购买意向不能为空")  @RequestParam(value = "intention",required = false,defaultValue = "")String intention,
                               @RequestParam(value = "pageNumb",required = true)int pageNumb,
@@ -190,24 +183,6 @@ public class MessageResource {
         response.setData(data);
         return response;
     }
-
-
-
-
-
-
-//    @RequestMapping(value = "/",method = RequestMethod.GET)
-//    public String (){
-//
-//        return "";
-//    }
-//
-//
-//    @RequestMapping(value = "/",method = RequestMethod.POST)
-//    public @ResponseBody Response ()
-//    {
-//
-//    }
 
 
 }
