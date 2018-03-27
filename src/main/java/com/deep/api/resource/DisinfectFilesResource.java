@@ -20,8 +20,8 @@ import java.util.List;
 
 
 @Controller
-@RequestMapping(value = "/allfunction/df",method = RequestMethod.GET)
-public class DisinfectFilesResourceController {
+@RequestMapping(value = "/df",method = RequestMethod.GET)
+public class DisinfectFilesResource {
 
     @Resource
     private DisinfectFilesService disinfectFilesService;
@@ -33,7 +33,7 @@ public class DisinfectFilesResourceController {
      * METHOD:GET
      * @return
      */
-    @RequestMapping(value = "/function",method = RequestMethod.POST)
+    @RequestMapping(value = "/function",method = RequestMethod.GET)
     public String DisinfectFilesFunctionChoice(){
         /*SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         DisinfectFilesModel disinfectFilesModel = disinfectFilesService.getDisinfectFilesModelByfactoryNumAnddisinfectTimeAnddisinfectName(new BigInteger("2011"),"2018-03-01","消毒液");
@@ -186,27 +186,31 @@ public class DisinfectFilesResourceController {
      * 返回查询结果
      * 以json格式返回前端
      * 分页查询
-     * METHOD:POST
+     * METHOD:GET
      * @param disinfectFilesModel
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/findshow",method = RequestMethod.POST)
+    @RequestMapping(value = "/findshow",method = RequestMethod.GET)
     public Response FindShow(@RequestBody DisinfectFilesModel disinfectFilesModel){
-
-        RowBounds bounds = new RowBounds(0,2);
 
         List<DisinfectFilesModel> disinfectFilesModel1 = disinfectFilesService.getDisinfectFilesModel(disinfectFilesModel.getFactoryNum(),
                 disinfectFilesModel.getDisinfectTimeStart(),disinfectFilesModel.getDisinfectTimeEnd(),disinfectFilesModel.getDisinfectName(),
                 disinfectFilesModel.getDisinfectQuality(),disinfectFilesModel.getDisinfectWay(),disinfectFilesModel.getOperator(),disinfectFilesModel.getProfessor(),
                 disinfectFilesModel.getSupervisor(),disinfectFilesModel.getRemark(),disinfectFilesModel.getIsPass1(),disinfectFilesModel.getUnpassReason1(),
-                disinfectFilesModel.getIsPass2(),disinfectFilesModel.getUnpassReason2(),bounds);
+                disinfectFilesModel.getIsPass2(),disinfectFilesModel.getUnpassReason2(),new RowBounds(disinfectFilesModel.getPage(),disinfectFilesModel.getSize()));
         return new Response().addData("List<DisinfectionFilesModel>",disinfectFilesModel1);
     }
 
     //更新接口
-    //权限仅为专家和监督员
 
+    @ResponseBody
+    @RequestMapping(value = "/pfind",method = RequestMethod.GET)
+    public Response ProfessorFind(@RequestBody DisinfectFilesModel disinfectFilesModel){
+        List<DisinfectFilesModel> disinfectFilesModel1 = this.disinfectFilesService.getDisinfectFilesModelByProfessor(disinfectFilesModel);
+        return new Response().addData("List",disinfectFilesModel1);
+    }
+    //权限仅为专家和监督员
     //////删除数据在查询中再修改
 
 
