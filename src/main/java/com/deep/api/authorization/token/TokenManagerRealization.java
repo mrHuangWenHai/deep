@@ -19,7 +19,7 @@ public class TokenManagerRealization implements TokenManager{
         if (authentication == null || authentication.length() == 0) {
             return null;
         }
-        String[] param = authentication.split("_");
+        String[] param = authentication.split(":");
         if (param.length != 2) {
             return null;
         }

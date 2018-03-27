@@ -34,7 +34,12 @@ public interface UserMapper {
             @Result(property = "question_3", column = "question_3"),
             @Result(property = "answer_1", column = "answer_1"),
             @Result(property = "answer_2", column = "answer_2"),
-            @Result(property = "answer_3", column = "answer_3")
+            @Result(property = "answer_3", column = "answer_3"),
+            @Result(property = "userEmail", column = "user_email"),
+            @Result(property = "MSN", column = "MSN"),
+            @Result(property = "QQ", column = "QQ"),
+            @Result(property = "officialPhone", column = "official_phone"),
+            @Result(property = "familyPhone", column = "family_phone")
     })
     List<UserModel> queryAllUser();
 
@@ -66,7 +71,12 @@ public interface UserMapper {
             @Result(property = "question_3", column = "question_3"),
             @Result(property = "answer_1", column = "answer_1"),
             @Result(property = "answer_2", column = "answer_2"),
-            @Result(property = "answer_3", column = "answer_3")
+            @Result(property = "answer_3", column = "answer_3"),
+            @Result(property = "userEmail", column = "user_email"),
+            @Result(property = "MSN", column = "MSN"),
+            @Result(property = "QQ", column = "QQ"),
+            @Result(property = "officialPhone", column = "official_phone"),
+            @Result(property = "familyPhone", column = "family_phone")
     })
     UserModel queryUserById(Long userId);
 
@@ -98,7 +108,12 @@ public interface UserMapper {
             @Result(property = "question_3", column = "question_3"),
             @Result(property = "answer_1", column = "answer_1"),
             @Result(property = "answer_2", column = "answer_2"),
-            @Result(property = "answer_3", column = "answer_3")
+            @Result(property = "answer_3", column = "answer_3"),
+            @Result(property = "userEmail", column = "user_email"),
+            @Result(property = "MSN", column = "MSN"),
+            @Result(property = "QQ", column = "QQ"),
+            @Result(property = "officialPhone", column = "official_phone"),
+            @Result(property = "familyPhone", column = "family_phone")
     })
     UserModel queryUserByPkuserID(String pkUserid);
 
@@ -130,7 +145,12 @@ public interface UserMapper {
             @Result(property = "question_3", column = "question_3"),
             @Result(property = "answer_1", column = "answer_1"),
             @Result(property = "answer_2", column = "answer_2"),
-            @Result(property = "answer_3", column = "answer_3")
+            @Result(property = "answer_3", column = "answer_3"),
+            @Result(property = "userEmail", column = "user_email"),
+            @Result(property = "MSN", column = "MSN"),
+            @Result(property = "QQ", column = "QQ"),
+            @Result(property = "officialPhone", column = "official_phone"),
+            @Result(property = "familyPhone", column = "family_phone")
     })
     UserModel queryUserByRealnameLike(String userRealname);
 
@@ -160,7 +180,12 @@ public interface UserMapper {
             "question_3, " +
             "answer_1," +
             "answer_2," +
-            "answer_3)" +
+            "answer_3," +
+            "user_email," +
+            "MSN," +
+            "QQ," +
+            "official_phone," +
+            "family_phone)" +
             "values(" +
             "#{gmtCreate}," +
             "#{gmtModified}," +
@@ -182,7 +207,12 @@ public interface UserMapper {
             "#{question_3}," +
             "#{answer_1}," +
             "#{answer_2}," +
-            "#{answer_3}" +
+            "#{answer_3}," +
+            "#{userEmail}," +
+            "#{MSN}," +
+            "#{QQ}," +
+            "#{officialPhone}," +
+            "#{familyPhone}" +
             ")")
     Long insertUser(UserModel userModel);
 
@@ -207,13 +237,17 @@ public interface UserMapper {
             "user_permit = #{userPermit}," +
             "is_extended = #{isExtended}," +
             "is_factory = #{isFactory}," +
-            "question_answer = #{questionAnswer}" +
             "question_1 = #{question_1}, " +
             "question_2 = #{question_2}, " +
             "question_3 = #{question_3}, " +
             "answer_1 = #{answer_1}, " +
             "answer_2 = #{answer_2}, " +
-            "answer_3 = #{answer_3}" +
+            "answer_3 = #{answer_3}," +
+            "user_email = #{userEmail}," +
+            "MSN = #{MSN}," +
+            "QQ = #{QQ}," +
+            "official_phone = #{officialPhone}," +
+            "family_phone = #{familyPhone}" +
             " where id=#{id}")
     Long updateUser(UserModel userModel);
 

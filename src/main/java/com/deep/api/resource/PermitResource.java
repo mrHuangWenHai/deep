@@ -12,9 +12,10 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
-@RequestMapping(value = "permit")
+@RequestMapping(value = "/permit", method = RequestMethod.GET)
 public class PermitResource {
     @Resource
     private PermitService permitService;
@@ -23,15 +24,18 @@ public class PermitResource {
      * 展示所有的权限,不更新新的页面
      * @return 展示所有权限的json格式
      */
-    @Permit(modules = "permit")
+//    @Permit(modules = "permit")
     @GetMapping(value = "/")
     public Response permitLists() {
+        List<PermitModel> permitModels = permitService.getAll();
+        if (permitModels.size() <= 0) {
+            return Responses.errorResponse("无权限信息");
+        }
         Response response = Responses.successResponse();
-
         HashMap<String, Object> data = new HashMap<>();
-        data.put("allPermit", permitService.getAll());
+        data.put("allPermit", permitModels);
+        data.put("nubmer", permitModels.size());
         response.setData(data);
-
         return response;
     }
 
@@ -45,16 +49,18 @@ public class PermitResource {
     @PostMapping(value = "/add")
     public Response addRole(@Valid PermitModel permitModel, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return Responses.errorResponse("添加角色出错,请检查网络后重试");
+            return Responses.errorResponse("添加权限出错,请检查网络后重试");
         } else {
             permitModel.setPermitId(permitModel.getPermitId());
             permitModel.setGmtCreate(new Timestamp(System.currentTimeMillis()));
             permitModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
-
+            Long addID = permitService.addPermit(permitModel);
+            if (addID <= 0) {
+                return Responses.errorResponse("添加失败");
+            }
             Response response = Responses.successResponse();
-
             HashMap<String, Object> data = new HashMap<>();
-            data.put("success", permitService.addPermit(permitModel));
+            data.put("success", addID);
             response.setData(data);
             return response;
         }

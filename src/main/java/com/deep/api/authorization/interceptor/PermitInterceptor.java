@@ -5,8 +5,8 @@ import com.deep.api.authorization.token.TokenManager;
 import com.deep.api.authorization.token.TokenModel;
 import com.deep.api.authorization.tools.Constants;
 import com.deep.api.authorization.tools.RoleAndPermit;
+import com.deep.domain.service.ServiceConfiguration;
 import com.deep.domain.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -183,5 +183,9 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
             }
         }
         return false;
+    }
+
+    public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
+        System.out.println("this is the afterCompletion of PermitInterceptor");
     }
 }

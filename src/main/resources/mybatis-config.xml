@@ -9,6 +9,11 @@
     </typeAliases>
     <mappers>
         <mapper resource="mapper/TestMapper.xml"/>
-        <mapper class="com.deep.infra.persistence.sql.mapper.UserMapper"/>
+        <!--<mapper class="com.deep.infra.persistence.sql.mapper.UserMapper"/>-->
+        <!--<mapper class="com.deep.infra.persistence.sql.mapper.RoleMapper"/>-->
+        <!--<mapper class="com.deep.infra.persistence.sql.mapper.PermitMapper"/>-->
+        <!--<mapper class="com.deep.infra.persistence.sql.mapper.FactoryMapper"/>-->
+        <!--<mapper class="com.deep.infra.persistence.sql.mapper.AgentMapper"/>-->
+        <!--<mapper class="com.deep.infra.persistence.sql.mapper.TestMapper"/>-->
     </mappers>
 </configuration>

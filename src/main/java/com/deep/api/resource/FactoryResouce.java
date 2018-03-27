@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/factory")
@@ -26,40 +27,49 @@ public class FactoryResouce {
     @Permit(modules = "factory", authorities = "select_factory")
     @GetMapping(value = "/")
     public Response factoryLists() {
+        List<FactoryModel> factoryModelList = factoryService.getAll();
+        if (factoryModelList.size() <= 0) {
+            return Responses.errorResponse("暂无羊场信息");
+        }
         Response response = Responses.successResponse();
-
         HashMap<String, Object> data = new HashMap<>();
-        data.put("allFactory", factoryService.getAll());
+        data.put("allFactory", factoryModelList);
+        data.put("number", factoryModelList.size());
         response.setData(data);
-
         return response;
     }
 
     /**
-     * 根据羊场的主键查询一个角色
+     * 根据羊场的主键查询羊场
      */
     @Permit(modules = "factory", authorities = "select_factory")
     @GetMapping(value = "/{id:\\d+}")
     public Response getFactoryOne(@PathVariable("id") Long id) {
+        FactoryModel factoryModel = factoryService.getOneFactory(id);
+        if (factoryModel == null) {
+            return Responses.errorResponse("系统中暂无该羊场信息");
+        }
         Response response = Responses.successResponse();
-
         HashMap<String, Object> data = new HashMap<>();
-        data.put("oneFactory", factoryService.getOneFactory(id));
+        data.put("oneFactory", factoryModel);
         response.setData(data);
-
         return response;
     }
 
     /**
-     * 根据工厂的主键删除一个角色
+     * 根据工厂的主键删除一个羊场
      * @param id
      */
     @Permit(modules = "factory")
     @DeleteMapping(value = "/{id:\\d+}")
     public Response deleteFactory(@PathVariable("id") Long id) {
+        Long deleteID = factoryService.deleteFatory(id);
+        if (deleteID <= 0) {
+            return Responses.errorResponse("删除央行信息失败");
+        }
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
-        data.put("oneUser", factoryService.deleteFatory(id));
+        data.put("oneUser", deleteID);
         response.setData(data);
         return response;
     }
@@ -75,28 +85,20 @@ public class FactoryResouce {
     @PutMapping(value = "/{id:\\d+}")
     public Response factoryUpdate(@Valid @RequestBody FactoryModel factoryModel, @PathVariable("id") Long id , BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("羊场修改失败");
+            Response response = Responses.errorResponse("羊场修改失败, 数据校验失败");
             return response;
         } else {
             factoryModel.setId(id);
             factoryModel.setGmtCreate(factoryService.getOneFactory(id).getGmtCreate());
             factoryModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
-
-            factoryModel.setPkNumber(factoryModel.getPkNumber());
-            factoryModel.setBreadName(factoryModel.getBreadName());
-            factoryModel.setBreadLocation(factoryModel.getBreadLocation());
-            factoryModel.setCreateTime(factoryModel.getCreateTime());
-            factoryModel.setResponsiblePersonid(factoryModel.getResponsiblePersonid());
-            factoryModel.setRemark(factoryModel.getRemark());
-            factoryModel.setDisnfectP(factoryModel.getDisnfectP());
-            factoryModel.setAgent(factoryModel.getAgent());
-
+            Long updateID = factoryService.updateFactory(factoryModel);
+            if (updateID <= 0) {
+                return Responses.errorResponse("修改失败");
+            }
             Response response = Responses.successResponse();
-
             HashMap<String, Object> data = new HashMap<>();
-            data.put("oneUser", factoryService.updateFactory(factoryModel));
+            data.put("oneUser", updateID);
             response.setData(data);
-
             return response;
         }
     }
@@ -116,19 +118,14 @@ public class FactoryResouce {
         } else {
             factoryModel.setGmtCreate(new Timestamp(System.currentTimeMillis()));
             factoryModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
-            factoryModel.setPkNumber(factoryModel.getPkNumber());
-            factoryModel.setBreadName(factoryModel.getBreadName());
-            factoryModel.setBreadLocation(factoryModel.getBreadLocation());
-            factoryModel.setCreateTime(factoryModel.getCreateTime());
-            factoryModel.setResponsiblePersonid(factoryModel.getResponsiblePersonid());
-            factoryModel.setRemark(factoryModel.getRemark());
-            factoryModel.setDisnfectP(factoryModel.getDisnfectP());
-            factoryModel.setAgent(factoryModel.getAgent());
+            Long addID = factoryService.updateFactory(factoryModel);
+            if (addID <= 0) {
+                return Responses.errorResponse("添加失败");
+            }
 
             Response response = Responses.successResponse();
-
             HashMap<String, Object> data = new HashMap<>();
-            data.put("oneUser", factoryService.updateFactory(factoryModel));
+            data.put("oneUser", addID);
             response.setData(data);
             return response;
         }
