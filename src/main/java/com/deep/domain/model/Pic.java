@@ -39,6 +39,18 @@ public class Pic implements Serializable {
     @NotNull(message = "文件名不能为空")
     private String filename;
 
+    private Integer returnId;
+
+    public Integer getReturnId() {
+        return returnId;
+    }
+
+    public void setReturnId(Integer returnId) {
+        this.returnId = returnId;
+    }
+
+
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {

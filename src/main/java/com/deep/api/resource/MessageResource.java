@@ -34,7 +34,7 @@ public class MessageResource {
 //        message.setUsername(message.getUsername());
 //        message.setContact(message.getContact());
 //        message.setMessage(message.getMessage());
-//        message.setInserttime(new Date());
+        message.setInserttime(new Date());
 //        //数据分析相关
 //        message.setTag(message.getTag());
 //        message.setAttitude(message.getAttitude());
@@ -76,7 +76,10 @@ public class MessageResource {
 //        }
 
 
-        int id = messageService.insertMessage(message);
+        Integer id = messageService.insertMessage(message);
+
+        Integer messageId = message.getMessageId();
+
 
 //        MessageExample messageExample =new MessageExample();
 //        MessageExample.Criteria criteria=messageExample.createCriteria();
@@ -86,7 +89,7 @@ public class MessageResource {
         if (id != 0) {
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("Message", id);
+            data.put("Message",messageId);
             response.setData(data);
             return response;
         }

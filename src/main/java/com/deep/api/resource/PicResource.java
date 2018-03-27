@@ -85,6 +85,7 @@ public class PicResource {
         pic.setAddress(fileAddress);
         pic.setFilename(fileName);
         int id = picService.insertPic(pic);
+        Integer returnId = pic.getReturnId();
 
 //        PicExample picExample=new PicExample();
 //        PicExample.Criteria criteria=picExample.createCriteria();
@@ -94,7 +95,7 @@ public class PicResource {
         if (id != 0) {
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("Pic", id);
+            data.put("Pic", returnId);
             response.setData(data);
             return response;
         }
