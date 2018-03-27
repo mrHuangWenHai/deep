@@ -27,6 +27,16 @@ public class Message implements Serializable {
     @NotNull(message = "购买意向不可为空")
     private String intention;
 
+    public Integer getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(Integer messageId) {
+        this.messageId = messageId;
+    }
+
+    private Integer messageId;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {

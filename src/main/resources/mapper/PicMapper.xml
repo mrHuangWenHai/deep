@@ -154,7 +154,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.deep.domain.model.Pic" >
+  <insert id="insert" parameterType="com.deep.domain.model.Pic" useGeneratedKeys="true" keyProperty="returnId">
     insert into pic (id, address, brand, 
       udate, expert, sex, 
       solution, symptom, uploader, 

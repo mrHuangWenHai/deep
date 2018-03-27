@@ -27,7 +27,7 @@ public class PicResource {
     @Resource
     private PicService picService;
 
-    @RequestMapping(value = "/uploadfile",method = RequestMethod.GET)
+    @RequestMapping(value = "/uploadFile",method = RequestMethod.GET)
     public String upload(){
 
         return "uploadFile";
@@ -35,7 +35,7 @@ public class PicResource {
     }
 
 
-    @RequestMapping(value = "/uploadfile/upload",method = RequestMethod.POST)
+    @RequestMapping(value = "/uploadFile/upload",method = RequestMethod.POST)
     public @ResponseBody Response addPic(@Valid Pic pic,
                            @RequestParam("file")MultipartFile file,
                            HttpServletRequest request) {
@@ -85,6 +85,7 @@ public class PicResource {
         pic.setAddress(fileAddress);
         pic.setFilename(fileName);
         int id = picService.insertPic(pic);
+        Integer returnId = pic.getReturnId();
 
 //        PicExample picExample=new PicExample();
 //        PicExample.Criteria criteria=picExample.createCriteria();
@@ -94,7 +95,7 @@ public class PicResource {
         if (id != 0) {
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("Pic", id);
+            data.put("Pic", returnId);
             response.setData(data);
             return response;
         }
@@ -110,7 +111,7 @@ public class PicResource {
 //        return "searchByExpert";
 //
 //    }
-    @RequestMapping(value = "/searchFile/searchByExpert",method = RequestMethod.POST)
+    @RequestMapping(value = "/searchfile/searchByExpert",method = RequestMethod.POST)
     public @ResponseBody Response getByExpert(@NotNull(message = "专家名不能为空") @RequestParam(value = "expert",required = true)String expert){
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
@@ -130,7 +131,7 @@ public class PicResource {
 //        return "searchByFilename";
 //
 //    }
-    @RequestMapping(value = "/searchFile/searchByFilename",method = RequestMethod.POST)
+    @RequestMapping(value = "/searchfile/searchByFilename",method = RequestMethod.POST)
     public @ResponseBody Response getByFilename(@NotNull(message = "文件名不能为空") @RequestParam(value = "filename",required = true)String filename){
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
@@ -150,7 +151,7 @@ public class PicResource {
 //        return "searchBySymptom";
 //
 //    }
-    @RequestMapping(value = "/searchFile/searchBySymptom",method = RequestMethod.POST)
+    @RequestMapping(value = "/searchfile/searchBySymptom",method = RequestMethod.POST)
     public @ResponseBody Response getBySymptom(@NotNull(message = "症状不能为空") @RequestParam(value = "symptom",required = true)String symptom){
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
@@ -170,7 +171,7 @@ public class PicResource {
 //        return "searchByUploader";
 //
 //    }
-    @RequestMapping(value = "/searchFile/searchByUploader",method = RequestMethod.POST)
+    @RequestMapping(value = "/searchfile/searchByUploader",method = RequestMethod.POST)
     public @ResponseBody Response getByUploader(@NotNull(message = "上传人不能为空") @RequestParam(value = "uploader",required = true)String uploader){
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
