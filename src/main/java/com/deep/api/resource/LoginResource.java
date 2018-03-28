@@ -1,17 +1,16 @@
 package com.deep.api.resource;
 
+import com.deep.api.Utils.JedisUtil;
 import com.deep.api.Utils.MobileAnnouncementUtil;
 import com.deep.api.authorization.token.TokenModel;
 import com.deep.api.authorization.tools.RoleAndPermit;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.UserModel;
-import com.deep.domain.service.ServiceConfiguration;
 import com.deep.domain.service.UserService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
-import redis.clients.jedis.Jedis;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -62,12 +61,8 @@ public class LoginResource {
                 RoleAndPermit userRoleAndPermit = userService.findRoleByUserID(userModel.getId());
                 Long roleInt = userRoleAndPermit.getRole();
                 TokenModel tokenModel = new TokenModel(userModel.getId(), String.valueOf(roleInt));
-
-                Jedis jedis = new Jedis(ServiceConfiguration.redisServer, ServiceConfiguration.port);
-                jedis.set(String.valueOf(userModel.getId()),tokenModel.getToken());
-                jedis.expire(String.valueOf(userModel.getId()),10*60);
-                System.out.println("login token:" + tokenModel.getToken());
-                System.out.println("login redis token" + jedis.get(String.valueOf(userModel.getId())));
+                JedisUtil.setValue(String.valueOf(userModel.getId()),tokenModel.getToken());
+                JedisUtil.doExpire(String.valueOf(userModel.getId()));
                 httpServletResponse.setHeader("Authorization", userModel.getId() + ":" + tokenModel.getToken());
                 return response;
             }else {
@@ -213,13 +208,14 @@ public class LoginResource {
      * @param id 用户名
      * @return
      */
-    @DeleteMapping
-    public Response logout(Long id) {
-        Jedis jedis = new Jedis(ServiceConfiguration.redisServer);
-        jedis.del(String.valueOf(id));
-        Response response = Responses.errorResponse("logout failed!");
+    @GetMapping(value = "/logout/{id}")
+    public Response logout(@PathVariable("id") String id) {
+        if (!JedisUtil.doDelete(id)) {
+            return Responses.errorResponse("退出登录失败, 请检查网络之后重试");
+        }
+        Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
-        data.put("errorMessage", "something error");
+        data.put("successMessage", "退出成功!");
         response.setData(data);
         return response;
     }

@@ -15,4 +15,12 @@ public class JedisUtil {
     public static void doExpire(String key) {
         jedis.expire(key,seconds);
     }
+    public static boolean doDelete(String key) {
+        try {
+            jedis.del(key);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 }

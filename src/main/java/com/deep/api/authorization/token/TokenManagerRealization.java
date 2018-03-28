@@ -26,7 +26,6 @@ public class TokenManagerRealization implements TokenManager{
         // 使用userID和源token简单拼接成的token, 可以增加加密措施
         long userId = Long.parseLong(param[0]);
         String token = param[1];
-        System.out.println(token);
         return new TokenModel(new Long(userId), token);
     }
 
