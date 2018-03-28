@@ -44,13 +44,13 @@ public class PicResource {
 //        udate=formatter.parse(udate);
 
         //pic.setUdate(new Date());
-        pic.setVaccine(pic.getVaccine());
-        pic.setBrand(pic.getBrand());
-        pic.setUploader(pic.getUploader());
-        pic.setSymptom(pic.getSymptom());
-        pic.setSex(pic.getSex());
-        pic.setSolution(pic.getSolution());
-        pic.setExpert(pic.getExpert());
+//        pic.setVaccine(pic.getVaccine());
+//        pic.setBrand(pic.getBrand());
+//        pic.setUploader(pic.getUploader());
+//        pic.setSymptom(pic.getSymptom());
+//        pic.setSex(pic.getSex());
+//        pic.setSolution(pic.getSolution());
+//        pic.setExpert(pic.getExpert());
 
         Date udate = new Date();
         pic.setUdate(udate);

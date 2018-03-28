@@ -14,7 +14,7 @@ public class Pic implements Serializable {
     @Size(min =15, max =15, message = "商标耳牌长度错误")
     private String brand;
 
-    @NotNull(message = "日期不能为空")
+
     private Date udate;
 
     @NotNull(message = "专家不能为空")
@@ -36,8 +36,7 @@ public class Pic implements Serializable {
     @Size(min =15, max =15, message = "检疫耳牌长度错误")
     private String vaccine;
 
-    @NotNull(message = "文件名不能为空")
-    private String filename;
+     private String filename;
 
     private Integer returnId;
 
