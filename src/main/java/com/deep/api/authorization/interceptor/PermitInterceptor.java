@@ -10,6 +10,7 @@ import com.deep.domain.service.UserService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import redis.clients.jedis.Jedis;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -30,8 +31,8 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
 
     // 用户角色
     private static Map<Long, String> map = new HashMap<>();
-    // 用户权限
 
+    // 用户权限
     public static Map<Long, String> permitMap = new HashMap<>();
 
     static {
@@ -131,54 +132,38 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         // 从方法处理器中获取要调用的方法
         Method method = handlerMethod.getMethod();
-
         // 从请求头中获取用户的ID
         String authorization = request.getHeader(Constants.AUTHORIZATION);
         if (authorization == null) {
             return false;
         }
         TokenModel model = tokenManager.getToken(authorization);
-
         // 取出方法上的Permit注解
         Permit permit = method.getAnnotation(Permit.class);
-
         if (permit == null) {
             // 如果注解Permit不为null, 标明不需要拦截, 直接放过
             return true;
         } else {
             if (permit.authorities().length > 0) {
-                // 如果权限配置不为空, 则需要取出配置的值
                 String[] modules = permit.modules();
-
                 Set<String> authSet = new HashSet<>();
                 for (String module : modules) {
-                    // 将角色加到一个Set集合当中
                     authSet.add(module);
                 }
                 // 从参数中获取用户的ID
                 // 从数据库的权限表中查询用户所拥有的权限集合, 与Set集合中的权限进行比对完成权限校验
                 Long userID = model.getUserId();
-                // 查找用户表以获取用户的用户的角色以及权限
-                RoleAndPermit userRoleAndPermit = userService.findRoleByUserID(userID);
-                Long roleInt = userRoleAndPermit.getRole();
-                // TODO 需要判断用户是否有拓展权限从而判断是否属于其它的用户从而决定是否进行拦截操作
+                // 从Redis数据库中获取用户的相应权限
+                Jedis jedis = new Jedis(ServiceConfiguration.redisServer);
+                String roleInt = jedis.get(String.valueOf(userID).split("-")[1]);
+                // TODO 需要判断用户是否有拓展权限从而判断是否属于其它的用户从而决定是否进行拦截操作(PASS--用户可以自定义角色, 所以此功能可以舍弃)
                 // 根据roleInt去查询角色的名称, 需要实现roleInt与角色名称的一一对应
-                // 但是目前的数据库设置中没有这一项目
                 // 所以通过静态的方法去处理相关的关系
-
                 // 这是相应的roleString角色
                 String roleString = map.get(roleInt);
-
                 if (authSet.contains(roleString)) {
                     // 校验通过返回true, 否则拦截请求
                     return true;
-                } else {
-                    if (authSet.contains(map.get(new Long(0))) && userRoleAndPermit.getExtended() != 0) {
-                        // TODO 当用户拥有拓展权限的时候
-                        // TODO 需要将用户当前的请求与数据库中权限表的请求作比对
-                        // TODO 如果拥有此请求, 则返回true, 否则返回false
-                        return false;
-                    }
                 }
             }
         }

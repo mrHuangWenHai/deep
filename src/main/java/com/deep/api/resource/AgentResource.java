@@ -1,5 +1,6 @@
 package com.deep.api.resource;
 
+import com.deep.api.Utils.StringToLongUtil;
 import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
@@ -45,9 +46,13 @@ public class AgentResource {
      * @return
      */
     @Permit(modules = "dongxiang_factory_administrator", authorities = "select_agent")
-    @GetMapping(value = "/{id:\\d+}")
-    public Response findOne(@PathVariable("id") Long id) {
-        AgentModel agentModel = agentService.getOneAgent(id);
+    @GetMapping(value = "/{id}")
+    public Response findOne(@PathVariable("id") String id) {
+        long uid = StringToLongUtil.stringToLong(id);
+        if (uid == -1) {
+            return Responses.errorResponse("查询错误");
+        }
+        AgentModel agentModel = agentService.getOneAgent(uid);
         if (agentModel == null) {
             return Responses.errorResponse("短代理不存在");
         }
@@ -63,9 +68,13 @@ public class AgentResource {
      * @param id
      */
     @Permit(modules = "dongxiang_factory_administrator", authorities = "delete_agent")
-    @DeleteMapping(value = "/{id:\\d+}")
-    public Response deleteOne(@PathVariable("id") Long id) {
-        Long deleteID = agentService.deleteAgent(id);
+    @DeleteMapping(value = "/{id}")
+    public Response deleteOne(@PathVariable("id") String id) {
+        long uid = StringToLongUtil.stringToLong(id);
+        if (uid == -1) {
+            return Responses.errorResponse("查询错误");
+        }
+        Long deleteID = agentService.deleteAgent(uid);
         if (deleteID <= 0) {
             return Responses.errorResponse("删除代理失败");
         }
@@ -111,13 +120,17 @@ public class AgentResource {
      * @return
      */
     @Permit(modules = "dongxiang_factory_administrator", authorities = "update_agent")
-    @PutMapping("/{id:\\d+}")
-    public Response agentUpdate(@Valid AgentModel agentModel, @PathVariable("id") int id, BindingResult bindingResult) {
+    @PutMapping("/{id}")
+    public Response agentUpdate(@Valid AgentModel agentModel, @PathVariable("id") String id, BindingResult bindingResult) {
+        int uid = StringToLongUtil.stringToInt(id);
+        if (uid == -1) {
+            return Responses.errorResponse("查询错误");
+        }
         if (bindingResult.hasErrors())  {
             return Responses.errorResponse("修改代理失败");
         } else {
-            agentModel.setId(id);
-            agentModel.setGmtCreate(agentService.getOneAgent(new Long((long)id)).getGmtCreate());
+            agentModel.setId(uid);
+            agentModel.setGmtCreate(agentService.getOneAgent(new Long(uid)).getGmtCreate());
             agentModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
             Long updateID = agentService.updateAgent(agentModel);
             if (updateID <= 0) {

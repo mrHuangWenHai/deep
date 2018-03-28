@@ -249,14 +249,18 @@ public class UserService {
         if (isFactory == 0) {
             // 代表羊场
             FactoryModel factoryModel = factoryService.getOneFactory(factoryId);
-            factoryOrAgentMapper.put("factoryNum", factoryModel.getId());
-            factoryOrAgentMapper.put("factoryName",factoryModel.getBreadName());
+            if (factoryModel != null) {
+                factoryOrAgentMapper.put("factoryNum", factoryModel.getId());
+                factoryOrAgentMapper.put("factoryName",factoryModel.getBreadName());
+            }
         } else if (isFactory == 1){
             // 代表代理
             AgentModel agentModel = agentService.getOneAgent(factoryId);
-            factoryOrAgentMapper.put("agentNum", agentModel.getId());
-            factoryOrAgentMapper.put("agentName", agentModel.getAgentName());
-            factoryOrAgentMapper.put("agentArea", agentModel.getAgentArea());
+            if (agentModel != null) {
+                factoryOrAgentMapper.put("agentNum", agentModel.getId());
+                factoryOrAgentMapper.put("agentName", agentModel.getAgentName());
+                factoryOrAgentMapper.put("agentArea", agentModel.getAgentArea());
+            }
         }
         userLogin.setUserFactory(factoryOrAgentMapper);
         return userLogin;

@@ -1,5 +1,6 @@
 package com.deep.api.resource;
 
+import com.deep.api.Utils.StringToLongUtil;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.UserModel;
@@ -57,9 +58,13 @@ public class UserResource {
 //            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
 //            "sheep_farm_supervisor", "tourist", "others"
 //    })
-    @GetMapping(value = "user/{id:\\d+}")
-    public Response getUserOne(@PathVariable("id")Long id) {
-        UserService.UserLogin userModel = userService.findOneUser(id);
+    @GetMapping(value = "user/{id}")
+    public Response getUserOne(@PathVariable("id")String id) {
+        long uid = StringToLongUtil.stringToLong(id);
+        if (uid == -1) {
+            return Responses.errorResponse("查询错误");
+        }
+        UserService.UserLogin userModel = userService.findOneUser(uid);
         if (userModel == null) {
             return Responses.errorResponse("用户不存在");
         }
@@ -84,9 +89,13 @@ public class UserResource {
 //            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
 //            "sheep_farm_supervisor", "tourist", "others"
 //    })
-    @GetMapping(value = "user/detail/{id:\\d+}")
-    public Response getUserOneDetail(@PathVariable("id")Long id) {
-        UserModel userModel = userService.getOneUser(id);
+    @GetMapping(value = "user/detail/{id}")
+    public Response getUserOneDetail(@PathVariable("id") String id) {
+        long uid = StringToLongUtil.stringToLong(id);
+        if (uid == -1) {
+            return Responses.errorResponse("查询错误");
+        }
+        UserModel userModel = userService.getOneUser(uid);
         if (userModel == null) {
             return Responses.errorResponse("系统中该用户不存在");
         }
@@ -173,7 +182,7 @@ public class UserResource {
 //            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
 //            "sheep_farm_supervisor", "tourist", "others"
 //    })
-        @PostMapping("/register")
+    @PostMapping("/register")
     public Response addUser(@RequestBody @Valid UserModel userModel,  BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("验证失败");
@@ -220,8 +229,12 @@ public class UserResource {
 //            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
 //            "sheep_farm_supervisor", "tourist", "others"
 //    })
-    @PutMapping(value = "user/{id:\\d+}")
-    public Response modifyUser(@RequestBody @Valid UserModel userModel, @PathVariable("id") Long id, BindingResult bindingResult) {
+    @PutMapping(value = "user/{id}")
+    public Response modifyUser(@RequestBody @Valid UserModel userModel, @PathVariable("id") String id, BindingResult bindingResult) {
+        long uid = StringToLongUtil.stringToLong(id);
+        if (uid == -1) {
+            return Responses.errorResponse("查询错误");
+        }
         Response response;
         if (bindingResult.hasErrors()) {
             response = Responses.errorResponse("验证失败");
@@ -230,10 +243,11 @@ public class UserResource {
             response.setData(data);
             return response;
         }
-        userModel.setId(id);
+        userModel.setId(uid);
+        UserModel user = userService.getOneUser(uid);
         //用户名不可以更改
-        userModel.setPkUserid(userService.getOneUser(id).getPkUserid());
-        userModel.setGmtCreate(userService.getOneUser(id).getGmtCreate());
+        userModel.setPkUserid(user.getPkUserid());
+        userModel.setGmtCreate(user.getGmtCreate());
         userModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
         Long updateID = userService.updateUser(userModel);
         if (updateID <= 0) {
@@ -260,9 +274,13 @@ public class UserResource {
 //            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
 //            "sheep_farm_supervisor", "tourist", "others"
 //    })
-    @DeleteMapping("user/{id:\\d+}")
-    public Response deleteUser(@PathVariable("id") Long id) {
-        Long deleteId = userService.deleteUser(id);
+    @DeleteMapping("user/{id}")
+    public Response deleteUser(@PathVariable("id") String id) {
+        long uid = StringToLongUtil.stringToLong(id);
+        if (uid == -1) {
+            return Responses.errorResponse("查询错误");
+        }
+        Long deleteId = userService.deleteUser(uid);
         if (deleteId <= 0) {
             return Responses.errorResponse("用户信息删除失败,请检查网络后重试");
         }

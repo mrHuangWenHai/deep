@@ -6,6 +6,7 @@ import com.deep.api.authorization.tools.Constants;
 import com.deep.domain.service.ServiceConfiguration;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import redis.clients.jedis.Jedis;
 
@@ -32,15 +33,12 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
      */
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response, Object handler) throws Exception {
-
         // 加相关的回应头
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
         response.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET, PUT, POST, DELETE");
         response.setHeader("Access-Control-Expose-Headers", "Authorization");
-
-        System.out.println("this is preHandle AuthorizationInterceptor");
 
         if (!(handler instanceof HandlerMethod)) {
             return true;
@@ -56,24 +54,24 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
                 ) {
             return true;
         }
-
         // 从header中获取token
         String authorization = request.getHeader(Constants.AUTHORIZATION);
+        tokenManagerRealization = new TokenManagerRealization();
         // 从authorization中获取用户名以及token
         TokenModel model = tokenManagerRealization.getToken(authorization);
         if (model == null) {
             return false;
         }
-        Jedis jedis = new Jedis(ServiceConfiguration.redisServer);
+        Jedis jedis = new Jedis(ServiceConfiguration.redisServer, ServiceConfiguration.port);
         if(jedis.get(String.valueOf(model.getUserId())) == null){
             return false;
-        } else if (jedis.get(String.valueOf(model.getUserId())) != model.getToken()){
+        } else if (!jedis.get(String.valueOf(model.getUserId())).equals(model.getToken())){
             return false;
         }
-        // 修改相关的token
-        System.out.println("this is the afterCompletion of authorization");
-        // 用户表当中的主键
-        TokenModel tokenModel = new TokenModel(model.getUserId());
+        // 从Redis数据库中获取用户原来的token, 然后取得其权限, 加入新的token
+        String oldToken = jedis.get(String.valueOf(model.getUserId()));
+        String userRoleID = oldToken.split("-")[1];
+        TokenModel tokenModel = new TokenModel(model.getUserId(), userRoleID);
         jedis.set(String.valueOf(model.getUserId()),tokenModel.getToken());
         jedis.expire(String.valueOf(model.getUserId()),10*60);
         response.setHeader("Authorization", model.getUserId() + ":" + tokenModel.getToken());

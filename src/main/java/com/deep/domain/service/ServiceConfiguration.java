@@ -15,4 +15,5 @@ public class ServiceConfiguration {
 //
 //  }
     public static String redisServer = "localhost";
+    public static int port = 6379;
 }

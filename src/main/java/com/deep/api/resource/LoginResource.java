@@ -1,7 +1,8 @@
 package com.deep.api.resource;
 
-import com.deep.api.Utils.MD5Util;
 import com.deep.api.Utils.MobileAnnouncementUtil;
+import com.deep.api.authorization.token.TokenModel;
+import com.deep.api.authorization.tools.RoleAndPermit;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.UserModel;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import redis.clients.jedis.Jedis;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,7 +40,7 @@ public class LoginResource {
      * @return0
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public Response LoginResult(@RequestBody UserModel userModelTest){
+    public Response LoginResult(@RequestBody UserModel userModelTest, HttpServletResponse httpServletResponse){
         String username = userModelTest.getPkUserid();
         String password = userModelTest.getUserPwd();
         UserModel userModel = userService.getUserByPkuserID(username);
@@ -56,6 +58,17 @@ public class LoginResource {
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("successMessage", "登录成功!");
                 response.setData(data);
+
+                RoleAndPermit userRoleAndPermit = userService.findRoleByUserID(userModel.getId());
+                Long roleInt = userRoleAndPermit.getRole();
+                TokenModel tokenModel = new TokenModel(userModel.getId(), String.valueOf(roleInt));
+
+                Jedis jedis = new Jedis(ServiceConfiguration.redisServer, ServiceConfiguration.port);
+                jedis.set(String.valueOf(userModel.getId()),tokenModel.getToken());
+                jedis.expire(String.valueOf(userModel.getId()),10*60);
+                System.out.println("login token:" + tokenModel.getToken());
+                System.out.println("login redis token" + jedis.get(String.valueOf(userModel.getId())));
+                httpServletResponse.setHeader("Authorization", userModel.getId() + ":" + tokenModel.getToken());
                 return response;
             }else {
                 Response response = Responses.errorResponse("密码错误");
@@ -64,7 +77,6 @@ public class LoginResource {
                 response.setData(data);
                 return response;
             }
-
         }
     }
 
