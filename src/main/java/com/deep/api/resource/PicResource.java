@@ -5,6 +5,9 @@ import com.deep.api.response.Responses;
 import com.deep.domain.model.Pic;
 import com.deep.domain.model.PicExample;
 import com.deep.domain.service.PicService;
+import com.deep.api.Utils.FileUtil;
+
+import com.sun.xml.internal.ws.api.message.ExceptionHasMessage;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -52,55 +55,73 @@ public class PicResource {
 //        pic.setSolution(pic.getSolution());
 //        pic.setExpert(pic.getExpert());
 
-        Date udate = new Date();
-        pic.setUdate(udate);
+        try {
+            String Header = FileUtil.getFileHeader(file);
+            if (Header != "FFD8FF" && Header != "89504E47" && Header != "47494638" &&
+                    Header != "49492A00" && Header != "424D" &&
+                    Header != "57415645" && Header != "41564920" &&
+                    Header != "2E7261FD" && Header != "2E524D46" &&
+                    Header != "000001BA" && Header != "6D6F6F76" &&
+                    Header != "3026B2758E66CF11" && Header != "4D546864"
+                    ) {
+                throw new Exception("文件格式错误！");
+            }
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateString = formatter.format(udate);
-        String fileDate = dateString.replaceAll(":", "-");
-        String filepath = request.getSession().getServletContext().getContextPath() + "../file/";
-        String originalFilename = file.getOriginalFilename();
-        String suffix = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
-        String fileName = pic.getBrand() + "_" + pic.getVaccine() + "_" + fileDate + "." + suffix;
-        String fileAddress = filepath + fileName;
-        if (!file.isEmpty()) {
-            File saveFile = new File(fileAddress);
-            if (!saveFile.getParentFile().exists()) {
-                saveFile.getParentFile().mkdirs();
+
+            Date udate = new Date();
+            pic.setUdate(udate);
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateString = formatter.format(udate);
+            String fileDate = dateString.replaceAll(":", "-");
+            String filepath = request.getSession().getServletContext().getContextPath() + "../file/";
+            String originalFilename = file.getOriginalFilename();
+            String suffix = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
+            String fileName = pic.getBrand() + "_" + pic.getVaccine() + "_" + fileDate + "." + suffix;
+            String fileAddress = filepath + fileName;
+            if (!file.isEmpty()) {
+                File saveFile = new File(fileAddress);
+                if (!saveFile.getParentFile().exists()) {
+                    saveFile.getParentFile().mkdirs();
+                }
+                try {
+                    BufferedOutputStream out = new BufferedOutputStream(
+                            new FileOutputStream(saveFile));
+                    out.write(file.getBytes());
+                    out.flush();
+                    out.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    System.out.println("上传失败，" + e.getMessage());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println("上传失败，" + e.getMessage());
+                }
             }
-            try {
-                BufferedOutputStream out = new BufferedOutputStream(
-                        new FileOutputStream(saveFile));
-                out.write(file.getBytes());
-                out.flush();
-                out.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                System.out.println("上传失败，" + e.getMessage());
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.out.println("上传失败，" + e.getMessage());
-            }
-        }
-        pic.setAddress(fileAddress);
-        pic.setFilename(fileName);
-        int id = picService.insertPic(pic);
-        Integer returnId = pic.getReturnId();
+            pic.setAddress(fileAddress);
+            pic.setFilename(fileName);
+            int id = picService.insertPic(pic);
+            Integer returnId = pic.getReturnId();
 
 //        PicExample picExample=new PicExample();
 //        PicExample.Criteria criteria=picExample.createCriteria();
 //        criteria.andFilenameEqualTo(pic.getFilename());
 //        List<Pic> select=picService.findPicSelective(picExample);
 
-        if (id != 0) {
-            Response response = Responses.successResponse();
-            HashMap<String, Object> data = new HashMap<>();
-            data.put("Pic", returnId);
-            response.setData(data);
-            return response;
-        }
-        else {
-            Response response = Responses.errorResponse("数据插入失败");
+            if (id != 0) {
+                Response response = Responses.successResponse();
+                HashMap<String, Object> data = new HashMap<>();
+                data.put("Pic", returnId);
+                response.setData(data);
+                return response;
+            } else {
+                Response response = Responses.errorResponse("数据插入失败");
+                return response;
+            }
+        }catch (Exception e){
+
+            System.out.println(e.getMessage());
+            Response response = Responses.errorResponse(e.getMessage());
             return response;
         }
     }

@@ -33,7 +33,7 @@ public class Pic implements Serializable {
     private String uploader;
 
     @NotNull(message = "检疫耳牌不能为空")
-    @Size(min =15, max =15, message = "检疫耳牌长度错误")
+    @Size(min =8, max =8, message = "检疫耳牌长度错误")
     private String vaccine;
 
      private String filename;
