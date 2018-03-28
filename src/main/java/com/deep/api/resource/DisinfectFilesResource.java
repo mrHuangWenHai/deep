@@ -1,6 +1,7 @@
 package com.deep.api.resource;
 
 import com.deep.api.response.Response;
+import com.deep.api.response.Responses;
 import com.deep.domain.model.DisinfectFilesModel;
 import com.deep.domain.model.UserModel;
 import com.deep.domain.service.DisinfectFilesService;
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.math.BigInteger;
 import java.sql.Timestamp;
 
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -29,27 +32,7 @@ public class DisinfectFilesResource {
     @Resource
     private UserService userService;
 
-    /**
-     * METHOD:GET
-     * @return
-     */
-    @RequestMapping(value = "/function",method = RequestMethod.GET)
-    public String DisinfectFilesFunctionChoice(){
-        /*SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        DisinfectFilesModel disinfectFilesModel = disinfectFilesService.getDisinfectFilesModelByfactoryNumAnddisinfectTimeAnddisinfectName(new BigInteger("2011"),"2018-03-01","消毒液");
-        System.out.println(disinfectFilesModel.getDisinfectTime()+"   "+simpleDateFormat.format(disinfectFilesModel.getGmtCreate()));
-        System.out.println(disinfectFilesModel.getDisinfectTime().compareTo(simpleDateFormat.format(disinfectFilesModel.getGmtCreate())));*/
-        return "DisinfectFilesHTML/DisinfectFilesFunctionChoiceForm";
-    }
 
-    /**
-     * METHOD:GET
-     * @return
-     */
-    @RequestMapping(value = "/save",method = RequestMethod.GET)
-    public String Save(){
-        return "DisinfectFilesHTML/DisinfectFilesSaveForm";
-    }
 
     /**
      * 返回插入结果
@@ -79,7 +62,8 @@ public class DisinfectFilesResource {
                 "".equals(disinfectFilesModel.getDisinfectWay())||
                 "".equals(disinfectFilesModel.getOperator())||
                 "".equals(disinfectFilesModel.getRemark())){
-            return new Response().addData("Error","Lack Item");
+            return Responses.errorResponse("Lack Item");
+
         }else {
             DisinfectFilesModel disinfectFilesModel1 = disinfectFilesService.getDisinfectFilesModelByfactoryNumAnddisinfectTimeAnddisinfectName(disinfectFilesModel.getFactoryNum(), disinfectFilesModel.getDisinfectTime(), disinfectFilesModel.getDisinfectName());
             if (disinfectFilesModel1 == null) {
@@ -104,13 +88,8 @@ public class DisinfectFilesResource {
                     jedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
                     jedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
 
-                    //System.out.println("testSendProfessorValue:"+jedisUtil.getCertainKeyValue(testSendProfessor));
-                    //System.out.println("judge equal:"+"1".equals(jedisUtil.getCertainKeyValue(testSendProfessor)));
-
-                    //若redis中 若干天未发送短信
-                    //若未完成超过50条
                     if(!("1".equals(jedisUtil.getCertainKeyValue(testSendProfessor)))){
-                        System.out.println("testSendProfessorValue:"+jedisUtil.getCertainKeyValue(testSendProfessor));
+                        //System.out.println("testSendProfessorValue:"+jedisUtil.getCertainKeyValue(testSendProfessor));
                         if(jedisUtil.redisJudgeTime(professorKey)){
 
                             System.out.println("in redis:");
@@ -132,28 +111,34 @@ public class DisinfectFilesResource {
 
                                 //System.out.println(phoneList);
                         } }else {
-                            //System.out.println("professor:3天内已发送");
+                            System.out.println("professor:3天内已发送");
                         }
 
                         if(!("1".equals(jedisUtil.getCertainKeyValue(testSendSupervisor)))){
-                        if(jedisUtil.redisJudgeTime(supervisorKey)){
-                            int expireTime = Integer.parseInt(jedisUtil.getCertainKeyValue("ExpireTime"));
-                            List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(disinfectFilesModel.getFactoryNum());
+                            if(jedisUtil.redisJudgeTime(supervisorKey)){
+                                int expireTime = Integer.parseInt(jedisUtil.getCertainKeyValue("ExpireTime"));
+                                List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(disinfectFilesModel.getFactoryNum());
 
-                            StringBuffer phoneList = new StringBuffer("");
-                            for(int i = 0; i < userModels.size(); i++){
-                                phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
+                                StringBuffer phoneList = new StringBuffer("");
+                                for(int i = 0; i < userModels.size(); i++){
+                                    phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
+                                }
+                                if(jedisUtil.redisSendMessage(phoneList.toString(),jedisUtil.getCertainKeyValue("Message"))){
+                                    //System.out.println("发送成功！");
+                                    jedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",expireTime*24*60*60);
+
+                                    HashMap<String,Object> data = new HashMap<>();
+                                    data.put("successMessage","Message Sent");
+                                    return Responses.successResponse(data);
+                                }
                             }
-                            if(jedisUtil.redisSendMessage(phoneList.toString(),jedisUtil.getCertainKeyValue("Message"))){
-                                //System.out.println("发送成功！");
-                                jedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",expireTime*24*60*60);
-                                return new Response().addData("Success","Send ok");
-                            }
+                        }else {
+                            System.out.println("supervisor:3天内已发送");
                         }
-                    }else {
-                        System.out.println("supervisor:3天内已发送");
-                    }
-                    return new Response().addData("Success","Uneccessary send");
+                    HashMap<String,Object> data = new HashMap<>();
+                    data.put("successMessage","have sent message in 3 days");
+                    return Responses.successResponse(data);
+
                     //jedisUtil.redisSaveProfessorSupervisorWorks(professorKey,factoryNum);
                     //jedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey,factoryNum);
                 }catch (Exception e){
@@ -162,56 +147,118 @@ public class DisinfectFilesResource {
                 }
 
             }else {
-                return new Response().addData("Error", "Already exist");
+                return Responses.errorResponse("Already Exist");
             }
         }
-            return new Response().addData("Error", "IO Exception");
+        return Responses.errorResponse("IOException");
 
     }
 
 
 
-
-
-    /**
-     * METHOD:GET
-     * @return
-     */
-    @RequestMapping(value = "/find")
-    public String Find(){
-        return "DisinfectFilesHTML/DisinfectFilesFindForm";
-    }
 
     /**
      * 返回查询结果
      * 以json格式返回前端
      * 分页查询
-     * METHOD:GET
+     * METHOD:POST
      * @param disinfectFilesModel
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/findshow",method = RequestMethod.GET)
+    @RequestMapping(value = "/findshow",method = RequestMethod.POST)
     public Response FindShow(@RequestBody DisinfectFilesModel disinfectFilesModel){
 
-        List<DisinfectFilesModel> disinfectFilesModel1 = disinfectFilesService.getDisinfectFilesModel(disinfectFilesModel.getFactoryNum(),
-                disinfectFilesModel.getDisinfectTimeStart(),disinfectFilesModel.getDisinfectTimeEnd(),disinfectFilesModel.getDisinfectName(),
-                disinfectFilesModel.getDisinfectQuality(),disinfectFilesModel.getDisinfectWay(),disinfectFilesModel.getOperator(),disinfectFilesModel.getProfessor(),
-                disinfectFilesModel.getSupervisor(),disinfectFilesModel.getRemark(),disinfectFilesModel.getIsPass1(),disinfectFilesModel.getUnpassReason1(),
-                disinfectFilesModel.getIsPass2(),disinfectFilesModel.getUnpassReason2(),new RowBounds(disinfectFilesModel.getPage(),disinfectFilesModel.getSize()));
-        return new Response().addData("List<DisinfectionFilesModel>",disinfectFilesModel1);
+        List<DisinfectFilesModel> disinfectFilesModel1 = disinfectFilesService.getDisinfectFilesModel(disinfectFilesModel,
+                new RowBounds(disinfectFilesModel.getPage(),disinfectFilesModel.getSize()));
+
+        HashMap<String,Object> data = new HashMap<>();
+        data.put("List",disinfectFilesModel1);
+        return Responses.successResponse(data);
     }
 
     //更新接口
 
+
+    //权限仅为专家和监督员
+    /**
+     * 专家入口 查看isPass1 = 0或者isPass1 = 1的数据
+     * METHOD:GET
+     * @param isPass1
+     * @param page
+     * @param size
+     * @return
+     */
+
     @ResponseBody
     @RequestMapping(value = "/pfind",method = RequestMethod.GET)
-    public Response ProfessorFind(@RequestBody DisinfectFilesModel disinfectFilesModel){
-        List<DisinfectFilesModel> disinfectFilesModel1 = this.disinfectFilesService.getDisinfectFilesModelByProfessor(disinfectFilesModel);
-        return new Response().addData("List",disinfectFilesModel1);
+    public Response ProfessorFind(@RequestParam("isPass1") Integer isPass1,
+                                  @RequestParam("page") int page,
+                                  @RequestParam("size") int size){
+        List<DisinfectFilesModel> disinfectFilesModel1 = this.disinfectFilesService.getDisinfectFilesModelByProfessor(isPass1,new RowBounds(page,size));
+
+        HashMap<String,Object> data = new HashMap<>();
+        data.put("List",disinfectFilesModel1);
+        return Responses.successResponse(data);
     }
-    //权限仅为专家和监督员
+
+
+    /**
+     * 审核入口 展示所有isPass2 = 0或者isPass2 = 1的数据
+     * METHOD:PATCH
+     * @param disinfectFilesModel
+     * @return
+     */
+
+    @ResponseBody
+    @RequestMapping(value = "/pupdate",method = RequestMethod.PATCH)
+    public Response ProfessorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel){
+        int row = this.disinfectFilesService.updateDisinfectFilesModelByProfessor(disinfectFilesModel);
+
+        HashMap<String,Object> data = new HashMap<>();
+        data.put("update row",row);
+        return Responses.successResponse(data);
+    }
+
+
+
+    @ResponseBody
+    @RequestMapping(value = "/sfind",method = RequestMethod.GET)
+    public Response SupervisorFind(@RequestParam("isPass2") Integer isPass2,
+                                   @RequestParam("page") int page,
+                                   @RequestParam("size") int size){
+        List<DisinfectFilesModel> disinfectFilesModel1 = this.disinfectFilesService.getDisinfectFilesModelBySupervisor(isPass2,new RowBounds(page,size));
+        HashMap<String,Object> data = new HashMap<>();
+        data.put("List",disinfectFilesModel1);
+        return Responses.successResponse(data);
+    }
+
+
+
+    @ResponseBody
+    @RequestMapping(value = "/supdate",method = RequestMethod.PATCH)
+    public Response SupervisorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel){
+        int row = this.disinfectFilesService.updateDisinfectFilesModelBySupervisor(disinfectFilesModel);
+        HashMap<String,Object> data = new HashMap<>();
+        data.put("update row",row);
+        return Responses.successResponse(data);
+    }
+
     //////删除数据在查询中再修改
 
+    /**
+     * 删除id = certain 的数据
+     * 权限设置
+     * @param id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
+    public Response Delete(@RequestParam("id") BigInteger id){
+        int row = this.disinfectFilesService.deleteDisinfectFilesModelByid(id);
+        HashMap<String,Object> data = new HashMap<>();
+        data.put("delete row",row);
+        return Responses.successResponse(data);
+    }
 
 }
