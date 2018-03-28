@@ -72,9 +72,6 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             // 登录成功
             return false;
         }
-
-
-
         return true;
     }
 }

@@ -35,6 +35,10 @@ public class NoticePlanService {
             NoticePlan find = this.noticePlanMapper.selectByPrimaryKey(id);
             return find;
         }
+        public List<NoticePlan> selectInSite(String string){
+            List<NoticePlan> find = this.noticePlanMapper.selectInSite(string);
+            return find;
+        }
         public List<NoticePlan> findPlanSelective(NoticePlanExample noticePlanExample){
             List<NoticePlan> find = this.noticePlanMapper.selectByExampleWithBLOBs(noticePlanExample);
             return find;
