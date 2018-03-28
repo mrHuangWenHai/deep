@@ -2,6 +2,7 @@ package com.deep.domain.service;
 
 import com.deep.domain.model.DisinfectFilesModel;
 import com.deep.infra.persistence.sql.mapper.DisinfectFilesMapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,36 +21,21 @@ public class DisinfectFilesService {
         this.disinfectFilesMapper.setDisinfectFilesModel(disinfectFilesModel);
     }
 
-    public List<DisinfectFilesModel> getDisinfectFilesModel(BigInteger factoryNum,
-                                                            String disinfectTimeStart,
-                                                            String disinfectTimeEnd,
-                                                            String disinfectName,
-                                                            String disinfectQuality,
-                                                            String disinfectWay,
-                                                            String operator,
-                                                            String professor,
-                                                            String supervisor,
-                                                            String remark,
-                                                            String  isPass1,
-                                                            String unpassReason1,
-                                                            String  isPass2,
-                                                            String unpassReason2,
+    public List<DisinfectFilesModel> getDisinfectFilesModel(DisinfectFilesModel disinfectFilesModel,
                                                             RowBounds bounds){
-        List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesMapper.getDisinfectFilesModel(factoryNum,
-                disinfectTimeStart,disinfectTimeEnd, disinfectName, disinfectQuality, disinfectWay, operator,
-                professor, supervisor, remark, isPass1,unpassReason1,isPass2,unpassReason2,bounds);
+        List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesMapper.getDisinfectFilesModel(disinfectFilesModel,bounds);
         return disinfectFilesModels;
     }
-    public List<DisinfectFilesModel> getDisinfectFilesModelByfactoryNum(BigInteger factoryNum){
-        List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesMapper.getDisinfectFilesModelByfactoryNum(factoryNum);
+    public List<DisinfectFilesModel> getDisinfectFilesModelByfactoryNum(BigInteger factoryNum, RowBounds bounds){
+        List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesMapper.getDisinfectFilesModelByfactoryNum(factoryNum,bounds);
         return disinfectFilesModels;
     }
-    public List<DisinfectFilesModel> getDisinfectFilesModelBydisinfectTime(Date disinfectTime){
-        List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesMapper.getDisinfectFilesModelBydisinfectTime(disinfectTime);
+    public List<DisinfectFilesModel> getDisinfectFilesModelBydisinfectTime(Date disinfectTime, RowBounds bounds){
+        List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesMapper.getDisinfectFilesModelBydisinfectTime(disinfectTime,bounds);
         return disinfectFilesModels;
     }
-    public List<DisinfectFilesModel> getDisinfectFilesModelByfactoryNumAnddisinfectTime(BigInteger factoryNum, String gmtCreate, String gmtTrans){
-        List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesMapper.getDisinfectFilesModelByfactoryNumAnddisinfectTime(factoryNum, gmtCreate, gmtTrans);
+    public List<DisinfectFilesModel> getDisinfectFilesModelByfactoryNumAnddisinfectTime(BigInteger factoryNum, String gmtCreate, String gmtTrans, RowBounds bounds){
+        List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesMapper.getDisinfectFilesModelByfactoryNumAnddisinfectTime(factoryNum, gmtCreate, gmtTrans,bounds);
         return disinfectFilesModels;
     }
     public DisinfectFilesModel getDisinfectFilesModelByfactoryNumAnddisinfectTimeAnddisinfectName(BigInteger factoryNum, String disinfectTime, String disinfectName){
@@ -57,25 +43,30 @@ public class DisinfectFilesService {
         return disinfectFilesModel;
     }
 
-
-
-    public int updateDisinfectFilesModelByProfessor(String professor, String isPass1, String unpassReason1, String gmtProfessor){
-        int row = this.disinfectFilesMapper.updateDisinfectFilesModelByProfessor(professor, isPass1, unpassReason1, gmtProfessor);
-        return row;
-    }
-    public int updateDisinfectFilesModelBySupervisor(String supervisor, String isPass2, String unpassReason2, String gmtSuperise){
-        int row = this.disinfectFilesMapper.updateDisinfectFilesModelBySupervisor(supervisor, isPass2, unpassReason2, gmtSuperise);
-        return row;
+    public List<DisinfectFilesModel> getDisinfectFilesModelByProfessor(Integer isPass1,RowBounds bounds){
+        List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesMapper.getDisinfectFilesModelByProfessor(isPass1,bounds);
+        return disinfectFilesModels;
     }
 
+    public List<DisinfectFilesModel> getDisinfectFilesModelBySupervisor(Integer isPass2,RowBounds bounds){
+        List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesMapper.getDisinfectFilesModelBySupervisor(isPass2,bounds);
+        return disinfectFilesModels;
+    }
 
 
-    public int deleteDisinfectFilesModelByfactoryNum(BigInteger factoryNum){
-        int row = this.disinfectFilesMapper.deleteDisinfectFilesModelByfactoryNum(factoryNum);
+    public int updateDisinfectFilesModelByProfessor(DisinfectFilesModel disinfectFilesModel){
+        int row = this.disinfectFilesMapper.updateDisinfectFilesModelByProfessor(disinfectFilesModel);
         return row;
     }
-    public int deleteDisinfectFilesModelByfactoryNumAnddisinfectTime(BigInteger factoryNum, String disinfectTime){
-        int row = this.disinfectFilesMapper.deleteDisinfectFilesModelByfactoryNumAnddisinfectTime(factoryNum,disinfectTime);
+    public int updateDisinfectFilesModelBySupervisor(DisinfectFilesModel disinfectFilesModel){
+        int row = this.disinfectFilesMapper.updateDisinfectFilesModelBySupervisor(disinfectFilesModel);
+        return row;
+    }
+
+
+
+    public int deleteDisinfectFilesModelByid(BigInteger id){
+        int row = this.disinfectFilesMapper.deleteDisinfectFilesModelByid(id);
         return row;
     }
 

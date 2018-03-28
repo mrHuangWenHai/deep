@@ -6,6 +6,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -50,7 +51,7 @@ public class  GenealogicalFilesService {
 
 
 
-    public GenealogicalFilesModel getGenealogicalFilesModelByid(int id){
+    public GenealogicalFilesModel getGenealogicalFilesModelByid(BigInteger id){
         GenealogicalFilesModel model = this.genealogicalFilesMapper.getGenealogicalFilesModelByid(id);
         return model;
     }
@@ -65,8 +66,13 @@ public class  GenealogicalFilesService {
     }
 
 
-    public int deleteGenealogicalFilesModel(String selfEartag){
-        int row=this.genealogicalFilesMapper.deleteGenealogicalFilesModel(selfEartag);
+    public int deleteGenealogicalFilesModel(BigInteger id){
+        int row = this.genealogicalFilesMapper.deleteGenealogicalFilesModel(id);
+        return row;
+    }
+
+    public int updateGenealogicalFilesModel(GenealogicalFilesModel genealogicalFilesModel){
+        int row = this.genealogicalFilesMapper.updateGenealogicalFilesModel(genealogicalFilesModel);
         return row;
     }
 }

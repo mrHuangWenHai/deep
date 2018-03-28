@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 
 @Controller
-public class GeditMessageResourceController {
+public class GeditMessageResource {
 
     @RequestMapping(value = "gredit",method = RequestMethod.GET)
     public String Gredit(){

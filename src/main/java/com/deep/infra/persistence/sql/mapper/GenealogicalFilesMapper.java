@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -12,6 +13,8 @@ import java.util.List;
  **/
 @Mapper
 public interface GenealogicalFilesMapper {
+
+    void setGenealogicalFilesModel(@Param("genealogicalFilesModel") GenealogicalFilesModel genealogicalFilesModel);
 
 
     List<GenealogicalFilesModel> getGenealogicalFilesModel(@Param("selfEartag") String selfEartag,
@@ -32,15 +35,14 @@ public interface GenealogicalFilesMapper {
                                                            @Param("eartagOfMothersMother") String eartagOfMothersMother,
                                                            RowBounds rowBounds
                                                            );
-    GenealogicalFilesModel getGenealogicalFilesModelByid(@Param("id") int id);
+    GenealogicalFilesModel getGenealogicalFilesModelByid(@Param("id") BigInteger id);
 
     GenealogicalFilesModel getGenealogicalFilesModelByimmuneEartag(@Param("immuneEartag") String immuneEartag);
     GenealogicalFilesModel getGenealogicalFilesModelBytradeMarkEartag(@Param("tradeMarkEartag") String tradeMarkEartag);
 
-    //@Insert("INSERT INTO genealogical_files VALUES genealogicalFilesModel")
-    void setGenealogicalFilesModel(@Param("genealogicalFilesModel") GenealogicalFilesModel genealogicalFilesModel);
-
     //@Delete(FROM genealogical_files WHERE self_eartag = #{SelfEartag})
-    int deleteGenealogicalFilesModel(@Param("selfEartag") String selfEartag);
+    int deleteGenealogicalFilesModel(@Param("id") BigInteger id);
+
+    int updateGenealogicalFilesModel(@Param("genealogicalFilesModel") GenealogicalFilesModel genealogicalFilesModel);
 
 }

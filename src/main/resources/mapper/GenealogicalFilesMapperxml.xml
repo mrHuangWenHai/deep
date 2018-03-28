@@ -42,17 +42,8 @@
         )
     </insert>
 
-    <select id="getGenealogicalFilesModelByid">
-        SELECT
-        *
-        FROM
-        genealogical_files
-        WHERE
-        id = #{id}
-    </select>
-
-    <resultMap id="genealogicalFiles" type="com.deep.domain.model.GenealogicalFilesModel">
-        <id property="id" column="id"/>
+    <resultMap id="GenealogicalFiles" type="com.deep.domain.model.GenealogicalFilesModel">
+        <result property="id" column="id"/>
         <result property="selfEartag" column="self_eartag"/>
         <result property="immuneEartag" column="immune_eartag"/>
         <result property="tradeMarkEartag" column="trademark_eartag"/>
@@ -71,7 +62,16 @@
         <result property="gmtCreate" column="gmt_create"/>
         <result property="gmtModified" column="gmt_modified"/>
     </resultMap>
-    <select id="getGenealogicalFilesModel" resultMap="genealogicalFiles">
+    <select id="getGenealogicalFilesModelByid" resultMap="GenealogicalFiles">
+        SELECT
+        *
+        FROM
+        genealogical_files
+        WHERE
+        id = #{id}
+    </select>
+
+    <select id="getGenealogicalFilesModel" resultMap="GenealogicalFiles">
         SELECT
         self_eartag AS "selfEartag",
         immune_eartag AS "immuneEartag",
@@ -188,10 +188,62 @@
         WHERE trademark_eartag = #{tradeMarkEartag}
     </select>
 
-    <delete id="deleteGenealogicalFilesModel" parameterType="String">
+    <delete id="deleteGenealogicalFilesModel" parameterType="BigInteger">
         DELETE FROM
           genealogical_files
         WHERE
-          self_eartag = #{selfEartag}
+          id = #{genealogicalFilesModel.id}
     </delete>
+
+    <update id="updateGenealogicalFilesModel" parameterType="com.deep.domain.model.GenealogicalFilesModel">
+        UPDATE
+        genealogical_files
+        <set>
+            <if test="genealogicalFilesModel.selfEartag != null and genealogicalFilesModel.selfEartag !=''">
+                self_eartag = #{genealogicalFilesModel.selfEartag},
+            </if>
+            <if test="genealogicalFilesModel.immuneEartag!= null and genealogicalFilesModel.immuneEartag != '' ">
+                immune_eartag = #{genealogicalFilesModel.immuneEartag},
+            </if>
+            <if test="genealogicalFilesModel.tradeMarkEartag != null and genealogicalFilesModel.tradeMarkEartag != '' ">
+                trademark_eartag = #{genealogicalFilesModel.tradeMarkEartag},
+            </if>
+            <if test="genealogicalFilesModel.breedingSheepBase != null and genealogicalFilesModel.breedingSheepBase != '' ">
+                breedingsheep_base = #{genealogicalFilesModel.breedingSheepBase},
+            </if>
+            <if test="genealogicalFilesModel.birthTime != null and genealogicalFilesModel.birthTime != ''">
+                birth_time = #{genealogicalFilesModel.birthTime},
+            </if>
+            <if test="genealogicalFilesModel.birthWeight != null and genealogicalFilesModel.birthWeight != ''">
+                birth_weight = #{genealogicalFilesModel.birthWeight},
+            </if>
+            <if test="genealogicalFilesModel.color != null and genealogicalFilesModel.color != '' ">
+                color = #{genealogicalFilesModel.color},
+            </if>
+            <if test="genealogicalFilesModel.sex != null and genealogicalFilesModel.sex != '' ">
+                sex = #{genealogicalFilesModel.sex},
+            </if>
+            <if test="genealogicalFilesModel.eartagOfFather != null and genealogicalFilesModel.eartagOfFather != '' ">
+                eartag_of_father = #{genealogicalFilesModel.eartagOfFather},
+            </if>
+            <if test="genealogicalFilesModel.eartagOfMother != null and genealogicalFilesModel.eartagOfMother != '' ">
+                eartag_of_mother = #{genealogicalFilesModel.eartagOfMother},
+            </if>
+            <if test="genealogicalFilesModel.eartagOfFathersFather != null and genealogicalFilesModel.eartagOfFathersFather != '' ">
+                eartag_of_fathersfather = #{genealogicalFilesModel.eartagOfFathersFather},
+            </if>
+            <if test="genealogicalFilesModel.eartagOfFathersMother != null and genealogicalFilesModel.eartagOfFathersMother != '' ">
+                eartag_of_fathersmother = #{genealogicalFilesModel.eartagOfFathersMother},
+            </if>
+            <if test="genealogicalFilesModel.eartagOfMothersFather != null and genealogicalFilesModel.eartagOfMothersFather != '' ">
+                eartag_of_mothersfather = #{genealogicalFilesModel.eartagOfMothersFather},
+            </if>
+            <if test="genealogicalFilesModel.eartagOfMothersMother != null and genealogicalFilesModel.eartagOfMothersMother != '' ">
+                eartag_of_mothersmother = #{genealogicalFilesModel.eartagOfMothersMother}
+            </if>
+        </set>
+        WHERE
+        id = #{genealogicalFilesModel.id}
+
+    </update>
 </mapper>

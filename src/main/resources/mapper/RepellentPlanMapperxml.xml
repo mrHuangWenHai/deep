@@ -19,18 +19,18 @@
         gmt_create
         )
         VALUES(
-        #{repellentPlanModel.factoryNum},
-        #{repellentPlanModel.crowdNum},
-        #{repellentPlanModel.repellentEartag},
-        #{repellentPlanModel.repellentTime},
-        #{repellentPlanModel.repellentName},
-        #{repellentPlanModel.repellentWay},
-        #{repellentPlanModel.repellentQuality},
-        #{repellentPlanModel.operator},
-        #{repellentPlanModel.remark},
-        #{repellentPlanModel.isPass1},
-        #{repellentPlanModel.isPass2},
-        #{repellentPlanModel.gmtCreate}
+        #{factoryNum},
+        #{crowdNum},
+        #{repellentEartag},
+        #{repellentTime},
+        #{repellentName},
+        #{repellentWay},
+        #{repellentQuality},
+        #{operator},
+        #{remark},
+        #{isPass1},
+        #{isPass2},
+        #{gmtCreate}
         )
     </insert>
     <resultMap id="RepellentPlan" type="com.deep.domain.model.RepellentPlanModel">
@@ -59,50 +59,50 @@
         repellent_plan
         WHERE
         1=1
-        <if test="factoryNum != null and factoryNum != '' ">
-            AND factory_num = #{factoryNum}
+        <if test="repellentPlanModel.factoryNum != null and repellentPlanModel.factoryNum != '' ">
+            AND factory_num = #{repellentPlanModel.factoryNum}
         </if>
-        <if test="crowdNum != null and crowdNum != '' ">
-            AND crowd_num = #{crowdNum}
+        <if test="repellentPlanModel.crowdNum != null and repellentPlanModel.crowdNum != '' ">
+            AND crowd_num = #{repellentPlanModel.crowdNum}
         </if>
-        <if test="repellentTimeStart != null and repellentTimeStart != '' and
-                  repellentTimeEnd != null and repellentTimeEnd != '' ">
-            AND repellent_time BETWEEN #{repellentTimeStart} AND #{repellentTimeEnd}
+        <if test="repellentPlanModel.repellentTimeStart != null and repellentPlanModel.repellentTimeStart != '' and
+                  repellentPlanModel.repellentTimeEnd != null and repellentPlanModel.repellentTimeEnd != '' ">
+            AND repellent_time BETWEEN #{repellentPlanModel.repellentTimeStart} AND #{repellentPlanModel.repellentTimeEnd}
         </if>
-        <if test="repellentName != null and repellentName != '' ">
-            AND repellent_name = #{repellentName}
-        </if>
-
-        <if test="repellentWay != null and repellentWay != '' ">
-            AND repellent_way = #{repellentWay}
-        </if>
-        <if test="repellentQuality != null and repellentQuality != '' ">
-            AND repellent_quality = #{repellentQuality}
+        <if test="repellentPlanModel.repellentName != null and repellentPlanModel.repellentName != '' ">
+            AND repellent_name = #{repellentPlanModel.repellentName}
         </if>
 
-        <if test="operator != null and operator != '' ">
-            AND operator = #{operator}
+        <if test="repellentPlanModel.repellentWay != null and repellentPlanModel.repellentWay != '' ">
+            AND repellent_way = #{repellentPlanModel.repellentWay}
         </if>
-        <if test="professor != null and professor != '' ">
-            AND professor = #{professor}
+        <if test="repellentPlanModel.repellentQuality != null and repellentPlanModel.repellentQuality != '' ">
+            AND repellent_quality = #{repellentPlanModel.repellentQuality}
         </if>
-        <if test="supervisor != null and supervisor != '' ">
-            AND supervisor = #{supervisor}
+
+        <if test="repellentPlanModel.operator != null and repellentPlanModel.operator != '' ">
+            AND operator = #{repellentPlanModel.operator}
         </if>
-        <if test="remark != null and remark != '' ">
-            AND remark = #{remark}
+        <if test="repellentPlanModel.professor != null and repellentPlanModel.professor != '' ">
+            AND professor = #{repellentPlanModel.professor}
         </if>
-        <if test="isPass1 != null and isPass1 != '' ">
-            AND is_pass1 = #{isPass1}
+        <if test="repellentPlanModel.supervisor != null and repellentPlanModel.supervisor != '' ">
+            AND supervisor = #{repellentPlanModel.supervisor}
         </if>
-        <if test="unpassReason1 != null and unpassReason1 != '' ">
-            AND unpass_reason1 = #{unpassReason1}
+        <if test="repellentPlanModel.remark != null and repellentPlanModel.remark != '' ">
+            AND remark = #{repellentPlanModel.remark}
         </if>
-        <if test="isPass2 != null and isPass2 != '' ">
-            AND is_pass2 = #{isPass2}
+        <if test="repellentPlanModel.isPass1 != null and repellentPlanModel.isPass1 != '' ">
+            AND is_pass1 = #{repellentPlanModel.isPass1}
         </if>
-        <if test="unpassReason2 != null and unpassReason2 != '' ">
-            AND unpass_reason2 = #{unpassReason2}
+        <if test="repellentPlanModel.unpassReason1 != null and repellentPlanModel.unpassReason1 != '' ">
+            AND unpass_reason1 = #{repellentPlanModel.unpassReason1}
+        </if>
+        <if test="repellentPlanModel.isPass2 != null and repellentPlanModel.isPass2 != '' ">
+            AND is_pass2 = #{repellentPlanModel.isPass2}
+        </if>
+        <if test="repellentPlanModel.unpassReason2 != null and repellentPlanModel.unpassReason2 != '' ">
+            AND unpass_reason2 = #{repellentPlanModel.unpassReason2}
         </if>
     </select>
 
@@ -124,34 +124,48 @@
         factory_num = #{factoryNum} AND repellent_time = #{repellentTime} AND repellent_name = #{repellentName}
     </select>
 
-    <update id="updateRepellentPlanModelByProfessor">
-        UPDATE repellent_plan
-        SET  professor = #{professor},
-        is_pass1 = #{isPass1},
-        unpass_reason1 = #{unpassReason1},
-        gmt_professor = #{gmtProfessor}
-        WHERE id = #{id}
-    </update>
 
-    <update id="updateRepellentPlanModelBySupervisor">
-        UPDATE repellent_plan
-        SET  supervisor = #{supervisor},
-        is_pass2 = #{isPass2},
-        unpass_reason2 = #{unpassReason2},
-        gmt_supervise = #{gmtSupervise}
-        WHERE id = #{id}
-    </update>
+    <select id="getRepellentPlanModelByProfessor" resultMap="RepellentPlan">
+        SELECT
+        *
+        FROM
+        repellent_plan
+        WHERE
+        is_pass1 = #{isPass1}
+    </select>
 
-    <delete id="deleteRepellentPlanModelByfactoryNum" >
+    <select id="getRepellentPlanModelBySupervisor" resultMap="RepellentPlan">
+        SELECT
+        *
+        FROM
+        repellent_plan
+        WHERE
+        is_pass2 = #{isPass2}
+    </select>
+
+    <delete id="deleteRepellentPlanModelByid" parameterType="BigInteger">
         DELETE FROM
         repellent_plan
         WHERE
-        factory_num = #{factoryNum}
+        id = #{id}
     </delete>
-    <delete id="deleteRepellentPlanModelByfactoryNumAndrepellentTime" >
-        DELETE FROM
-        repellent_plan
-        WHERE
-        factory_num = #{factoryNum} AND repellent_time = #{repellentTime}
-    </delete>
+
+
+    <update id="updateRepellentPlanModelByProfessor" parameterType="com.deep.domain.model.RepellentPlanModel">
+        UPDATE repellent_plan
+        SET  professor = #{repellentPlanModel.professor},
+        is_pass1 = #{repellentPlanModel.isPass1},
+        unpass_reason1 = #{repellentPlanModel.unpassReason1},
+        gmt_professor = #{repellentPlanModel.gmtProfessor}
+        WHERE id = #{repellentPlanModel.id}
+    </update>
+
+    <update id="updateRepellentPlanModelBySupervisor" parameterType="com.deep.domain.model.RepellentPlanModel">
+        UPDATE repellent_plan
+        SET  supervisor = #{repellentPlanModel.supervisor},
+        is_pass2 = #{repellentPlanModel.isPass2},
+        unpass_reason2 = #{repellentPlanModel.unpassReason2},
+        gmt_supervise = #{repellentPlanModel.gmtSupervise}
+        WHERE id = #{repellentPlanModel.id}
+    </update>
 </mapper>

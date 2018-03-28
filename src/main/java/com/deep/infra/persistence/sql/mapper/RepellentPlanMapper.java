@@ -25,21 +25,7 @@ public interface RepellentPlanMapper {
                                @Param("isPass2") String isPass2,
                                @Param("gmtCreate") Timestamp gmtCreate);
 
-    List<RepellentPlanModel> getRepellentPlanModel(@Param("factoryNum")BigInteger factoryNum,
-                                                   @Param("crowdNum") String crowdNum,
-                                                   @Param("repellentTimeStart") String repellentTimeStart,
-                                                   @Param("repellentTimeEnd") String repellentTimeEnd,
-                                                   @Param("repellentName") String repellentName,
-                                                   @Param("repellentWay") String repellentWay,
-                                                   @Param("repellentQuality") String repellentQuality,
-                                                   @Param("operator") String operator,
-                                                   @Param("professor") String professor,
-                                                   @Param("supervisor") String supervisor,
-                                                   @Param("remark") String remark,
-                                                   @Param("isPass1") String  isPass1,
-                                                   @Param("unpassReason1") String unpassReason1,
-                                                   @Param("isPass2") String isPass2,
-                                                   @Param("unpassReason2") String unpassReason2,
+    List<RepellentPlanModel> getRepellentPlanModel(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel,
                                                    RowBounds bounds);
 
     RepellentPlanModel getRepellentPlanModelByfactoryNumAndrepellentTimeAndrepellentName(@Param("factoryNum")BigInteger factoryNum,
@@ -47,20 +33,16 @@ public interface RepellentPlanMapper {
                                                                                          @Param("repellentName")String repellentName);
 
 
-    int updateRepellentPlanModelByProfessor(@Param("professor") String professor,
-                                            @Param("isPass1") String  isPass1,
-                                            @Param("unpassReason1") String unpassReason1,
-                                            @Param("gmtProfessor") String gmtProfessor);
-
-    int updateRepellentPlanModelBySupervisor(@Param("supervisor") String supervisor,
-                                            @Param("isPass2") String  isPass2,
-                                            @Param("unpassReason2") String unpassReason2,
-                                            @Param("gmtSupervisor") String gmtSupervisor);
+    List<RepellentPlanModel> getRepellentPlanModelByProfessor(@Param("isPass1") Integer isPass1,
+                                                              RowBounds bounds);
+    List<RepellentPlanModel> getRepellentPlanModelBySupervisor(@Param("isPass2") Integer isPass2,
+                                                               RowBounds bounds);
 
 
-    int deleteRepellentPlanModelByfactoryNum(@Param("factoryNum")BigInteger factoryNum);
-    int deleteRepellentPlanModelByfactoryNumAndrepellentTime(@Param("factoryNum")BigInteger factoryNum,
-                                                             @Param("repellentTime")String repellentTime);
+    int deleteRepellentPlanModelByid(@Param("id") BigInteger id);
 
+    int updateRepellentPlanModelByProfessor(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel);
+
+    int updateRepellentPlanModelBySupervisor(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel);
 
 }

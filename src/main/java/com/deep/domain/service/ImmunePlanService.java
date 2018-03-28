@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
@@ -14,33 +15,26 @@ public class ImmunePlanService {
     @Resource
     private ImmunePlanMapper immunePlanMapper;
 
-    public void setImmunePlanModel(ImmunePlanModel immunePlanModel){
-        this.immunePlanMapper.setImmunePlanModel(immunePlanModel);
+    public void setImmunePlanModel(BigInteger factoryNum,
+                                   String crowdNum,
+                                   String immuneEartag,
+                                   String immuneTime,
+                                   String immuneKind,
+                                   String immuneWay,
+                                   String immuneQuality,
+                                   String immuneDuring,
+                                   String operator,
+                                   String remark,
+                                   String  isPass1,
+                                   String isPass2,
+                                   Timestamp gmtCreate){
+        this.immunePlanMapper.setImmunePlanModel(factoryNum, crowdNum, immuneEartag, immuneTime,
+                immuneKind, immuneWay, immuneQuality, immuneDuring, operator, remark, isPass1, isPass2, gmtCreate);
     }
 
-    public List<ImmunePlanModel> getImmunePlanModel(BigInteger factoryNum,
-                                                    String crowdNum,
-                                                    String immuneEartagStart,
-                                                    String immuneEartagEnd,
-                                                    String immuneTimeStart,
-                                                    String immuneTimeEnd,
-                                                    String immuneKind,
-                                                    String immuneWay,
-                                                    String immuneQuality,
-                                                    String immuneDuring,
-                                                    String operator,
-                                                    String professor,
-                                                    String supervisor,
-                                                    String remark,
-                                                    String  isPass1,
-                                                    String unpassReason1,
-                                                    String isPass2,
-                                                    String unpassReason2,
+    public List<ImmunePlanModel> getImmunePlanModel(ImmunePlanModel immunePlanModel,
                                                     RowBounds bounds){
-        List<ImmunePlanModel> models = this.immunePlanMapper.getImmunePlanModel(factoryNum,crowdNum, immuneEartagStart,immuneEartagEnd,
-                                                        immuneTimeStart,immuneTimeEnd, immuneKind, immuneWay, immuneQuality,
-                                                        immuneDuring, operator, professor, supervisor,
-                                                        remark, isPass1, unpassReason1, isPass2, unpassReason2,bounds);
+        List<ImmunePlanModel> models = this.immunePlanMapper.getImmunePlanModel(immunePlanModel,bounds);
         return models;
     }
 
@@ -50,30 +44,32 @@ public class ImmunePlanService {
         return  immunePlanModel;
     }
 
-    public List<ImmunePlanModel> getImmunePlanModelByProfessor(RowBounds bounds){
-        List<ImmunePlanModel> models = this.immunePlanMapper.getImmunePlanModelByProfessor(bounds);
+    public List<ImmunePlanModel> getImmunePlanModelByProfessor(Integer isPass1, RowBounds bounds){
+        List<ImmunePlanModel> models = this.immunePlanMapper.getImmunePlanModelByProfessor(isPass1,bounds);
         return models;
     }
 
-    public int updateImmunePlanModelByProfessor(String professor, String  isPass1, String unpassReason1, String gmtProfessor){
-        int row = this.immunePlanMapper.updateImmunePlanModelByProfessor(professor, isPass1, unpassReason1, gmtProfessor);
+    public List<ImmunePlanModel> getImmunePlanModelBySupervisor(Integer isPass2, RowBounds bounds){
+        List<ImmunePlanModel> models = this.immunePlanMapper.getImmunePlanModelBySupervisor(isPass2,bounds);
+        return models;
+    }
+
+    public int updateImmunePlanModelByProfessor(ImmunePlanModel immunePlanModel){
+        int row = this.immunePlanMapper.updateImmunePlanModelByProfessor(immunePlanModel);
         return row;
     }
 
-    public int updateImmunePlanModelBySupervisor(String supervisor, String isPass2, String unpassReason2, String gmtSupervise){
-        int row = this.immunePlanMapper.updateImmunePlanModelBySupervisor(supervisor, isPass2, unpassReason2, gmtSupervise);
+    public int updateImmunePlanModelBySupervisor(ImmunePlanModel immunePlanModel){
+        int row = this.immunePlanMapper.updateImmunePlanModelBySupervisor(immunePlanModel);
         return row;
     }
 
 
 
-    public int deleteImmunePlanModelByfactoryNum(BigInteger factoryNum){
-        int row = this.immunePlanMapper.deleteImmunePlanModelByfactoryNum(factoryNum);
+    public int deleteImmunePlanModelByid(BigInteger id){
+        int row = this.immunePlanMapper.deleteImmunePlanModelByid(id);
         return row;
     }
-    public int deleteImmunePlanModelByfactoryNumAndimmuneTime(BigInteger factoryNum,String immuneTime){
-        int row = this.immunePlanMapper.deleteImmunePlanModelByfactoryNumAndimmuneTime(factoryNum,immuneTime);
-        return row;
-    }
+
 
 }

@@ -14,45 +14,38 @@ public interface DisinfectFilesMapper {
     void setDisinfectFilesModel(@Param("disinfectFilesModel") DisinfectFilesModel disinfectFilesModel);
 
 
-    List<DisinfectFilesModel> getDisinfectFilesModel(@Param("factoryNum") BigInteger factoryNum,
-                                                     @Param("disinfectTimeStart") String disinfectTimeStart,
-                                                     @Param("disinfectTimeEnd") String disinfectTimeEnd,
-                                                     @Param("disinfectName") String disinfectName,
-                                                     @Param("disinfectQuality") String disinfectQuality,
-                                                     @Param("disinfectWay") String disinfectWay,
-                                                     @Param("operator") String operator,
-                                                     @Param("professor") String professor,
-                                                     @Param("supervisor") String supervisor,
-                                                     @Param("remark") String remark,
-                                                     @Param("isPass1") String  isPass1,
-                                                     @Param("unpassReason1") String unpassReason1,
-                                                     @Param("isPass2") String isPass2,
-                                                     @Param("unpassReason2") String unpassReason2,
+    List<DisinfectFilesModel> getDisinfectFilesModel(@Param("disinfectFilesModel") DisinfectFilesModel disinfectFilesModel,
                                                      RowBounds bounds);
-    List<DisinfectFilesModel> getDisinfectFilesModelByfactoryNum(@Param("factoryNum")BigInteger factoryNum);
-    List<DisinfectFilesModel> getDisinfectFilesModelBydisinfectTime(@Param("disinfectTime")Date disinfectTime);
+
+    List<DisinfectFilesModel> getDisinfectFilesModelByfactoryNum(@Param("factoryNum")BigInteger factoryNum,
+                                                                 RowBounds bounds);
+
+    List<DisinfectFilesModel> getDisinfectFilesModelBydisinfectTime(@Param("disinfectTime")Date disinfectTime,
+                                                                    RowBounds bounds);
+
     List<DisinfectFilesModel> getDisinfectFilesModelByfactoryNumAnddisinfectTime(@Param("factoryNum")BigInteger factoryNum,
                                                                                  @Param("gmtCreate") String gmtCreate,
-                                                                                 @Param("gmtTrans") String gmtTrans);
+                                                                                 @Param("gmtTrans") String gmtTrans,
+                                                                                 RowBounds bounds);
+
     DisinfectFilesModel getDisinfectFilesModelByfactoryNumAnddisinfectTimeAnddisinfectName(@Param("factoryNum") BigInteger factoryNum,
                                                                                            @Param("disinfectTime") String disinfectTime,
                                                                                            @Param("disinfectName") String disinfectName);
 
 
 
-    int updateDisinfectFilesModelByProfessor(@Param("professor") String professor,
-                                              @Param("isPass1") String  isPass1,
-                                              @Param("unpassReason1") String unpassReason1,
-                                              @Param("gmtProfessor") String gmtProfessor);
+    List<DisinfectFilesModel> getDisinfectFilesModelByProfessor(@Param("isPass1") Integer isPass1,
+                                                                RowBounds bounds);
 
-    int updateDisinfectFilesModelBySupervisor(@Param("supervisor") String supervisor,
-                                              @Param("isPass2") String  isPass2,
-                                              @Param("unpassReason2") String unpassReason2,
-                                              @Param("gmtSupervise") String gmtSupervise);
+    List<DisinfectFilesModel> getDisinfectFilesModelBySupervisor(@Param("isPass2") Integer isPass2,
+                                                                 RowBounds bounds);
 
 
+    int updateDisinfectFilesModelByProfessor(@Param("disinfectFilesModel") DisinfectFilesModel disinfectFilesModel);
 
-    int deleteDisinfectFilesModelByfactoryNum(@Param("factoryNum")BigInteger factoryNum);
-    int deleteDisinfectFilesModelByfactoryNumAnddisinfectTime(@Param("factoryNum")BigInteger factoryNum,
-                                                              @Param("disinfectTime") String disinfectTime);
+    int updateDisinfectFilesModelBySupervisor(@Param("disinfectFilesModel") DisinfectFilesModel disinfectFilesModel);
+
+
+
+    int deleteDisinfectFilesModelByid(@Param("id") BigInteger id);
 }

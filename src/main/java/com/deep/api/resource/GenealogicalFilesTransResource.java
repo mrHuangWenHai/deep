@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 
 @Controller
-@RequestMapping(value = "/allfunction/gft")
-public class GenealogicalFilesTransResourceController {
+@RequestMapping(value = "/gft")
+public class GenealogicalFilesTransResource {
 
     //追溯系统 通过商标耳牌追溯
     /**

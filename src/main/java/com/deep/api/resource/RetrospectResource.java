@@ -32,7 +32,7 @@ import java.util.List;
  */
 
 @Controller
-public class RetrospectResourceController {
+public class RetrospectResource {
     //通过耳牌号查询
     @Resource
     private GenealogicalFilesService genealogicalFilesService;
@@ -51,23 +51,29 @@ public class RetrospectResourceController {
     @RequestMapping(value = "/retro")
     public String Retro(){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-MM-ss");
+
+        //系谱档案查询耳牌对应信息
+        //系谱档案转手表查询耳牌对应信息
         GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesService.getGenealogicalFilesModelBytradeMarkEartag("201102023456789");
         List<GenealogicalFilesTransModel> genealogicalFilesTransModels = genealogicalFilesTransService.getGenealogicalFilesTransModelBytrademarkEartag(genealogicalFilesModel.getTradeMarkEartag());
 
         List<DisinfectFilesModel> disinfectFilesModels;
+
+
+
+
         for( int i = 0; i < genealogicalFilesTransModels.size(); i++){
             //如果gmtTrans为空 说明该羊仍在该厂内
             //时间间隔由gmtCreate到现在
             if(genealogicalFilesTransModels.get(i).getGmtTrans() == null){
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-                disinfectFilesModels = disinfectFilesService.getDisinfectFilesModelByfactoryNumAnddisinfectTime(
+                /*disinfectFilesModels = disinfectFilesService.getDisinfectFilesModelByfactoryNumAnddisinfectTime(
                         new BigInteger(genealogicalFilesTransModels.get(i).getBeforeOwnerFactory()),
-                        simpleDateFormat.format(genealogicalFilesTransModels.get(i).getGmtCreate()),simpleDateFormat.format(timestamp));
+                        simpleDateFormat.format(genealogicalFilesTransModels.get(i).getGmtCreate()),simpleDateFormat.format(timestamp));*/
             }
         }
 
         return null;
     }
-
 
 }

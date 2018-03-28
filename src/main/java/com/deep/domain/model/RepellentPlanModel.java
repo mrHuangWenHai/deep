@@ -1,6 +1,7 @@
 package com.deep.domain.model;
 
 import org.apache.ibatis.session.RowBounds;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -10,7 +11,9 @@ public class RepellentPlanModel {
     private BigInteger id;      //id
     private BigInteger factoryNum;   //工厂编号
     private String crowdNum;       //羊群号
-    private String repellentEartag;    //耳牌附件号
+    private String repellentEartag;    //耳牌附件名
+    private MultipartFile repellentEartagFile;    //耳牌附件号文件
+
     private String repellentTime;    //驱虫时间
     private String repellentName;   //药物名称
     private String repellentWay;     //给药方式
@@ -31,7 +34,8 @@ public class RepellentPlanModel {
     //
     private String repellentTimeStart;
     private String repellentTimeEnd;
-    private RowBounds bounds;
+    private int page;
+    private int size;
 
     public RepellentPlanModel() {
     }
@@ -90,6 +94,14 @@ public class RepellentPlanModel {
 
     public void setCrowdNum(String crowdNum) {
         this.crowdNum = crowdNum;
+    }
+
+    public MultipartFile getRepellentEartagFile() {
+        return repellentEartagFile;
+    }
+
+    public void setRepellentEartagFile(MultipartFile repellentEartagFile) {
+        this.repellentEartagFile = repellentEartagFile;
     }
 
     public String getRepellentEartag() {
@@ -244,11 +256,19 @@ public class RepellentPlanModel {
         this.repellentTimeEnd = repellentTimeEnd;
     }
 
-    public RowBounds getBounds() {
-        return bounds;
+    public int getPage() {
+        return page;
     }
 
-    public void setBounds(RowBounds bounds) {
-        this.bounds = bounds;
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 }

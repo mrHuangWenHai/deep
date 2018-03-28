@@ -11,7 +11,8 @@ public class ImmunePlanModel {
     private BigInteger id;      //id
     private BigInteger factoryNum;  //工厂编号
     private String crowdNum;     //羊群号
-    private String immuneEartag;    //耳牌附件号
+    private String immuneEartag;    //耳牌附件名
+    private MultipartFile immuneEartagFile;   //耳牌附件 用于接受文件
     private String immuneTime;     //接种时间
     private String immuneKind;     //免疫种类
     private String immuneWay;       //免疫方法
@@ -33,7 +34,8 @@ public class ImmunePlanModel {
     //
     private String immuneTimeStart;
     private String immuneTimeEnd;
-    private RowBounds bounds;
+    private int page;
+    private int size;
 
     public ImmunePlanModel() {
     }
@@ -99,6 +101,14 @@ public class ImmunePlanModel {
 
     public void setCrowdNum(String crowdNum) {
         this.crowdNum = crowdNum;
+    }
+
+    public MultipartFile getImmuneEartagFile() {
+        return immuneEartagFile;
+    }
+
+    public void setImmuneEartagFile(MultipartFile immuneEartagFile) {
+        this.immuneEartagFile = immuneEartagFile;
     }
 
     public String getImmuneEartag() {
@@ -260,11 +270,19 @@ public class ImmunePlanModel {
         this.immuneTimeEnd = immuneTimeEnd;
     }
 
-    public RowBounds getBounds() {
-        return bounds;
+    public int getPage() {
+        return page;
     }
 
-    public void setBounds(RowBounds bounds) {
-        this.bounds = bounds;
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 }

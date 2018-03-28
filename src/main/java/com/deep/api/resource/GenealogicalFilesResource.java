@@ -27,28 +27,6 @@ public class GenealogicalFilesResource {
 
     //localhost:9090/allfunction/gf/function
 
-    /**
-     * METHOD:GET
-     * @return
-     */
-    @RequestMapping(value = "/function",method = RequestMethod.POST)
-    public String GenealogicalFilesFunctionChoice(){
-        return "GenealogicalFilesHTML/GenealogicalFilesFunctionChoiceForm";
-    }
-
-    /**
-     * METHOD:GET
-     * @return
-     */
-    @RequestMapping(value = "/save",method = RequestMethod.GET)
-    public String Save(){
-        /*Jedis jedis = new Jedis("localhost");
-        jedis.get("userId");
-        jedis.get("token");
-        System.out.println(jedis.get("userId")+ jedis.get("token"));
-        System.out.println("查看userId的剩余生存时间："+jedis.ttl("userId"));*/
-        return "GenealogicalFilesHTML/GenealogicalFilesSaveForm";
-    }
 
     /**
      * 返回插入结果
@@ -77,7 +55,7 @@ public class GenealogicalFilesResource {
                 "".equals(genealogicalFilesModel.getEartagOfMothersFather())||
                 "".equals(genealogicalFilesModel.getEartagOfMothersMother())||
                 "".equals(genealogicalFilesModel.getRemark())){
-            return new Response().addData("Error","Error Lack Item");
+            return Responses.errorResponse("Lack Item");
         }else{
             //System.out.println(SelfEartag);
             GenealogicalFilesModel genealogicalFilesModelByimmuneEartag = genealogicalFilesService.getGenealogicalFilesModelByimmuneEartag(genealogicalFilesModel.getImmuneEartag());
@@ -93,25 +71,17 @@ public class GenealogicalFilesResource {
                         genealogicalFilesModel.getEartagOfFathersFather(),genealogicalFilesModel.getEartagOfFathersMother(),genealogicalFilesModel.getEartagOfMothersFather(),
                         genealogicalFilesModel.getEartagOfMothersMother(),genealogicalFilesModel.getRemark(),timestamp));
 
-                Response response = new Response();
-                response.addData("Success","");
 
-                return response;
+                HashMap<String,Object> data = new HashMap<>();
+                data.put("successMessage","save");
+                return Responses.successResponse(data);
+
             }else{
-                return new Response().addData("Error","Error Already Exist");
+
+                return Responses.errorResponse("Already Exist");
             }
         }
 
-    }
-
-    //localhost:8080/allfunction/gf/find
-    /**
-     * METHOD:GET
-     * @return
-     */
-    @RequestMapping(value = "/find",method = RequestMethod.GET)
-    public String Find(){
-        return "GenealogicalFilesHTML/GenealogicalFilesFindForm";
     }
 
 
@@ -133,11 +103,13 @@ public class GenealogicalFilesResource {
                 genealogicalFilesModel.getBirthTimeStart(),genealogicalFilesModel.getBirthTimeEnd(),genealogicalFilesModel.getBirthWeightStart(),
                 genealogicalFilesModel.getBirthWeightEnd(),genealogicalFilesModel.getColor(),genealogicalFilesModel.getSex(),genealogicalFilesModel.getEartagOfFather(),
                 genealogicalFilesModel.getEartagOfMother(),genealogicalFilesModel.getEartagOfFathersFather(),genealogicalFilesModel.getEartagOfFathersMother(),
-                genealogicalFilesModel.getEartagOfMothersFather(),genealogicalFilesModel.getEartagOfMothersMother(),new RowBounds(0,20));
-        System.out.println("ModelSize:"+genealogicalFilesModels.size());
-        System.out.println("ModelId:"+genealogicalFilesModels.get(0).getId());
+                genealogicalFilesModel.getEartagOfMothersFather(),genealogicalFilesModel.getEartagOfMothersMother(),new RowBounds(genealogicalFilesModel.getPage(),genealogicalFilesModel.getSize()));
+        //System.out.println("ModelSize:"+genealogicalFilesModels.size());
+        //System.out.println("ModelId:"+genealogicalFilesModels.get(0).getId());
 
-        return new Response().addData("Success",genealogicalFilesModels);
+        HashMap<String,Object> data  = new HashMap<>();
+        data.put("List",genealogicalFilesModels);
+        return Responses.successResponse(data);
     }
 
     /**
@@ -154,50 +126,37 @@ public class GenealogicalFilesResource {
         GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesService.getGenealogicalFilesModelByid(id);
         //System.out.println(genealogicalFilesModel.getSelfEartag());
 
-        if (genealogicalFilesModel == null){
-            Responses.successResponse();
-        }
-        return null;
+        HashMap<String,Object> data = new HashMap<>();
+        data.put("find by id",genealogicalFilesModel);
+        return Responses.successResponse(data);
 
     }
-
-    /**
-     * METHOD:GET
-     * @return
-     */
-    @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
-    public String Delete(){
-        return "GenealogicalFilesHTML/GenealogicalFilesDeleteForm";
-    }
-
-    /**
-     * 返回删除内容行号
-     * 以json格式返回前端
-     * METHOD:DELETE
-     * @param selfEartag
-     * @return
-     * @throws Exception
-     */
-    @ResponseBody
-    @RequestMapping(value = "/deleteshow",method = RequestMethod.DELETE)
-    public Response DeleteShow(@RequestParam("selfEartag") String selfEartag)throws Exception{
-        try {
-            int row = genealogicalFilesService.deleteGenealogicalFilesModel(selfEartag);
-            //System.out.println(row);
-            if(row != 0){ return new Response().addData("Delete Success! Detele row:",row); }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return new Response().addData("Delete Fail!","Error");
-    }
-
 
     //update
     @ResponseBody
     @RequestMapping(value = "/update",method = RequestMethod.PATCH)
     public Response Update(@RequestBody GenealogicalFilesModel genealogicalFilesModel){
         int row = genealogicalFilesService.updateGenealogicalFilesModel(genealogicalFilesModel);
-        return null;
+        HashMap<String,Object> data = new HashMap<>();
+        data.put("update row",row);
+        return Responses.successResponse(data);
+    }
+
+
+    /**
+     * 返回删除内容行号
+     * 以json格式返回前端
+     * METHOD:DELETE
+     * @param genealogicalFilesModel
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
+    public Response Delete(@RequestBody GenealogicalFilesModel genealogicalFilesModel){
+        int row = genealogicalFilesService.deleteGenealogicalFilesModel(genealogicalFilesModel.getId());
+        HashMap<String,Object> data = new HashMap<>();
+        data.put("delete row",row);
+        return Responses.successResponse(data);
     }
 
 }

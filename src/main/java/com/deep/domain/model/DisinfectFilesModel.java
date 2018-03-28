@@ -29,7 +29,8 @@ public class DisinfectFilesModel {
     //目标:json格式
     private String disinfectTimeStart;
     private String disinfectTimeEnd;
-    private RowBounds bound;
+    private int page;
+    private int size;
 
 
     public DisinfectFilesModel() {
@@ -223,11 +224,19 @@ public class DisinfectFilesModel {
         this.disinfectTimeEnd = disinfectTimeEnd;
     }
 
-    public RowBounds getBound() {
-        return bound;
+    public int getPage() {
+        return page;
     }
 
-    public void setBound(RowBounds bound) {
-        this.bound = bound;
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 }
