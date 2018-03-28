@@ -223,12 +223,10 @@ public class UserService {
         Map permitMapper = new HashMap();
         // 用户代理羊场信息
         Map factoryOrAgentMapper = new HashMap();
-
         userLogin.setId(userModel.getId());
         userLogin.setPkUserid(userModel.getPkUserid());
         userLogin.setUserPic(userModel.getUserPic());
         userLogin.setUserPwd(userModel.getUserPwd());
-
         // 角色名称
         String roleName = roleService.getOneRoleByRolePkTypeID(userModel.getUserRole()).getTypeName();
         roleMapper.put("roleName", roleName);

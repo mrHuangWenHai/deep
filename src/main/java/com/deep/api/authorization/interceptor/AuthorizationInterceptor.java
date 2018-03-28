@@ -59,7 +59,6 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
         // 从header中获取token
         String authorization = request.getHeader(Constants.AUTHORIZATION);
-
         // 从authorization中获取用户名以及token
         TokenModel model = tokenManagerRealization.getToken(authorization);
         if (model == null) {
