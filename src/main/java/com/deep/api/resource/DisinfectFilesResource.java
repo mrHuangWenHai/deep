@@ -7,6 +7,7 @@ import com.deep.domain.model.UserModel;
 import com.deep.domain.service.DisinfectFilesService;
 import com.deep.domain.service.UserService;
 import com.deep.domain.util.JedisUtil;
+import com.deep.domain.util.JudgeUtil;
 import com.deep.domain.util.UploadUtil;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
@@ -169,12 +170,10 @@ public class DisinfectFilesResource {
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
     public Response FindShow(@RequestBody DisinfectFilesModel disinfectFilesModel){
 
-        List<DisinfectFilesModel> disinfectFilesModel1 = disinfectFilesService.getDisinfectFilesModel(disinfectFilesModel,
+        List<DisinfectFilesModel> disinfectFilesModels = disinfectFilesService.getDisinfectFilesModel(disinfectFilesModel,
                 new RowBounds(disinfectFilesModel.getPage(),disinfectFilesModel.getSize()));
 
-        HashMap<String,Object> data = new HashMap<>();
-        data.put("List",disinfectFilesModel1);
-        return Responses.successResponse(data);
+        return JudgeUtil.JudgeFind(disinfectFilesModels);
     }
 
     //更新接口
@@ -195,11 +194,9 @@ public class DisinfectFilesResource {
     public Response ProfessorFind(@RequestParam("isPass1") Integer isPass1,
                                   @RequestParam("page") int page,
                                   @RequestParam("size") int size){
-        List<DisinfectFilesModel> disinfectFilesModel1 = this.disinfectFilesService.getDisinfectFilesModelByProfessor(isPass1,new RowBounds(page,size));
+        List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesService.getDisinfectFilesModelByProfessor(isPass1,new RowBounds(page,size));
 
-        HashMap<String,Object> data = new HashMap<>();
-        data.put("List",disinfectFilesModel1);
-        return Responses.successResponse(data);
+        return JudgeUtil.JudgeFind(disinfectFilesModels);
     }
 
 
@@ -215,9 +212,7 @@ public class DisinfectFilesResource {
     public Response ProfessorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel){
         int row = this.disinfectFilesService.updateDisinfectFilesModelByProfessor(disinfectFilesModel);
 
-        HashMap<String,Object> data = new HashMap<>();
-        data.put("update row",row);
-        return Responses.successResponse(data);
+        return JudgeUtil.JudgeUpdate(row);
     }
 
 
@@ -227,10 +222,9 @@ public class DisinfectFilesResource {
     public Response SupervisorFind(@RequestParam("isPass2") Integer isPass2,
                                    @RequestParam("page") int page,
                                    @RequestParam("size") int size){
-        List<DisinfectFilesModel> disinfectFilesModel1 = this.disinfectFilesService.getDisinfectFilesModelBySupervisor(isPass2,new RowBounds(page,size));
-        HashMap<String,Object> data = new HashMap<>();
-        data.put("List",disinfectFilesModel1);
-        return Responses.successResponse(data);
+        List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesService.getDisinfectFilesModelBySupervisor(isPass2,new RowBounds(page,size));
+
+        return JudgeUtil.JudgeFind(disinfectFilesModels);
     }
 
 
@@ -239,9 +233,8 @@ public class DisinfectFilesResource {
     @RequestMapping(value = "/supdate",method = RequestMethod.PATCH)
     public Response SupervisorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel){
         int row = this.disinfectFilesService.updateDisinfectFilesModelBySupervisor(disinfectFilesModel);
-        HashMap<String,Object> data = new HashMap<>();
-        data.put("update row",row);
-        return Responses.successResponse(data);
+
+        return JudgeUtil.JudgeUpdate(row);
     }
 
     //////删除数据在查询中再修改
@@ -256,9 +249,8 @@ public class DisinfectFilesResource {
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
     public Response Delete(@RequestParam("id") BigInteger id){
         int row = this.disinfectFilesService.deleteDisinfectFilesModelByid(id);
-        HashMap<String,Object> data = new HashMap<>();
-        data.put("delete row",row);
-        return Responses.successResponse(data);
+
+        return JudgeUtil.JudgeDelete(row);
     }
 
 }
