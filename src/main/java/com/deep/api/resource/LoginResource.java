@@ -5,7 +5,6 @@ import com.deep.api.Utils.MobileAnnouncementUtil;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.UserModel;
-import com.deep.domain.service.RoleService;
 import com.deep.domain.service.ServiceConfiguration;
 import com.deep.domain.service.UserService;
 import org.json.JSONException;
@@ -24,9 +23,6 @@ public class LoginResource {
     private UserService userService;
 
     @Resource
-    private RoleService roleService;
-
-    @Resource
     private MobileAnnouncementUtil mobileAnnouncementModel;
 
     @Resource
@@ -35,6 +31,10 @@ public class LoginResource {
     /**
      * 用户登录验证并且返回结果
      * @param userModelTest 用户登录加的模型
+     * {
+     *                      "pkUserid": "00004",
+     *                      "userPwd": "123456"
+     * }
      * @return0
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -71,13 +71,23 @@ public class LoginResource {
     /**
      *  通过电话号码找回并且返回相关的数据
      * @param usernameP 用户名
+     *                  "usernameP": "00004"
      * @return
      */
     @RequestMapping(value = "/phonefind")
     public Response PhoneFind(@RequestParam("usernameP") String usernameP){
         UserModel userModel = userService.getUserByPkuserID(usernameP);
+        if (userModel == null) {
+            return Responses.errorResponse("用户不存在");
+        }
         mobileAnnouncementModel = new MobileAnnouncementUtil(userModel.getUserTelephone());
-
+        if (mobileAnnouncementModel == null){
+            Response response = Responses.errorResponse("发送失败");
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("successMessage", "验证码发送成功!");
+            response.setData(data);
+            return response;
+        }
         String httpResponse =  mobileAnnouncementModel.testSend();
         try {
             JSONObject jsonObj = new JSONObject( httpResponse );
@@ -87,7 +97,7 @@ public class LoginResource {
                 System.out.println("Send message success.");
                 Response response = Responses.successResponse();
                 HashMap<String, Object> data = new HashMap<>();
-                data.put("successMessage", "验证码发送成功!");
+                data.put("fail", "未查找到用户名");
                 response.setData(data);
                 return response;
             }else{
@@ -102,7 +112,6 @@ public class LoginResource {
         } catch (JSONException ex) {
             Logger.getLogger(MobileAnnouncementUtil.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         httpResponse =  mobileAnnouncementModel.testStatus();
         try {
             JSONObject jsonObj = new JSONObject( httpResponse );
@@ -110,23 +119,19 @@ public class LoginResource {
             if( error_code == 0 ){
                 int deposit = jsonObj.getInt("deposit");
                 System.out.println("Fetch deposit success :"+deposit);
-
                 Response response = Responses.successResponse();
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("successMessage", "验证码发送成功!");
                 response.setData(data);
                 return response;
-
             }else{
                 String error_msg = jsonObj.getString("msg");
                 System.out.println("Fetch deposit failed,code is "+error_code+",msg is "+error_msg);
-
                 Response response = Responses.errorResponse("发送消息失败");
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("successMessage", "Fetch deposit failed,code is "+error_code+",msg is "+error_msg);
                 response.setData(data);
                 return response;
-
             }
         } catch (JSONException ex) {
             Logger.getLogger(MobileAnnouncementUtil.class.getName()).log(Level.SEVERE, null, ex);
@@ -141,41 +146,54 @@ public class LoginResource {
      */
     @RequestMapping(value = "/ensureverify")
     public Response EnsureVerify(@RequestParam("verifyCode") String verifyCode){
+        Response response;
         if(verifyCode.equals(mobileAnnouncementModel.getIdentityCode())){
-            Response response = Responses.successResponse();
+            response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("errorMessage", "valid success");
         }else{
-            Response response = Responses.errorResponse("logout failed!");
+            response = Responses.errorResponse("valid failed!");
             HashMap<String, Object> data = new HashMap<>();
             data.put("errorMessage", "something error");
         }
-        return null;
+        return response;
+    }
+
+    @GetMapping(value = "/questionAndAnswer")
+    public Response requestQuestion(@RequestParam("id") Long id) {
+        myuserModel = userService.getOneUser(id);
+        if (myuserModel == null) {
+            return Responses.errorResponse("请求失败");
+        } else {
+            Response response = Responses.successResponse();
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("answer_1", myuserModel.getQuestion_1());
+            data.put("answer_2", myuserModel.getQuestion_2());
+            data.put("answer_3", myuserModel.getQuestion_3());
+            response.setData(data);
+            return response;
+        }
     }
 
     /**
      * 通过问题找回密码的数据验证方法
-     * @param answer_1  答案一
-     * @param answer_2  答案二
-     * @param answer_3  答案三
      * @return
      */
     @RequestMapping(value = "/ensurequestion")
-    public Response EnsureQuestion(@RequestParam("answer_1") String answer_1,
-                                 @RequestParam("answer_2") String answer_2,
-                                 @RequestParam("answer_3") String answer_3){
-        if ( MD5Util.encode(answer_1).equals(myuserModel.getAnswer_1()) &&
-                MD5Util.encode(answer_2).equals(myuserModel.getAnswer_2()) &&
-                MD5Util.encode(answer_3).equals(myuserModel.getAnswer_3())){
-            Response response = Responses.successResponse();
+    public Response EnsureQuestion(@RequestBody UserModel userModel){
+        Response response;
+        if (userModel.getAnswer_1().equals(myuserModel.getAnswer_1()) &&
+                userModel.getAnswer_2().equals(myuserModel.getAnswer_2()) &&
+                userModel.getAnswer_3().equals(myuserModel.getAnswer_3())){
+            response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("errorMessage", "valid success");
         }else {
-            Response response = Responses.errorResponse("valid error");
+            response = Responses.errorResponse("valid error");
             HashMap<String, Object> data = new HashMap<>();
             data.put("errorMessage", "valid error");
         }
-        return null;
+        return response;
     }
 
     /**

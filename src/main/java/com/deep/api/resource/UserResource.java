@@ -173,7 +173,7 @@ public class UserResource {
 //            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
 //            "sheep_farm_supervisor", "tourist", "others"
 //    })
-    @PostMapping("/register")
+        @PostMapping("/register")
     public Response addUser(@RequestBody @Valid UserModel userModel,  BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("验证失败");
