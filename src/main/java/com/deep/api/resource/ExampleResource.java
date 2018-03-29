@@ -44,4 +44,5 @@ public class ExampleResource {
     response.setData(data);
     return response;
   }
+
 }

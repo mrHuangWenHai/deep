@@ -29,6 +29,7 @@ public class LiveBroadcastResource {
     if (userid.equals("")) {
       return Responses.errorResponse("userid 不能为空");
     }
+
     LiveBroadcastResp resp = liveBroadcastService.getLiveBroadcastRespUrl(userid);
     Response response;
     Map<String, Object> data = new HashMap<String, Object>();
@@ -96,6 +97,5 @@ public class LiveBroadcastResource {
     response.setData(data);
     return response;
   }
-
 
 }

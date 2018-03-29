@@ -202,52 +202,65 @@ public class DiagnosisController {
         java.text.SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd HH:mm:SS");
         DiagnosisPlanExample diagnosisPlanExample = new DiagnosisPlanExample();
         DiagnosisPlanExample.Criteria criteria = diagnosisPlanExample.createCriteria();
-        if (s_diagnosisT1 != "" && s_diagnosisT2 != ""){
+        if (s_diagnosisT1 != "" && s_diagnosisT2 != "") {
             diagnosisT1 =  formatter.parse(s_diagnosisT1);
             diagnosisT2 =  formatter.parse(s_diagnosisT2);
         }
-        if(diagnosisT1 != null && diagnosisT2 != null){
+
+        if(diagnosisT1 != null && diagnosisT2 != null) {
             criteria.andDiagnosisTBetween(diagnosisT1,diagnosisT2);
         }
-        if(diagnosisPlanWithBLOBs.getId() != null && diagnosisPlanWithBLOBs.getId().toString() !=""){
+
+        if(diagnosisPlanWithBLOBs.getId() != null && diagnosisPlanWithBLOBs.getId().toString() !="") {
             criteria.andIdEqualTo(diagnosisPlanWithBLOBs.getId());
         }
-        if(diagnosisPlanWithBLOBs.getFactoryNum() != null && diagnosisPlanWithBLOBs.getFactoryNum().toString() !=""){
+
+        if(diagnosisPlanWithBLOBs.getFactoryNum() != null && diagnosisPlanWithBLOBs.getFactoryNum().toString() !="") {
             criteria.andFactoryNumEqualTo(diagnosisPlanWithBLOBs.getFactoryNum());
         }
-        if(diagnosisPlanWithBLOBs.getBuilding() != null && diagnosisPlanWithBLOBs.getBuilding() !=""){
+
+        if(diagnosisPlanWithBLOBs.getBuilding() != null && diagnosisPlanWithBLOBs.getBuilding() !="") {
             criteria.andBuildingEqualTo(diagnosisPlanWithBLOBs.getBuilding());
         }
-        if(diagnosisPlanWithBLOBs.getEtB() != null && diagnosisPlanWithBLOBs.getEtB() !=""){
+
+        if(diagnosisPlanWithBLOBs.getEtB() != null && diagnosisPlanWithBLOBs.getEtB() !="") {
             criteria.andEtBEqualTo(diagnosisPlanWithBLOBs.getEtB());
         }
-        if(diagnosisPlanWithBLOBs.getOperator() != null && diagnosisPlanWithBLOBs.getOperator() !=""){
+        if(diagnosisPlanWithBLOBs.getOperator() != null && diagnosisPlanWithBLOBs.getOperator() !="") {
             criteria.andOperatorEqualTo(diagnosisPlanWithBLOBs.getOperator());
         }
-        if(diagnosisPlanWithBLOBs.getProfessor() != null && diagnosisPlanWithBLOBs.getProfessor() !=""){
+
+        if(diagnosisPlanWithBLOBs.getProfessor() != null && diagnosisPlanWithBLOBs.getProfessor() !="") {
             criteria.andProfessorEqualTo(diagnosisPlanWithBLOBs.getProfessor());
         }
-        if(diagnosisPlanWithBLOBs.getSupervisor() != null && diagnosisPlanWithBLOBs.getSupervisor() !=""){
+
+        if(diagnosisPlanWithBLOBs.getSupervisor() != null && diagnosisPlanWithBLOBs.getSupervisor() !="") {
             criteria.andSupervisorEqualTo(diagnosisPlanWithBLOBs.getSupervisor());
         }
-        if(diagnosisPlanWithBLOBs.getRemark() != null && diagnosisPlanWithBLOBs.getRemark() !=""){
+
+        if(diagnosisPlanWithBLOBs.getRemark() != null && diagnosisPlanWithBLOBs.getRemark() !="") {
             criteria.andRemarkLike(diagnosisPlanWithBLOBs.getRemark());
         }
-        if(diagnosisPlanWithBLOBs.getIsPass() != null && diagnosisPlanWithBLOBs.getIsPass().toString() !=""){
+
+        if(diagnosisPlanWithBLOBs.getIsPass() != null && diagnosisPlanWithBLOBs.getIsPass().toString() !="") {
             criteria.andIsPassEqualTo(diagnosisPlanWithBLOBs.getIsPass());
         }
-        if(diagnosisPlanWithBLOBs.getUpassReason() != null && diagnosisPlanWithBLOBs.getUpassReason() !=""){
+
+        if(diagnosisPlanWithBLOBs.getUpassReason() != null && diagnosisPlanWithBLOBs.getUpassReason() !="") {
             criteria.andUpassReasonLike(diagnosisPlanWithBLOBs.getUpassReason());
         }
-        if(diagnosisPlanWithBLOBs.getIsPass1() != null && diagnosisPlanWithBLOBs.getIsPass1().toString() !=""){
+
+        if(diagnosisPlanWithBLOBs.getIsPass1() != null && diagnosisPlanWithBLOBs.getIsPass1().toString() !="") {
             criteria.andIsPassEqualTo(diagnosisPlanWithBLOBs.getIsPass1());
         }
+
         List<DiagnosisPlanWithBLOBs> select = diagnosisPlanService.findPlanSelective(diagnosisPlanExample);
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
         data.put("diagnosis_plan",select);
         response.setData(data);
         return response;
+
     }
 
 //    供技术审核查询信息
@@ -264,18 +277,19 @@ public class DiagnosisController {
         DiagnosisPlanExample diagnosisPlanExample = new DiagnosisPlanExample();
         DiagnosisPlanExample.Criteria criteria = diagnosisPlanExample.createCriteria();
 
-        if(diagnosisPlanWithBLOBs.getId() != null && diagnosisPlanWithBLOBs.getId().toString() !=""){
+        if(diagnosisPlanWithBLOBs.getId() != null && diagnosisPlanWithBLOBs.getId().toString() !="") {
             criteria.andIdEqualTo(diagnosisPlanWithBLOBs.getId());
         }
-        if(diagnosisPlanWithBLOBs.getProfessor() != null && diagnosisPlanWithBLOBs.getProfessor() !=""){
+        if(diagnosisPlanWithBLOBs.getProfessor() != null && diagnosisPlanWithBLOBs.getProfessor() !="") {
             criteria.andProfessorEqualTo(diagnosisPlanWithBLOBs.getProfessor());
         }
-        if(diagnosisPlanWithBLOBs.getIsPass() != null && diagnosisPlanWithBLOBs.getIsPass().toString() !=""){
+        if(diagnosisPlanWithBLOBs.getIsPass() != null && diagnosisPlanWithBLOBs.getIsPass().toString() !="") {
             criteria.andIsPassEqualTo(diagnosisPlanWithBLOBs.getIsPass());
         }
-        if(diagnosisPlanWithBLOBs.getUpassReason() != null && diagnosisPlanWithBLOBs.getUpassReason() !=""){
+        if(diagnosisPlanWithBLOBs.getUpassReason() != null && diagnosisPlanWithBLOBs.getUpassReason() !="") {
             criteria.andUpassReasonLike(diagnosisPlanWithBLOBs.getUpassReason());
         }
+
         List<DiagnosisPlanWithBLOBs> select = diagnosisPlanService.findPlanSelective(diagnosisPlanExample);
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
