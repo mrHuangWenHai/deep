@@ -66,7 +66,7 @@ public class RepellentPlanResource {
     ) {
         if ("".equals(repellentPlanModel.getFactoryNum().toString()) ||
                 "".equals(repellentPlanModel.getCrowdNum()) ||
-                repellentPlanModel.getRepellentEartag().isEmpty() ||
+                repellentPlanModel.getRepellentEartagFile().isEmpty() ||
                 "".equals(repellentPlanModel.getRepellentTime()) ||
                 "".equals(repellentPlanModel.getRepellentName()) ||
                 "".equals(repellentPlanModel.getRepellentWay()) ||
@@ -83,7 +83,7 @@ public class RepellentPlanResource {
                     try{
                         String filepath = request.getSession().getServletContext().getContextPath()+"../EartagDocument/repellentEartag/"+"/";
                         try {
-                            uploadUtil.uploadFile(repellentPlanModel.getRepellentEartag().getBytes(), filepath);
+                            uploadUtil.uploadFile(repellentPlanModel.getRepellentEartagFile().getBytes(), filepath);
                             //System.out.println("saving file");
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -198,7 +198,7 @@ public class RepellentPlanResource {
         List<RepellentPlanModel> repellentPlanModels =repellentPlanService.getRepellentPlanModel(repellentPlanModel,
                 new RowBounds(repellentPlanModel.getPage(),repellentPlanModel.getSize()));
 
-        return JudgeUtil.JudgeFind(repellentPlanModels);
+        return JudgeUtil.JudgeFind(repellentPlanModels,repellentPlanModels.size());
 
     }
 
@@ -219,7 +219,7 @@ public class RepellentPlanResource {
                                   @RequestParam("size") int size){
         List<RepellentPlanModel> repellentPlanModels = repellentPlanService.getRepellentPlanModelByProfessor(isPass1,new RowBounds(page,size));
 
-        return JudgeUtil.JudgeFind(repellentPlanModels);
+        return JudgeUtil.JudgeFind(repellentPlanModels,repellentPlanModels.size());
     }
 
 
@@ -254,7 +254,7 @@ public class RepellentPlanResource {
                                    @RequestParam("size") int size){
         List<RepellentPlanModel> repellentPlanModels = repellentPlanService.getRepellentPlanModelBySupervisor(isPass2,new RowBounds(page,size));
 
-        return JudgeUtil.JudgeFind(repellentPlanModels);
+        return JudgeUtil.JudgeFind(repellentPlanModels,repellentPlanModels.size());
     }
 
     /**

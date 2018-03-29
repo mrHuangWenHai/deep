@@ -67,7 +67,7 @@ public class ImmunePlanResource {
         System.out.println("查看userId的剩余生存时间："+jedis.ttl("userId"));*/
         if ("".equals(immunePlanModel.getFactoryNum().toString()) ||
                 "".equals(immunePlanModel.getCrowdNum()) ||
-                immunePlanModel.getImmuneEartag().isEmpty() ||
+                immunePlanModel.getImmuneEartagFile().isEmpty() ||
                 "".equals(immunePlanModel.getImmuneTime()) ||
                 "".equals(immunePlanModel.getImmuneKind()) ||
                 "".equals(immunePlanModel.getImmuneWay()) ||
@@ -89,7 +89,7 @@ public class ImmunePlanResource {
                         //if (!immuneEartag.isEmpty()) System.out.println("immuneEartag is ready");
                         //System.out.println(filepath);
                         try {
-                            uploadUtil.uploadFile(immunePlanModel.getImmuneEartag().getBytes(), filepath);
+                            uploadUtil.uploadFile(immunePlanModel.getImmuneEartagFile().getBytes(), filepath);
                             //System.out.println("saving file");
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -163,10 +163,12 @@ public class ImmunePlanResource {
                             }
                         }else {
                             System.out.println("supervisor:3天内已发送");
+                            HashMap<String,Object> data = new HashMap<>();
+                            data.put("successMessage","have sent message in 3 days");
+                            return Responses.successResponse(data);
                         }
-
                         HashMap<String,Object> data = new HashMap<>();
-                        data.put("successMessage","have sent message in 3 days");
+                        data.put("successMessage","unnecessary send");
                         return Responses.successResponse(data);
                         //jedisUtil.redisSaveProfessorSupervisorWorks(professorKey,factoryNum);
                         //jedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey,factoryNum);
@@ -204,7 +206,7 @@ public class ImmunePlanResource {
         List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModel(immunePlanModel,
                 new RowBounds(immunePlanModel.getPage(),immunePlanModel.getSize()));
 
-        return JudgeUtil.JudgeFind(immunePlanModels);
+        return JudgeUtil.JudgeFind(immunePlanModels,immunePlanModels.size());
     }
 
 
@@ -223,7 +225,7 @@ public class ImmunePlanResource {
                                   @RequestParam("size") int size){
         List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModelByProfessor(isPass1,new RowBounds(page,size));
 
-        return JudgeUtil.JudgeFind(immunePlanModels);
+        return JudgeUtil.JudgeFind(immunePlanModels,immunePlanModels.size());
     }
 
 
@@ -258,7 +260,7 @@ public class ImmunePlanResource {
                                    @RequestParam("size") int size){
         List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModelBySupervisor(isPass2,new RowBounds(page,size));
 
-        return JudgeUtil.JudgeFind(immunePlanModels);
+        return JudgeUtil.JudgeFind(immunePlanModels,immunePlanModels.size());
 
     }
 

@@ -104,7 +104,7 @@ public class GenealogicalFilesResource {
         //System.out.println("ModelId:"+genealogicalFilesModels.get(0).getId());
 
         System.out.println(""+genealogicalFilesModels.get(0).getId());
-        return JudgeUtil.JudgeFind(genealogicalFilesModels);
+        return JudgeUtil.JudgeFind(genealogicalFilesModels,genealogicalFilesModels.size());
     }
 
     /**

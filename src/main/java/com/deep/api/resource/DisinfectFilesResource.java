@@ -184,7 +184,7 @@ public class DisinfectFilesResource {
         List<DisinfectFilesModel> disinfectFilesModels = disinfectFilesService.getDisinfectFilesModel(disinfectFilesModel,
                 new RowBounds(disinfectFilesModel.getPage(),disinfectFilesModel.getSize()));
 
-        return JudgeUtil.JudgeFind(disinfectFilesModels);
+        return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
     }
 
     //更新接口
@@ -207,12 +207,12 @@ public class DisinfectFilesResource {
                                   @RequestParam("size") int size){
         List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesService.getDisinfectFilesModelByProfessor(isPass1,new RowBounds(page,size));
 
-        return JudgeUtil.JudgeFind(disinfectFilesModels);
+        return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
     }
 
 
     /**
-     * 审核入口 展示所有isPass2 = 0或者isPass2 = 1的数据
+     * 审核入口 审核isPass1 = 0的数据
      * METHOD:PATCH
      * @param disinfectFilesModel
      * @return
@@ -235,7 +235,7 @@ public class DisinfectFilesResource {
                                    @RequestParam("size") int size){
         List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesService.getDisinfectFilesModelBySupervisor(isPass2,new RowBounds(page,size));
 
-        return JudgeUtil.JudgeFind(disinfectFilesModels);
+        return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
     }
 
 

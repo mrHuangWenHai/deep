@@ -43,14 +43,27 @@ public class JudgeUtil {
 
     /**
      * 用于判断查询操作是否成功执行
+     * 返回结果为单个对象
      * @param object
      * @return
      */
     public static Response JudgeFind(Object object){
         HashMap<String,Object> data = new HashMap<>();
-        data.put("List",object);
+        data.put("object",object);
         return Responses.successResponse(data);
     }
 
+    /**
+     * 用于判断查询操作是否成功执行
+     * 返回结果为多个对象数组
+     * @param object
+     * @return
+     */
+    public static Response JudgeFind(Object object ,int size){
+        HashMap<String,Object> data = new HashMap<>();
+        data.put("List",object);
+        data.put("size",size);
+        return Responses.successResponse(data);
+    }
 
 }
