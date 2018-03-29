@@ -151,6 +151,15 @@
         is_pass2 = #{isPass2}
     </select>
 
+    <select id="getDisinfectFilesModelByid" resultType="com.deep.domain.model.DisinfectFilesModel">
+        SELECT
+        *
+        FROM
+        disinfection_files
+        WHERE
+        id = #{id}
+    </select>
+
     <update id="updateDisinfectFilesModelByProfessor">
         UPDATE disinfection_files
         SET  professor = #{disinfectFilesModel.professor},

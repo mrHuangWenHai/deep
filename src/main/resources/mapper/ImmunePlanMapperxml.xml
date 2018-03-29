@@ -113,6 +113,15 @@
         </if>
     </select>
 
+    <select id="getImmunePlanModelByid" resultType="com.deep.domain.model.ImmunePlanModel">
+        SELECT
+        *
+        FROM
+        immune_plan
+        WHERE
+        id = #{id}
+    </select>
+
     <select id="getImmunePlanModelByfactoryNumAndimmuneTime" resultMap="ImmunePlan">
         SELECT
         *
@@ -121,6 +130,7 @@
         WHERE
         factory_num = #{facctoryNum} AND immune_time BETWEEN #{gmtCreate} AND #{gmtTrans}
     </select>
+
 
 
     <select id="getImmunePlanModelByfactoryNumAndcrowdNumAndimmuneTime" resultMap="ImmunePlan">

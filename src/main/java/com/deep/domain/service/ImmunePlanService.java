@@ -54,6 +54,11 @@ public class ImmunePlanService {
         return models;
     }
 
+    public ImmunePlanModel getImmunePlanModelByid(BigInteger id){
+        ImmunePlanModel model = this.immunePlanMapper.getImmunePlanModelByid(id);
+        return model;
+    }
+
     public int updateImmunePlanModelByProfessor(ImmunePlanModel immunePlanModel){
         int row = this.immunePlanMapper.updateImmunePlanModelByProfessor(immunePlanModel);
         return row;

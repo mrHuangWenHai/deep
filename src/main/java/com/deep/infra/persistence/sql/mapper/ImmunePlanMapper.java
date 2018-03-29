@@ -37,8 +37,7 @@ public interface ImmunePlanMapper {
                                                         RowBounds bounds);
     List<ImmunePlanModel> getImmunePlanModelBySupervisor(@Param("isPass2") Integer isPass2,
                                                          RowBounds bounds);
-
-
+    ImmunePlanModel getImmunePlanModelByid(@Param("id") BigInteger id);
 
     int deleteImmunePlanModelByid(@Param("id") BigInteger id);
 

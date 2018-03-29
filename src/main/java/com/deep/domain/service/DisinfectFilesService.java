@@ -53,6 +53,10 @@ public class DisinfectFilesService {
         return disinfectFilesModels;
     }
 
+    public DisinfectFilesModel getDisinfectFilesModelByid(BigInteger id){
+        DisinfectFilesModel disinfectFilesModel = this.disinfectFilesMapper.getDisinfectFilesModelByid(id);
+        return  disinfectFilesModel;
+    }
 
     public int updateDisinfectFilesModelByProfessor(DisinfectFilesModel disinfectFilesModel){
         int row = this.disinfectFilesMapper.updateDisinfectFilesModelByProfessor(disinfectFilesModel);

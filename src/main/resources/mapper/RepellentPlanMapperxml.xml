@@ -124,6 +124,14 @@
         factory_num = #{factoryNum} AND repellent_time = #{repellentTime} AND repellent_name = #{repellentName}
     </select>
 
+    <select id="getRepellentPlanModelByid" resultType="com.deep.domain.model.RepellentPlanModel">
+        SELECT
+        *
+        FROM
+        repellent_plan
+        WHERE
+        id = #{id}
+    </select>
 
     <select id="getRepellentPlanModelByProfessor" resultMap="RepellentPlan">
         SELECT

@@ -1,6 +1,7 @@
 package com.deep.domain.util;
 
 import com.deep.api.response.Response;
+import com.deep.api.response.Responses;
 import com.deep.domain.model.MobileAnnouncementModel;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,9 +62,11 @@ public class JedisUtil {
      * 超过50次(自定义)未操作时返回true
      * @param key
      */
-    public boolean redisJudgeTime(String key){
+    public static boolean redisJudgeTime(String key){
         Jedis jedis = new Jedis("localhost");
-        return Integer.parseInt(jedis.get(key)) >= 3;
+        int i = Integer.parseInt(jedis.get(key));
+        int j = Integer.parseInt(jedis.get("PressureTips"));
+        return i > j;
     }
 
 
@@ -78,7 +81,7 @@ public class JedisUtil {
      * 功能：在操作员添加了一条数据后,redis中对应数据+1
      * @param key
      */
-    public void redisSaveProfessorSupervisorWorks(String key){
+    public static void redisSaveProfessorSupervisorWorks(String key){
         Jedis jedis = new Jedis("localhost");
         String temValue = jedis.get(key);
         if (temValue == null){
@@ -95,22 +98,42 @@ public class JedisUtil {
         //System.out.println("after :"+"redis key:"+key+" redis value:"+jedis.get(key));
     }
 
-    //未解决:发送一次短信后 操作员继续插入 则会继续发送
-    //理想方案:即使专家/监督员未完成任务 操作员在提交表格后 1天也最多发1条短信
+    /**
+     * key value同上
+     * 功能：在专家/审核员 处理了一条数据后,redis中对应数据-1
+     * @param key
+     */
+    public static boolean redisCancelProfessorSupervisorWorks(String key){
+        Jedis jedis = new Jedis("localhost");
+        String temValue = jedis.get(key);
+        if (temValue == null || "0".equals(temValue)){
+            return false;
+        }else {
+            //System.out.println("断点1");
+            Integer v = Integer.parseInt(temValue);
+            v -= 1;
+            //System.out.println("before :"+"redis key:"+key+" redis value:"+jedis.get(key));
+            temValue = v.toString();
+            jedis.set(key,temValue);
+            return true;
+        }
+        //System.out.println("after :"+"redis key:"+key+" redis value:"+jedis.get(key));
+    }
 
     /**
      *
      * @param mobile_list
      * @param message
      */
-    public boolean redisSendMessage(String mobile_list, String message){
+    public static boolean redisSendMessage(String mobile_list, String message){
         MobileAnnouncementModel mobileAnnouncementModel = new MobileAnnouncementModel(mobile_list,message);
-        return true;
-        /*if(manyMessageSendResult(mobileAnnouncementModel)){
-            return new Response().addData("Success","");
+
+        //发送成功 返回true
+        if(manyMessageSendResult(mobileAnnouncementModel)){
+            return true;
         }else {
-            return new Response().addData("Error","Send fail");
-        }*/
+            return false;
+        }
     }
 
     /**
@@ -120,7 +143,7 @@ public class JedisUtil {
      * @param mobileAnnouncementModel
      * @return
      */
-    public Response oneMessageSendResult(MobileAnnouncementModel mobileAnnouncementModel){
+    public static Response oneMessageSendResult(MobileAnnouncementModel mobileAnnouncementModel){
         String httpResponse =  mobileAnnouncementModel.testSendSingle();
         try {
             JSONObject jsonObj = new JSONObject( httpResponse );
@@ -160,7 +183,7 @@ public class JedisUtil {
      * @param mobileAnnouncementModel
      * @return
      */
-    public boolean manyMessageSendResult(MobileAnnouncementModel mobileAnnouncementModel){
+    public static boolean manyMessageSendResult(MobileAnnouncementModel mobileAnnouncementModel){
         String httpResponse =  mobileAnnouncementModel.testSendMany();
         try {
             JSONObject jsonObj = new JSONObject( httpResponse );
@@ -198,10 +221,11 @@ public class JedisUtil {
      * key:userId
      * value:token
      * @param key
-     * @param value
+     * @param expireTime
      */
-    public void redisInLoginExtend(String key, String value){
-
+    public static void expireCertainKey(String key, int expireTime){
+        Jedis jedis = new Jedis("localhost");
+        jedis.expire(key, expireTime);
     }
 
     /**
@@ -209,7 +233,7 @@ public class JedisUtil {
      * @param key
      * @return
      */
-    public String getCertainKeyValue(String key){
+    public static String getCertainKeyValue(String key){
         Jedis jedis = new Jedis("localhost");
         return jedis.get(key);
     }
@@ -220,7 +244,7 @@ public class JedisUtil {
      * @param value
      * @return
      */
-    public void setCertainKeyValue(String key, String value){
+    public static void setCertainKeyValue(String key, String value){
         Jedis jedis = new Jedis("localhost");
         jedis.set(key, value);
     }
@@ -234,7 +258,7 @@ public class JedisUtil {
      * @param expireTime
      * @return
      */
-    public void setCertainKeyValueWithExpireTime(String key, String value,int expireTime){
+    public static void setCertainKeyValueWithExpireTime(String key, String value,int expireTime){
         Jedis jedis = new Jedis("localhost");
         jedis.set(key, value);
         jedis.expire(key,expireTime);

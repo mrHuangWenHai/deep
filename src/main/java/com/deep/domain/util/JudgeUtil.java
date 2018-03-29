@@ -66,4 +66,17 @@ public class JudgeUtil {
         return Responses.successResponse(data);
     }
 
+    /**
+     * 用于返回成功方法
+     * 内部构造HashMap
+     * @param details
+     * @param o
+     * @return
+     */
+    public static Response JudgeSuccess(String details,Object o){
+        HashMap<String,Object> data = new HashMap<>();
+        data.put(details,o);
+        return Responses.successResponse(data);
+    }
+
 }

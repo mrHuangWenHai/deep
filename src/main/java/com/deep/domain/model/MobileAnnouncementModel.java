@@ -115,7 +115,7 @@ public class MobileAnnouncementModel {
      */
     public String testSendMany(){
         // just replace key here
-        message = message+"【东翔验证】";
+        this.message = message+"【东翔验证】";
         Client client = Client.create();
         client.addFilter(new HTTPBasicAuthFilter(
                 "api","key-22c3576f6f618dfd8aabb19de974d99f"));
@@ -123,8 +123,8 @@ public class MobileAnnouncementModel {
                 "http://sms-api.luosimao.com/v1/send_batch.json");
         MultivaluedMapImpl formData = new MultivaluedMapImpl();
         //System.out.println("testSend中:"+mobile_list);
-        formData.add("mobile_list", mobile_list);
-        formData.add("message", message);
+        formData.add("mobile_list", this.mobile_list);
+        formData.add("message", this.message);
         ClientResponse response =  webResource.type( MediaType.APPLICATION_FORM_URLENCODED ).
                 post(ClientResponse.class, formData);
         String textEntity = response.getEntity(String.class);

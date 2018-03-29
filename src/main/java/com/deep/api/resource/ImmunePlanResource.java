@@ -109,20 +109,20 @@ public class ImmunePlanResource {
                         String testSendProfessor = immunePlanModel.getFactoryNum() + "_immunePlan_professor_AlreadySend";
                         String testSendSupervisor = immunePlanModel.getFactoryNum() + "_immunePlan_supervisor_AlreadySend";
 
-                        jedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
-                        jedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
+                        JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
+                        JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
 
                         //System.out.println("testSendProfessorValue:"+jedisUtil.getCertainKeyValue(testSendProfessor));
                         //System.out.println("judge equal:"+"1".equals(jedisUtil.getCertainKeyValue(testSendProfessor)));
 
                         //若redis中 若干天未发送短信
                         //若未完成超过50条
-                        if(!("1".equals(jedisUtil.getCertainKeyValue(testSendProfessor)))){
-                            System.out.println("testSendProfessorValue:"+jedisUtil.getCertainKeyValue(testSendProfessor));
-                            if(jedisUtil.redisJudgeTime(professorKey)){
+                        if(!("1".equals(JedisUtil.getCertainKeyValue(testSendProfessor)))){
+                            System.out.println("testSendProfessorValue:"+JedisUtil.getCertainKeyValue(testSendProfessor));
+                            if(JedisUtil.redisJudgeTime(professorKey)){
 
                                 //获取redis中存储的设定过期时间
-                                int expireTime = Integer.parseInt(jedisUtil.getCertainKeyValue("ExpireTime"));
+                                int expireTime = Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime"));
                                 List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(immunePlanModel.getFactoryNum());
 
                                 //需完成:userModels.getTelephone()赋值给String
@@ -133,8 +133,8 @@ public class ImmunePlanResource {
                                 }
 
                                 //发送成功 更新redis中字段
-                                if(jedisUtil.redisSendMessage(phoneList.toString(),jedisUtil.getCertainKeyValue("Message"))){
-                                    jedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor,"1",expireTime*24*60*60);
+                                if(JedisUtil.redisSendMessage(phoneList.toString(),JedisUtil.getCertainKeyValue("Message"))){
+                                    JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor,"1",expireTime*24*60*60);
                                 }
 
                                 //System.out.println(phoneList);
@@ -143,33 +143,33 @@ public class ImmunePlanResource {
                             System.out.println("professor:3天内已发送");
                         }
 
-                        if(!("1".equals(jedisUtil.getCertainKeyValue(testSendSupervisor)))){
-                            if(jedisUtil.redisJudgeTime(supervisorKey)){
-                                int expireTime = Integer.parseInt(jedisUtil.getCertainKeyValue("ExpireTime"));
+                        if(!("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))){
+                            if(JedisUtil.redisJudgeTime(supervisorKey)){
+                                int expireTime = Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime"));
                                 List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(immunePlanModel.getFactoryNum());
 
                                 StringBuffer phoneList = new StringBuffer("");
                                 for(int i = 0; i < userModels.size(); i++){
                                     phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
                                 }
-                                if(jedisUtil.redisSendMessage(phoneList.toString(),jedisUtil.getCertainKeyValue("Message"))){
+                                if(JedisUtil.redisSendMessage(phoneList.toString(),JedisUtil.getCertainKeyValue("Message"))){
                                     System.out.println("发送成功！");
-                                    jedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",expireTime*24*60*60);
+                                    JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",expireTime*24*60*60);
 
-                                    HashMap<String,Object> data = new HashMap<>();
-                                    data.put("successMessage","Message Sent");
-                                    return Responses.successResponse(data);
+
+                                    return  JudgeUtil.JudgeSuccess("successMessage","Message Sent");
+
                                 }
                             }
                         }else {
                             System.out.println("supervisor:3天内已发送");
-                            HashMap<String,Object> data = new HashMap<>();
-                            data.put("successMessage","have sent message in 3 days");
-                            return Responses.successResponse(data);
+
+                            return  JudgeUtil.JudgeSuccess("successMessage","have sent message in days");
+
                         }
-                        HashMap<String,Object> data = new HashMap<>();
-                        data.put("successMessage","unnecessary send");
-                        return Responses.successResponse(data);
+
+                        return JudgeUtil.JudgeSuccess("successMessage","unnecessary send");
+
                         //jedisUtil.redisSaveProfessorSupervisorWorks(professorKey,factoryNum);
                         //jedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey,factoryNum);
                         }catch (Exception e){
@@ -241,7 +241,24 @@ public class ImmunePlanResource {
     public Response ProfessorUpdate(@RequestBody ImmunePlanModel immunePlanModel){
         int row = immunePlanService.updateImmunePlanModelByProfessor(immunePlanModel);
 
-        return JudgeUtil.JudgeUpdate(row);
+        if( row == 0){
+            return JudgeUtil.JudgeUpdate(row);
+        }else {
+            //删除成功 redis数据库种对应数据-1
+            ImmunePlanModel immunePlanModel1 = immunePlanService.getImmunePlanModelByid(immunePlanModel.getId());
+            String professorKey = immunePlanModel1.getFactoryNum() + "_immunePlan_professor";
+            JedisUtil jedisUtil = new JedisUtil();
+
+            //key->value-1 返回true
+            if (jedisUtil.redisCancelProfessorSupervisorWorks(professorKey)){
+                return JudgeUtil.JudgeUpdate(row);
+            }else {
+                //此时数据库出现较大问题
+                //未完成工作实际数量与redis记录不一样
+                return Responses.errorResponse("Inner Error");
+            }
+
+        }
     }
 
 
@@ -275,7 +292,24 @@ public class ImmunePlanResource {
     public Response SupervisorUpdate(@RequestBody ImmunePlanModel immunePlanModel){
         int row = immunePlanService.updateImmunePlanModelBySupervisor(immunePlanModel);
 
-        return JudgeUtil.JudgeUpdate(row);
+        if( row == 0){
+            return JudgeUtil.JudgeUpdate(row);
+        }else {
+            //删除成功 redis数据库种对应数据-1
+            ImmunePlanModel immunePlanModel1 = immunePlanService.getImmunePlanModelByid(immunePlanModel.getId());
+            String supervisorKey = immunePlanModel1.getFactoryNum() + "_immunePlan_supervisor";
+            JedisUtil jedisUtil = new JedisUtil();
+
+            //key->value-1 返回true
+            if (jedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
+                return JudgeUtil.JudgeUpdate(row);
+            }else {
+                //此时数据库出现较大问题
+                //未完成工作实际数量与redis记录不一样
+                return Responses.errorResponse("Inner Error");
+            }
+
+        }
     }
 
     /**

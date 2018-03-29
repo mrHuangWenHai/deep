@@ -52,6 +52,11 @@ public class RepellentPlanService {
         return repellentPlanModels;
     }
 
+    public RepellentPlanModel getRepellentModelByid(BigInteger id){
+        RepellentPlanModel repellentPlanModels = this.repellentPlanMapper.getRepellentModelByid(id);
+        return repellentPlanModels;
+    }
+
     public int updateRepellentPlanModelByProfessor(RepellentPlanModel repellentPlanModel){
         int row = this.repellentPlanMapper.updateRepellentPlanModelByProfessor(repellentPlanModel);
         return row;

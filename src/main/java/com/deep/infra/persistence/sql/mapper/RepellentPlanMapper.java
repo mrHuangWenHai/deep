@@ -7,7 +7,6 @@ import org.apache.ibatis.session.RowBounds;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 @Mapper
@@ -37,6 +36,8 @@ public interface RepellentPlanMapper {
                                                               RowBounds bounds);
     List<RepellentPlanModel> getRepellentPlanModelBySupervisor(@Param("isPass2") Integer isPass2,
                                                                RowBounds bounds);
+
+    RepellentPlanModel getRepellentModelByid(@Param("id") BigInteger id);
 
 
     int deleteRepellentPlanModelByid(@Param("id") BigInteger id);
