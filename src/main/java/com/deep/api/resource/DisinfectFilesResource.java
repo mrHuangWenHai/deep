@@ -39,6 +39,10 @@ public class DisinfectFilesResource {
      * 返回插入结果
      * 成功：success
      * 失败：返回对应失败错误
+     *
+     * 同时 若累计未审核超过50条（自定义）
+     * 3天内未通知对应专家/审核员
+     * 则通知 不然返回已发送
      * METHOD:POST
      * @param disinfectFilesModel
      * @return
@@ -89,6 +93,9 @@ public class DisinfectFilesResource {
                     jedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
                     jedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
 
+                    //System.out.println("Have sent:"+jedisUtil.getCertainKeyValue(testSendProfessor));
+
+                    //发送短信后 testSendProfessor存放在redis中 过期时间为ExpireTime
                     if(!("1".equals(jedisUtil.getCertainKeyValue(testSendProfessor)))){
                         //System.out.println("testSendProfessorValue:"+jedisUtil.getCertainKeyValue(testSendProfessor));
                         if(jedisUtil.redisJudgeTime(professorKey)){
@@ -135,9 +142,13 @@ public class DisinfectFilesResource {
                             }
                         }else {
                             System.out.println("supervisor:3天内已发送");
+
+                            HashMap<String,Object> data = new HashMap<>();
+                            data.put("successMessage","have sent message in 3 days");
+                            return Responses.successResponse(data);
                         }
                     HashMap<String,Object> data = new HashMap<>();
-                    data.put("successMessage","have sent message in 3 days");
+                    data.put("successMessage","unnecessary send");
                     return Responses.successResponse(data);
 
                     //jedisUtil.redisSaveProfessorSupervisorWorks(professorKey,factoryNum);

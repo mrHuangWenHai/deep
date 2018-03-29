@@ -23,29 +23,9 @@ public class  GenealogicalFilesService {
         this.genealogicalFilesMapper.setGenealogicalFilesModel(genealogicalFilesModel);
     }
 
-    public List<GenealogicalFilesModel> getGenealogicalFilesModel(String selfEartag,
-                                                                  String immuneEartag,
-                                                                  String tradeMarkEartag,
-                                                                  String breedingSheepBase,
-                                                                  String birthTimeStart,
-                                                                  String birthTimeEnd,
-                                                                  String birthWeightStart,
-                                                                  String birthWeightEnd,
-                                                                  String color,
-                                                                  String sex,
-                                                                  String eartagOfFather,
-                                                                  String eartagOfMother,
-                                                                  String eartagOfFathersFather,
-                                                                  String eartagOfFathersMother,
-                                                                  String eartagOfMothersFather,
-                                                                  String eartagOfMothersMother,
+    public List<GenealogicalFilesModel> getGenealogicalFilesModel(GenealogicalFilesModel genealogicalFilesModel,
                                                                   RowBounds bounds) {
-        List<GenealogicalFilesModel> model = this.genealogicalFilesMapper.getGenealogicalFilesModel(selfEartag,immuneEartag,tradeMarkEartag,
-                                                                                        breedingSheepBase,birthTimeStart,birthTimeEnd,
-                                                                                        birthWeightStart,birthWeightEnd,color,
-                                                                                        sex,eartagOfFather,eartagOfMother,
-                                                                                        eartagOfFathersFather,eartagOfFathersMother,
-                                                                                        eartagOfMothersFather, eartagOfMothersMother,bounds);
+        List<GenealogicalFilesModel> model = this.genealogicalFilesMapper.getGenealogicalFilesModel(genealogicalFilesModel,bounds);
         return model;
     }
 
@@ -56,6 +36,10 @@ public class  GenealogicalFilesService {
         return model;
     }
 
+    public GenealogicalFilesModel getGenealogicalFilesModelByselfEartag(String selfEartag){
+        GenealogicalFilesModel model = this.genealogicalFilesMapper.getGenealogicalFilesModelByselfEartag(selfEartag);
+        return model;
+    }
     public GenealogicalFilesModel getGenealogicalFilesModelByimmuneEartag(String immuneEartag) {
         GenealogicalFilesModel model = this.genealogicalFilesMapper.getGenealogicalFilesModelByimmuneEartag(immuneEartag);
         return model;

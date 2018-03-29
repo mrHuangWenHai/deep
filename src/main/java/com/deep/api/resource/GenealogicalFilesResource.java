@@ -1,17 +1,15 @@
 package com.deep.api.resource;
 
-import com.deep.api.response.RespMeta;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.GenealogicalFilesModel;
 import com.deep.domain.service.GenealogicalFilesService;
+import com.deep.domain.util.JudgeUtil;
 import org.apache.ibatis.session.RowBounds;
-import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.validation.Valid;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -32,6 +30,9 @@ public class GenealogicalFilesResource {
      * 返回插入结果
      * 成功：success
      * 失败：返回对应失败错误
+     *
+     * color:棕色 0  暗红 1  杂色 2
+     * sex:公 0 母 1
      * METHOD:POST
      * @param genealogicalFilesModel
      * @return
@@ -88,28 +89,22 @@ public class GenealogicalFilesResource {
     /**
      * 用于条件查找
      * RowBounds为必传参数
-     * METHOD:GET
+     * METHOD:POST
      * @param genealogicalFilesModel
      * @return
      */
     //bound为必传参数
     @ResponseBody
-    @RequestMapping(value = "/findshow",method = RequestMethod.GET)
+    @RequestMapping(value = "/findshow",method = RequestMethod.POST)
     public Response FindResult(@RequestBody GenealogicalFilesModel genealogicalFilesModel){
-        //System.out.println("EartagOfFather:"+genealogicalFilesModel.getEartagOfFather());
+        //System.out.println("selfEartag:"+genealogicalFilesModel.getSelfEartag());
 
-        List<GenealogicalFilesModel> genealogicalFilesModels = genealogicalFilesService.getGenealogicalFilesModel(genealogicalFilesModel.getSelfEartag(),
-                genealogicalFilesModel.getImmuneEartag(),genealogicalFilesModel.getTradeMarkEartag(),genealogicalFilesModel.getBreedingSheepBase(),
-                genealogicalFilesModel.getBirthTimeStart(),genealogicalFilesModel.getBirthTimeEnd(),genealogicalFilesModel.getBirthWeightStart(),
-                genealogicalFilesModel.getBirthWeightEnd(),genealogicalFilesModel.getColor(),genealogicalFilesModel.getSex(),genealogicalFilesModel.getEartagOfFather(),
-                genealogicalFilesModel.getEartagOfMother(),genealogicalFilesModel.getEartagOfFathersFather(),genealogicalFilesModel.getEartagOfFathersMother(),
-                genealogicalFilesModel.getEartagOfMothersFather(),genealogicalFilesModel.getEartagOfMothersMother(),new RowBounds(genealogicalFilesModel.getPage(),genealogicalFilesModel.getSize()));
+        List<GenealogicalFilesModel> genealogicalFilesModels = genealogicalFilesService.getGenealogicalFilesModel(genealogicalFilesModel,new RowBounds(genealogicalFilesModel.getPage(),genealogicalFilesModel.getSize()));
         //System.out.println("ModelSize:"+genealogicalFilesModels.size());
         //System.out.println("ModelId:"+genealogicalFilesModels.get(0).getId());
 
-        HashMap<String,Object> data  = new HashMap<>();
-        data.put("List",genealogicalFilesModels);
-        return Responses.successResponse(data);
+        System.out.println(""+genealogicalFilesModels.get(0).getId());
+        return JudgeUtil.JudgeFind(genealogicalFilesModels);
     }
 
     /**
@@ -126,37 +121,45 @@ public class GenealogicalFilesResource {
         GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesService.getGenealogicalFilesModelByid(id);
         //System.out.println(genealogicalFilesModel.getSelfEartag());
 
-        HashMap<String,Object> data = new HashMap<>();
-        data.put("find by id",genealogicalFilesModel);
-        return Responses.successResponse(data);
+        return JudgeUtil.JudgeFind(genealogicalFilesModel);
 
     }
 
     //update
+
+    /**
+     * 更新操作 输入数据替代原数据
+     * METHOD:PATCH
+     * @param genealogicalFilesModel
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "/update",method = RequestMethod.PATCH)
     public Response Update(@RequestBody GenealogicalFilesModel genealogicalFilesModel){
-        int row = genealogicalFilesService.updateGenealogicalFilesModel(genealogicalFilesModel);
-        HashMap<String,Object> data = new HashMap<>();
-        data.put("update row",row);
-        return Responses.successResponse(data);
+        if (genealogicalFilesService.getGenealogicalFilesModelByselfEartag(genealogicalFilesModel.getSelfEartag()) == null&&
+                genealogicalFilesService.getGenealogicalFilesModelByimmuneEartag(genealogicalFilesModel.getImmuneEartag()) == null&&
+                genealogicalFilesService.getGenealogicalFilesModelBytradeMarkEartag(genealogicalFilesModel.getTradeMarkEartag()) == null){
+
+            int row = genealogicalFilesService.updateGenealogicalFilesModel(genealogicalFilesModel);
+            return JudgeUtil.JudgeUpdate(row);
+        }else {
+            return Responses.errorResponse("conflict with existing datas");
+        }
+
     }
 
 
     /**
      * 返回删除内容行号
-     * 以json格式返回前端
      * METHOD:DELETE
-     * @param genealogicalFilesModel
+     * @param id
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
-    public Response Delete(@RequestBody GenealogicalFilesModel genealogicalFilesModel){
-        int row = genealogicalFilesService.deleteGenealogicalFilesModel(genealogicalFilesModel.getId());
-        HashMap<String,Object> data = new HashMap<>();
-        data.put("delete row",row);
-        return Responses.successResponse(data);
+    public Response Delete(@RequestParam("id") BigInteger id){
+        int row = genealogicalFilesService.deleteGenealogicalFilesModel(id);
+        return JudgeUtil.JudgeDelete(row);
     }
 
 }

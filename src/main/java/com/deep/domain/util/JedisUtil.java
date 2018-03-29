@@ -87,12 +87,12 @@ public class JedisUtil {
             //System.out.println("断点1");
             Integer v = Integer.parseInt(temValue);
             v += 1;
-            System.out.println("before :"+"redis key:"+key+" redis value:"+jedis.get(key));
+            //System.out.println("before :"+"redis key:"+key+" redis value:"+jedis.get(key));
             temValue = v.toString();
             jedis.set(key,temValue);
         }
 
-        System.out.println("after :"+"redis key:"+key+" redis value:"+jedis.get(key));
+        //System.out.println("after :"+"redis key:"+key+" redis value:"+jedis.get(key));
     }
 
     //未解决:发送一次短信后 操作员继续插入 则会继续发送
