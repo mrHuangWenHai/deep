@@ -1,5 +1,7 @@
 package com.deep.api.resource;
 
+import com.deep.api.Utils.ExcelData;
+import com.deep.api.Utils.ExportExcelUtil;
 import com.deep.api.Utils.StringToLongUtil;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
@@ -9,9 +11,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.lang.reflect.Field;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -289,5 +295,28 @@ public class UserResource {
         data.put("deleteID", deleteId);
         response.setData(data);
         return response;
+    }
+    @GetMapping(value = "/user/excel")
+    public Response exportExcel(HttpServletResponse httpServletResponse) throws Exception{
+        ExcelData data = new ExcelData();
+        data.setName("user");
+        List<String> titles = new ArrayList();
+        List<UserModel> userModels = userService.getAll();
+        UserModel userModel;
+        data.setTitles(titles);
+        List<List<Object>> rows = new ArrayList();
+        List<Object> row = new ArrayList();
+        for(int i = 0 ; i < userModels.size(); i++) {
+            userModel = userModels.get(i);
+            for (Field field : userModel.getClass().getDeclaredFields()) {
+                field.setAccessible(true);
+                row.add(field.get(userModel));
+            }
+            rows.add(row);
+        }
+        data.setRows(rows);
+        // TODO 应该继续封装模板
+        ExportExcelUtil.exportExcel(httpServletResponse,"user.xlsx",data);
+        return Responses.successResponse();
     }
 }

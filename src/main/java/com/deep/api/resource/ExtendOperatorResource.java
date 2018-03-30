@@ -5,7 +5,6 @@ import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
