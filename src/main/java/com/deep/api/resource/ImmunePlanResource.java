@@ -134,7 +134,7 @@ public class ImmunePlanResource {
 
                                 //发送成功 更新redis中字段
                                 if(JedisUtil.redisSendMessage(phoneList.toString(),JedisUtil.getCertainKeyValue("Message"))){
-                                    JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor,"1",expireTime*24*60*60);
+                                    JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor,"1",Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime"))*24*60*60);
                                 }
 
                                 //System.out.println(phoneList);
@@ -154,7 +154,7 @@ public class ImmunePlanResource {
                                 }
                                 if(JedisUtil.redisSendMessage(phoneList.toString(),JedisUtil.getCertainKeyValue("Message"))){
                                     System.out.println("发送成功！");
-                                    JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",expireTime*24*60*60);
+                                    JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime"))*24*60*60);
 
 
                                     return  JudgeUtil.JudgeSuccess("successMessage","Message Sent");
@@ -246,11 +246,10 @@ public class ImmunePlanResource {
         }else {
             //删除成功 redis数据库种对应数据-1
             ImmunePlanModel immunePlanModel1 = immunePlanService.getImmunePlanModelByid(immunePlanModel.getId());
-            String professorKey = immunePlanModel1.getFactoryNum() + "_immunePlan_professor";
-            JedisUtil jedisUtil = new JedisUtil();
+            String professorKey = immunePlanModel1.getFactoryNum().toString() + "_immunePlan_professor";
 
             //key->value-1 返回true
-            if (jedisUtil.redisCancelProfessorSupervisorWorks(professorKey)){
+            if (JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)){
                 return JudgeUtil.JudgeUpdate(row);
             }else {
                 //此时数据库出现较大问题
@@ -297,11 +296,17 @@ public class ImmunePlanResource {
         }else {
             //删除成功 redis数据库种对应数据-1
             ImmunePlanModel immunePlanModel1 = immunePlanService.getImmunePlanModelByid(immunePlanModel.getId());
-            String supervisorKey = immunePlanModel1.getFactoryNum() + "_immunePlan_supervisor";
-            JedisUtil jedisUtil = new JedisUtil();
+            String supervisorKey = immunePlanModel1.getFactoryNum().toString() + "_immunePlan_supervisor";
 
+
+            //System.out.println("id input:"+immunePlanModel.getId());
+            //System.out.println("id find:"+immunePlanModel1.getId());
+            //System.out.println("factoryNum find:"+immunePlanModel1.getFactoryNum());
+            //System.out.println("supervisorkey:"+supervisorKey);
+            //System.out.println("before:"+JedisUtil.getCertainKeyValue(supervisorKey));
             //key->value-1 返回true
-            if (jedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
+            if (JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
+                System.out.println("after:"+JedisUtil.getCertainKeyValue(supervisorKey));
                 return JudgeUtil.JudgeUpdate(row);
             }else {
                 //此时数据库出现较大问题

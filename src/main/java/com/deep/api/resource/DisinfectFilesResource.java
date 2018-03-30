@@ -84,25 +84,22 @@ public class DisinfectFilesResource {
                             disinfectFilesModel.getRemark(), ispass, ispass, timestamp));
 
                     //数据插入redis
-                    JedisUtil jedisUtil = new JedisUtil();
                     String professorKey = disinfectFilesModel.getFactoryNum() + "_disinfectFiles_professor";
                     String supervisorKey = disinfectFilesModel.getFactoryNum() + "_disinfectFiles_supervisor";
                     String testSendProfessor = disinfectFilesModel.getFactoryNum() + "_disinfectFiles_professor_AlreadySend";
                     String testSendSupervisor = disinfectFilesModel.getFactoryNum() + "_disinfectFiles_supervisor_AlreadySend";
 
-                    jedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
-                    jedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
+                    JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
+                    JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
 
                     //System.out.println("Have sent:"+jedisUtil.getCertainKeyValue(testSendProfessor));
 
                     //发送短信后 testSendProfessor存放在redis中 过期时间为ExpireTime
-                    if(!("1".equals(jedisUtil.getCertainKeyValue(testSendProfessor)))){
+                    if(!("1".equals(JedisUtil.getCertainKeyValue(testSendProfessor)))){
                         //System.out.println("testSendProfessorValue:"+jedisUtil.getCertainKeyValue(testSendProfessor));
-                        if(jedisUtil.redisJudgeTime(professorKey)){
+                        if(JedisUtil.redisJudgeTime(professorKey)){
 
                             System.out.println("in redis:");
-                            //获取redis中存储的设定过期时间
-                            int expireTime = Integer.parseInt(jedisUtil.getCertainKeyValue("ExpireTime"));
                             List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(disinfectFilesModel.getFactoryNum());
 
                             //需完成:userModels.getTelephone()赋值给String
@@ -114,7 +111,7 @@ public class DisinfectFilesResource {
 
                             //发送成功 更新redis中字段
                             if(JedisUtil.redisSendMessage(phoneList.toString(),JedisUtil.getCertainKeyValue("Message"))){
-                                JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor,"1",expireTime*24*60*60);
+                                JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor,"1",Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime"))*24*60*60);
                             }
 
                                 //System.out.println(phoneList);
@@ -124,7 +121,6 @@ public class DisinfectFilesResource {
 
                         if(!("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))){
                             if(JedisUtil.redisJudgeTime(supervisorKey)){
-                                int expireTime = Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime"));
                                 List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(disinfectFilesModel.getFactoryNum());
 
                                 StringBuffer phoneList = new StringBuffer("");
@@ -133,7 +129,7 @@ public class DisinfectFilesResource {
                                 }
                                 if(JedisUtil.redisSendMessage(phoneList.toString(),JedisUtil.getCertainKeyValue("Message"))){
                                     //System.out.println("发送成功！");
-                                    JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",expireTime*24*60*60);
+                                    JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime"))*24*60*60);
 
                                     return JudgeUtil.JudgeSuccess("successMessage","Message Sent");
 
@@ -224,11 +220,11 @@ public class DisinfectFilesResource {
         }else {
             //删除成功 redis数据库种对应数据-1
             DisinfectFilesModel repellentPlanModel1 = disinfectFilesService.getDisinfectFilesModelByid(disinfectFilesModel.getId());
-            String professorKey = repellentPlanModel1.getFactoryNum() + "_disinfectFiles_professor";
-            JedisUtil jedisUtil = new JedisUtil();
+            String professorKey = repellentPlanModel1.getFactoryNum().toString() + "_disinfectFiles_professor";
+
 
             //key->value-1 返回true
-            if (jedisUtil.redisCancelProfessorSupervisorWorks(professorKey)){
+            if (JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)){
                 return JudgeUtil.JudgeUpdate(row);
             }else {
                 //此时数据库出现较大问题
@@ -263,11 +259,10 @@ public class DisinfectFilesResource {
         }else {
             //删除成功 redis数据库种对应数据-1
             DisinfectFilesModel repellentPlanModel1 = disinfectFilesService.getDisinfectFilesModelByid(disinfectFilesModel.getId());
-            String supervisorKey = repellentPlanModel1.getFactoryNum() + "_disinfectFiles_supervisor";
-            JedisUtil jedisUtil = new JedisUtil();
+            String supervisorKey = repellentPlanModel1.getFactoryNum().toString() + "_disinfectFiles_supervisor";
 
             //key->value-1 返回true
-            if (jedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
+            if (JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
                 return JudgeUtil.JudgeUpdate(row);
             }else {
                 //此时数据库出现较大问题

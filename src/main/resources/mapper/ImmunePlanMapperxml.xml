@@ -113,7 +113,7 @@
         </if>
     </select>
 
-    <select id="getImmunePlanModelByid" resultType="com.deep.domain.model.ImmunePlanModel">
+    <select id="getImmunePlanModelByid" resultMap="ImmunePlan">
         SELECT
         *
         FROM

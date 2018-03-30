@@ -7,12 +7,12 @@ package com.deep.domain.model;
 public class RedisDataModel {
     private String message; //短信编辑内容
     private String expireTime;  //发短信间隔时间
-    private int pressureTips;   //到达多少条后通知
+    private String pressureTips;   //到达多少条后通知
 
     public RedisDataModel() {
     }
 
-    public RedisDataModel(String message, String expireTime, int pressureTips) {
+    public RedisDataModel(String message, String expireTime, String pressureTips) {
         this.message = message;
         this.expireTime = expireTime;
         this.pressureTips = pressureTips;
@@ -34,11 +34,11 @@ public class RedisDataModel {
         this.expireTime = expireTime;
     }
 
-    public int getPressureTips() {
+    public String getPressureTips() {
         return pressureTips;
     }
 
-    public void setPressureTips(int pressureTips) {
+    public void setPressureTips(String pressureTips) {
         this.pressureTips = pressureTips;
     }
 }

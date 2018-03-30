@@ -240,8 +240,7 @@ public class RepellentPlanResource {
         }else {
             //删除成功 redis数据库种对应数据-1
             RepellentPlanModel repellentPlanModel1 = repellentPlanService.getRepellentModelByid(repellentPlanModel.getId());
-            String professorKey = repellentPlanModel1.getFactoryNum() + "_repellentPlan_professor";
-            JedisUtil jedisUtil = new JedisUtil();
+            String professorKey = repellentPlanModel1.getFactoryNum().toString() + "_repellentPlan_professor";
 
             //key->value-1 返回true
             if (JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)){
@@ -291,8 +290,7 @@ public class RepellentPlanResource {
         }else {
             //删除成功 redis数据库种对应数据-1
             RepellentPlanModel repellentPlanModel1 = repellentPlanService.getRepellentModelByid(repellentPlanModel.getId());
-            String supervisorKey = repellentPlanModel1.getFactoryNum() + "_repellentPlan_supervisor";
-            JedisUtil jedisUtil = new JedisUtil();
+            String supervisorKey = repellentPlanModel1.getFactoryNum().toString() + "_repellentPlan_supervisor";
 
             //key->value-1 返回true
             if (JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){

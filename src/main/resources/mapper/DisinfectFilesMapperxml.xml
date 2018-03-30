@@ -151,7 +151,7 @@
         is_pass2 = #{isPass2}
     </select>
 
-    <select id="getDisinfectFilesModelByid" resultType="com.deep.domain.model.DisinfectFilesModel">
+    <select id="getDisinfectFilesModelByid" resultMap="DisinfectFiles">
         SELECT
         *
         FROM
