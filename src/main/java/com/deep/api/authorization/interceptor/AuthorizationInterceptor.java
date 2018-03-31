@@ -46,7 +46,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
                 request.getRequestURI().equals("/phonefind") ||request.getRequestURI().equals("/questionfind")||
                 request.getRequestURI().equals("/ensureverify") ||request.getRequestURI().equals("/findpassword")||
                 request.getRequestURI().equals("/phonefind")||request.getRequestURI().equals("/ensurequestion") ||
-                request.getRequestURI().equals("/error")
+                request.getRequestURI().equals("/error") || request.getRequestURI().equals("/question")
                 ) {
             return true;
         }
@@ -67,6 +67,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         String oldToken = JedisUtil.getValue(String.valueOf(model.getUserId()));
         String userRoleID = oldToken.split("-")[1];
         TokenModel tokenModel = new TokenModel(model.getUserId(), userRoleID);
+        System.out.println(tokenModel.getToken());
         JedisUtil.setValue(String.valueOf(model.getUserId()),tokenModel.getToken());
         JedisUtil.doExpire(String.valueOf(model.getUserId()));
         response.setHeader("Authorization", model.getUserId() + ":" + tokenModel.getToken());

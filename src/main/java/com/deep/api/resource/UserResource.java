@@ -207,6 +207,12 @@ public class UserResource {
             }
             userModel.setGmtCreate(new Timestamp(System.currentTimeMillis()));
             userModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
+
+            userModel.setIsFactory((byte)0);
+            userModel.setUserPermit((byte)0);
+            userModel.setIsExtended((byte)0);
+            userModel.setUserRole(0);
+
             Long addID = userService.addUser(userModel);
             if (addID <= 0) {
                 return Responses.errorResponse("用户信息增加失败,请检查网络后重试");

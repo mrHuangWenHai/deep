@@ -18,18 +18,18 @@ public class UserModel {
 
         private String userPwd;
 
-        @NotBlank(message = "用户编号不能为含有空格的串")
+//        @NotBlank(message = "用户编号不能为含有空格的串")
         private String userNum;
 
         private String userPic;
 
-        @NotBlank(message = "不能带有空格")
+//        @NotBlank(message = "不能带有空格")
         private String userRealname;
 
-        @NotBlank(message = "不能带有空格")
+//        @NotBlank(message = "不能带有空格")
         private String userLocation;
 
-        @Pattern(regexp = "((^[1][3-9][0-9]{9}$)|(^[1-9]{1}[0-9]{5,8}))", message = "号码格式错误")
+        @Pattern(regexp = "(^$|(^[1][3-9][0-9]{9}$)|(^[1-9]{1}[0-9]{5,8}))", message = "号码格式错误")
         private String userTelephone;
 
         private String userRemark;
@@ -37,12 +37,12 @@ public class UserModel {
         private long userRole;
         private long userPermit;
 
-        @Max(1)
-        @Min(0)
+//        @Max(1)
+//        @Min(0)
         private byte isExtended;
 
-        @Min(0)
-        @Max(1)
+//        @Min(0)
+//        @Max(1)
         private byte isFactory;
 
         @NotNull(message = "必须设置密保问题1")
@@ -67,8 +67,10 @@ public class UserModel {
 
         private String QQ;
 
+        @Pattern(regexp = "^$|^(\\d+|\\-){7,}$")
         private String officialPhone;
 
+        @Pattern(regexp = "^$|^(\\d+|\\-){7,}$")
         private String familyPhone;
 
 

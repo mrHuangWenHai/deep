@@ -45,9 +45,9 @@ public class LoginResource {
         UserModel userModel = userService.getUserByPkuserID(username);
         if(userModel == null){
             //数据库中未查到用户名
-            Response response = Responses.errorResponse("没有找到用户名");
+            Response response = Responses.errorResponse("用户名或者密码错误");
             HashMap<String, Object> data = new HashMap<>();
-            data.put("errorMessage", "username error");
+            data.put("errorMessage", "error");
             response.setData(data);
             return response;
         }else {
@@ -56,8 +56,8 @@ public class LoginResource {
                 Response response = Responses.successResponse();
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("successMessage", "登录成功!");
+                data.put("id", userModel.getId());
                 response.setData(data);
-
                 RoleAndPermit userRoleAndPermit = userService.findRoleByUserID(userModel.getId());
                 Long roleInt = userRoleAndPermit.getRole();
                 TokenModel tokenModel = new TokenModel(userModel.getId(), String.valueOf(roleInt));
@@ -66,9 +66,9 @@ public class LoginResource {
                 httpServletResponse.setHeader("Authorization", userModel.getId() + ":" + tokenModel.getToken());
                 return response;
             }else {
-                Response response = Responses.errorResponse("密码错误");
+                Response response = Responses.errorResponse("用户名或者密码错误");
                 HashMap<String, Object> data = new HashMap<>();
-                data.put("errorMessage", "password error");
+                data.put("errorMessage", "error");
                 response.setData(data);
                 return response;
             }
@@ -91,7 +91,7 @@ public class LoginResource {
         if (mobileAnnouncementModel == null){
             Response response = Responses.errorResponse("发送失败");
             HashMap<String, Object> data = new HashMap<>();
-            data.put("successMessage", "验证码发送成功!");
+            data.put("successMessage", "验证码发送失败!");
             response.setData(data);
             return response;
         }
@@ -151,32 +151,41 @@ public class LoginResource {
      * @param verifyCode 验证码
      * @return
      */
-    @RequestMapping(value = "/ensureverify",method = RequestMethod.GET)
-    public Response EnsureVerify(@RequestParam("verifyCode") String verifyCode){
+    @GetMapping(value = "/ensureverify/{verifyCode}")
+    public Response EnsureVerify(@PathVariable("verifyCode") String verifyCode){
+        if (verifyCode == null) {
+            return Responses.errorResponse("error!");
+        }
         Response response;
         if(verifyCode.equals(mobileAnnouncementModel.getIdentityCode())){
             response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("errorMessage", "valid success");
+            response.setData(data);
         }else{
             response = Responses.errorResponse("valid failed!");
             HashMap<String, Object> data = new HashMap<>();
             data.put("errorMessage", "something error");
+            response.setData(data);
         }
         return response;
     }
 
-    @GetMapping(value = "/questionAndAnswer")
-    public Response requestQuestion(@RequestParam("id") Long id) {
-        myuserModel = userService.getOneUser(id);
+    @GetMapping(value = "/question")
+    public Response requestQuestion(@RequestParam("name") String name) {
+        System.out.println(name);
+        if (name == null) {
+            return Responses.errorResponse("error!");
+        }
+        myuserModel = userService.getUserByPkuserID(name);
         if (myuserModel == null) {
             return Responses.errorResponse("请求失败");
         } else {
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("answer_1", myuserModel.getQuestion_1());
-            data.put("answer_2", myuserModel.getQuestion_2());
-            data.put("answer_3", myuserModel.getQuestion_3());
+            data.put("question_1", myuserModel.getQuestion_1());
+            data.put("question_2", myuserModel.getQuestion_2());
+            data.put("question_3", myuserModel.getQuestion_3());
             response.setData(data);
             return response;
         }
@@ -186,19 +195,34 @@ public class LoginResource {
      * 通过问题找回密码的数据验证方法
      * @return
      */
-    @RequestMapping(value = "/ensurequestion")
+    @PostMapping(value = "/ensurequestion")
     public Response EnsureQuestion(@RequestBody UserModel userModel){
         Response response;
-        if (userModel.getAnswer_1().equals(myuserModel.getAnswer_1()) &&
-                userModel.getAnswer_2().equals(myuserModel.getAnswer_2()) &&
-                userModel.getAnswer_3().equals(myuserModel.getAnswer_3())){
+        if (userModel == null) {
+            return Responses.errorResponse("error!");
+        }
+        String username = userModel.getPkUserid();
+        UserModel user = userService.getUserByPkuserID(username);
+        if (user == null) {
+            return Responses.errorResponse("error");
+        }
+        if (userModel.getAnswer_1().equals(user.getAnswer_1()) &&
+                userModel.getAnswer_2().equals(user.getAnswer_2()) &&
+                    userModel.getAnswer_3().equals(user.getAnswer_3())){
+            user.setUserPwd(userModel.getUserPwd());
+            Long updateID = userService.updateUser(user);
+            if (updateID <= 0) {
+                return Responses.errorResponse("error");
+            }
             response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("errorMessage", "valid success");
+            response.setData(data);
         }else {
             response = Responses.errorResponse("valid error");
             HashMap<String, Object> data = new HashMap<>();
             data.put("errorMessage", "valid error");
+            response.setData(data);
         }
         return response;
     }
@@ -210,6 +234,9 @@ public class LoginResource {
      */
     @GetMapping(value = "/logout/{id}")
     public Response logout(@PathVariable("id") String id) {
+        if (id == null) {
+            return Responses.errorResponse("error!");
+        }
         if (!JedisUtil.doDelete(id)) {
             return Responses.errorResponse("退出登录失败, 请检查网络之后重试");
         }
