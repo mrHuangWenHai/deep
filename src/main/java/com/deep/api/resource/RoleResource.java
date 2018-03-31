@@ -47,8 +47,8 @@ public class RoleResource {
      * @return
      */
     @Permit(modules = "role")
-    @PostMapping(value = "")
-    public Response addRole(@Valid RoleModel roleModel, BindingResult bindingResult) {
+    @PostMapping(value = "/add")
+    public Response addRole(@Valid @RequestBody RoleModel roleModel, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("添加角色出错,请检查网络后重试");
         } else {

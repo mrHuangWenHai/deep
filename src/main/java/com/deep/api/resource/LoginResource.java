@@ -151,7 +151,7 @@ public class LoginResource {
      * @param verifyCode 验证码
      * @return
      */
-    @RequestMapping(value = "/ensureverify")
+    @RequestMapping(value = "/ensureverify",method = RequestMethod.GET)
     public Response EnsureVerify(@RequestParam("verifyCode") String verifyCode){
         Response response;
         if(verifyCode.equals(mobileAnnouncementModel.getIdentityCode())){

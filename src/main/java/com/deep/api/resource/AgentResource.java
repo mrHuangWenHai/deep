@@ -93,7 +93,7 @@ public class AgentResource {
      */
     @Permit(modules = "dongxiang_factory_administrator", authorities = "create_agent")
     @PostMapping(value = "/add")
-    public Response addOne(@Valid AgentModel agentModel, BindingResult bindingResult) {
+    public Response addOne(@Valid @RequestBody AgentModel agentModel, BindingResult bindingResult) {
         if (bindingResult.hasErrors())  {
             return Responses.errorResponse("添加代理失败, 验证错误!");
         } else {
@@ -121,7 +121,7 @@ public class AgentResource {
      */
     @Permit(modules = "dongxiang_factory_administrator", authorities = "update_agent")
     @PutMapping("/{id}")
-    public Response agentUpdate(@Valid AgentModel agentModel, @PathVariable("id") String id, BindingResult bindingResult) {
+    public Response agentUpdate(@Valid @RequestBody AgentModel agentModel, @PathVariable("id") String id, BindingResult bindingResult) {
         int uid = StringToLongUtil.stringToInt(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");

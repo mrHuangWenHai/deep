@@ -300,20 +300,21 @@ public class UserResource {
     public Response exportExcel(HttpServletResponse httpServletResponse) throws Exception{
         ExcelData data = new ExcelData();
         data.setName("user");
-        List<String> titles = new ArrayList();
         List<UserModel> userModels = userService.getAll();
         UserModel userModel;
-        data.setTitles(titles);
         List<List<Object>> rows = new ArrayList();
-        List<Object> row = new ArrayList();
+        List<String> titles = new ArrayList();
         for(int i = 0 ; i < userModels.size(); i++) {
+            List<Object> row = new ArrayList();
             userModel = userModels.get(i);
             for (Field field : userModel.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
                 row.add(field.get(userModel));
+                titles.add(field.getName());
             }
             rows.add(row);
         }
+        data.setTitles(titles);
         data.setRows(rows);
         // TODO 应该继续封装模板
         ExportExcelUtil.exportExcel(httpServletResponse,"user.xlsx",data);

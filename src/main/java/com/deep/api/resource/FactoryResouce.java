@@ -124,7 +124,7 @@ public class FactoryResouce {
      */
     @Permit(modules = "factory")
     @PostMapping(value = "/add")
-    public Response addFactory(@Valid FactoryModel factoryModel, BindingResult bindingResult) {
+    public Response addFactory(@Valid @RequestBody FactoryModel factoryModel, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("羊场添加失败");
             return response;
