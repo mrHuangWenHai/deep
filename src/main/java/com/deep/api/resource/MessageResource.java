@@ -35,6 +35,17 @@ public class MessageResource {
 //        message.setContact(message.getContact());
 //        message.setMessage(message.getMessage());
         message.setInserttime(new Date());
+        String contact = message.getContact();
+        try {
+            if (!Message.isEmail(contact) && !Message.isMobile(contact)) {
+                throw new Exception("请输入正确手机号或者邮箱地址！");
+            }
+        }catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            Response response = Responses.errorResponse(e.getMessage());
+            return response;
+        }
 //        //数据分析相关
 //        message.setTag(message.getTag());
 //        message.setAttitude(message.getAttitude());
