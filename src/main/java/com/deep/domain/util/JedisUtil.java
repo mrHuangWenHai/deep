@@ -22,6 +22,8 @@ public class JedisUtil {
     private int expireTime;
 
 
+    private static Jedis jedis = new Jedis("localhost");
+
     public JedisUtil() {
     }
 
@@ -35,7 +37,6 @@ public class JedisUtil {
     public JedisUtil(String key, String value) {
         this.key = key;
         this.value = value;
-        Jedis jedis = new Jedis("localhost");
         jedis.set(key, value);
     }
 
@@ -51,7 +52,6 @@ public class JedisUtil {
         this.expireTime = expireTime;
         this.key = key;
         this.value = value;
-        Jedis jedis = new Jedis("localhost");
         jedis.set(key, value);
         jedis.expire(key, expireTime);
     }
@@ -63,7 +63,6 @@ public class JedisUtil {
      * @param key
      */
     public static boolean redisJudgeTime(String key){
-        Jedis jedis = new Jedis("localhost");
         int i = Integer.parseInt(jedis.get(key));
         int j = Integer.parseInt(jedis.get("PressureTips"));
         return i > j;
@@ -82,7 +81,6 @@ public class JedisUtil {
      * @param key
      */
     public static void redisSaveProfessorSupervisorWorks(String key){
-        Jedis jedis = new Jedis("localhost");
         String temValue = jedis.get(key);
         if (temValue == null){
             jedis.set(key,"1");
@@ -104,7 +102,6 @@ public class JedisUtil {
      * @param key
      */
     public static boolean redisCancelProfessorSupervisorWorks(String key){
-        Jedis jedis = new Jedis("localhost");
         String temValue = jedis.get(key);
         if (temValue == null || "0".equals(temValue)){
             return false;
@@ -224,7 +221,6 @@ public class JedisUtil {
      * @param expireTime
      */
     public static void expireCertainKey(String key, int expireTime){
-        Jedis jedis = new Jedis("localhost");
         jedis.expire(key, expireTime);
     }
 
@@ -234,7 +230,6 @@ public class JedisUtil {
      * @return
      */
     public static String getCertainKeyValue(String key){
-        Jedis jedis = new Jedis("localhost");
         return jedis.get(key);
     }
 
@@ -245,7 +240,6 @@ public class JedisUtil {
      * @return
      */
     public static void setCertainKeyValue(String key, String value){
-        Jedis jedis = new Jedis("localhost");
         jedis.set(key, value);
     }
 
@@ -259,7 +253,6 @@ public class JedisUtil {
      * @return
      */
     public static void setCertainKeyValueWithExpireTime(String key, String value,int expireTime){
-        Jedis jedis = new Jedis("localhost");
         jedis.set(key, value);
         jedis.expire(key,expireTime);
     }

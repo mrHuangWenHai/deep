@@ -48,6 +48,8 @@ public interface DisinfectFilesMapper {
 
     int updateDisinfectFilesModelBySupervisor(@Param("disinfectFilesModel") DisinfectFilesModel disinfectFilesModel);
 
+    int updateDisinfectFilesModelByOperator(@Param("disinfectFilesModel") DisinfectFilesModel disinfectFilesModel);
+
 
 
     int deleteDisinfectFilesModelByid(@Param("id") BigInteger id);

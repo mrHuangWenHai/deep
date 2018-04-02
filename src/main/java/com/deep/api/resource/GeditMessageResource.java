@@ -8,7 +8,6 @@ import com.deep.domain.util.JudgeUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 
 /**
  * 用于编辑通知时短信内容

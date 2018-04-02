@@ -9,6 +9,7 @@ import com.deep.domain.service.UserService;
 import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.JudgeUtil;
 import com.deep.domain.util.UploadUtil;
+import org.apache.el.lang.ELArithmetic;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -103,14 +104,25 @@ public class ImmunePlanResource {
                                 immunePlanModel.getImmuneDuring(),immunePlanModel.getOperator(),immunePlanModel.getRemark(), isPass,isPass,timestamp);
 
                         //数据插入redis
-                        JedisUtil jedisUtil = new JedisUtil();
                         String professorKey = immunePlanModel.getFactoryNum() + "_immunePlan_professor";
                         String supervisorKey = immunePlanModel.getFactoryNum() + "_immunePlan_supervisor";
                         String testSendProfessor = immunePlanModel.getFactoryNum() + "_immunePlan_professor_AlreadySend";
                         String testSendSupervisor = immunePlanModel.getFactoryNum() + "_immunePlan_supervisor_AlreadySend";
+                        String professorWorkInRedis = immunePlanModel.getId().toString()+ "_immunePlan_professor_worked";
+                        String supervisorWorkInRedis = immunePlanModel.getId().toString()+ "_immunePlan_supervisor_worked";
+
+                        //System.out.println("before operator insert supervisorKey:"+supervisorKey);
+                        //System.out.println("before operator insert supervisorKey value:"+JedisUtil.getCertainKeyValue(supervisorKey));
 
                         JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
                         JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
+
+                        JedisUtil.setCertainKeyValue(professorWorkInRedis,"0");
+                        JedisUtil.setCertainKeyValue(supervisorWorkInRedis,"0");
+
+                        //System.out.println("before operator insert supervisorKey:"+supervisorKey);
+                        //System.out.println("before operator insert supervisorKey value:"+JedisUtil.getCertainKeyValue(supervisorKey));
+
 
                         //System.out.println("testSendProfessorValue:"+jedisUtil.getCertainKeyValue(testSendProfessor));
                         //System.out.println("judge equal:"+"1".equals(jedisUtil.getCertainKeyValue(testSendProfessor)));
@@ -121,8 +133,6 @@ public class ImmunePlanResource {
                             System.out.println("testSendProfessorValue:"+JedisUtil.getCertainKeyValue(testSendProfessor));
                             if(JedisUtil.redisJudgeTime(professorKey)){
 
-                                //获取redis中存储的设定过期时间
-                                int expireTime = Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime"));
                                 List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(immunePlanModel.getFactoryNum());
 
                                 //需完成:userModels.getTelephone()赋值给String
@@ -145,10 +155,10 @@ public class ImmunePlanResource {
 
                         if(!("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))){
                             if(JedisUtil.redisJudgeTime(supervisorKey)){
-                                int expireTime = Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime"));
                                 List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(immunePlanModel.getFactoryNum());
 
                                 StringBuffer phoneList = new StringBuffer("");
+
                                 for(int i = 0; i < userModels.size(); i++){
                                     phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
                                 }
@@ -202,6 +212,9 @@ public class ImmunePlanResource {
     @ResponseBody
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
     public Response FindShow(@RequestBody ImmunePlanModel immunePlanModel) {
+        if (immunePlanModel.getSize() == 0){
+            immunePlanModel.setSize(10);
+        }
         //前台传参数
         List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModel(immunePlanModel,
                 new RowBounds(immunePlanModel.getPage(),immunePlanModel.getSize()));
@@ -221,8 +234,8 @@ public class ImmunePlanResource {
     @ResponseBody
     @RequestMapping(value = "pfind",method = RequestMethod.GET)
     public Response ProfessorFind(@RequestParam("isPass1") Integer isPass1,
-                                  @RequestParam("page") int page,
-                                  @RequestParam("size") int size){
+                                  @RequestParam(value = "page",defaultValue = "0") int page,
+                                  @RequestParam(value = "size",defaultValue = "10") int size){
         List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModelByProfessor(isPass1,new RowBounds(page,size));
 
         return JudgeUtil.JudgeFind(immunePlanModels,immunePlanModels.size());
@@ -239,26 +252,71 @@ public class ImmunePlanResource {
     @ResponseBody
     @RequestMapping(value = "pupdate",method = RequestMethod.PATCH)
     public Response ProfessorUpdate(@RequestBody ImmunePlanModel immunePlanModel){
-        int row = immunePlanService.updateImmunePlanModelByProfessor(immunePlanModel);
 
-        if( row == 0){
-            return JudgeUtil.JudgeUpdate(row);
+        if(immunePlanModel.getId() == null||
+                immunePlanModel.getProfessor() == null||
+                immunePlanModel.getIsPass1() == null||
+                immunePlanModel.getUnpassReason1() == null){
+            return Responses.errorResponse("Lack Item");
         }else {
-            //删除成功 redis数据库种对应数据-1
             ImmunePlanModel immunePlanModel1 = immunePlanService.getImmunePlanModelByid(immunePlanModel.getId());
-            String professorKey = immunePlanModel1.getFactoryNum().toString() + "_immunePlan_professor";
 
-            //key->value-1 返回true
-            if (JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)){
-                return JudgeUtil.JudgeUpdate(row);
+            String professorWorkInRedis = immunePlanModel1.getId().toString() + "_immunePlan_professor_worked";
+
+            if (immunePlanModel1.getIsPass1().equals("1")){
+
+                return Responses.errorResponse("Already update");
+
+
+                //此时flag=*1 表示专家已经修改过一次 此次为第n次修改
+                //isPass1=0 审核未通过
             }else {
-                //此时数据库出现较大问题
-                //未完成工作实际数量与redis记录不一样
-                return Responses.errorResponse("Inner Error");
-            }
+                if ("1".equals(JedisUtil.getCertainKeyValue(professorWorkInRedis))){
 
+                    //System.out.println("professor No redis");
+                    immunePlanModel.setGmtProfessor(new Timestamp(System.currentTimeMillis()));
+                    int row = immunePlanService.updateImmunePlanModelByProfessor(immunePlanModel);
+                    return JudgeUtil.JudgeUpdate(row);
+
+                    //此时为操作员提交后第一次修改 professorWorkInRedis=0
+                }else {
+
+                    //标志专家已操作
+                    immunePlanModel.setGmtProfessor(new Timestamp(System.currentTimeMillis()));
+                    int row = immunePlanService.updateImmunePlanModelByProfessor(immunePlanModel);
+
+                    if( row == 0){
+                        return JudgeUtil.JudgeUpdate(row);
+                    }else {
+                        //更新成功 redis数据库种对应数据-1
+                        JedisUtil.setCertainKeyValue(professorWorkInRedis,"1");
+
+                        String professorKey = immunePlanModel1.getFactoryNum().toString() + "_immunePlan_professor";
+
+
+                        //System.out.println("before professor professorKey:" + professorKey);
+                        //System.out.println("before professor professorKey value:" + JedisUtil.getCertainKeyValue(professorKey));
+
+                        if (JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
+                            //System.out.println("after:"+JedisUtil.getCertainKeyValue(supervisorKey));
+                            //System.out.println("after professor professorKey:" + professorKey);
+                            //System.out.println("after professor professorKey value:" + JedisUtil.getCertainKeyValue(professorKey));
+
+                            return JudgeUtil.JudgeUpdate(row);
+
+                        } else {
+                            //此时数据库出现较大问题
+                            //未完成工作实际数量与redis记录不一样
+                            return Responses.errorResponse("Inner Error");
+                        }
+                    }
+                }
+            }
         }
+
     }
+
+
 
 
     /**
@@ -272,16 +330,18 @@ public class ImmunePlanResource {
     @ResponseBody
     @RequestMapping(value = "sfind",method = RequestMethod.GET)
     public Response SupervisorFind(@RequestParam("isPass2") Integer isPass2,
-                                   @RequestParam("page") int page,
-                                   @RequestParam("size") int size){
+                                   @RequestParam(value = "page",defaultValue = "0") int page,
+                                   @RequestParam(value = "size",defaultValue = "10") int size){
         List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModelBySupervisor(isPass2,new RowBounds(page,size));
 
+        System.out.println("size:"+immunePlanModels.size());
         return JudgeUtil.JudgeFind(immunePlanModels,immunePlanModels.size());
 
     }
 
     /**
      * 专家入口 审核isPass2 = 0的数据
+     * 审核要求:审核时要求条例写完整 审核后无权限再修改
      * @param immunePlanModel
      * METHOD:PATCH
      * @return
@@ -289,33 +349,153 @@ public class ImmunePlanResource {
     @ResponseBody
     @RequestMapping(value = "supdate",method = RequestMethod.PATCH)
     public Response SupervisorUpdate(@RequestBody ImmunePlanModel immunePlanModel){
-        int row = immunePlanService.updateImmunePlanModelBySupervisor(immunePlanModel);
 
-        if( row == 0){
-            return JudgeUtil.JudgeUpdate(row);
+        if(immunePlanModel.getId() == null||
+                immunePlanModel.getSupervisor() == null||
+                immunePlanModel.getIsPass2() == null||
+                immunePlanModel.getUnpassReason2() == null){
+            return Responses.errorResponse("Lack Item");
+
         }else {
-            //删除成功 redis数据库种对应数据-1
+
             ImmunePlanModel immunePlanModel1 = immunePlanService.getImmunePlanModelByid(immunePlanModel.getId());
-            String supervisorKey = immunePlanModel1.getFactoryNum().toString() + "_immunePlan_supervisor";
 
+            String supervisorWorkInRedis = immunePlanModel1.getId().toString() + "_immunePlan_supervisor_worked";
 
-            //System.out.println("id input:"+immunePlanModel.getId());
-            //System.out.println("id find:"+immunePlanModel1.getId());
-            //System.out.println("factoryNum find:"+immunePlanModel1.getFactoryNum());
-            //System.out.println("supervisorkey:"+supervisorKey);
-            //System.out.println("before:"+JedisUtil.getCertainKeyValue(supervisorKey));
-            //key->value-1 返回true
-            if (JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
-                System.out.println("after:"+JedisUtil.getCertainKeyValue(supervisorKey));
-                return JudgeUtil.JudgeUpdate(row);
+            //System.out.println("direct in DB"+immunePlanModel1.getFlag());
+            if (immunePlanModel1.getIsPass2().equals("1")){
+
+                return Responses.errorResponse("Already update");
+
+                //此时flag=1*
             }else {
-                //此时数据库出现较大问题
-                //未完成工作实际数量与redis记录不一样
-                return Responses.errorResponse("Inner Error");
+                if ("1".equals(JedisUtil.getCertainKeyValue(supervisorWorkInRedis))){
+                    //在操作员再次提交前 在监督员修改一次后 监督员需要再修改
+                    //此时修改不需要进入redis
+                    System.out.println("supervisor No redis");
+                    immunePlanModel.setGmtSupervise(new Timestamp(System.currentTimeMillis()));
+                    int row = immunePlanService.updateImmunePlanModelBySupervisor(immunePlanModel);
+                    return JudgeUtil.JudgeUpdate(row);
+
+                } else {
+
+                    //此时是操作员提交后 监督员第一次审核
+                    //操作需要和redis关联
+                    immunePlanModel.setGmtSupervise(new Timestamp(System.currentTimeMillis()));
+                    //int i = immunePlanModel1.getFlag();
+
+                    //System.out.println("i="+i);
+                    //flag = 1* 即+2 标识监督员已审核
+                    //System.out.println("immunetime:"+immunePlanModel.getGmtProfessor());
+
+                    int row = immunePlanService.updateImmunePlanModelBySupervisor(immunePlanModel);
+
+                    if( row == 0){
+                        return JudgeUtil.JudgeUpdate(row);
+                    }else {
+                        //更新成功 redis数据库种对应数据-1
+
+                        String supervisorKey = immunePlanModel1.getFactoryNum().toString() + "_immunePlan_supervisor";
+
+                        JedisUtil.setCertainKeyValue(supervisorWorkInRedis,"1");
+
+                        //System.out.println("rediskey:"+JedisUtil.getCertainKeyValue(supervisorWorkInRedis));
+                        //System.out.println("before supervisor supervisorKey:"+supervisorKey);
+                        //System.out.println("before supervisor supervisorKey value:"+JedisUtil.getCertainKeyValue(supervisorKey));
+
+                        if (JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
+                            //System.out.println("after:"+JedisUtil.getCertainKeyValue(supervisorKey));
+                            //System.out.println("after supervisor supervisorKey:"+supervisorKey);
+                            //System.out.println("after supervisor supervisorKey value:"+JedisUtil.getCertainKeyValue(supervisorKey));
+
+                            return JudgeUtil.JudgeUpdate(row);
+
+                        }else {
+                            //此时数据库出现较大问题
+                            //未完成工作实际数量与redis记录不一样
+                            return Responses.errorResponse("Inner Error");
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+
+
+    /**
+     * 操作员在审核前想修改数据的接口
+     * 或处理被退回操作的接口
+     *
+     * 行为1 与redis数据库无关
+     * 行为2 redis对应数据字段+1
+     * @param immunePlanModel
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "oupdate",method = RequestMethod.PATCH)
+    public Response OperatorUpdate(@RequestBody ImmunePlanModel immunePlanModel) {
+
+        if (immunePlanModel.getId() == null) {
+            return Responses.errorResponse("Operate wrong");
+        } else {
+            ImmunePlanModel immunePlanModel1 = this.immunePlanService.getImmunePlanModelByid(immunePlanModel.getId());
+
+            //字段标识
+            String professorWorkInRedis = immunePlanModel1.getId().toString()+ "_immunePlan_professor_worked";
+            String supervisorWorkInRedis = immunePlanModel1.getId().toString()+ "_immunePlan_supervisor_worked";
+
+            //System.out.println("professorwork:"+JedisUtil.getCertainKeyValue(professorWorkInRedis));
+            //System.out.println("supervisorwork:"+JedisUtil.getCertainKeyValue(supervisorWorkInRedis));
+
+            //即专家未审核 操作员需要修改
+            if("0".equals(JedisUtil.getCertainKeyValue(professorWorkInRedis))){
+                //
+                System.out.println("professorWork No redis");
+
+            }else {
+
+                String professorKey = immunePlanModel1.getFactoryNum().toString()+ "_immunePlan_professor";
+
+                //置0 即提交专家可审核
+                JedisUtil.setCertainKeyValue(professorWorkInRedis,"0");
+                //System.out.println("before operator update professorKey:"+professorKey);
+                //System.out.println("before operator update professorKey value:"+JedisUtil.getCertainKeyValue(professorKey));
+
+                //redis数据库中对应字段+1
+                JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
+                //System.out.println("before operator update professorKey:"+professorKey);
+                //System.out.println("before operator update professorKey value:"+JedisUtil.getCertainKeyValue(professorKey));
+
+            }
+
+            //监督员未审核 操作员需要修改
+            if ("0".equals(JedisUtil.getCertainKeyValue(supervisorWorkInRedis))){
+
+                System.out.println("supervisorWork No redis");
+                int row = this.immunePlanService.updateImmunePlanModelByOperator(immunePlanModel);
+                return JudgeUtil.JudgeUpdate(row);
+
+            }else {
+                //专家已审核 退回后的数据
+                int row = this.immunePlanService.updateImmunePlanModelByOperator(immunePlanModel);
+                String supervisorKey = immunePlanModel1.getFactoryNum().toString()+ "_immunePlan_supervisor";
+
+                JedisUtil.setCertainKeyValue(supervisorWorkInRedis,"0");
+                //System.out.println("before operator update supervisorKey:"+supervisorKey);
+                //System.out.println("before operator update supervisorKey value:"+JedisUtil.getCertainKeyValue(supervisorKey));
+                //redis数据库中对应字段+1
+                JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
+
+                //System.out.println("after operator update supervisorKey:"+supervisorKey);
+                //System.out.println("after operator update supervisorKey value:"+JedisUtil.getCertainKeyValue(supervisorKey));
+
+                return JudgeUtil.JudgeUpdate(row);
             }
 
         }
     }
+
 
     /**
      * 删除id = certain 的数据

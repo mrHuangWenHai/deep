@@ -8,18 +8,14 @@ import com.deep.domain.service.DisinfectFilesService;
 import com.deep.domain.service.UserService;
 import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.JudgeUtil;
-import com.deep.domain.util.UploadUtil;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -76,12 +72,11 @@ public class DisinfectFilesResource {
                     //System.out.println("save before");
                     //数据插入数据库
                     //System.out.println("mysql执行前");
-                    String ispass = "0";
                     Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                     disinfectFilesService.setDisinfectFilesModel(new DisinfectFilesModel(disinfectFilesModel.getFactoryNum(), disinfectFilesModel.getDisinfectTime(),
                             disinfectFilesModel.getDisinfectName(), disinfectFilesModel.getDisinfectQuality(),
                             disinfectFilesModel.getDisinfectWay(), disinfectFilesModel.getOperator(),
-                            disinfectFilesModel.getRemark(), ispass, ispass, timestamp));
+                            disinfectFilesModel.getRemark(), "0", "0", timestamp));
 
                     //数据插入redis
                     String professorKey = disinfectFilesModel.getFactoryNum() + "_disinfectFiles_professor";
@@ -89,8 +84,14 @@ public class DisinfectFilesResource {
                     String testSendProfessor = disinfectFilesModel.getFactoryNum() + "_disinfectFiles_professor_AlreadySend";
                     String testSendSupervisor = disinfectFilesModel.getFactoryNum() + "_disinfectFiles_supervisor_AlreadySend";
 
+                    String professorWorkInRedis = disinfectFilesModel.getId().toString()+ "_disinfectFiles_professor_worked";
+                    String supervisorWorkInRedis = disinfectFilesModel.getId().toString()+ "_disinfectFiles_supervisor_worked";
+
                     JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
                     JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
+
+                    JedisUtil.setCertainKeyValue(professorWorkInRedis,"0");
+                    JedisUtil.setCertainKeyValue(supervisorWorkInRedis,"0");
 
                     //System.out.println("Have sent:"+jedisUtil.getCertainKeyValue(testSendProfessor));
 
@@ -172,6 +173,9 @@ public class DisinfectFilesResource {
     @ResponseBody
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
     public Response FindShow(@RequestBody DisinfectFilesModel disinfectFilesModel){
+        if(disinfectFilesModel.getSize() == 0){
+            disinfectFilesModel.setSize(10);
+        }
 
         List<DisinfectFilesModel> disinfectFilesModels = disinfectFilesService.getDisinfectFilesModel(disinfectFilesModel,
                 new RowBounds(disinfectFilesModel.getPage(),disinfectFilesModel.getSize()));
@@ -195,8 +199,8 @@ public class DisinfectFilesResource {
     @ResponseBody
     @RequestMapping(value = "/pfind",method = RequestMethod.GET)
     public Response ProfessorFind(@RequestParam("isPass1") Integer isPass1,
-                                  @RequestParam("page") int page,
-                                  @RequestParam("size") int size){
+                                  @RequestParam(value = "page",defaultValue = "0") int page,
+                                  @RequestParam(value = "size",defaultValue = "10") int size){
         List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesService.getDisinfectFilesModelByProfessor(isPass1,new RowBounds(page,size));
 
         return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
@@ -212,27 +216,57 @@ public class DisinfectFilesResource {
 
     @ResponseBody
     @RequestMapping(value = "/pupdate",method = RequestMethod.PATCH)
-    public Response ProfessorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel){
-        int row = this.disinfectFilesService.updateDisinfectFilesModelByProfessor(disinfectFilesModel);
+    public Response ProfessorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel) {
 
-        if( row == 0){
-            return JudgeUtil.JudgeUpdate(row);
-        }else {
-            //删除成功 redis数据库种对应数据-1
-            DisinfectFilesModel repellentPlanModel1 = disinfectFilesService.getDisinfectFilesModelByid(disinfectFilesModel.getId());
-            String professorKey = repellentPlanModel1.getFactoryNum().toString() + "_disinfectFiles_professor";
+        if (disinfectFilesModel.getId() == null ||
+                disinfectFilesModel.getProfessor() == null ||
+                disinfectFilesModel.getIsPass1() == null ||
+                disinfectFilesModel.getUnpassReason1() == null) {
+            return Responses.errorResponse("Lack Item");
+        } else {
 
+            DisinfectFilesModel disinfectFilesModel1 = disinfectFilesService.getDisinfectFilesModelByid(disinfectFilesModel.getId());
+            String professorWorkInRedis = disinfectFilesModel1.getId().toString() + "_disinfectFiles_professor_worked";
 
-            //key->value-1 返回true
-            if (JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)){
-                return JudgeUtil.JudgeUpdate(row);
+            if (disinfectFilesModel1.getIsPass1().equals("1") ) {
+
+                return Responses.errorResponse("Already update");
             }else {
-                //此时数据库出现较大问题
-                //未完成工作实际数量与redis记录不一样
-                return Responses.errorResponse("Inner Error");
-            }
 
+                if ("1".equals(JedisUtil.getCertainKeyValue(professorWorkInRedis))) {
+
+                    //生成更新当前时间
+                    disinfectFilesModel.setGmtProfessor(new Timestamp(System.currentTimeMillis()));
+
+                    int row = this.disinfectFilesService.updateDisinfectFilesModelByProfessor(disinfectFilesModel);
+
+                    return JudgeUtil.JudgeUpdate(row);
+                }else{
+
+                    int row = this.disinfectFilesService.updateDisinfectFilesModelByProfessor(disinfectFilesModel);
+
+                    if (row == 0) {
+                        return JudgeUtil.JudgeUpdate(row);
+                    } else {
+
+                        //删除成功 redis数据库种对应数据-1
+                        String professorKey = disinfectFilesModel1.getFactoryNum().toString() + "_disinfectFiles_professor";
+
+
+                        //key->value-1 返回true
+                        if (JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
+
+                            return JudgeUtil.JudgeUpdate(row);
+                        } else {
+                            //此时数据库出现较大问题
+                            //未完成工作实际数量与redis记录不一样
+                            return Responses.errorResponse("Inner Error");
+                        }
+                    }
+                }
+            }
         }
+
     }
 
 
@@ -240,8 +274,8 @@ public class DisinfectFilesResource {
     @ResponseBody
     @RequestMapping(value = "/sfind",method = RequestMethod.GET)
     public Response SupervisorFind(@RequestParam("isPass2") Integer isPass2,
-                                   @RequestParam("page") int page,
-                                   @RequestParam("size") int size){
+                                   @RequestParam(value = "page",defaultValue = "0") int page,
+                                   @RequestParam(value = "size",defaultValue = "10") int size){
         List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesService.getDisinfectFilesModelBySupervisor(isPass2,new RowBounds(page,size));
 
         return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
@@ -252,28 +286,128 @@ public class DisinfectFilesResource {
     @ResponseBody
     @RequestMapping(value = "/supdate",method = RequestMethod.PATCH)
     public Response SupervisorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel){
-        int row = this.disinfectFilesService.updateDisinfectFilesModelBySupervisor(disinfectFilesModel);
 
-        if( row == 0){
-            return JudgeUtil.JudgeUpdate(row);
-        }else {
-            //删除成功 redis数据库种对应数据-1
-            DisinfectFilesModel repellentPlanModel1 = disinfectFilesService.getDisinfectFilesModelByid(disinfectFilesModel.getId());
-            String supervisorKey = repellentPlanModel1.getFactoryNum().toString() + "_disinfectFiles_supervisor";
+        if (disinfectFilesModel.getId() == null ||
+                disinfectFilesModel.getSupervisor() == null ||
+                disinfectFilesModel.getIsPass2() == null ||
+                disinfectFilesModel.getUnpassReason2() == null) {
+            return Responses.errorResponse("Lack Item");
+        } else {
 
-            //key->value-1 返回true
-            if (JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
-                return JudgeUtil.JudgeUpdate(row);
+            DisinfectFilesModel disinfectFilesModel1 = disinfectFilesService.getDisinfectFilesModelByid(disinfectFilesModel.getId());
+            String supervisorWorkInRedis = disinfectFilesModel1.getId().toString() + "_disinfectFiles_supervisor_worked";
+
+
+            if (disinfectFilesModel1.getIsPass2().equals("1") ) {
+
+                return Responses.errorResponse("Already update");
             }else {
-                //此时数据库出现较大问题
-                //未完成工作实际数量与redis记录不一样
-                return Responses.errorResponse("Inner Error");
+                //生成更新当前时间
+                disinfectFilesModel.setGmtSupervise(new Timestamp(System.currentTimeMillis()));
+
+                if ("1".equals(JedisUtil.getCertainKeyValue(supervisorWorkInRedis))) {
+
+                    disinfectFilesModel.setGmtSupervise(new Timestamp(System.currentTimeMillis()));
+                    int row = this.disinfectFilesService.updateDisinfectFilesModelBySupervisor(disinfectFilesModel);
+                    return JudgeUtil.JudgeUpdate(row);
+
+                }else {
+
+                    disinfectFilesModel.setGmtSupervise(new Timestamp(System.currentTimeMillis()));
+                    int row = this.disinfectFilesService.updateDisinfectFilesModelBySupervisor(disinfectFilesModel);
+
+
+                    if (row == 0) {
+
+                        return JudgeUtil.JudgeUpdate(row);
+
+                    } else {
+
+                        //删除成功 redis数据库种对应数据-1
+                        String supervisorKey = disinfectFilesModel1.getFactoryNum().toString() + "_disinfectFiles_supervisor";
+                        disinfectFilesModel.setGmtSupervise(new Timestamp(System.currentTimeMillis()));
+
+                        JedisUtil.setCertainKeyValue(supervisorWorkInRedis,"1");
+                        //key->value-1 返回true
+                        if (JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)) {
+                            return JudgeUtil.JudgeUpdate(row);
+                        } else {
+                            //此时数据库出现较大问题
+                            //未完成工作实际数量与redis记录不一样
+                            return Responses.errorResponse("Inner Error");
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
+    /**
+     * 操作员在审核前想修改数据的接口
+     * 或处理被退回操作的接口
+     *
+     * 行为1 与redis数据库无关
+     * 行为2 redis对应数据字段+1
+     * @param disinfectFilesModel
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "oupdate",method = RequestMethod.PATCH)
+    public Response OperatorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel) {
+
+        if (disinfectFilesModel.getId() == null) {
+            return Responses.errorResponse("Operate wrong");
+        } else {
+            DisinfectFilesModel disinfectFilesModel1 = this.disinfectFilesService.getDisinfectFilesModelByid(disinfectFilesModel.getId());
+
+            String professorWorkInRedis = disinfectFilesModel1.getId().toString()+ "_immunePlan_professor_worked";
+            String supervisorWorkInRedis = disinfectFilesModel1.getId().toString()+ "_immunePlan_supervisor_worked";
+
+            //即专家未审核 操作员需要修改
+            if("0".equals(JedisUtil.getCertainKeyValue(professorWorkInRedis))){
+                //无需修改 在下个语句修改
+                System.out.println("running");
+
+            }else {
+
+                //专家已审核 退回后的数据
+                String professorKey = disinfectFilesModel1.getFactoryNum().toString()+ "_disinfectFiles_professor";
+
+                //置0 专家可操作
+                JedisUtil.setCertainKeyValue(professorWorkInRedis,"0");
+
+                //redis数据库中对应字段+1
+                JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
+            }
+
+            //监督员未审核 操作员需要修改
+            if ("0".equals(JedisUtil.getCertainKeyValue(supervisorWorkInRedis))){
+                //System.out.println("No redis");
+
+                int row = this.disinfectFilesService.updateDisinfectFilesModelByOperator(disinfectFilesModel);
+                return JudgeUtil.JudgeUpdate(row);
+
+            } else {
+
+                //专家已审核 退回后的数据
+                int row = this.disinfectFilesService.updateDisinfectFilesModelByOperator(disinfectFilesModel);
+                String supervisorKey = disinfectFilesModel1.getFactoryNum().toString()+ "_disinfectFiles_supervisor";
+
+                JedisUtil.setCertainKeyValue(supervisorWorkInRedis,"0");
+                //redis数据库中对应字段+1
+                JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
+
+                return JudgeUtil.JudgeUpdate(row);
             }
 
         }
     }
 
-    //////删除数据在查询中再修改
+
 
     /**
      * 删除id = certain 的数据

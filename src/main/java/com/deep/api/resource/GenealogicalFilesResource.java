@@ -98,12 +98,18 @@ public class GenealogicalFilesResource {
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
     public Response FindResult(@RequestBody GenealogicalFilesModel genealogicalFilesModel){
         //System.out.println("selfEartag:"+genealogicalFilesModel.getSelfEartag());
+        if (genealogicalFilesModel.getPage() == 0){
+            genealogicalFilesModel.setPage(0);
+        }
 
+        if (genealogicalFilesModel.getSize() == 0){
+            genealogicalFilesModel.setSize(10);
+        }
         List<GenealogicalFilesModel> genealogicalFilesModels = genealogicalFilesService.getGenealogicalFilesModel(genealogicalFilesModel,new RowBounds(genealogicalFilesModel.getPage(),genealogicalFilesModel.getSize()));
         //System.out.println("ModelSize:"+genealogicalFilesModels.size());
         //System.out.println("ModelId:"+genealogicalFilesModels.get(0).getId());
 
-        System.out.println(""+genealogicalFilesModels.get(0).getId());
+        //System.out.println(""+genealogicalFilesModels.get(0).getId());
         return JudgeUtil.JudgeFind(genealogicalFilesModels,genealogicalFilesModels.size());
     }
 

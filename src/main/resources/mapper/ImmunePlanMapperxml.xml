@@ -36,7 +36,7 @@
         )
     </insert>
     <resultMap id="ImmunePlan" type="com.deep.domain.model.ImmunePlanModel">
-        <result property="id" column="id"/>
+        <id property="id" column="id"/>
         <result property="factoryNum" column="factory_num"/>
         <result property="crowdNum" column="crowd_num"/>
         <result property="immuneEartag" column="immune_eartag"/>
@@ -49,8 +49,10 @@
         <result property="professor" column="professor"/>
         <result property="supervisor" column="supervisor"/>
         <result property="remark" column="remark"/>
-        <result property="isPass" column="is_pass"/>
-        <result property="unpassReason" column="unpass_reason"/>
+        <result property="isPass1" column="is_pass1"/>
+        <result property="unpassReason1" column="unpass_reason1"/>
+        <result property="isPass2" column="is_pass2"/>
+        <result property="unpassReason2" column="unpass_reason2"/>
         <result property="gmtCreate" column="gmt_create"/>
         <result property="gmtModified" column="gmt_modified"/>
         <result property="gmtProfessor" column="gmt_professor"/>
@@ -161,21 +163,14 @@
     </select>
 
 
-    <delete id="deleteImmunePlanModelByid" parameterType="BigInteger">
-        DELETE FROM
-        immune_plan
-        WHERE
-        id = #{id}
-    </delete>
-
-
     <update id="updateImmunePlanModelByProfessor" parameterType="com.deep.domain.model.ImmunePlanModel">
         UPDATE immune_plan
         SET  professor = #{immunePlanModel.professor},
         is_pass1 = #{immunePlanModel.isPass1},
         unpass_reason1 = #{immunePlanModel.unpassReason1},
         gmt_professor = #{immunePlanModel.gmtProfessor}
-        WHERE id = #{immunePlanModel.id}
+        WHERE
+        id = #{immunePlanModel.id}
     </update>
 
     <update id="updateImmunePlanModelBySupervisor" parameterType="com.deep.domain.model.ImmunePlanModel">
@@ -184,6 +179,49 @@
         is_pass2 = #{immunePlanModel.isPass2},
         unpass_reason2 = #{immunePlanModel.unpassReason2},
         gmt_supervise = #{immunePlanModel.gmtSupervise}
-        WHERE id = #{immunePlanModel.id}
+        WHERE
+        id = #{immunePlanModel.id}
     </update>
+
+
+    <update id="updateImmunePlanModelByOperator" parameterType="com.deep.domain.model.ImmunePlanModel">
+        UPDATE immune_plan
+        <set>
+            <if test="immunePlanModel.factoryNum != null and immunePlanModel.factoryNum != ''">
+                factory_num = #{immunePlanModel.factoryNum},
+            </if>
+            <if test="immunePlanModel.crowdNum != null and immunePlanModel.crowdNum != ''">
+                crowd_num = #{immunePlanModel.crowdNum},
+            </if>
+            <if test="immunePlanModel.immuneTime != null and immunePlanModel.immuneTime != ''">
+                immune_time = #{immunePlanModel.immuneTime},
+            </if>
+            <if test="immunePlanModel.immuneKind != null and immunePlanModel.immuneKind != ''">
+                immune_kind = #{immunePlanModel.immuneKind},
+            </if>
+            <if test="immunePlanModel.immuneWay != null and immunePlanModel.immuneWay != ''">
+                immune_way = #{immunePlanModel.immuneWay},
+            </if>
+            <if test="immunePlanModel.immuneQuality != null and immunePlanModel.immuneQuality != ''">
+                immune_quality = #{immunePlanModel.immuneQuality},
+            </if>
+            <if test="immunePlanModel.immuneDuring != null and immunePlanModel.immuneDuring != ''">
+                immune_during = #{immunePlanModel.immuneDuring},
+            </if>
+            <if test="immunePlanModel.remark != null and immunePlanModel.remark != ''">
+                remark = #{immunePlanModel.remark},
+            </if>
+
+        </set>
+        WHERE
+        id = #{immunePlanModel.id}
+    </update>
+
+
+    <delete id="deleteImmunePlanModelByid" parameterType="BigInteger">
+        DELETE FROM
+        immune_plan
+        WHERE
+        id = #{id}
+    </delete>
 </mapper>

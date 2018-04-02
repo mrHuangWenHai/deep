@@ -25,6 +25,12 @@ public class DisinfectFilesModel {
     private Timestamp gmtModified;     //修改时间
     private Timestamp gmtProfessor;     //审核时间 可空
     private Timestamp gmtSupervise;     //监督确认时间 可空
+
+    //用于判断操作 flag=00 为操作员建立数据提交时
+    //flag=01  专家已审核 专家可再修改 但是数据不进入redis  操作员可操作 监督员可操作 数据进入redis
+    //flag=10  监督员已审核 监督员可修改 ......
+    private int flag;
+
     //从前台传递的参数
     //目标:json格式
     private String disinfectTimeStart;
@@ -222,6 +228,14 @@ public class DisinfectFilesModel {
 
     public void setDisinfectTimeEnd(String disinfectTimeEnd) {
         this.disinfectTimeEnd = disinfectTimeEnd;
+    }
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
     }
 
     public int getPage() {

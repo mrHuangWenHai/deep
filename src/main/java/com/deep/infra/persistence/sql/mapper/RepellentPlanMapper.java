@@ -37,7 +37,7 @@ public interface RepellentPlanMapper {
     List<RepellentPlanModel> getRepellentPlanModelBySupervisor(@Param("isPass2") Integer isPass2,
                                                                RowBounds bounds);
 
-    RepellentPlanModel getRepellentModelByid(@Param("id") BigInteger id);
+    RepellentPlanModel getRepellentPlanModelByid(@Param("id") BigInteger id);
 
 
     int deleteRepellentPlanModelByid(@Param("id") BigInteger id);
@@ -45,5 +45,7 @@ public interface RepellentPlanMapper {
     int updateRepellentPlanModelByProfessor(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel);
 
     int updateRepellentPlanModelBySupervisor(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel);
+
+    int updateRepellentPlanModelByOperator(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel);
 
 }

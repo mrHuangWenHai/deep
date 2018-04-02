@@ -34,7 +34,8 @@
         )
     </insert>
     <resultMap id="RepellentPlan" type="com.deep.domain.model.RepellentPlanModel">
-        <id property="factoryNum" column="factory_num"/>
+        <id property="id" column="id"/>
+        <result property="factoryNum" column="factory_num"/>
         <result property="crowdNum" column="crowd_num"/>
         <result property="repellentEartag" column="repellent_eartag"/>
         <result property="repellentTime" column="repellent_time"/>
@@ -45,8 +46,10 @@
         <result property="professor" column="professor"/>
         <result property="supervisor" column="supervisor"/>
         <result property="remark" column="remark"/>
-        <result property="isPass" column="is_pass"/>
-        <result property="unpassReason" column="unpass_reason"/>
+        <result property="isPass1" column="is_pass1"/>
+        <result property="unpassReason1" column="unpass_reason1"/>
+        <result property="isPass2" column="is_pass2"/>
+        <result property="unpassReason2" column="unpass_reason2"/>
         <result property="gmtCreate" column="gmt_create"/>
         <result property="gmtModified" column="gmt_modified"/>
         <result property="gmtProfessor" column="gmt_professor"/>
@@ -151,12 +154,6 @@
         is_pass2 = #{isPass2}
     </select>
 
-    <delete id="deleteRepellentPlanModelByid" parameterType="BigInteger">
-        DELETE FROM
-        repellent_plan
-        WHERE
-        id = #{id}
-    </delete>
 
 
     <update id="updateRepellentPlanModelByProfessor" parameterType="com.deep.domain.model.RepellentPlanModel">
@@ -165,7 +162,8 @@
         is_pass1 = #{repellentPlanModel.isPass1},
         unpass_reason1 = #{repellentPlanModel.unpassReason1},
         gmt_professor = #{repellentPlanModel.gmtProfessor}
-        WHERE id = #{repellentPlanModel.id}
+        WHERE
+        id = #{repellentPlanModel.id}
     </update>
 
     <update id="updateRepellentPlanModelBySupervisor" parameterType="com.deep.domain.model.RepellentPlanModel">
@@ -174,6 +172,44 @@
         is_pass2 = #{repellentPlanModel.isPass2},
         unpass_reason2 = #{repellentPlanModel.unpassReason2},
         gmt_supervise = #{repellentPlanModel.gmtSupervise}
-        WHERE id = #{repellentPlanModel.id}
+        WHERE
+        id = #{repellentPlanModel.id}
     </update>
+
+    <update id="updateRepellentPlanModelByOperator" parameterType="com.deep.domain.model.RepellentPlanModel">
+        UPDATE repellent_plan
+        <set>
+            <if test="repellentPlanModel.factoryNum != null and repellentPlanModel.factoryNum != ''">
+                factory_num = #{repellentPlanModel.factoryNum},
+            </if>
+            <if test="repellentPlanModel.crowdNum != null and repellentPlanModel.crowdNum != ''">
+                crowd_num = #{repellentPlanModel.crowdNum},
+            </if>
+            <if test="repellentPlanModel.repellentTime != null and repellentPlanModel.repellentTime != ''">
+                repellent_time = #{repellentPlanModel.repellentTime},
+            </if>
+            <if test="repellentPlanModel.repellentName != null and repellentPlanModel.repellentName != ''">
+                repellent_name = #{repellentPlanModel.repellentName},
+            </if>
+            <if test="repellentPlanModel.repellentWay != null and repellentPlanModel.repellentWay != ''">
+                repellent_way = #{repellentPlanModel.repellentWay},
+            </if>
+            <if test="repellentPlanModel.repellentQuality != null and repellentPlanModel.repellentQuality != ''">
+                repellent_quality = #{repellentPlanModel.repellentQuality},
+            </if>
+            <if test="repellentPlanModel.remark != null and repellentPlanModel.remark != ''">
+                remark = #{repellentPlanModel.remark}
+            </if>
+
+        </set>
+        WHERE
+        id = #{repellentPlanModel.id}
+    </update>
+
+    <delete id="deleteRepellentPlanModelByid" parameterType="BigInteger">
+        DELETE FROM
+        repellent_plan
+        WHERE
+        id = #{id}
+    </delete>
 </mapper>

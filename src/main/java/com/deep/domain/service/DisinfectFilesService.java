@@ -67,6 +67,11 @@ public class DisinfectFilesService {
         return row;
     }
 
+    public int updateDisinfectFilesModelByOperator(DisinfectFilesModel disinfectFilesModel){
+        int row = this.disinfectFilesMapper.updateDisinfectFilesModelByOperator(disinfectFilesModel);
+        return row;
+    }
+
 
 
     public int deleteDisinfectFilesModelByid(BigInteger id){

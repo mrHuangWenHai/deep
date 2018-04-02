@@ -69,6 +69,10 @@ public class ImmunePlanService {
         return row;
     }
 
+    public int updateImmunePlanModelByOperator(ImmunePlanModel immunePlanModel){
+        int row = this.immunePlanMapper.updateImmunePlanModelByOperator(immunePlanModel);
+        return row;
+    }
 
 
     public int deleteImmunePlanModelByid(BigInteger id){

@@ -30,7 +30,8 @@
         )
     </insert>
     <resultMap id="DisinfectFiles" type="com.deep.domain.model.DisinfectFilesModel">
-        <id property="factoryNum" column="factory_num"/>
+        <id property="id" column="id"/>
+        <result property="factoryNum" column="factory_num"/>
         <result property="disinfectTime" column="disinfect_time"/>
         <result property="disinfectName" column="disinfect_name"/>
         <result property="disinfectQuality" column="disinfect_quality"/>
@@ -166,7 +167,8 @@
         is_pass1 = #{disinfectFilesModel.isPass1},
         unpass_reason1 = #{disinfectFilesModel.unpassReason1},
         gmt_professor = #{disinfectFilesModel.gmtProfessor}
-        WHERE id = #{disinfectFilesModel.id}
+        WHERE
+        id = #{disinfectFilesModel.id}
     </update>
 
     <update id="updateDisinfectFilesModelBySupervisor">
@@ -175,7 +177,35 @@
         is_pass2 = #{disinfectFilesModel.isPass2},
         unpass_reason2 = #{disinfectFilesModel.unpassReason2},
         gmt_supervise = #{disinfectFilesModel.gmtSupervise}
-        WHERE id = #{disinfectFilesModel.id}
+        WHERE
+        id = #{disinfectFilesModel.id}
+    </update>
+
+    <update id="updateDisinfectFilesModelByOperator">
+        UPDATE disinfection_files
+        <set>
+            <if test="disinfectFilesModel.factoryNum != null and disinfectFilesModel.factoryNum != ''">
+                factory_num = #{disinfectFilesModel.factoryNum},
+            </if>
+            <if test="disinfectFilesModel.disinfectTime != null and disinfectFilesModel.disinfectTime != ''">
+                disinfect_time = #{disinfectFilesModel.disinfectTime},
+            </if>
+            <if test="disinfectFilesModel.disinfectName != null and disinfectFilesModel.disinfectName != ''">
+                disinfect_name = #{disinfectFilesModel.disinfectName},
+            </if>
+            <if test="disinfectFilesModel.disinfectQuality != null and disinfectFilesModel.disinfectQuality != ''">
+                disinfect_quality = #{disinfectFilesModel.disinfectQuality},
+            </if>
+            <if test="disinfectFilesModel.disinfectWay != null and disinfectFilesModel.disinfectWay != ''">
+                disinfect_way = #{disinfectFilesModel.disinfectWay},
+            </if>
+            <if test="disinfectFilesModel.remark != null and disinfectFilesModel.remark != ''">
+                remark = #{disinfectFilesModel.remark},
+            </if>
+
+        </set>
+        WHERE
+        id = #{disinfectFilesModel.id}
     </update>
 
     <delete id="deleteDisinfectFilesModelByid" >
