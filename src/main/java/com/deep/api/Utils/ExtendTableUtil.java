@@ -28,6 +28,7 @@ public class ExtendTableUtil {
      * 创建一张数据表
      */
     public static boolean createTable(String tableName, Map<String, String> colnums) {
+        // TODO need to verify the tableName(Like the 2018-4-1 is invalid!)
         if (colnums == null) {
             System.out.println("column is null");
             return false;
@@ -48,6 +49,7 @@ public class ExtendTableUtil {
                     + getColnums
                     + "id int auto_increment"
                     + ", PRIMARY KEY(id))charset=utf8;";
+            System.out.println(creatSql);
             if (0 == statement.executeLargeUpdate(creatSql)) {
                 System.out.println("成功创建表");
             } else {

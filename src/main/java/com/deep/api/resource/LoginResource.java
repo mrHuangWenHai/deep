@@ -32,10 +32,6 @@ public class LoginResource {
     /**
      * 用户登录验证并且返回结果
      * @param userModelTest 用户登录加的模型
-     * {
-     *                      "pkUserid": "00004",
-     *                      "userPwd": "123456"
-     * }
      * @return0
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -78,7 +74,6 @@ public class LoginResource {
     /**
      *  通过电话号码找回并且返回相关的数据
      * @param usernameP 用户名
-     *                  "usernameP": "00004"
      * @return
      */
     @RequestMapping(value = "/phonefind")
@@ -197,35 +192,45 @@ public class LoginResource {
      */
     @PostMapping(value = "/ensurequestion")
     public Response EnsureQuestion(@RequestBody UserModel userModel){
-        Response response;
         if (userModel == null) {
             return Responses.errorResponse("error!");
         }
         String username = userModel.getPkUserid();
         UserModel user = userService.getUserByPkuserID(username);
-        if (user == null) {
+        if (user == null || userModel.getAnswer_3().equals("") || userModel.getAnswer_2().equals("") || userModel.getAnswer_1().equals("")) {
             return Responses.errorResponse("error");
         }
         if (userModel.getAnswer_1().equals(user.getAnswer_1()) &&
                 userModel.getAnswer_2().equals(user.getAnswer_2()) &&
-                    userModel.getAnswer_3().equals(user.getAnswer_3())){
-            user.setUserPwd(userModel.getUserPwd());
-            Long updateID = userService.updateUser(user);
-            if (updateID <= 0) {
-                return Responses.errorResponse("error");
-            }
-            response = Responses.successResponse();
-            HashMap<String, Object> data = new HashMap<>();
-            data.put("errorMessage", "valid success");
-            response.setData(data);
-        }else {
-            response = Responses.errorResponse("valid error");
-            HashMap<String, Object> data = new HashMap<>();
-            data.put("errorMessage", "valid error");
-            response.setData(data);
+                    userModel.getAnswer_3().equals(user.getAnswer_3())) {
+            JedisUtil.setValue("Identify" + username,"Success");
+            JedisUtil.doExpire("Identify" + username);
         }
-        return response;
+        return Responses.successResponse();
     }
+
+    // 只需要密碼
+    @PostMapping(value = "repassword")
+    public Response RePassword(@RequestBody UserModel userModel){
+        if (!"Success".equals(JedisUtil.getValue("Identify" + userModel.getPkUserid()))){
+            return Responses.errorResponse("No Authtication");
+        }else {
+            UserModel user = userService.getUserByPkuserID(userModel.getPkUserid());
+            if (user == null) {
+                return Responses.errorResponse("error");
+            } else {
+                user.setUserPwd(userModel.getUserPwd());
+                Long updateID = userService.updateUser(user);
+                if (updateID <= 0) {
+                    return Responses.errorResponse("error!");
+                } else {
+                    return Responses.successResponse();
+                }
+            }
+        }
+    }
+
+
 
     /**
      * user logout for himself

@@ -258,4 +258,13 @@ public interface UserMapper {
      */
     @Delete("delete from user_manage where id = #{id}")
     Long deleteUser(Long userID);
+
+    /**
+     * 修改用户密码
+     * @param userPwd
+     * @param username
+     * @return
+     */
+    @Update("update user_manage set user_pwd = #{userPwd} where username = #{username}")
+    Long updateUserPwd(String userPwd, String username);
 }

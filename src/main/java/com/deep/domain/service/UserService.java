@@ -265,4 +265,13 @@ public class UserService {
         userLogin.setUserFactory(factoryOrAgentMapper);
         return userLogin;
     }
+
+    /**
+     * 修改用户密码
+     * @param userPwd
+     * @return
+     */
+    public Long updateUserPwd(String userPwd, String username) {
+        return userMapper.updateUserPwd(userPwd, username);
+    }
 }
