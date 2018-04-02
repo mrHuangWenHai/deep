@@ -1,18 +1,16 @@
 package com.deep.api.resource;
 
+import com.deep.api.Utils.StringToLongUtil;
 import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.RoleModel;
 import com.deep.domain.service.RoleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.awt.print.Pageable;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -30,29 +28,17 @@ public class RoleResource {
     @Permit(modules = "role")
     @GetMapping(value = "/")
     public Response roleLists() {
+        List<RoleModel> roleModels = roleService.getAll();
+        if (roleModels.size() <= 0) {
+            return Responses.errorResponse("获取角色信息失败");
+        }
         Response response = Responses.successResponse();
-
         HashMap<String, Object> data = new HashMap<>();
-        data.put("allRole", roleService.getAll());
+        data.put("allRole", roleModels);
+        data.put("number", roleModels.size());
         response.setData(data);
-
         return response;
     }
-
-    /**
-     * 角色管理
-     * @return
-     */
-//    @Permit(modules = "role")
-//    @GetMapping("role")
-//    public ModelAndView showAddRole() {
-//        List<RoleUserEntity> roleUserEntities = roleRepository.findAll();
-//
-//        String viewName = "addRole";
-//        ModelAndView modelAndView = new ModelAndView(viewName);
-//        modelAndView.addObject("allRole", roleUserEntities);
-//        return modelAndView;
-//    }
 
     /**
      * 添加一个角色
@@ -61,26 +47,21 @@ public class RoleResource {
      * @return
      */
     @Permit(modules = "role")
-    @PostMapping(value = "")
-    public Response addRole(@Valid RoleModel roleModel, BindingResult bindingResult) {
+    @PostMapping(value = "/add")
+    public Response addRole(@Valid @RequestBody RoleModel roleModel, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("添加角色出错,请检查网络后重试");
         } else {
-            // 各个角色的名称,不能重复
-            roleModel.setTypeName(roleModel.getTypeName());
-            // 各个角色的代码,不能重复
-            roleModel.setPkTypeid(roleModel.getPkTypeid());
-            // 各个角色的默认权限
-            roleModel.setDefaultPermit(roleModel.getDefaultPermit());
             roleModel.setGmtCreate(new Timestamp(System.currentTimeMillis()));
             roleModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
-
+            Long addId = roleService.addRole(roleModel);
+            if (addId <= 0) {
+                return Responses.errorResponse("添加失败");
+            }
             Response response = Responses.successResponse();
-
             HashMap<String, Object> data = new HashMap<>();
-            data.put("oneAgent", roleService.addRole(roleModel));
+            data.put("oneAgent", addId);
             response.setData(data);
-
             return response;
         }
     }
@@ -91,14 +72,20 @@ public class RoleResource {
      * @return
      */
     @Permit(modules = "role")
-    @GetMapping(value = "/{id:\\d+}")
-    public Response findRole(@PathVariable("id")Long id) {
+    @GetMapping(value = "/{id}")
+    public Response findRole(@PathVariable("id")String id) {
+        long uid = StringToLongUtil.stringToLong(id);
+        if (uid == -1) {
+            return Responses.errorResponse("查询错误");
+        }
+        RoleModel roleModel = roleService.getOneRole(uid);
+        if (roleModel == null) {
+            return Responses.errorResponse("查询失败");
+        }
         Response response = Responses.successResponse();
-
         HashMap<String, Object> data = new HashMap<>();
-        data.put("oneAgent", roleService.getOneRole(id));
+        data.put("oneAgent", roleModel);
         response.setData(data);
-
         return response;
     }
 
@@ -107,46 +94,53 @@ public class RoleResource {
      * @param id
      */
     @Permit(modules = "role")
-    @DeleteMapping(value = "/{id:\\d+}")
-    public Response deleteRole(@PathVariable("id")Long id) {
+    @DeleteMapping(value = "/{id}")
+    public Response deleteRole(@PathVariable("id")String id) {
+        long uid = StringToLongUtil.stringToLong(id);
+        if (uid == -1) {
+            return Responses.errorResponse("查询错误");
+        }
+        Long deleteID = roleService.deleteRole(uid);
+        if (deleteID <= 0) {
+            return Responses.errorResponse("删除失败");
+        }
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
-        data.put("oneAgent", roleService.deleteRole(id));
+        data.put("oneAgent", deleteID);
         response.setData(data);
         return response;
     }
 
     /**
      * 修改权限方法
-     * @param id
-     * @param pkTypeid
-     * @param typeName
-     * @param defaultPermit
+     * @param roleModel
      * @return
      */
     @Permit(modules = "role")
-    @PutMapping(value = "/{id:\\d+}")
-    public Response roleUpdate(
-            @PathVariable("id")Long id,
-            @PathVariable("pkTypeid")Long pkTypeid,
-            @PathVariable("typeName")String typeName,
-            @PathVariable("defaultPermit")Long defaultPermit, BindingResult bindingResult
+    @PutMapping(value = "/{id}")
+    public Response roleUpdate(@RequestBody @Valid RoleModel roleModel, @PathVariable("id") String id, BindingResult bindingResult
     ) {
+        long uid = StringToLongUtil.stringToLong(id);
+        if (uid == -1) {
+            return Responses.errorResponse("查询错误");
+        }
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("修改角色失败");
         }
-
-        RoleModel roleModel = new RoleModel();
-
-        roleModel.setDefaultPermit(defaultPermit);
-        roleModel.setTypeName(typeName);
-        roleModel.setPkTypeid(pkTypeid);
-        roleModel.setId(id);
+        RoleModel middle = roleService.getOneRole(uid);
+        if (middle == null) {
+            return Responses.errorResponse("修改失败");
+        }
+        roleModel.setId(uid);
+        roleModel.setGmtCreate(middle.getGmtCreate());
         roleModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
+        Long updateId = roleService.updateRole(roleModel);
+        if (updateId <= 0) {
+            return Responses.errorResponse("修改失败");
+        }
         Response response = Responses.successResponse();
-
         HashMap<String, Object> data = new HashMap<>();
-        data.put("oneUser", roleService.updateRole(roleModel));
+        data.put("oneUser", updateId);
         response.setData(data);
         return response;
     }

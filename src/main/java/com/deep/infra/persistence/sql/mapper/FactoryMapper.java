@@ -64,17 +64,17 @@ public interface FactoryMapper {
             "responsible_personid," +
             "remark," +
             "disnfect_p," +
-            "agent," +
+            "agent" +
             ") values(" +
-            "#{gmtCreate}" +
-            "#{gmtModofied}" +
-            "#{pkNumber}" +
-            "#{breadName}" +
-            "#{breadLocation}" +
-            "#{createTime}" +
-            "#{responsiblePersonid}" +
-            "#{remark}" +
-            "#{disnfectP}" +
+            "#{gmtCreate}, " +
+            "#{gmtModofied}, " +
+            "#{pkNumber}, " +
+            "#{breadName}, " +
+            "#{breadLocation}, " +
+            "#{createTime}, " +
+            "#{responsiblePersonid}, " +
+            "#{remark}, " +
+            "#{disnfectP}, " +
             "#{agent})")
     Long insertFactory(FactoryModel factoryModel);
 
@@ -83,7 +83,7 @@ public interface FactoryMapper {
      * @param factoryModel
      * @return
      */
-    @Update("update factory_manage set" +
+    @Update("update factory_manage set " +
             "gmt_create = #{gmtCreate}, " +
             "gmt_modified = #{gmtModofied}, " +
             "pk_number = #{pkNumber}, " +

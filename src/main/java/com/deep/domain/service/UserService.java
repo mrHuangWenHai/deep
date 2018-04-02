@@ -4,7 +4,6 @@ import com.deep.api.authorization.tools.RoleAndPermit;
 import com.deep.domain.model.AgentModel;
 import com.deep.domain.model.FactoryModel;
 import com.deep.domain.model.UserModel;
-import com.deep.infra.persistence.sql.mapper.RoleMapper;
 import com.deep.infra.persistence.sql.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 
@@ -164,7 +163,9 @@ public class UserService {
     public RoleAndPermit findRoleByUserID(long id) {
         RoleAndPermit roleAndPermit = new RoleAndPermit();
         UserModel userModel = userMapper.queryUserById(id);
-
+        if (userModel == null) {
+            return null;
+        }
         roleAndPermit.setRole(userModel.getUserRole());
         roleAndPermit.setExtended(userModel.getIsExtended());
         roleAndPermit.setExtendedPermit(userModel.getUserPermit());
@@ -212,32 +213,34 @@ public class UserService {
      */
     public UserLogin findOneUser(long id) {
         UserModel userModel = userMapper.queryUserById(id);
+        if (userModel == null) {
+            return null;
+        }
         UserLogin userLogin = new UserLogin();
-        Map map = new HashMap();
-        Map mapper;
-        Map mapperFactory = new HashMap();
-
+        // 用户角色信息
+        Map roleMapper = new HashMap();
+        // 用户权限信息
+        Map permitMapper = new HashMap();
+        // 用户代理羊场信息
+        Map factoryOrAgentMapper = new HashMap();
         userLogin.setId(userModel.getId());
         userLogin.setPkUserid(userModel.getPkUserid());
         userLogin.setUserPic(userModel.getUserPic());
         userLogin.setUserPwd(userModel.getUserPwd());
-
         // 角色名称
         String roleName = roleService.getOneRoleByRolePkTypeID(userModel.getUserRole()).getTypeName();
-        map.put("roleName", roleName);
-        map.put("roleNum", userModel.getUserRole());
-        userLogin.setUserRole(map);
+        roleMapper.put("roleName", roleName);
+        roleMapper.put("roleNum", userModel.getUserRole());
+        userLogin.setUserRole(roleMapper);
 
-        mapper = roleService.findRolePermits(userModel.getUserRole());
-
+        permitMapper = roleService.findRolePermits(userModel.getUserRole());
         // 判断是否有拓展权限
         if (userModel.getIsExtended() == 0) {
             // 没有拓展权限
         } else {
-            mapper = roleService.findExtendPermit(mapper, userModel.getUserPermit());
+            permitMapper = roleService.findExtendPermit(permitMapper, userModel.getUserPermit());
         }
-
-        userLogin.setUserPermit(mapper);
+        userLogin.setUserPermit(permitMapper);
 
         int isFactory = userModel.getIsFactory();
         long factoryId = userModel.getUserFactory();
@@ -246,16 +249,29 @@ public class UserService {
         if (isFactory == 0) {
             // 代表羊场
             FactoryModel factoryModel = factoryService.getOneFactory(factoryId);
-            mapperFactory.put("factoryNum", factoryModel.getId());
-            mapperFactory.put("factoryName",factoryModel.getBreadName());
+            if (factoryModel != null) {
+                factoryOrAgentMapper.put("factoryNum", factoryModel.getId());
+                factoryOrAgentMapper.put("factoryName",factoryModel.getBreadName());
+            }
         } else if (isFactory == 1){
             // 代表代理
             AgentModel agentModel = agentService.getOneAgent(factoryId);
-            mapperFactory.put("agentNum", agentModel.getId());
-            mapperFactory.put("agentName", agentModel.getAgentName());
-            mapperFactory.put("agentArea", agentModel.getAgentArea());
+            if (agentModel != null) {
+                factoryOrAgentMapper.put("agentNum", agentModel.getId());
+                factoryOrAgentMapper.put("agentName", agentModel.getAgentName());
+                factoryOrAgentMapper.put("agentArea", agentModel.getAgentArea());
+            }
         }
-        userLogin.setUserFactory(mapperFactory);
+        userLogin.setUserFactory(factoryOrAgentMapper);
         return userLogin;
+    }
+
+    /**
+     * 修改用户密码
+     * @param userPwd
+     * @return
+     */
+    public Long updateUserPwd(String userPwd, String username) {
+        return userMapper.updateUserPwd(userPwd, username);
     }
 }

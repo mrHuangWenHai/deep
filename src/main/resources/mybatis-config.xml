@@ -9,7 +9,6 @@
     </typeAliases>
     <mappers>
         <mapper resource="mapper/TestMapper.xml"/>
-
         <mapper class="com.deep.infra.persistence.sql.mapper.UserMapper"/>
         <mapper resource="mapper/BreedingPlanMapper.xml"/>
         <mapper resource="mapper/DiagnosisPlanMapper.xml"/>

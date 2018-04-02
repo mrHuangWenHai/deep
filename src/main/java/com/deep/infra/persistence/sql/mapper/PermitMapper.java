@@ -62,7 +62,7 @@ public interface PermitMapper {
      * @param permitModel
      * @return
      */
-    @Update("update permit_manage set" +
+    @Update("update permit_manage set " +
             "gmt_create = #{gmtCreate}, " +
             "gmt_modified = #{gmtModified}, " +
             "permit_id = #{permitId}, " +

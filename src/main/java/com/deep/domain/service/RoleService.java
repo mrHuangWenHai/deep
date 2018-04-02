@@ -30,14 +30,17 @@ public class RoleService {
      * @return
      */
     public RoleModel getOneRole(Long id) {
-//        System.out.println(roleMapper.queryRoleById(id));
         System.out.println(id);
         System.out.println(roleMapper.queryRoleById(id).getDefaultPermit());
         System.out.println(roleMapper.queryRoleById(id).getTypeName());
         return roleMapper.queryRoleById(id);
     }
 
-    // 根据pktypeID获取相应的单个角色的信息
+    /**
+     * 根据pktypeID获取相应的单个角色的信息
+     * @param id
+     * @return
+     */
     public RoleModel getOneRoleByRolePkTypeID(Long id) {
         System.out.println(id);
         return roleMapper.queryRoleByPkTypeId(id);
@@ -130,6 +133,4 @@ public class RoleService {
 
         return map;
     }
-
-
 }

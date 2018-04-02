@@ -80,7 +80,7 @@ public interface RoleMapper {
      * @param roleModel
      * @return
      */
-    @Update("update role_user set" +
+    @Update("update role_user set " +
             "gmt_create = #{gmtCreate}, " +
             "gmt_modified = #{gmtModified}, " +
             "pk_typeid = #{pkTypeid}, " +
