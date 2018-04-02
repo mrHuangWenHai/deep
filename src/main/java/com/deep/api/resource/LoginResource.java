@@ -203,8 +203,6 @@ public class LoginResource {
         if (userModel.getAnswer_1().equals(user.getAnswer_1()) &&
                 userModel.getAnswer_2().equals(user.getAnswer_2()) &&
                     userModel.getAnswer_3().equals(user.getAnswer_3())) {
-//            JedisUtil.setValue("Identify" + username,"Success");
-//            JedisUtil.doExpire("Identify" + username);
             user.setUserPwd(userModel.getUserPwd());
             Long updateID = userService.updateUser(user);
             if (updateID <= 0) {
@@ -215,29 +213,6 @@ public class LoginResource {
         }
         return Responses.errorResponse("问题答案错误!");
     }
-
-    // 只需要密碼
-    @PostMapping(value = "/repassword")
-    public Response RePassword(@RequestBody UserModel userModel){
-        if (!"Success".equals(JedisUtil.getValue("Identify" + userModel.getPkUserid()))){
-            return Responses.errorResponse("No Authtication");
-        }else {
-            UserModel user = userService.getUserByPkuserID(userModel.getPkUserid());
-            if (user == null) {
-                return Responses.errorResponse("error");
-            } else {
-                user.setUserPwd(userModel.getUserPwd());
-                Long updateID = userService.updateUser(user);
-                if (updateID <= 0) {
-                    return Responses.errorResponse("error!");
-                } else {
-                    return Responses.successResponse();
-                }
-            }
-        }
-    }
-
-
 
     /**
      * user logout for himself
