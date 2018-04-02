@@ -14,6 +14,7 @@ import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "agent")
@@ -144,4 +145,33 @@ public class AgentResource {
             return response;
         }
     }
+
+    /**
+     * 根据代理的主键获取其所有的子代理
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/sons/{id}")
+    public Response AgentsSon(@PathVariable("id") String id) {
+        int agentID = StringToLongUtil.stringToInt(id);
+        if (agentID != -1) {
+            return Responses.errorResponse("error");
+        } else {
+            List<AgentModel> agentModels = agentService.getSons(agentID);
+            if (agentModels.size() > 0) {
+                Response response = Responses.successResponse();
+                Map<String, Object> data = new HashMap<>();
+                data.put("sons", agentModels);
+                data.put("size", agentModels.size());
+                response.setData(data);
+                return response;
+            }
+            return Responses.errorResponse("error");
+        }
+    }
+
+//    @GetMapping(value = "/father/{id}")
+//    public Response AgentFather(@PathVariable("id") String id) {
+//        int agentID = StringToLongUtil.stringToInt(id);
+//    }
 }

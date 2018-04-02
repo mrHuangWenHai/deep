@@ -23,6 +23,38 @@ public interface AgentMapper {
     List<AgentModel> queryAllAgent();
 
     /**
+     * 获取所有的子代理
+     * @param id
+     * @return
+     */
+    @Select("select * from agent_factory where agent_father = #{id}")
+    @Results ({
+            @Result(property = "id", column = "id"),
+            @Result(property = "gmtCreate", column = "gmt_create"),
+            @Result(property = "gmtModified", column = "gmt_modified"),
+            @Result(property = "agentName", column = "agent_name"),
+            @Result(property = "agentArea", column = "agent_area"),
+            @Result(property = "agentFather", column = "agent_father")
+    })
+    List<AgentModel> getSons(int id);
+
+    /**
+     * 获取上级代理
+     * @param id
+     * @return
+     */
+    @Select("select * from agent_factory where id = #{id}")
+    @Results ({
+            @Result(property = "id", column = "id"),
+            @Result(property = "gmtCreate", column = "gmt_create"),
+            @Result(property = "gmtModified", column = "gmt_modified"),
+            @Result(property = "agentName", column = "agent_name"),
+            @Result(property = "agentArea", column = "agent_area"),
+            @Result(property = "agentFather", column = "agent_father")
+    })
+    AgentModel getFather(int id);
+
+    /**
      * 根据ID获取单个代理
      * @param id
      * @return
