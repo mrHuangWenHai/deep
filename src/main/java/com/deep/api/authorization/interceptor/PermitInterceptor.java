@@ -1,10 +1,8 @@
 package com.deep.api.authorization.interceptor;
 
 import com.deep.api.authorization.annotation.Permit;
-import com.deep.api.authorization.token.TokenManager;
 import com.deep.api.authorization.token.TokenManagerRealization;
 import com.deep.api.authorization.tools.Constants;
-import com.deep.domain.service.UserService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -20,10 +18,6 @@ import java.util.Set;
 
 @Component
 public class PermitInterceptor extends HandlerInterceptorAdapter{
-    @Resource
-    private TokenManager tokenManager;
-    @Resource
-    private UserService userService;
     @Resource
     private TokenManagerRealization tokenManagerRealization;
     // static修饰的代码块在类进行初始化的时候肯定会执行
