@@ -170,8 +170,26 @@ public class AgentResource {
         }
     }
 
-//    @GetMapping(value = "/father/{id}")
-//    public Response AgentFather(@PathVariable("id") String id) {
-//        int agentID = StringToLongUtil.stringToInt(id);
-//    }
+    /**
+     * 获取上级代理操作
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/father/{id}")
+    public Response AgentFather(@PathVariable("id") String id) {
+        int agentID = StringToLongUtil.stringToInt(id);
+        if (agentID != -1) {
+            return Responses.errorResponse("error");
+        } else {
+            AgentModel agentModel = agentService.getFather(agentID);
+            if (agentModel == null) {
+                Response response = Responses.successResponse();
+                Map<String, Object> data = new HashMap<>();
+                data.put("father", agentModel);
+                response.setData(data);
+                return response;
+            }
+            return Responses.errorResponse("error");
+        }
+    }
 }

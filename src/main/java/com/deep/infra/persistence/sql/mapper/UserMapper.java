@@ -1,6 +1,7 @@
 package com.deep.infra.persistence.sql.mapper;
 
 import com.deep.domain.model.UserModel;
+import com.deep.domain.service.UserService;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -267,4 +268,21 @@ public interface UserMapper {
      */
     @Update("update user_manage set user_pwd = #{userPwd} where username = #{username}")
     Long updateUserPwd(String userPwd, String username);
+
+    /**
+     * 获取某一类专家
+     * @param roleID
+     * @return
+     */
+    @Select("select id, pk_userid, user_telephone, user_role, user_email, official_phone, QQ from user_manage where user_role = #{roleID}")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "pkUserid", column = "pk_userid"),
+            @Result(property = "userTelephone", column = "user_telephone"),
+            @Result(property = "userRole", column = "user_role"),
+            @Result(property = "userEmail", column = "user_email"),
+            @Result(property = "officialPhone", column = "official_phone"),
+            @Result(property = "QQ", column = "QQ")
+    })
+    List<UserService.UserRole> getOneRoles(long roleID);
 }

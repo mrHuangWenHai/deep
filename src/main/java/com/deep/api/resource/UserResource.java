@@ -3,6 +3,7 @@ package com.deep.api.resource;
 import com.deep.api.Utils.ExcelData;
 import com.deep.api.Utils.ExportExcelUtil;
 import com.deep.api.Utils.StringToLongUtil;
+import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.UserModel;
@@ -31,11 +32,11 @@ public class UserResource {
      * 查找所有的用户列表
      * @return 返回所有的用户信息
      */
-//    @Permit(modules = {
-//            "dongxiang_factory_administrator", "total_system_administrator", "province_agent_total_administrator",
-//            "province_agent_administrator", "city_agent_total_administrator", "city_agent_administrator",
-//            "county_agent_total_administrator", "county_agent_administrator", "sheep_farm_administrator",
-//    })
+    @Permit(modules = {
+            "dongxiang_factory_administrator", "total_system_administrator", "province_agent_total_administrator",
+            "province_agent_administrator", "city_agent_total_administrator", "city_agent_administrator",
+            "county_agent_total_administrator", "county_agent_administrator", "sheep_farm_administrator",
+    })
     @GetMapping(value = "user/")
     public Response userList() {
         List<UserModel> userLists = userService.getAll();
@@ -55,15 +56,15 @@ public class UserResource {
      * @param id 获取用户的信息(简略信息)
      * @return
      */
-//    @Permit(modules = {
-//            "dongxiang_factory_administrator", "total_system_administrator", "province_agent_total_administrator",
-//            "province_agent_administrator", "city_agent_total_administrator", "city_agent_administrator",
-//            "county_agent_total_administrator", "county_agent_administrator", "sheep_farm_administrator",
-//            "dongxiang_factory_expert", "dongxiang_factory_technician", "province_agent_expert",
-//            "province_agent_technician", "city_agent_expert", "city_agent_technician",
-//            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
-//            "sheep_farm_supervisor", "tourist", "others"
-//    })
+    @Permit(modules = {
+            "dongxiang_factory_administrator", "total_system_administrator", "province_agent_total_administrator",
+            "province_agent_administrator", "city_agent_total_administrator", "city_agent_administrator",
+            "county_agent_total_administrator", "county_agent_administrator", "sheep_farm_administrator",
+            "dongxiang_factory_expert", "dongxiang_factory_technician", "province_agent_expert",
+            "province_agent_technician", "city_agent_expert", "city_agent_technician",
+            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
+            "sheep_farm_supervisor"
+    })
     @GetMapping(value = "user/{id}")
     public Response getUserOne(@PathVariable("id")String id) {
         long uid = StringToLongUtil.stringToLong(id);
@@ -86,15 +87,15 @@ public class UserResource {
      * @param id 获取用户的信息(简略信息)
      * @return
      */
-//    @Permit(modules = {
-//            "dongxiang_factory_administrator", "total_system_administrator", "province_agent_total_administrator",
-//            "province_agent_administrator", "city_agent_total_administrator", "city_agent_administrator",
-//            "county_agent_total_administrator", "county_agent_administrator", "sheep_farm_administrator",
-//            "dongxiang_factory_expert", "dongxiang_factory_technician", "province_agent_expert",
-//            "province_agent_technician", "city_agent_expert", "city_agent_technician",
-//            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
-//            "sheep_farm_supervisor", "tourist", "others"
-//    })
+    @Permit(modules = {
+            "dongxiang_factory_administrator", "total_system_administrator", "province_agent_total_administrator",
+            "province_agent_administrator", "city_agent_total_administrator", "city_agent_administrator",
+            "county_agent_total_administrator", "county_agent_administrator", "sheep_farm_administrator",
+            "dongxiang_factory_expert", "dongxiang_factory_technician", "province_agent_expert",
+            "province_agent_technician", "city_agent_expert", "city_agent_technician",
+            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
+            "sheep_farm_supervisor", "others"
+    })
     @GetMapping(value = "user/detail/{id}")
     public Response getUserOneDetail(@PathVariable("id") String id) {
         long uid = StringToLongUtil.stringToLong(id);
@@ -117,15 +118,15 @@ public class UserResource {
      * @param realname
      * @return
      */
-//    @Permit(modules = {
-//            "dongxiang_factory_administrator", "total_system_administrator", "province_agent_total_administrator",
-//            "province_agent_administrator", "city_agent_total_administrator", "city_agent_administrator",
-//            "county_agent_total_administrator", "county_agent_administrator", "sheep_farm_administrator",
-//            "dongxiang_factory_expert", "dongxiang_factory_technician", "province_agent_expert",
-//            "province_agent_technician", "city_agent_expert", "city_agent_technician",
-//            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
-//            "sheep_farm_supervisor", "tourist", "others"
-//    })
+    @Permit(modules = {
+            "dongxiang_factory_administrator", "total_system_administrator", "province_agent_total_administrator",
+            "province_agent_administrator", "city_agent_total_administrator", "city_agent_administrator",
+            "county_agent_total_administrator", "county_agent_administrator", "sheep_farm_administrator",
+            "dongxiang_factory_expert", "dongxiang_factory_technician", "province_agent_expert",
+            "province_agent_technician", "city_agent_expert", "city_agent_technician",
+            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
+            "sheep_farm_supervisor"
+    })
     @GetMapping(value = "user/name/{realname}")
     public Response getUserByUserRealname(@PathVariable("realname") String realname) {
         UserModel userModel = userService.getUserByUserRealnameLike(realname);
@@ -302,6 +303,13 @@ public class UserResource {
         response.setData(data);
         return response;
     }
+
+    /**
+     * 导出Excel表格
+     * @param httpServletResponse
+     * @return
+     * @throws Exception
+     */
     @GetMapping(value = "/user/excel")
     public Response exportExcel(HttpServletResponse httpServletResponse) throws Exception{
         ExcelData data = new ExcelData();
@@ -325,5 +333,28 @@ public class UserResource {
         // TODO 应该继续封装模板
         ExportExcelUtil.exportExcel(httpServletResponse,"user.xlsx",data);
         return Responses.successResponse();
+    }
+
+    /**
+     * 获取某一类专家接口
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/user/high/{id}")
+    public Response getRolesOfProfessor(@PathVariable("id") String id) {
+        long uid = StringToLongUtil.stringToLong(id);
+        if (uid == -1) {
+            return Responses.errorResponse("error!");
+        }
+        List<UserService.UserRole> userModels = userService.getRoles(uid);
+        if (userModels.size() <= 0) {
+            return Responses.errorResponse("error!");
+        }
+        Response response = Responses.successResponse();
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("data", userModels);
+        data.put("size", userModels.size());
+        response.setData(data);
+        return response;
     }
 }

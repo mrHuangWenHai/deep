@@ -97,6 +97,82 @@ public class UserService {
         }
     }
 
+    public class UserRole {
+        private long id;;                      // 用户表的主键
+        private String pkUserid;               // 用户名
+        private long userRole;
+        private String userEmail;
+        private String QQ;
+        private String officialPhone;
+        private String userTelephone;
+
+        public String getUserTelephone() {
+            return userTelephone;
+        }
+
+        public void setUserTelephone(String userTelephone) {
+            this.userTelephone = userTelephone;
+        }
+
+        public long getId() {
+            return id;
+        }
+
+        public void setId(long id) {
+            this.id = id;
+        }
+
+        public String getPkUserid() {
+            return pkUserid;
+        }
+
+        public void setPkUserid(String pkUserid) {
+            this.pkUserid = pkUserid;
+        }
+
+        public long getUserRole() {
+            return userRole;
+        }
+
+        public void setUserRole(long userRole) {
+            this.userRole = userRole;
+        }
+
+        public String getUserEmail() {
+            return userEmail;
+        }
+
+        public void setUserEmail(String userEmail) {
+            this.userEmail = userEmail;
+        }
+
+        public String getQQ() {
+            return QQ;
+        }
+
+        public void setQQ(String QQ) {
+            this.QQ = QQ;
+        }
+
+        public String getOfficialPhone() {
+            return officialPhone;
+        }
+
+        public void setOfficialPhone(String officialPhone) {
+            this.officialPhone = officialPhone;
+        }
+
+        public UserRole(long id, String pkUserid, long userRole, String userEmail, String QQ, String officialPhone, String userTelephone) {
+            this.id = id;
+            this.pkUserid = pkUserid;
+            this.userRole = userRole;
+            this.userEmail = userEmail;
+            this.QQ = QQ;
+            this.officialPhone = officialPhone;
+            this.userTelephone = userTelephone;
+        }
+    }
+
     /**
      * 获取所有的用户信息
      * @return
@@ -264,6 +340,15 @@ public class UserService {
         }
         userLogin.setUserFactory(factoryOrAgentMapper);
         return userLogin;
+    }
+
+    /**
+     * 获取同类的角色
+     * @param roleID
+     * @return
+     */
+    public List<UserRole> getRoles(long roleID) {
+        return userMapper.getOneRoles(roleID);
     }
 
     /**
