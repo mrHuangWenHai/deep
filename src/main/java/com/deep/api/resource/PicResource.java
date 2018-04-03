@@ -38,6 +38,7 @@ public class PicResource {
     @RequestMapping(value = "/uploadFile/upload",method = RequestMethod.POST)
     public @ResponseBody Response addPic(@Valid Pic pic,
                            @RequestParam("file")MultipartFile file,
+//                           @RequestParam(value = "uploader", required = true) String uploader,
                            HttpServletRequest request) {
 //        java.text.SimpleDateFormat formatter =new SimpleDateFormat("yyyy-MM-dd");
 //        Date udate=new Date();
@@ -55,12 +56,13 @@ public class PicResource {
 
         try {
             String Header = FileUtil.getFileHeader(file);
-            if (Header != "FFD8FF" && Header != "89504E47" && Header != "47494638" &&
-                    Header != "49492A00" && Header != "424D" &&
-                    Header != "57415645" && Header != "41564920" &&
-                    Header != "2E7261FD" && Header != "2E524D46" &&
-                    Header != "000001BA" && Header != "6D6F6F76" &&
-                    Header != "3026B2758E66CF11" && Header != "4D546864"
+            if (!Header.equals("FFD8FF") && !Header.equals("89504E47")  && !Header.equals("47494638") &&
+                    !Header.equals("49492A00")  && !Header.equals("424D") &&
+                    !Header.equals("57415645")  && !Header.equals("41564920") &&
+                    !Header.equals("2E7261FD")  && !Header.equals("2E524D46") &&
+                    !Header.equals("000001BA")  && !Header.equals("6D6F6F76") &&
+                    !Header.equals("3026B2758E66CF11") && !Header.equals("4D546864") &&
+                    !Header.equals("00000020") && !Header.equals("FFD8FFE0")
                     ) {
                 throw new Exception("文件格式错误！");
 
@@ -69,6 +71,7 @@ public class PicResource {
 
             Date udate = new Date();
             pic.setUdate(udate);
+//            pic.setUploader(uploader);
 
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String dateString = formatter.format(udate);

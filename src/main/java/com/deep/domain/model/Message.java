@@ -1,30 +1,33 @@
 package com.deep.domain.model;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.regex.*;
+import java.util.regex.Pattern;
 
 public class Message implements Serializable {
     private Integer id;
 
-    @NotNull(message = "用户名不可为空")
+    @NotBlank(message = "用户名不可为空")
     private String username;
 
-    @NotNull(message = "联系方式不可为空")
+
+    @NotBlank(message = "联系方式不可为空")
     private String contact;
 
-    @NotNull(message = "留言不可为空")
+    @NotBlank(message = "留言不可为空")
     private String message;
 
     private Date inserttime;
 
-    @NotNull(message = "标签不可为空")
+    @NotBlank(message = "标签不可为空")
     private String tag;
 
-    @NotNull(message = "态度不可为空")
+    @NotBlank(message = "态度不可为空")
     private String attitude;
 
-    @NotNull(message = "购买意向不可为空")
+    @NotBlank(message = "购买意向不可为空")
     private String intention;
 
     public Integer getMessageId() {
@@ -101,5 +104,16 @@ public class Message implements Serializable {
 
     public void setIntention(String intention) {
         this.intention = intention == null ? null : intention.trim();
+    }
+
+    //匹配手机号
+    public static boolean isMobile(String mobile) {
+        String regex = "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}$";
+        return Pattern.matches(regex, mobile);
+    }
+    //匹配邮箱
+    public static boolean isEmail(String email){
+        String regex = "^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\\.[a-zA-Z0-9]{2,6}$";
+        return Pattern.matches(regex, email);
     }
 }
