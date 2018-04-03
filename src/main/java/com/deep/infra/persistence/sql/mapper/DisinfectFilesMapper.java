@@ -35,7 +35,7 @@ public interface DisinfectFilesMapper {
 
 
 
-    DisinfectFilesModel getDisinfectFilesModelByid(@Param("id") BigInteger id);
+    DisinfectFilesModel getDisinfectFilesModelByid(@Param("id") Long id);
 
     List<DisinfectFilesModel> getDisinfectFilesModelByProfessor(@Param("isPass1") Integer isPass1,
                                                                 RowBounds bounds);
@@ -52,5 +52,5 @@ public interface DisinfectFilesMapper {
 
 
 
-    int deleteDisinfectFilesModelByid(@Param("id") BigInteger id);
+    int deleteDisinfectFilesModelByid(@Param("id") Long id);
 }

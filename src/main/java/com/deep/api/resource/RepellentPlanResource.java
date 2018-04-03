@@ -12,11 +12,14 @@ import com.deep.domain.util.UploadUtil;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @RequestMapping(value = "/rp")
@@ -43,140 +46,141 @@ public class RepellentPlanResource {
      */
     @ResponseBody
     @RequestMapping(value = "/saveshow",method = RequestMethod.POST)
-    public Response SaveShow(@RequestBody RepellentPlanModel repellentPlanModel,
-                             //@RequestParam("factoryNum") BigInteger factoryNum,
-                             //@RequestParam("crowdNum") String crowdNum,
-                             //@RequestParam("repellentEartag") MultipartFile repellentEartag,
-                             //@RequestParam("repellentTime") String repellentTime,
-                             //@RequestParam("repellentName") String repellentName,
-                             //@RequestParam("repellentWay") String repellentWay,
-                             //@RequestParam("repellentQuality") String repellentQuality,
-                             //@RequestParam("operator") String operator,
-                             //@RequestParam("professor") String professor, 审核时自动插入
-                             //@RequestParam("supervisor") String supervisor, 审核时自动插入
-                             //@RequestParam("remark") String remark,
-                             //@RequestParam("isPass") String isPass,  默认 未审核
-                             //@RequestParam("unpassReason") String unpassReason, 默认 无
-                             //@RequestParam("gmtCreate") Timestamp gmtCreate; 插入时自动生成
-                             // 下同
+    public Response SaveShow(@Valid RepellentPlanModel repellentPlanModel,
+                             @RequestParam("repellentEartagFile") MultipartFile repellentEartagFile,
                              HttpServletRequest request
     ) {
-        if ("".equals(repellentPlanModel.getFactoryNum().toString()) ||
-                "".equals(repellentPlanModel.getCrowdNum()) ||
-                repellentPlanModel.getRepellentEartagFile().isEmpty() ||
-                "".equals(repellentPlanModel.getRepellentTime()) ||
-                "".equals(repellentPlanModel.getRepellentName()) ||
-                "".equals(repellentPlanModel.getRepellentWay()) ||
-                "".equals(repellentPlanModel.getRepellentQuality()) ||
-                "".equals(repellentPlanModel.getOperator()) ||
-                "".equals(repellentPlanModel.getRemark())) {
+        //System.out.println("No requestBody");
+
+        //判断文件头
+
+        if (repellentPlanModel.getFactoryNum() == null ||
+                repellentPlanModel.getCrowdNum() == null ||
+                repellentPlanModel.getRepellentTime() == null ||
+                repellentPlanModel.getRepellentName() == null ||
+                repellentPlanModel.getRepellentWay()  == null ||
+                repellentPlanModel.getRepellentQuality() == null ||
+                repellentPlanModel.getOperator() == null ||
+                repellentPlanModel.getRemark() == null ||
+                repellentEartagFile.isEmpty()
+                ) {
+
             return Responses.errorResponse("Lack Item");
+
         } else {
-            try{
-                RepellentPlanModel repellentPlanModel1 = repellentPlanService.getRepellentPlanModelByfactoryNumAndrepellentTimeAndrepellentName(repellentPlanModel.getFactoryNum(),repellentPlanModel.getRepellentTime(),repellentPlanModel.getRepellentName());
-                if (repellentPlanModel1 == null){
-                    //上传文件
-                    UploadUtil uploadUtil = new UploadUtil();
-                    try{
-                        String filepath = request.getSession().getServletContext().getContextPath()+"../EartagDocument/repellentEartag/"+"/";
-                        try {
-                            uploadUtil.uploadFile(repellentPlanModel.getRepellentEartagFile().getBytes(), filepath);
-                            //System.out.println("saving file");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+            RepellentPlanModel repellentPlanModel1 = repellentPlanService.getRepellentPlanModelByfactoryNumAndrepellentTimeAndrepellentName(repellentPlanModel.getFactoryNum(),repellentPlanModel.getRepellentTime(),repellentPlanModel.getRepellentName());
+            if (repellentPlanModel1 == null) {
 
-                        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                //上传文件
+                try {
 
-                        repellentPlanService.setRepellentPlanModel(repellentPlanModel.getFactoryNum(),repellentPlanModel.getCrowdNum(),uploadUtil.getFilename(),
-                                repellentPlanModel.getRepellentTime(),repellentPlanModel.getRepellentName(),repellentPlanModel.getRepellentWay(),repellentPlanModel.getRepellentQuality(),
-                                repellentPlanModel.getOperator(),repellentPlanModel.getRemark(),"0","0",timestamp);
-                        //RepellentPlanModel repellentPlanModel1 = repellentPlanService.getRepellentPlanModelByfactoryNumAndrepellentTimeAndrepellentName(factoryNum, repellentTime, repellentName);
-                        //System.out.println("save before:"+ispass);
+                    //uploadUtil.uploadFile(repellentPlanModel.getRepellentEartagFile().getBytes(), filepath, fileAddress);
+                    //System.out.println("saving file");
 
-                        String professorKey = repellentPlanModel.getFactoryNum() + "_repellentPlan_professor";
-                        String supervisorKey = repellentPlanModel.getFactoryNum() + "_repellentPlan_supervisor";
-                        String testSendProfessor = repellentPlanModel.getFactoryNum() + "_repellentPlan_professor_AlreadySend";
-                        String testSendSupervisor = repellentPlanModel.getFactoryNum() + "_repellentPlan_supervisor_AlreadySend";
+                    String fileName = "";
+                    String filePath = request.getSession().getServletContext().getContextPath() + "../EartagDocument/repellentEartag/";
+                    String fileAddress = "";
+                    fileAddress = UploadUtil.uploadFile(repellentEartagFile.getBytes(), filePath, fileName, fileAddress);
 
-                        String professorWorkInRedis = repellentPlanModel.getId().toString()+ "_repellentPlan_professor_worked";
-                        String supervisorWorkInRedis = repellentPlanModel.getId().toString()+ "_repellentPlan_supervisor_worked";
+                    //数据插入数据库
+                    //System.out.println("mysql执行前");
 
-                        JedisUtil.setCertainKeyValue(professorWorkInRedis,"0");
-                        JedisUtil.setCertainKeyValue(supervisorWorkInRedis,"0");
+                    //设置插入数据
+                    //耳牌地址
+                    //ispass 默认 0
+                    //插入时间
 
-                        JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
-                        JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
 
-                        //System.out.println("testSendProfessorValue:"+jedisUtil.getCertainKeyValue(testSendProfessor));
-                        //System.out.println("judge equal:"+"1".equals(jedisUtil.getCertainKeyValue(testSendProfessor)));
+                    repellentPlanModel.setRepellentEartag(fileAddress);
+                    repellentPlanModel.setIsPass1("0");
+                    repellentPlanModel.setIsPass2("0");
+                    repellentPlanModel.setGmtCreate(simpleDateFormat.format(new Timestamp(System.currentTimeMillis())));
 
-                        //若redis中 若干天未发送短信
-                        //若未完成超过50条
-                        if(!("1".equals(JedisUtil.getCertainKeyValue(testSendProfessor)))){
-                            System.out.println("testSendProfessorValue:"+JedisUtil.getCertainKeyValue(testSendProfessor));
-                            if(JedisUtil.redisJudgeTime(professorKey)){
-                                System.out.println(professorKey);
+                    repellentPlanService.setRepellentPlanModel(repellentPlanModel);
+                    //System.out.println("save before:"+ispass);
 
-                                List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(repellentPlanModel.getFactoryNum());
+                    String professorKey = repellentPlanModel.getFactoryNum().toString() + "_repellentPlan_professor";
+                    String supervisorKey = repellentPlanModel.getFactoryNum().toString() + "_repellentPlan_supervisor";
+                    String testSendProfessor = repellentPlanModel.getFactoryNum().toString() + "_repellentPlan_professor_AlreadySend";
+                    String testSendSupervisor = repellentPlanModel.getFactoryNum().toString() + "_repellentPlan_supervisor_AlreadySend";
 
-                                //需完成:userModels.getTelephone()赋值给String
-                                //获得StringBuffer手机号
-                                StringBuffer phoneList = new StringBuffer("");
-                                for(int i = 0; i < userModels.size(); i++){
-                                    phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
-                                }
+                    String professorWorkInRedis = repellentPlanModel.getId().toString() + "_repellentPlan_professor_worked";
+                    String supervisorWorkInRedis = repellentPlanModel.getId().toString() + "_repellentPlan_supervisor_worked";
 
-                                //发送成功 更新redis中字段
-                                if(JedisUtil.redisSendMessage(phoneList.toString(),JedisUtil.getCertainKeyValue("Message"))){
-                                    JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor,"1",Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime"))*24*60*60);
-                                }
+                    JedisUtil.setCertainKeyValue(professorWorkInRedis, "0");
+                    JedisUtil.setCertainKeyValue(supervisorWorkInRedis, "0");
 
-                                //System.out.println(phoneList);
+                    JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
+                    JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
+
+                    //System.out.println("testSendProfessorValue:"+jedisUtil.getCertainKeyValue(testSendProfessor));
+                    //System.out.println("judge equal:"+"1".equals(jedisUtil.getCertainKeyValue(testSendProfessor)));
+
+                    //若redis中 若干天未发送短信
+                    //若未完成超过50条
+                    if (!("1".equals(JedisUtil.getCertainKeyValue(testSendProfessor)))) {
+                        System.out.println("testSendProfessorValue:" + JedisUtil.getCertainKeyValue(testSendProfessor));
+                        if (JedisUtil.redisJudgeTime(professorKey)) {
+                            System.out.println(professorKey);
+
+                            List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(repellentPlanModel.getFactoryNum());
+
+                            //需完成:userModels.getTelephone()赋值给String
+                            //获得StringBuffer手机号
+                            StringBuffer phoneList = new StringBuffer("");
+                            for (int i = 0; i < userModels.size(); i++) {
+                                phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
                             }
-                        }else {
-                            System.out.println("professor:3天内已发送");
-                        }
 
-                        if(!("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))){
-                            if(JedisUtil.redisJudgeTime(supervisorKey)){
-
-                                List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(repellentPlanModel.getFactoryNum());
-
-                                System.out.println(JedisUtil.redisJudgeTime(supervisorKey));
-
-                                StringBuffer phoneList = new StringBuffer("");
-                                for(int i = 0; i < userModels.size(); i++){
-                                    phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
-                                }
-                                if(JedisUtil.redisSendMessage(phoneList.toString(),JedisUtil.getCertainKeyValue("Message"))){
-
-                                    JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime"))*24*60*60);
-                                    System.out.println("发送成功！");
-
-                                    return  JudgeUtil.JudgeSuccess("successMessage","Message Sent");
-
-                                }
+                            //发送成功 更新redis中字段
+                            if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
+                                JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
                             }
-                        }else {
-                            System.out.println("supervisor:3天内已发送");
-                            return  JudgeUtil.JudgeSuccess("successMessage","have sent message in  days");
 
+                            //System.out.println(phoneList);
                         }
-
-                        return JudgeUtil.JudgeSuccess("successMessage","unnecessary send");
-
-                    }catch (Exception e){
-                        e.printStackTrace();
+                    } else {
+                        System.out.println("professor:3天内已发送");
                     }
-                }else{
-                    return Responses.errorResponse("Already Exist");
+
+                    if (!("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
+                        if (JedisUtil.redisJudgeTime(supervisorKey)) {
+
+                            List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(repellentPlanModel.getFactoryNum());
+
+                            System.out.println(JedisUtil.redisJudgeTime(supervisorKey));
+
+                            StringBuffer phoneList = new StringBuffer("");
+                            for (int i = 0; i < userModels.size(); i++) {
+                                phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
+                            }
+                            if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
+
+                                JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
+                                System.out.println("发送成功！");
+
+                                return JudgeUtil.JudgeSuccess("successMessage", "Message Sent");
+
+                            }
+                        }
+
+                    } else {
+                        System.out.println("supervisor:3天内已发送");
+                        return JudgeUtil.JudgeSuccess("successMessage", "have sent message in  days");
+
+                    }
+
+                    return JudgeUtil.JudgeSuccess("successMessage", "unnecessary send");
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            }catch (Exception e){
-                e.printStackTrace();
+
             }
+
         }
-        return  Responses.errorResponse("NullPointerException");
+        return  Responses.errorResponse("Already Exist");
     }
 
 
@@ -257,9 +261,11 @@ public class RepellentPlanResource {
                 return Responses.errorResponse("Already update");
             } else {
 
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+
                 if ("1".equals(JedisUtil.getCertainKeyValue(professorWorkInRedis))) {
 
-                    repellentPlanModel.setGmtProfessor(new Timestamp(System.currentTimeMillis()));
+                    repellentPlanModel.setGmtProfessor(simpleDateFormat.format(new Timestamp(System.currentTimeMillis())));
 
                     int row = repellentPlanService.updateRepellentPlanModelByProfessor(repellentPlanModel);
                     return JudgeUtil.JudgeUpdate(row);
@@ -339,15 +345,17 @@ public class RepellentPlanResource {
                 return Responses.errorResponse("Already update");
             }else {
 
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+
                 if ("1".equals(JedisUtil.getCertainKeyValue(supervisorWorkInRedis))) {
 
-                    repellentPlanModel.setGmtSupervise(new Timestamp(System.currentTimeMillis()));
+                    repellentPlanModel.setGmtSupervise(simpleDateFormat.format(new Timestamp(System.currentTimeMillis())));
                     int row = repellentPlanService.updateRepellentPlanModelBySupervisor(repellentPlanModel);
 
                     return JudgeUtil.JudgeUpdate(row);
                 }else{
 
-                    repellentPlanModel.setGmtSupervise(new Timestamp(System.currentTimeMillis()));
+                    repellentPlanModel.setGmtSupervise(simpleDateFormat.format(new Timestamp(System.currentTimeMillis())));
                     int row = repellentPlanService.updateRepellentPlanModelBySupervisor(repellentPlanModel);
 
                     if( row == 0){
@@ -444,7 +452,7 @@ public class RepellentPlanResource {
      */
     @ResponseBody
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
-    public Response Delete(@RequestParam("id") BigInteger id){
+    public Response Delete(@RequestParam("id") Long id){
         int row = repellentPlanService.deleteRepellentPlanModelByid(id);
         return JudgeUtil.JudgeDelete(row);
     }

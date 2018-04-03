@@ -6,23 +6,11 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.util.List;
 
 @Mapper
 public interface RepellentPlanMapper {
-    void setRepellentPlanModel(@Param("factoryNum")BigInteger factoryNum,
-                               @Param("crowdNum") String crowdNum,
-                               @Param("repellentEartag") String repellentEartag,
-                               @Param("repellentTime") String repellentTime,
-                               @Param("repellentName") String repellentName,
-                               @Param("repellentWay") String repellentWay,
-                               @Param("repellentQuality") String repellentQuality,
-                               @Param("operator") String operator,
-                               @Param("remark") String remark,
-                               @Param("isPass1") String  isPass1,
-                               @Param("isPass2") String isPass2,
-                               @Param("gmtCreate") Timestamp gmtCreate);
+    void setRepellentPlanModel(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel);
 
     List<RepellentPlanModel> getRepellentPlanModel(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel,
                                                    RowBounds bounds);
@@ -37,10 +25,10 @@ public interface RepellentPlanMapper {
     List<RepellentPlanModel> getRepellentPlanModelBySupervisor(@Param("isPass2") Integer isPass2,
                                                                RowBounds bounds);
 
-    RepellentPlanModel getRepellentPlanModelByid(@Param("id") BigInteger id);
+    RepellentPlanModel getRepellentPlanModelByid(@Param("id") Long id);
 
 
-    int deleteRepellentPlanModelByid(@Param("id") BigInteger id);
+    int deleteRepellentPlanModelByid(@Param("id") Long id);
 
     int updateRepellentPlanModelByProfessor(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel);
 

@@ -7,7 +7,7 @@ import java.sql.Timestamp;
  * create by zhongrui on 18-3-19.
  */
 public class GenealogicalFilesTransModel {
-    private BigInteger id;
+    private Long id;
     private String beforeOwnerFactory;    //上一任拥有人 工厂号 用于追溯
     private String nowOwnerFactory;    //当前拥有人  工厂号
     private String immuneEartag;   //免疫耳牌
@@ -30,11 +30,11 @@ public class GenealogicalFilesTransModel {
         this.gmtTrans = gmtTrans;
     }
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

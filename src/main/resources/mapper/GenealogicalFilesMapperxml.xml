@@ -206,7 +206,7 @@
     </update>
 
 
-    <delete id="deleteGenealogicalFilesModel" parameterType="BigInteger">
+    <delete id="deleteGenealogicalFilesModel" parameterType="Long">
         DELETE FROM
         genealogical_files
         WHERE

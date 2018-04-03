@@ -3,7 +3,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--Mapper名称 对应infra中mapper类名-->
 <mapper namespace="com.deep.infra.persistence.sql.mapper.ImmunePlanMapper">
-    <insert id="setImmunePlanModel">
+    <insert id="setImmunePlanModel" parameterType="com.deep.domain.model.ImmunePlanModel">
+        <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="immunePlanModel.id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
         INSERT INTO immune_plan(
         factory_num,
         crowd_num,
@@ -20,19 +23,19 @@
         gmt_create
         )
         VALUES(
-        #{factoryNum},
-        #{crowdNum},
-        #{immuneEartag},
-        #{immuneTime},
-        #{immuneKind},
-        #{immuneWay},
-        #{immuneQuality},
-        #{immuneDuring},
-        #{operator},
-        #{remark},
-        #{isPass1},
-        #{isPass2},
-        #{gmtCreate}
+        #{immunePlanModel.factoryNum},
+        #{immunePlanModel.crowdNum},
+        #{immunePlanModel.immuneEartag},
+        #{immunePlanModel.immuneTime},
+        #{immunePlanModel.immuneKind},
+        #{immunePlanModel.immuneWay},
+        #{immunePlanModel.immuneQuality},
+        #{immunePlanModel.immuneDuring},
+        #{immunePlanModel.operator},
+        #{immunePlanModel.remark},
+        #{immunePlanModel.isPass1},
+        #{immunePlanModel.isPass2},
+        #{immunePlanModel.gmtCreate}
         )
     </insert>
     <resultMap id="ImmunePlan" type="com.deep.domain.model.ImmunePlanModel">
@@ -218,7 +221,7 @@
     </update>
 
 
-    <delete id="deleteImmunePlanModelByid" parameterType="BigInteger">
+    <delete id="deleteImmunePlanModelByid" parameterType="Long">
         DELETE FROM
         immune_plan
         WHERE

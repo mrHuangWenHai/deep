@@ -7,21 +7,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
- * create by zhongrui on 18-3-20.
+ * create by zhongrui on 18-4-2.
  */
 public class UploadUtil {
-
-    private String filename;
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
-    public void uploadFile(byte[] file, String filePath) throws Exception {
+    public static String uploadFile(byte[] file, String filePath, String fileName,String fileAddress) throws Exception {
         File targetFile = new File(filePath);
         if (!targetFile.exists()) {
             targetFile.mkdirs();
@@ -29,10 +18,15 @@ public class UploadUtil {
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMddhhMMss");
         Calendar calendar = Calendar.getInstance();
 
-        filename = dateFormat.format(calendar.getTime());
-        FileOutputStream out = new FileOutputStream(filePath + filename);
+        fileName = dateFormat.format(calendar.getTime());
+        FileOutputStream out = new FileOutputStream(filePath + fileName);
+        fileAddress = filePath + fileName;
+//        System.out.println("filePath:"+filePath);
+//        System.out.println("fileName:"+fileName);
+//        System.out.println("fileAddress:"+fileAddress);
         out.write(file);
         out.flush();
         out.close();
+        return fileAddress;
     }
 }

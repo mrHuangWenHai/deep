@@ -7,74 +7,51 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.util.List;
 
 @Service
 public class RepellentPlanService {
     @Resource
     private RepellentPlanMapper repellentPlanMapper;
-    public void setRepellentPlanModel(BigInteger factoryNum,
-                                      String crowdNum,
-                                      String repellentEartag,
-                                      String repellentTime,
-                                      String repellentName,
-                                      String repellentWay,
-                                      String repellentQuality,
-                                      String operator,
-                                      String remark,
-                                      String isPass1,
-                                      String isPass2,
-                                      Timestamp gmtCreate){
-        this.repellentPlanMapper.setRepellentPlanModel(factoryNum, crowdNum, repellentEartag,
-                repellentTime, repellentName, repellentWay, repellentQuality, operator,
-                remark, isPass1, isPass2, gmtCreate);
+    public void setRepellentPlanModel(RepellentPlanModel repellentPlanModel){
+        this.repellentPlanMapper.setRepellentPlanModel(repellentPlanModel);
     }
 
     public List<RepellentPlanModel> getRepellentPlanModel(RepellentPlanModel repellentPlanModel,
                                                           RowBounds bounds){
-        List<RepellentPlanModel> repellentPlanModels = this.repellentPlanMapper.getRepellentPlanModel(repellentPlanModel,bounds);
-        return repellentPlanModels;
+        return this.repellentPlanMapper.getRepellentPlanModel(repellentPlanModel,bounds);
     }
 
     public RepellentPlanModel getRepellentPlanModelByfactoryNumAndrepellentTimeAndrepellentName(BigInteger factoryNum,String repellentTime,String repellentName){
-        RepellentPlanModel repellentPlanModel = this.repellentPlanMapper.getRepellentPlanModelByfactoryNumAndrepellentTimeAndrepellentName(factoryNum, repellentTime, repellentName);
-        return repellentPlanModel;
+        return this.repellentPlanMapper.getRepellentPlanModelByfactoryNumAndrepellentTimeAndrepellentName(factoryNum, repellentTime, repellentName);
     }
 
     public List<RepellentPlanModel> getRepellentPlanModelByProfessor(Integer isPass1, RowBounds bounds){
-        List<RepellentPlanModel> repellentPlanModels = this.repellentPlanMapper.getRepellentPlanModelByProfessor(isPass1,bounds);
-        return repellentPlanModels;
+        return this.repellentPlanMapper.getRepellentPlanModelByProfessor(isPass1,bounds);
     }
 
     public List<RepellentPlanModel> getRepellentPlanModelBySupervisor(Integer isPass2, RowBounds bounds){
-        List<RepellentPlanModel> repellentPlanModels = this.repellentPlanMapper.getRepellentPlanModelBySupervisor(isPass2,bounds);
-        return repellentPlanModels;
+        return this.repellentPlanMapper.getRepellentPlanModelBySupervisor(isPass2,bounds);
     }
 
-    public RepellentPlanModel getRepellentPlanModelByid(BigInteger id){
-        RepellentPlanModel repellentPlanModel = this.repellentPlanMapper.getRepellentPlanModelByid(id);
-        return repellentPlanModel;
+    public RepellentPlanModel getRepellentPlanModelByid(Long id){
+        return this.repellentPlanMapper.getRepellentPlanModelByid(id);
     }
 
     public int updateRepellentPlanModelByProfessor(RepellentPlanModel repellentPlanModel){
-        int row = this.repellentPlanMapper.updateRepellentPlanModelByProfessor(repellentPlanModel);
-        return row;
+        return this.repellentPlanMapper.updateRepellentPlanModelByProfessor(repellentPlanModel);
     }
 
     public int updateRepellentPlanModelBySupervisor(RepellentPlanModel repellentPlanModel){
-        int row = this.repellentPlanMapper.updateRepellentPlanModelBySupervisor(repellentPlanModel);
-        return row;
+        return this.repellentPlanMapper.updateRepellentPlanModelBySupervisor(repellentPlanModel);
     }
 
     public int updateRepellentPlanModelByOperator(RepellentPlanModel repellentPlanModel){
-        int row = this.repellentPlanMapper.updateRepellentPlanModelByOperator(repellentPlanModel);
-        return row;
+        return this.repellentPlanMapper.updateRepellentPlanModelByOperator(repellentPlanModel);
     }
 
-    public int deleteRepellentPlanModelByid(BigInteger id){
-        int row = this.repellentPlanMapper.deleteRepellentPlanModelByid(id);
-        return row;
+    public int deleteRepellentPlanModelByid(Long id){
+        return this.repellentPlanMapper.deleteRepellentPlanModelByid(id);
     }
 
 }

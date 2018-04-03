@@ -4,6 +4,9 @@
 <!--Mapper名称 对应infra中mapper类名-->
 <mapper namespace="com.deep.infra.persistence.sql.mapper.RepellentPlanMapper">
     <insert id="setRepellentPlanModel" parameterType="com.deep.domain.model.RepellentPlanModel">
+        <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="repellentPlanModel.id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
         INSERT INTO repellent_plan(
         factory_num,
         crowd_num,
@@ -19,18 +22,18 @@
         gmt_create
         )
         VALUES(
-        #{factoryNum},
-        #{crowdNum},
-        #{repellentEartag},
-        #{repellentTime},
-        #{repellentName},
-        #{repellentWay},
-        #{repellentQuality},
-        #{operator},
-        #{remark},
-        #{isPass1},
-        #{isPass2},
-        #{gmtCreate}
+        #{repellentPlanModel.factoryNum},
+        #{repellentPlanModel.crowdNum},
+        #{repellentPlanModel.repellentEartag},
+        #{repellentPlanModel.repellentTime},
+        #{repellentPlanModel.repellentName},
+        #{repellentPlanModel.repellentWay},
+        #{repellentPlanModel.repellentQuality},
+        #{repellentPlanModel.operator},
+        #{repellentPlanModel.remark},
+        #{repellentPlanModel.isPass1},
+        #{repellentPlanModel.isPass2},
+        #{repellentPlanModel.gmtCreate}
         )
     </insert>
     <resultMap id="RepellentPlan" type="com.deep.domain.model.RepellentPlanModel">
@@ -206,7 +209,7 @@
         id = #{repellentPlanModel.id}
     </update>
 
-    <delete id="deleteRepellentPlanModelByid" parameterType="BigInteger">
+    <delete id="deleteRepellentPlanModelByid" parameterType="Long">
         DELETE FROM
         repellent_plan
         WHERE

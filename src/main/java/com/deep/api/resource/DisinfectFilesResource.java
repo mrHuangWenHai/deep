@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 
@@ -72,11 +73,11 @@ public class DisinfectFilesResource {
                     //System.out.println("save before");
                     //数据插入数据库
                     //System.out.println("mysql执行前");
-                    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     disinfectFilesService.setDisinfectFilesModel(new DisinfectFilesModel(disinfectFilesModel.getFactoryNum(), disinfectFilesModel.getDisinfectTime(),
                             disinfectFilesModel.getDisinfectName(), disinfectFilesModel.getDisinfectQuality(),
                             disinfectFilesModel.getDisinfectWay(), disinfectFilesModel.getOperator(),
-                            disinfectFilesModel.getRemark(), "0", "0", timestamp));
+                            disinfectFilesModel.getRemark(), "0", "0", dateFormat.format(new Timestamp(System.currentTimeMillis()))));
 
                     //数据插入redis
                     String professorKey = disinfectFilesModel.getFactoryNum() + "_disinfectFiles_professor";
@@ -236,7 +237,8 @@ public class DisinfectFilesResource {
                 if ("1".equals(JedisUtil.getCertainKeyValue(professorWorkInRedis))) {
 
                     //生成更新当前时间
-                    disinfectFilesModel.setGmtProfessor(new Timestamp(System.currentTimeMillis()));
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    disinfectFilesModel.setGmtProfessor(simpleDateFormat.format(new Timestamp(System.currentTimeMillis())));
 
                     int row = this.disinfectFilesService.updateDisinfectFilesModelByProfessor(disinfectFilesModel);
 
@@ -303,17 +305,18 @@ public class DisinfectFilesResource {
                 return Responses.errorResponse("Already update");
             }else {
                 //生成更新当前时间
-                disinfectFilesModel.setGmtSupervise(new Timestamp(System.currentTimeMillis()));
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                disinfectFilesModel.setGmtSupervise(simpleDateFormat.format(new Timestamp(System.currentTimeMillis())));
 
                 if ("1".equals(JedisUtil.getCertainKeyValue(supervisorWorkInRedis))) {
 
-                    disinfectFilesModel.setGmtSupervise(new Timestamp(System.currentTimeMillis()));
+                    disinfectFilesModel.setGmtSupervise(simpleDateFormat.format(new Timestamp(System.currentTimeMillis())));
                     int row = this.disinfectFilesService.updateDisinfectFilesModelBySupervisor(disinfectFilesModel);
                     return JudgeUtil.JudgeUpdate(row);
 
                 }else {
 
-                    disinfectFilesModel.setGmtSupervise(new Timestamp(System.currentTimeMillis()));
+                    disinfectFilesModel.setGmtSupervise(simpleDateFormat.format(new Timestamp(System.currentTimeMillis())));
                     int row = this.disinfectFilesService.updateDisinfectFilesModelBySupervisor(disinfectFilesModel);
 
 
@@ -325,7 +328,7 @@ public class DisinfectFilesResource {
 
                         //删除成功 redis数据库种对应数据-1
                         String supervisorKey = disinfectFilesModel1.getFactoryNum().toString() + "_disinfectFiles_supervisor";
-                        disinfectFilesModel.setGmtSupervise(new Timestamp(System.currentTimeMillis()));
+                        disinfectFilesModel.setGmtSupervise(simpleDateFormat.format(new Timestamp(System.currentTimeMillis())));
 
                         JedisUtil.setCertainKeyValue(supervisorWorkInRedis,"1");
                         //key->value-1 返回true
@@ -417,7 +420,7 @@ public class DisinfectFilesResource {
      */
     @ResponseBody
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
-    public Response Delete(@RequestParam("id") BigInteger id){
+    public Response Delete(@RequestParam("id") Long id){
         int row = this.disinfectFilesService.deleteDisinfectFilesModelByid(id);
 
         return JudgeUtil.JudgeDelete(row);

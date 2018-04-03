@@ -67,8 +67,8 @@ public class LoginResource {
                 //tokenModel存入redis
                 //10分钟后过期 需要重新登陆
                 //key:userId value:token
-                JedisUtil jedisUtil1 = new JedisUtil("userId",tokenModel.getUserId().toString(),10*60);
-                JedisUtil jedisUtil2 = new JedisUtil("token",tokenModel.getToken(),10*60);
+                JedisUtil.setCertainKeyValueWithExpireTime("userId",tokenModel.getUserId().toString(),10*60);
+                JedisUtil.setCertainKeyValueWithExpireTime("token",tokenModel.getToken(),10*60);
 
                 //System.out.println("in login"+" userId: "+tokenModel.getUserId()+"  token: "+tokenModel.getToken());
                 //System.out.println(md5Util.encode(password));
@@ -132,8 +132,8 @@ public class LoginResource {
     public Response PhoneFind(@RequestParam("usernameP") String usernameP){
         UserModel userModel = userService.getUserModelByusername(usernameP);
         mobileAnnouncementModel = new MobileAnnouncementModel(userModel.getTelephone());
-        JedisUtil jedisUtil = new JedisUtil();
-        return jedisUtil.oneMessageSendResult(mobileAnnouncementModel);
+
+        return JedisUtil.oneMessageSendResult(mobileAnnouncementModel);
     }
 
     @RequestMapping(value = "/ensureverify")
@@ -142,7 +142,7 @@ public class LoginResource {
             System.out.println("验证成功");
             TokenModel tokenModel = new TokenModel("Identify","Success");
             //记录找回名密码成功状态 时间：5分钟
-            JedisUtil jedisUtil = new JedisUtil(tokenModel.getIdentify(),tokenModel.getToken(),5*60);
+            JedisUtil.setCertainKeyValueWithExpireTime (tokenModel.getIdentify(),tokenModel.getToken(),5*60);
             return new Response().addData("Success","Continue input new password");
         }else {
             return new Response().addData("Error","Answer wrong");

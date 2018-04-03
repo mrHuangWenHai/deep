@@ -1,13 +1,10 @@
 package com.deep.domain.model;
 
-import org.apache.ibatis.session.RowBounds;
 
 import java.math.BigInteger;
-import java.util.Date;
-import java.sql.Timestamp;
 
 public class DisinfectFilesModel {
-    private BigInteger id;      //id
+    private Long id;      //id
     private BigInteger factoryNum;     //工厂号
     private String disinfectTime;     //消毒时间
     private String disinfectName;     //消毒药品名称
@@ -21,15 +18,11 @@ public class DisinfectFilesModel {
     private String unpassReason1;   //未通过审核原因 可空 默认未 无
     private String isPass2;       //是否通过审核 可空 默认为 0
     private String unpassReason2;   //未通过审核原因 可空 默认未 无
-    private Timestamp gmtCreate;   //创建时间
-    private Timestamp gmtModified;     //修改时间
-    private Timestamp gmtProfessor;     //审核时间 可空
-    private Timestamp gmtSupervise;     //监督确认时间 可空
+    private String gmtCreate;   //创建时间
+    private String gmtModified;     //修改时间
+    private String gmtProfessor;     //审核时间 可空
+    private String gmtSupervise;     //监督确认时间 可空
 
-    //用于判断操作 flag=00 为操作员建立数据提交时
-    //flag=01  专家已审核 专家可再修改 但是数据不进入redis  操作员可操作 监督员可操作 数据进入redis
-    //flag=10  监督员已审核 监督员可修改 ......
-    private int flag;
 
     //从前台传递的参数
     //目标:json格式
@@ -42,7 +35,7 @@ public class DisinfectFilesModel {
     public DisinfectFilesModel() {
     }
 
-    public DisinfectFilesModel(BigInteger factoryNum, String disinfectTime, String disinfectName, String disinfectQuality, String disinfectWay, String operator, String remark, String isPass1,String isPass2, Timestamp gmtCreate, Timestamp gmtModified) {
+    public DisinfectFilesModel(BigInteger factoryNum, String disinfectTime, String disinfectName, String disinfectQuality, String disinfectWay, String operator, String remark, String isPass1,String isPass2, String gmtCreate, String gmtModified) {
         this.factoryNum = factoryNum;
         this.disinfectTime = disinfectTime;
         this.disinfectName = disinfectName;
@@ -56,7 +49,7 @@ public class DisinfectFilesModel {
         this.gmtModified = gmtModified;
     }
 
-    public DisinfectFilesModel(BigInteger factoryNum, String  disinfectTime, String disinfectName, String disinfectQuality, String disinfectWay, String operator, String remark, String isPass1,String isPass2,Timestamp gmtCreate) {
+    public DisinfectFilesModel(BigInteger factoryNum, String  disinfectTime, String disinfectName, String disinfectQuality, String disinfectWay, String operator, String remark, String isPass1, String isPass2, String gmtCreate) {
         this.factoryNum = factoryNum;
         this.disinfectTime = disinfectTime;
         this.disinfectName = disinfectName;
@@ -70,11 +63,11 @@ public class DisinfectFilesModel {
 
     }
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -182,35 +175,35 @@ public class DisinfectFilesModel {
         this.unpassReason2 = unpassReason2;
     }
 
-    public Timestamp getGmtCreate() {
+    public String getGmtCreate() {
         return gmtCreate;
     }
 
-    public void setGmtCreate(Timestamp gmtCreate) {
+    public void setGmtCreate(String gmtCreate) {
         this.gmtCreate = gmtCreate;
     }
 
-    public Timestamp getGmtModified() {
+    public String getGmtModified() {
         return gmtModified;
     }
 
-    public void setGmtModified(Timestamp gmtModified) {
+    public void setGmtModified(String gmtModified) {
         this.gmtModified = gmtModified;
     }
 
-    public Timestamp getGmtProfessor() {
+    public String getGmtProfessor() {
         return gmtProfessor;
     }
 
-    public void setGmtProfessor(Timestamp gmtProfessor) {
+    public void setGmtProfessor(String gmtProfessor) {
         this.gmtProfessor = gmtProfessor;
     }
 
-    public Timestamp getGmtSupervise() {
+    public String getGmtSupervise() {
         return gmtSupervise;
     }
 
-    public void setGmtSupervise(Timestamp gmtSupervise) {
+    public void setGmtSupervise(String gmtSupervise) {
         this.gmtSupervise = gmtSupervise;
     }
 
@@ -228,14 +221,6 @@ public class DisinfectFilesModel {
 
     public void setDisinfectTimeEnd(String disinfectTimeEnd) {
         this.disinfectTimeEnd = disinfectTimeEnd;
-    }
-
-    public int getFlag() {
-        return flag;
-    }
-
-    public void setFlag(int flag) {
-        this.flag = flag;
     }
 
     public int getPage() {

@@ -1,18 +1,12 @@
 package com.deep.domain.model;
 
-import org.apache.ibatis.session.RowBounds;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.util.Date;
 
 public class ImmunePlanModel {
-    private BigInteger id;      //id
+    private Long id;      //id
     private BigInteger factoryNum;  //工厂编号
     private String crowdNum;     //羊群号
     private String immuneEartag;    //耳牌附件名
-    private MultipartFile immuneEartagFile;   //耳牌附件 用于接受文件
     private String immuneTime;     //接种时间
     private String immuneKind;     //免疫种类
     private String immuneWay;       //免疫方法
@@ -26,10 +20,10 @@ public class ImmunePlanModel {
     private String unpassReason1;   //未通过审核原因
     private String isPass2;      //是否通过监督 默认 未监督 0
     private String unpassReason2;   //未通过监督原因
-    private Timestamp gmtCreate;    //创建时间
-    private Timestamp gmtModified;  //修改时间
-    private Timestamp gmtProfessor;    //技术审核时间 可空
-    private Timestamp gmtSupervise;    //监督审核时间 可空
+    private String gmtCreate;    //创建时间
+    private String gmtModified;  //修改时间
+    private String gmtProfessor;    //技术审核时间 可空
+    private String gmtSupervise;    //监督审核时间 可空
 
     //
     private String immuneTimeStart;
@@ -40,7 +34,7 @@ public class ImmunePlanModel {
     public ImmunePlanModel() {
     }
 
-    public ImmunePlanModel(BigInteger factoryNum, String crowdNum, String immuneEartag, String immuneTime, String immuneKind, String immuneWay, String immuneQuality, String immuneDuring, String operator, String remark, String isPass1, String isPass2,Timestamp gmtCreate, Timestamp gmtModified) {
+    public ImmunePlanModel(BigInteger factoryNum, String crowdNum, String immuneEartag, String immuneTime, String immuneKind, String immuneWay, String immuneQuality, String immuneDuring, String operator, String remark, String isPass1, String isPass2, String gmtCreate, String gmtModified) {
         this.factoryNum = factoryNum;
         this.crowdNum = crowdNum;
         this.immuneEartag = immuneEartag;
@@ -57,7 +51,7 @@ public class ImmunePlanModel {
         this.gmtModified = gmtModified;
     }
 
-    public ImmunePlanModel(BigInteger factoryNum, String crowdNum, String immuneEartag, String immuneTime, String immuneKind, String immuneWay, String immuneQuality, String immuneDuring, String operator, String professor, String supervisor, String remark, String isPass1,  String isPass2, Timestamp gmtCreate, Timestamp gmtModified, Timestamp gmtProfessor, Timestamp gmtSupervise) {
+    public ImmunePlanModel(BigInteger factoryNum, String crowdNum, String immuneEartag, String immuneTime, String immuneKind, String immuneWay, String immuneQuality, String immuneDuring, String operator, String professor, String supervisor, String remark, String isPass1,  String isPass2, String gmtCreate, String gmtModified, String gmtProfessor, String gmtSupervise) {
         this.factoryNum = factoryNum;
         this.crowdNum = crowdNum;
         this.immuneEartag = immuneEartag;
@@ -79,11 +73,19 @@ public class ImmunePlanModel {
 
     }
 
-    public BigInteger getId() {
+    public String getImmuneEartag() {
+        return immuneEartag;
+    }
+
+    public void setImmuneEartag(String immuneEartag) {
+        this.immuneEartag = immuneEartag;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -101,22 +103,6 @@ public class ImmunePlanModel {
 
     public void setCrowdNum(String crowdNum) {
         this.crowdNum = crowdNum;
-    }
-
-    public MultipartFile getImmuneEartagFile() {
-        return immuneEartagFile;
-    }
-
-    public void setImmuneEartagFile(MultipartFile immuneEartagFile) {
-        this.immuneEartagFile = immuneEartagFile;
-    }
-
-    public String getImmuneEartag() {
-        return immuneEartag;
-    }
-
-    public void setImmuneEartag(String immuneEartag) {
-        this.immuneEartag = immuneEartag;
     }
 
     public String getImmuneTime() {
@@ -223,34 +209,35 @@ public class ImmunePlanModel {
         this.unpassReason2 = unpassReason2;
     }
 
-    public Timestamp getGmtCreate() {
+    public String getGmtCreate() {
         return gmtCreate;
     }
 
-    public void setGmtCreate(Timestamp gmtCreate) {
+    public void setGmtCreate(String gmtCreate) {
         this.gmtCreate = gmtCreate;
     }
 
-    public Timestamp getGmtModified() {
+    public String getGmtModified() {
         return gmtModified;
     }
 
-    public void setGmtModified(Timestamp gmtModified) {
+    public void setGmtModified(String gmtModified) {
         this.gmtModified = gmtModified;
     }
-    public Timestamp getGmtProfessor() {
+
+    public String getGmtProfessor() {
         return gmtProfessor;
     }
 
-    public void setGmtProfessor(Timestamp gmtProfessor) {
+    public void setGmtProfessor(String gmtProfessor) {
         this.gmtProfessor = gmtProfessor;
     }
 
-    public Timestamp getGmtSupervise() {
+    public String getGmtSupervise() {
         return gmtSupervise;
     }
 
-    public void setGmtSupervise(Timestamp gmtSupervise) {
+    public void setGmtSupervise(String gmtSupervise) {
         this.gmtSupervise = gmtSupervise;
     }
 

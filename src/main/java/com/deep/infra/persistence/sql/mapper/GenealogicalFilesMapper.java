@@ -20,14 +20,14 @@ public interface GenealogicalFilesMapper {
     List<GenealogicalFilesModel> getGenealogicalFilesModel(@Param("genealogicalFilesModel") GenealogicalFilesModel genealogicalFilesModel,
                                                            RowBounds rowBounds
                                                            );
-    GenealogicalFilesModel getGenealogicalFilesModelByid(@Param("id") BigInteger id);
+    GenealogicalFilesModel getGenealogicalFilesModelByid(@Param("id") Long id);
 
     GenealogicalFilesModel getGenealogicalFilesModelByselfEartag(@Param("selfEartag") String selfEartag);
     GenealogicalFilesModel getGenealogicalFilesModelByimmuneEartag(@Param("immuneEartag") String immuneEartag);
     GenealogicalFilesModel getGenealogicalFilesModelBytradeMarkEartag(@Param("tradeMarkEartag") String tradeMarkEartag);
 
     //@Delete(FROM genealogical_files WHERE self_eartag = #{SelfEartag})
-    int deleteGenealogicalFilesModel(@Param("id") BigInteger id);
+    int deleteGenealogicalFilesModel(@Param("id") Long id);
 
     int updateGenealogicalFilesModel(@Param("genealogicalFilesModel") GenealogicalFilesModel genealogicalFilesModel);
 

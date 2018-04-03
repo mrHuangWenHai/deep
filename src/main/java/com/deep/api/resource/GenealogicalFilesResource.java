@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 
@@ -41,6 +42,7 @@ public class GenealogicalFilesResource {
     @RequestMapping(value = "/saveshow",method = RequestMethod.POST)
     public Response SaveShow(@RequestBody GenealogicalFilesModel genealogicalFilesModel) {
         //System.out.println("传参数成功");
+
         if("".equals(genealogicalFilesModel.getSelfEartag())||
                 "".equals(genealogicalFilesModel.getImmuneEartag())||
                 "".equals(genealogicalFilesModel.getTradeMarkEartag())||
@@ -64,13 +66,14 @@ public class GenealogicalFilesResource {
             //System.out.println(genealogicalFilesModelByboth.getSelfEartag());
             if( genealogicalFilesModelByimmuneEartag == null && genealogicalFilesModelBytradeMarkEartag == null){
 
-                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
                 //System.out.println(timestamp);
                 genealogicalFilesService.setGenealogicalFilesModel(new GenealogicalFilesModel(genealogicalFilesModel.getSelfEartag(),genealogicalFilesModel.getImmuneEartag(),
                         genealogicalFilesModel.getTradeMarkEartag(),genealogicalFilesModel.getBreedingSheepBase(),genealogicalFilesModel.getBirthTime(),genealogicalFilesModel.getBirthWeight(),
                         genealogicalFilesModel.getColor(),genealogicalFilesModel.getSex(), genealogicalFilesModel.getEartagOfFather(),genealogicalFilesModel.getEartagOfMother(),
                         genealogicalFilesModel.getEartagOfFathersFather(),genealogicalFilesModel.getEartagOfFathersMother(),genealogicalFilesModel.getEartagOfMothersFather(),
-                        genealogicalFilesModel.getEartagOfMothersMother(),genealogicalFilesModel.getRemark(),timestamp));
+                        genealogicalFilesModel.getEartagOfMothersMother(),genealogicalFilesModel.getRemark(),simpleDateFormat.format(new Timestamp(System.currentTimeMillis()))));
 
 
                 HashMap<String,Object> data = new HashMap<>();
@@ -122,7 +125,7 @@ public class GenealogicalFilesResource {
      */
     @ResponseBody
     @RequestMapping(value = "/findshowbyid",method = RequestMethod.GET)
-    public Response FindIdShow(@RequestParam("id") BigInteger id ) {
+    public Response FindIdShow(@RequestParam("id") Long id ) {
         System.out.println("id:"+id);
         GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesService.getGenealogicalFilesModelByid(id);
         //System.out.println(genealogicalFilesModel.getSelfEartag());
@@ -163,7 +166,7 @@ public class GenealogicalFilesResource {
      */
     @ResponseBody
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
-    public Response Delete(@RequestParam("id") BigInteger id){
+    public Response Delete(@RequestParam("id") Long id){
         int row = genealogicalFilesService.deleteGenealogicalFilesModel(id);
         return JudgeUtil.JudgeDelete(row);
     }

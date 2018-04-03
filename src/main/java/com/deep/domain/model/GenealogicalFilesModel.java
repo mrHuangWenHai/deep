@@ -10,7 +10,7 @@ import java.sql.Timestamp;
  **/
 public class GenealogicalFilesModel {
 
-    private BigInteger id;
+    private Long id;
     private String selfEartag;  //8位表示原耳牌
     private String immuneEartag;  //免疫耳牌
     private String tradeMarkEartag;  //商标耳牌
@@ -26,8 +26,8 @@ public class GenealogicalFilesModel {
     private String eartagOfMothersFather;  //母父耳牌
     private String eartagOfMothersMother;  //母母耳牌
     private String remark;   //备注
-    private Timestamp gmtCreate;     //建立时间
-    private Timestamp gmtModified;   //修改时间
+    private String gmtCreate;     //建立时间
+    private String gmtModified;   //修改时间
 
     //从前台传递的参数
     //目标:json格式
@@ -59,7 +59,7 @@ public class GenealogicalFilesModel {
         this.eartagOfMothersMother = eartagOfMothersMother;
         this.remark = remark;
     }
-    public GenealogicalFilesModel( String selfEartag, String immuneEartag, String tradeMarkEartag, String breedingSheepBase, String birthTime, float birthWeight, String color, String sex, String eartagOfFather, String eartagOfMother, String eartagOfFathersFather, String eartagOfFathersMother, String eartagOfMothersFather, String eartagOfMothersMother, String remark,Timestamp gmtCreate) {
+    public GenealogicalFilesModel( String selfEartag, String immuneEartag, String tradeMarkEartag, String breedingSheepBase, String birthTime, float birthWeight, String color, String sex, String eartagOfFather, String eartagOfMother, String eartagOfFathersFather, String eartagOfFathersMother, String eartagOfMothersFather, String eartagOfMothersMother, String remark,String gmtCreate) {
 
         this.selfEartag = selfEartag;
         this.immuneEartag = immuneEartag;
@@ -79,11 +79,11 @@ public class GenealogicalFilesModel {
         this.gmtCreate = gmtCreate;
     }
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -207,19 +207,19 @@ public class GenealogicalFilesModel {
         this.remark = remark;
     }
 
-    public Timestamp getGmtCreate() {
+    public String getGmtCreate() {
         return gmtCreate;
     }
 
-    public void setGmtCreate(Timestamp gmtCreate) {
+    public void setGmtCreate(String gmtCreate) {
         this.gmtCreate = gmtCreate;
     }
 
-    public Timestamp getGmtModified() {
+    public String getGmtModified() {
         return gmtModified;
     }
 
-    public void setGmtModified(Timestamp gmtModified) {
+    public void setGmtModified(String gmtModified) {
         this.gmtModified = gmtModified;
     }
 

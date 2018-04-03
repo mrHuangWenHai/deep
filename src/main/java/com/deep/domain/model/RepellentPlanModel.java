@@ -8,11 +8,10 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 public class RepellentPlanModel {
-    private BigInteger id;      //id
+    private Long id;      //id
     private BigInteger factoryNum;   //工厂编号
     private String crowdNum;       //羊群号
     private String repellentEartag;    //耳牌附件名
-    private MultipartFile repellentEartagFile;    //耳牌附件号文件
 
     private String repellentTime;    //驱虫时间
     private String repellentName;   //药物名称
@@ -26,10 +25,10 @@ public class RepellentPlanModel {
     private String unpassReason1;
     private String isPass2;
     private String unpassReason2;
-    private Timestamp gmtCreate;
-    private Timestamp gmtModified;
-    private Timestamp gmtProfessor;
-    private Timestamp gmtSupervise;
+    private String gmtCreate;
+    private String gmtModified;
+    private String gmtProfessor;
+    private String gmtSupervise;
 
     //
     private String repellentTimeStart;
@@ -40,7 +39,7 @@ public class RepellentPlanModel {
     public RepellentPlanModel() {
     }
 
-    public RepellentPlanModel(BigInteger factoryNum, String crowdNum, String repellentEartag, String repellentTime, String repellentName, String repellentWay, String repellentQuality, String operator, String remark, String isPass1, String isPass2, Timestamp gmtCreate) {
+    public RepellentPlanModel(BigInteger factoryNum, String crowdNum, String repellentEartag, String repellentTime, String repellentName, String repellentWay, String repellentQuality, String operator, String remark, String isPass1, String isPass2, String gmtCreate) {
         this.factoryNum = factoryNum;
         this.crowdNum = crowdNum;
         this.repellentEartag = repellentEartag;
@@ -55,7 +54,7 @@ public class RepellentPlanModel {
         this.gmtCreate = gmtCreate;
     }
 
-    public RepellentPlanModel(BigInteger factoryNum, String crowdNum, String repellentEartag, String repellentTime, String repellentName, String repellentWay, String repellentQuality, String operator, String professor, String supervisor, String remark, String isPass1, String isPass2, Timestamp gmtCreate) {
+    public RepellentPlanModel(BigInteger factoryNum, String crowdNum, String repellentEartag, String repellentTime, String repellentName, String repellentWay, String repellentQuality, String operator, String professor, String supervisor, String remark, String isPass1, String isPass2, String gmtCreate) {
         this.factoryNum = factoryNum;
         this.crowdNum = crowdNum;
         this.repellentEartag = repellentEartag;
@@ -72,11 +71,11 @@ public class RepellentPlanModel {
         this.gmtCreate = gmtCreate;
     }
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -96,13 +95,7 @@ public class RepellentPlanModel {
         this.crowdNum = crowdNum;
     }
 
-    public MultipartFile getRepellentEartagFile() {
-        return repellentEartagFile;
-    }
 
-    public void setRepellentEartagFile(MultipartFile repellentEartagFile) {
-        this.repellentEartagFile = repellentEartagFile;
-    }
 
     public String getRepellentEartag() {
         return repellentEartag;
@@ -208,35 +201,35 @@ public class RepellentPlanModel {
         this.unpassReason2 = unpassReason2;
     }
 
-    public Timestamp getGmtCreate() {
+    public String getGmtCreate() {
         return gmtCreate;
     }
 
-    public void setGmtCreate(Timestamp gmtCreate) {
+    public void setGmtCreate(String gmtCreate) {
         this.gmtCreate = gmtCreate;
     }
 
-    public Timestamp getGmtModified() {
+    public String getGmtModified() {
         return gmtModified;
     }
 
-    public void setGmtModified(Timestamp gmtModified) {
+    public void setGmtModified(String gmtModified) {
         this.gmtModified = gmtModified;
     }
 
-    public Timestamp getGmtProfessor() {
+    public String getGmtProfessor() {
         return gmtProfessor;
     }
 
-    public void setGmtProfessor(Timestamp gmtProfessor) {
+    public void setGmtProfessor(String gmtProfessor) {
         this.gmtProfessor = gmtProfessor;
     }
 
-    public Timestamp getGmtSupervise() {
+    public String getGmtSupervise() {
         return gmtSupervise;
     }
 
-    public void setGmtSupervise(Timestamp gmtSupervise) {
+    public void setGmtSupervise(String gmtSupervise) {
         this.gmtSupervise = gmtSupervise;
     }
 

@@ -6,7 +6,6 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -25,38 +24,31 @@ public class  GenealogicalFilesService {
 
     public List<GenealogicalFilesModel> getGenealogicalFilesModel(GenealogicalFilesModel genealogicalFilesModel,
                                                                   RowBounds bounds) {
-        List<GenealogicalFilesModel> model = this.genealogicalFilesMapper.getGenealogicalFilesModel(genealogicalFilesModel,bounds);
-        return model;
+        return this.genealogicalFilesMapper.getGenealogicalFilesModel(genealogicalFilesModel,bounds);
     }
 
 
 
-    public GenealogicalFilesModel getGenealogicalFilesModelByid(BigInteger id){
-        GenealogicalFilesModel model = this.genealogicalFilesMapper.getGenealogicalFilesModelByid(id);
-        return model;
+    public GenealogicalFilesModel getGenealogicalFilesModelByid(Long id){
+        return this.genealogicalFilesMapper.getGenealogicalFilesModelByid(id);
     }
 
     public GenealogicalFilesModel getGenealogicalFilesModelByselfEartag(String selfEartag){
-        GenealogicalFilesModel model = this.genealogicalFilesMapper.getGenealogicalFilesModelByselfEartag(selfEartag);
-        return model;
+        return this.genealogicalFilesMapper.getGenealogicalFilesModelByselfEartag(selfEartag);
     }
     public GenealogicalFilesModel getGenealogicalFilesModelByimmuneEartag(String immuneEartag) {
-        GenealogicalFilesModel model = this.genealogicalFilesMapper.getGenealogicalFilesModelByimmuneEartag(immuneEartag);
-        return model;
+        return this.genealogicalFilesMapper.getGenealogicalFilesModelByimmuneEartag(immuneEartag);
     }
     public GenealogicalFilesModel getGenealogicalFilesModelBytradeMarkEartag(String tradeMarkEartag){
-        GenealogicalFilesModel model = this.genealogicalFilesMapper.getGenealogicalFilesModelBytradeMarkEartag(tradeMarkEartag);
-        return model;
+        return this.genealogicalFilesMapper.getGenealogicalFilesModelBytradeMarkEartag(tradeMarkEartag);
     }
 
 
-    public int deleteGenealogicalFilesModel(BigInteger id){
-        int row = this.genealogicalFilesMapper.deleteGenealogicalFilesModel(id);
-        return row;
+    public int deleteGenealogicalFilesModel(Long id){
+        return this.genealogicalFilesMapper.deleteGenealogicalFilesModel(id);
     }
 
     public int updateGenealogicalFilesModel(GenealogicalFilesModel genealogicalFilesModel){
-        int row = this.genealogicalFilesMapper.updateGenealogicalFilesModel(genealogicalFilesModel);
-        return row;
+        return this.genealogicalFilesMapper.updateGenealogicalFilesModel(genealogicalFilesModel);
     }
 }

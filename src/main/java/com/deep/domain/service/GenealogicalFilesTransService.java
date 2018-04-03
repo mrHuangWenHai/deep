@@ -25,12 +25,10 @@ public class GenealogicalFilesTransService {
     }
 
     public List<GenealogicalFilesTransModel> getGenealogicalFilesTransModelBytrademarkEartag(String trademarkEartag){
-        List<GenealogicalFilesTransModel> genealogicalFilesTransModels = this.genealogicalFilesTransMapper.getGenealogicalFilesTransModelBytrademarkEartag(trademarkEartag);
-        return genealogicalFilesTransModels;
+        return this.genealogicalFilesTransMapper.getGenealogicalFilesTransModelBytrademarkEartag(trademarkEartag);
     }
     public List<GenealogicalFilesTransModel> getAllGenealogicalFilesTransModel(){
-        List<GenealogicalFilesTransModel> genealogicalFilesTransModels = this.genealogicalFilesTransMapper.getAllGenealogicalFilesTransModel();
-        return genealogicalFilesTransModels;
+        return this.genealogicalFilesTransMapper.getAllGenealogicalFilesTransModel();
     }
 
 
