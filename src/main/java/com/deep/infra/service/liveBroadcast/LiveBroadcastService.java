@@ -190,12 +190,28 @@ public class LiveBroadcastService {
 
   }
 
+  public LiveBroadcastResp getLiveBroadCastLiveUrl(String userid) {
 
-  public LiveBroadcastResp getLiveBroadcastRespUrl(String userid) {
+    String streamId = bizid+"_"+userid;
+    LiveBroadcastResp resp = new LiveBroadcastResp();
+    Map<String, Object> data = new HashMap<String, Object>();
 
-    final String testid = "ba18fad871";
+    String playUrl = new StringBuilder().
+        append(bizid).
+        append(playUrlSub).
+        append(streamId).toString();
 
-    String streamId = bizid+"_"+testid;
+    data.put("playUrl", playUrl);
+    resp.setData(data);
+    resp.setRet("SUCCESS");
+    return resp;
+
+  }
+
+
+  public LiveBroadcastResp getLiveBroadCastPushUrl(String userid) {
+
+    String streamId = bizid+"_"+userid;
     long txTime = LiveBroadcastUtil.getUnixTime(Calendar.DATE,1);
     LiveBroadcastResp resp = new LiveBroadcastResp();
     String safeUrl = LiveBroadcastUtil.getSafeUrl(pushKey, streamId, txTime);
@@ -228,18 +244,9 @@ public class LiveBroadcastService {
         append(bizid).
         append(safeUrl).toString();
 
-
-    String playUrl = new StringBuilder().
-        append(bizid).
-        append(playUrlSub).
-        append(streamId).toString();
-
-
     data.put("pushUrl", pushUrl);
-    data.put("playUrl", playUrl);
     resp.setData(data);
     resp.setRet("SUCCESS");
-
     return resp;
 
   }
