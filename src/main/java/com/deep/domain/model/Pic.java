@@ -40,6 +40,26 @@ public class Pic implements Serializable {
 
     private Integer returnId;
 
+    private Integer pageNumb;
+
+    private Integer limit;
+
+    public Integer getPageNumb() {
+        return pageNumb;
+    }
+
+    public void setPageNumb(Integer pageNumb) {
+        this.pageNumb = pageNumb;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
+
     public Integer getReturnId() {
         return returnId;
     }

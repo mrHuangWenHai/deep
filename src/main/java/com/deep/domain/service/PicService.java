@@ -3,6 +3,7 @@ package com.deep.domain.service;
 import com.deep.domain.model.Pic;
 import com.deep.domain.model.PicExample;
 import com.deep.infra.persistence.sql.mapper.PicMapper;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -29,7 +30,17 @@ public class PicService {
         List<Pic>find=this.picMapper.selectByExample(picExample);
         return find;
     }
+    public List<Pic> findPicSelectiveWithRowbounds(PicExample picExample,int pageNumb,int limit)
+    {
+        int offset=(pageNumb-1)*limit;
 
+        RowBounds rowBounds=new RowBounds(offset,limit);
+
+        List<Pic>find=this.picMapper.selectByExampleWithRowbounds(picExample,rowBounds);
+
+        return find;
+
+    }
 //    public List<Pic> searchByBrand(String brand)
 //    {
 //        return this.picMapper.selectByBrand(brand);

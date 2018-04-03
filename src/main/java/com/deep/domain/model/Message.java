@@ -1,5 +1,7 @@
 package com.deep.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -39,6 +41,10 @@ public class Message implements Serializable {
     }
 
     private Integer messageId;
+
+    private Integer pageNumb;
+
+    private Integer limit;
 
     private static final long serialVersionUID = 1L;
 
@@ -106,6 +112,21 @@ public class Message implements Serializable {
         this.intention = intention == null ? null : intention.trim();
     }
 
+    public Integer getPageNumb() {
+        return pageNumb;
+    }
+
+    public void setPageNumb(Integer pageNumb) {
+        this.pageNumb = pageNumb;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
     //匹配手机号
     public static boolean isMobile(String mobile) {
         String regex = "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}$";

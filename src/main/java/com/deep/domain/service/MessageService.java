@@ -30,7 +30,6 @@ public class MessageService {
 
         return find;
 
-
     }
 
     public List<Message> findMessageSelectiveWithRowbounds(MessageExample messageExample,int pageNumb,int limit)

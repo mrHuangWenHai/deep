@@ -6,10 +6,7 @@ import com.deep.domain.model.Message;
 import com.deep.domain.model.MessageExample;
 import com.deep.domain.service.MessageService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -112,14 +109,17 @@ public class MessageResource {
 
     @RequestMapping(value = "/messageBoard/searchByMessage",method = RequestMethod.POST)
     public @ResponseBody
-    Response searchByMessage(@NotNull(message = "留言不能为空") @RequestParam(value = "message",required = false,defaultValue = "")String message,
-                             @RequestParam(value = "pageNumb",required = true)int pageNumb,
-                             @RequestParam(value = "limit",required = true)int limit)
+    Response searchByMessage( @RequestBody  Message message)
     {
+        if(message.getMessage().isEmpty())
+        {
+            Response response = Responses.errorResponse("查询条件不能为空！");
+            return response;
+        }
         MessageExample messageExample = new MessageExample();
         MessageExample.Criteria criteria = messageExample.createCriteria();
-        criteria.andMessageLike("%" + message+"%");
-        List<Message>select = messageService.findMessageSelectiveWithRowbounds(messageExample,pageNumb,limit);
+        criteria.andMessageLike("%" + message.getMessage()+"%");
+        List<Message>select = messageService.findMessageSelectiveWithRowbounds(messageExample,message.getPageNumb(),message.getLimit());
 
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
@@ -130,14 +130,22 @@ public class MessageResource {
 
     @RequestMapping(value = "/messageBoard/searchByUsername",method = RequestMethod.POST)
     public @ResponseBody
-    Response searchByUsername(@NotNull(message = "用户名不能为空") @RequestParam(value = "username",required = false,defaultValue = "")String username,
-                              @RequestParam(value = "pageNumb",required = true)int pageNumb,
-                              @RequestParam(value = "limit",required = true)int limit) {
+    Response searchByUsername(
+                                @RequestBody  Message message
+//                              @NotNull(message = "用户名不能为空") @RequestParam(value = "username",required = false,defaultValue = "")String username,
+//                              @RequestParam(value = "pageNumb",required = true)int pageNumb,
+//                              @RequestParam(value = "limit",required = true)int limit
+    ) {
 
+        if(message.getUsername().isEmpty())
+        {
+            Response response = Responses.errorResponse("查询条件不能为空！");
+            return response;
+        }
         MessageExample messageExample = new MessageExample();
         MessageExample.Criteria criteria = messageExample.createCriteria();
-        criteria.andUsernameLike("%" + username+"%");
-        List<Message>select=messageService.findMessageSelectiveWithRowbounds(messageExample,pageNumb,limit);
+        criteria.andUsernameLike("%" + message.getUsername()+"%");
+        List<Message>select=messageService.findMessageSelectiveWithRowbounds(messageExample,message.getPageNumb(),message.getLimit());
 
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
@@ -148,14 +156,17 @@ public class MessageResource {
 
     @RequestMapping(value = "/messageBoard/searchByTag",method = RequestMethod.POST)
     public @ResponseBody
-    Response searchByTag(@NotNull(message = "标签不能为空")  @RequestParam(value = "tag",required = false,defaultValue = "")String tag,
-                              @RequestParam(value = "pageNumb",required = true)int pageNumb,
-                              @RequestParam(value = "limit",required = true)int limit)
+    Response searchByTag(@RequestBody  Message message)
     {
+        if(message.getTag().isEmpty())
+        {
+            Response response = Responses.errorResponse("查询条件不能为空！");
+            return response;
+        }
         MessageExample messageExample=new MessageExample();
         MessageExample.Criteria criteria=messageExample.createCriteria();
-        criteria.andTagLike("%"+tag+"%");
-        List<Message>select=messageService.findMessageSelectiveWithRowbounds(messageExample,pageNumb,limit);
+        criteria.andTagLike("%"+message.getTag()+"%");
+        List<Message>select=messageService.findMessageSelectiveWithRowbounds(messageExample,message.getPageNumb(),message.getLimit());
 
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
@@ -165,14 +176,17 @@ public class MessageResource {
     }
     @RequestMapping(value = "/messageBoard/searchByAttitude",method = RequestMethod.POST)
     public @ResponseBody
-    Response searchByAttitude(@NotNull(message = "态度不能为空")  @RequestParam(value = "attitude",required = false,defaultValue = "")String attitude ,
-                              @RequestParam(value = "pageNumb",required = true)int pageNumb,
-                              @RequestParam(value = "limit",required = true)int limit)
+    Response searchByAttitude(@RequestBody  Message message)
     {
+        if(message.getAttitude().isEmpty())
+        {
+            Response response = Responses.errorResponse("查询条件不能为空！");
+            return response;
+        }
         MessageExample messageExample=new MessageExample();
         MessageExample.Criteria criteria=messageExample.createCriteria();
-        criteria.andAttitudeLike("%"+attitude+"%");
-        List<Message>select=messageService.findMessageSelectiveWithRowbounds(messageExample,pageNumb,limit);
+        criteria.andAttitudeLike("%"+message.getAttitude()+"%");
+        List<Message>select=messageService.findMessageSelectiveWithRowbounds(messageExample,message.getPageNumb(),message.getLimit());
 
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
@@ -182,14 +196,17 @@ public class MessageResource {
     }
     @RequestMapping(value = "/messageBoard/searchByIntention",method = RequestMethod.POST)
     public @ResponseBody
-    Response searchByIntention(@NotNull(message = "购买意向不能为空")  @RequestParam(value = "intention",required = false,defaultValue = "")String intention,
-                              @RequestParam(value = "pageNumb",required = true)int pageNumb,
-                              @RequestParam(value = "limit",required = true)int limit)
+    Response searchByIntention(@RequestBody  Message message)
     {
+        if(message.getIntention().isEmpty())
+        {
+            Response response = Responses.errorResponse("查询条件不能为空！");
+            return response;
+        }
         MessageExample messageExample=new MessageExample();
         MessageExample.Criteria criteria=messageExample.createCriteria();
-        criteria.andIntentionLike("%"+intention+"%");
-        List<Message>select=messageService.findMessageSelectiveWithRowbounds(messageExample,pageNumb,limit);
+        criteria.andIntentionLike("%"+message.getIntention()+"%");
+        List<Message>select=messageService.findMessageSelectiveWithRowbounds(messageExample,message.getPageNumb(),message.getLimit());
 
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();

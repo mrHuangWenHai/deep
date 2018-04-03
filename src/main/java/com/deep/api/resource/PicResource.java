@@ -7,10 +7,7 @@ import com.deep.domain.model.PicExample;
 import com.deep.domain.service.PicService;
 import com.deep.api.Utils.FileUtil;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -135,11 +132,16 @@ public class PicResource {
 //
 //    }
     @RequestMapping(value = "/searchfile/searchByExpert",method = RequestMethod.POST)
-    public @ResponseBody Response getByExpert(@NotNull(message = "专家名不能为空") @RequestParam(value = "expert",required = true)String expert){
+    public @ResponseBody Response getByExpert(@RequestBody Pic pic){
+        if (pic.getExpert().isEmpty())
+        {
+            Response response = Responses.errorResponse("查询条件不能为空！");
+            return response;
+        }
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
-        criteria.andExpertLike("%"+expert+"%");
-        List<Pic> select=picService.findPicSelective(picExample);
+        criteria.andExpertLike("%"+pic.getExpert()+"%");
+        List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
 
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
@@ -155,11 +157,16 @@ public class PicResource {
 //
 //    }
     @RequestMapping(value = "/searchfile/searchByFilename",method = RequestMethod.POST)
-    public @ResponseBody Response getByFilename(@NotNull(message = "文件名不能为空") @RequestParam(value = "filename",required = true)String filename){
+    public @ResponseBody Response getByFilename(@RequestBody Pic pic){
+        if (pic.getFilename().isEmpty())
+        {
+            Response response = Responses.errorResponse("查询条件不能为空！");
+            return response;
+        }
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
-        criteria.andFilenameLike("%"+filename+"%");
-        List<Pic> select=picService.findPicSelective(picExample);
+        criteria.andFilenameLike("%"+pic.getFilename()+"%");
+        List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
 
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
@@ -175,11 +182,16 @@ public class PicResource {
 //
 //    }
     @RequestMapping(value = "/searchfile/searchBySymptom",method = RequestMethod.POST)
-    public @ResponseBody Response getBySymptom(@NotNull(message = "症状不能为空") @RequestParam(value = "symptom",required = true)String symptom){
+    public @ResponseBody Response getBySymptom(@RequestBody Pic pic){
+        if (pic.getSymptom().isEmpty())
+        {
+            Response response = Responses.errorResponse("查询条件不能为空！");
+            return response;
+        }
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
-        criteria.andSymptomLike("%"+symptom+"%");
-        List<Pic> select=picService.findPicSelective(picExample);
+        criteria.andSymptomLike("%"+pic.getSymptom()+"%");
+        List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
 
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
@@ -195,11 +207,16 @@ public class PicResource {
 //
 //    }
     @RequestMapping(value = "/searchfile/searchByUploader",method = RequestMethod.POST)
-    public @ResponseBody Response getByUploader(@NotNull(message = "上传人不能为空") @RequestParam(value = "uploader",required = true)String uploader){
+    public @ResponseBody Response getByUploader(@RequestBody Pic pic){
+        if (pic.getUploader().isEmpty())
+        {
+            Response response = Responses.errorResponse("查询条件不能为空！");
+            return response;
+        }
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
-        criteria.andUploaderLike("%"+uploader+"%");
-        List<Pic> select=picService.findPicSelective(picExample);
+        criteria.andUploaderLike("%"+pic.getUploader()+"%");
+        List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
 
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
