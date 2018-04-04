@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * author: Created  By  Caojiawei
- * date: 2018/4/1  16:41
  * 读取文件的十六进制的文件头，来判断文件真正的格式
  */
 public class FileUtil {
@@ -47,9 +45,3 @@ public class FileUtil {
         return builder.toString();
     }
 }
-
-
-
-
-
-

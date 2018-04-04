@@ -36,24 +36,24 @@ public class LiveBroadcastService {
 
       long t = LiveBroadcastUtil.getUnixTime(Calendar.MINUTE, 2);
       String input = new StringBuilder().
-                        append(liveKey).
-                        append(String.valueOf(t)).toString();
+          append(liveKey).
+          append(String.valueOf(t)).toString();
       String sign = LiveBroadcastUtil.md5Secret(input);
 
       String targetUrl = new StringBuilder().
-                             append(LiveManagerServiceUrl).
-                             append("appid=").
-                             append(appid).
-                             append("&interface=").
-                             append(liveChannelSetStatusInterfaceName).
-                             append("&Param.s.channel_id=").
-                             append(channelId).
-                             append("&Param.n.status=").
-                             append(status).
-                             append("&t=").
-                             append(String.valueOf(t)).
-                             append("&sign=").
-                             append(sign).toString();
+          append(LiveManagerServiceUrl).
+          append("appid=").
+          append(appid).
+          append("&interface=").
+          append(liveChannelSetStatusInterfaceName).
+          append("&Param.s.channel_id=").
+          append(channelId).
+          append("&Param.n.status=").
+          append(status).
+          append("&t=").
+          append(String.valueOf(t)).
+          append("&sign=").
+          append(sign).toString();
 
       Request request = new Request.Builder()
           .url(targetUrl)
@@ -190,12 +190,28 @@ public class LiveBroadcastService {
 
   }
 
+  public LiveBroadcastResp getLiveBroadCastLiveUrl(String userid) {
 
-  public LiveBroadcastResp getLiveBroadcastRespUrl(String userid) {
+    String streamId = bizid+"_"+userid;
+    LiveBroadcastResp resp = new LiveBroadcastResp();
+    Map<String, Object> data = new HashMap<String, Object>();
 
-    final String testid = "ba18fad871";
+    String playUrl = new StringBuilder().
+        append(bizid).
+        append(playUrlSub).
+        append(streamId).toString();
 
-    String streamId = bizid+"_"+testid;
+    data.put("playUrl", playUrl);
+    resp.setData(data);
+    resp.setRet("SUCCESS");
+    return resp;
+
+  }
+
+
+  public LiveBroadcastResp getLiveBroadCastPushUrl(String userid) {
+
+    String streamId = bizid+"_"+userid;
     long txTime = LiveBroadcastUtil.getUnixTime(Calendar.DATE,1);
     LiveBroadcastResp resp = new LiveBroadcastResp();
     String safeUrl = LiveBroadcastUtil.getSafeUrl(pushKey, streamId, txTime);
@@ -220,26 +236,17 @@ public class LiveBroadcastService {
     }
 
     String pushUrl = new StringBuilder().
-                         append("rtmp://").
-                         append(bizid).
-                         append(pushUrlSub).
-                         append(streamId).
-                         append("?bizid=").
-                         append(bizid).
-                         append(safeUrl).toString();
-
-
-    String playUrl = new StringBuilder().
-                         append(bizid).
-                         append(playUrlSub).
-                         append(streamId).toString();
-
+        append("rtmp://").
+        append(bizid).
+        append(pushUrlSub).
+        append(streamId).
+        append("?bizid=").
+        append(bizid).
+        append(safeUrl).toString();
 
     data.put("pushUrl", pushUrl);
-    data.put("playUrl", playUrl);
     resp.setData(data);
     resp.setRet("SUCCESS");
-
     return resp;
 
   }

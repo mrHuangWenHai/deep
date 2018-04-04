@@ -102,7 +102,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.deep.domain.model.Message" >
+  <insert id="insert" parameterType="com.deep.domain.model.Message" useGeneratedKeys="true" keyProperty="messageId">
     insert into message (id, username, contact,
     message, inserttime, tag,
     attitude, intention)

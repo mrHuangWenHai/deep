@@ -2,8 +2,7 @@ package com.deep.api.request;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+
 
 /**
  * Created by huangwenhai on 2018/3/14.

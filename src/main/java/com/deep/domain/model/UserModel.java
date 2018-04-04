@@ -1,6 +1,5 @@
 package com.deep.domain.model;
 
-import com.deep.api.Utils.MD5Util;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.stereotype.Component;
 
@@ -11,29 +10,113 @@ public class UserModel {
         private long id;
         private Timestamp gmtCreate;;
         private Timestamp gmtModified;
+
+        @NotBlank(message = "用户名不能为空!")
+        @Pattern(regexp = "^[0-9a-z]+$", message = "用户名只能由a-z以及数字组成")
+        @Size(min = 4, max = 20, message = "用户名最小长度为4, 最大长度为20")
         private String pkUserid;
+
         private String userPwd;
+
+//        @NotBlank(message = "用户编号不能为含有空格的串")
         private String userNum;
+
         private String userPic;
+
+//        @NotBlank(message = "不能带有空格")
         private String userRealname;
+
+//        @NotBlank(message = "不能带有空格")
         private String userLocation;
+
+        @Pattern(regexp = "(^$|(^[1][3-9][0-9]{9}$)|(^[1-9]{1}[0-9]{5,8}))", message = "号码格式错误")
         private String userTelephone;
+
         private String userRemark;
         private long userFactory;
         private long userRole;
         private long userPermit;
+
+//        @Max(1)
+//        @Min(0)
         private byte isExtended;
+
+//        @Min(0)
+//        @Max(1)
         private byte isFactory;
+
+        @NotNull(message = "必须设置密保问题1")
         private String question_1;    //找回密码问题1
+        @NotNull(message = "必须设置密保问题1的答案")
         private String answer_1;     //找回密码答案1
+
+        @NotNull(message = "必须设置密保问题2")
         private String question_2;
+        @NotNull(message = "必须设置密保问题2的答案")
         private String answer_2;
+
+        @NotNull(message = "必须设置密保问题3")
         private String question_3;
+        @NotNull(message = "必须设置密保问题3的答案")
         private String answer_3;
 
-        public String getQuestion_1() {
-            return question_1;
+        @Email(message = "邮箱格式不正确")
+        private String userEmail;
+
+        private String MSN;
+
+        private String QQ;
+
+        @Pattern(regexp = "^$|^(\\d+|\\-){7,}$")
+        private String officialPhone;
+
+        @Pattern(regexp = "^$|^(\\d+|\\-){7,}$")
+        private String familyPhone;
+
+
+        public String getUserEmail() {
+            return userEmail;
         }
+
+        public void setUserEmail(String userEmail) {
+            this.userEmail = userEmail;
+        }
+
+        public String getMSN() {
+            return MSN;
+        }
+
+        public void setMSN(String MSN) {
+            this.MSN = MSN;
+        }
+
+        public String getQQ() {
+            return QQ;
+        }
+
+        public void setQQ(String QQ) {
+            this.QQ = QQ;
+        }
+
+        public String getOfficialPhone() {
+            return officialPhone;
+        }
+
+        public void setOfficialPhone(String officialPhone) {
+            this.officialPhone = officialPhone;
+        }
+
+        public String getFamilyPhone() {
+            return familyPhone;
+        }
+
+        public void setFamilyPhone(String familyPhone) {
+            this.familyPhone = familyPhone;
+        }
+
+        public String getQuestion_1() {
+                return question_1;
+            }
 
         public void setQuestion_1(String question_1) {
             this.question_1 = question_1;
@@ -79,8 +162,6 @@ public class UserModel {
             this.answer_3 = answer_3;
         }
 
-        @Min(0)
-        @Max(1)
         public byte getIsFactory() {
             return isFactory;
         }
@@ -116,9 +197,6 @@ public class UserModel {
             this.gmtModified = gmtModified;
         }
 
-        @NotBlank(message = "用户名不能为空!")
-        @Pattern(regexp = "^[0-9a-z]+$", message = "用户名只能由a-z以及数字组成")
-        @Size(min = 4, max = 20, message = "用户名最小长度为4, 最大长度为20")
         @JsonView(UserSimpleView.class)
         public String getPkUserid() {
             return pkUserid;
@@ -128,21 +206,15 @@ public class UserModel {
             this.pkUserid = pkUserid;
         }
 
-//        @NotBlank(message = "密码中不能含有空格")
-//        @Pattern(regexp = "^[0-9a-z]+$", message = "用户密码必须由数字, 26个英文字母或者',', '.', '@', '#'组成的字符串")
-//        @Size(min = 6, max = 20, message = "ｍｕｓｔ　ｂｅ　６－２０")
         @JsonView(UserDetailView.class)
         public String getUserPwd() {
             return userPwd;
         }
 
         public void setUserPwd(String userPwd) {
-
             this.userPwd = userPwd;
-//            this.userPwd = userPwd;
         }
 
-        @NotBlank(message = "用户编号不能为含有空格的串")
         @JsonView(UserSimpleView.class)
         public String getUserNum() {
             return userNum;
@@ -170,7 +242,6 @@ public class UserModel {
             this.userRealname = userRealname;
         }
 
-        @NotBlank(message = "不能带有空格")
         @JsonView(UserDetailView.class)
         public String getUserLocation() {
             return userLocation;
@@ -180,7 +251,6 @@ public class UserModel {
             this.userLocation = userLocation;
         }
 
-        @Pattern(regexp = "((^[1][3-9][0-9]{9}$)|(^[1-9]{1}[0-9]{5,8}))", message = "号码格式错误")
         @JsonView(UserDetailView.class)
         public String getUserTelephone() {
             return userTelephone;
@@ -226,8 +296,6 @@ public class UserModel {
             this.userPermit = userPermit;
         }
 
-        @Max(1)
-        @Min(0)
         @JsonView(UserSimpleView.class)
         public byte getIsExtended() {
             return isExtended;

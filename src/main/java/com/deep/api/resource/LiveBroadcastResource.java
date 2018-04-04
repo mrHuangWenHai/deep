@@ -23,13 +23,19 @@ public class LiveBroadcastResource {
   @Resource
   private LiveBroadcastService liveBroadcastService;
 
-  @RequestMapping(value = "/geturl", method = RequestMethod.POST)
-  public Response getLiveBroadCastUrl(@RequestParam(value = "userid", required = true)String userid) {
+  /**
+   * 方法功能:获取推流地址
+   * @param userid
+   * @return
+   */
+  @RequestMapping(value = "/getPushUrl", method = RequestMethod.GET)
+  public Response getLiveBroadCastPushUrl(@RequestParam(value = "userid", required = true) String userid) {
 
     if (userid.equals("")) {
       return Responses.errorResponse("userid 不能为空");
     }
-    LiveBroadcastResp resp = liveBroadcastService.getLiveBroadcastRespUrl(userid);
+
+    LiveBroadcastResp resp = liveBroadcastService.getLiveBroadCastPushUrl(userid);
     Response response;
     Map<String, Object> data = new HashMap<String, Object>();
     if (resp.getRet().equals("SUCCESS")) {
@@ -42,7 +48,27 @@ public class LiveBroadcastResource {
     return response;
   }
 
-  @RequestMapping(value = "/setStatus", method = RequestMethod.POST)
+  @RequestMapping(value = "/getGetLiveUrl")
+  public Response getLiveBroadCastLiveUrl(@RequestParam(value = "userid", required = true) String  userid) {
+
+    if (userid.equals("")) {
+      return Responses.errorResponse("userid 不能为空");
+    }
+
+    LiveBroadcastResp resp = liveBroadcastService.getLiveBroadCastLiveUrl(userid);
+    Response response;
+    Map<String, Object> data = new HashMap<String, Object>();
+    if (resp.getRet().equals("SUCCESS")) {
+      response = Responses.successResponse();
+    } else {
+      response = Responses.errorResponse("error");
+    }
+    data.put("liveBroadcastResp",resp);
+    response.setData(data);
+    return response;
+  }
+
+  @RequestMapping(value = "/setStatus", method = RequestMethod.GET)
   public Response setLiveChannelPushStatus(@RequestParam(value = "userid", required = true)String userid,
                                            @RequestParam(value = "status", required = true)String status) {
     if (userid.equals("") || status.equals("")) {
@@ -96,6 +122,5 @@ public class LiveBroadcastResource {
     response.setData(data);
     return response;
   }
-
 
 }

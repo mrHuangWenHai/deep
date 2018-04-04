@@ -21,6 +21,24 @@ public class AgentService {
     }
 
     /**
+     * 获取所有的子代理
+     * @param id
+     * @return
+     */
+    public List<AgentModel> getSons(int id) {
+        return agentMapper.getSons(id);
+    }
+
+    /**
+     * 查询父亲代理
+     * @param id
+     * @return
+     */
+    public AgentModel getFather(int id) {
+        return agentMapper.getFather(id);
+    }
+
+    /**
      * 根据代理的主键查询单个代理信息
      * @param id
      * @return
@@ -46,6 +64,7 @@ public class AgentService {
     public Long deleteAgent(Long id) {
         return agentMapper.deleteAgent(id);
     }
+
     /**
      * 修改一个代理
      */

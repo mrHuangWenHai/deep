@@ -9,8 +9,13 @@ public class AgentModel {
     private Timestamp gmtCreate;
     private Timestamp gmtModified;
     private byte agentRank;
+
+    @NotBlank(message = "代理名称不能为空")
     private String agentName;
+
+    @NotEmpty(message = "代理区域不能为空")
     private String agentArea;
+
     private int agentFather;
 
     public int getId() {
@@ -45,7 +50,6 @@ public class AgentModel {
         this.agentRank = agentRank;
     }
 
-    @NotBlank(message = "代理名称不能为空")
     public String getAgentName() {
         return agentName;
     }
@@ -54,7 +58,6 @@ public class AgentModel {
         this.agentName = agentName;
     }
 
-    @NotEmpty(message = "代理区域不能为空")
     public String getAgentArea() {
         return agentArea;
     }

@@ -28,8 +28,6 @@ public interface NoticePlanMapper {
 
     NoticePlan selectByPrimaryKey(Integer id);
 
-    List<NoticePlan> selectInSite(String string);
-
     int updateByExampleSelective(@Param("record") NoticePlan record, @Param("example") NoticePlanExample example);
 
     int updateByExampleWithBLOBs(@Param("record") NoticePlan record, @Param("example") NoticePlanExample example);

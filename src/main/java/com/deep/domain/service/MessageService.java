@@ -18,11 +18,8 @@ public class MessageService {
 
     public int insertMessage(Message message)
     {
-
-        int flag=messageMapper.insert(message);
-
+        int flag = messageMapper.insert(message);
         return flag;
-
     }
 
 

@@ -8,11 +8,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ServiceConfiguration {
-
-    //  @Bean
-//  public TestService testService() {
-//    TestService testService = new TestService();
-//
-//  }
     public static String redisServer = "localhost";
+
+    public static int port = 6379;
 }
+
