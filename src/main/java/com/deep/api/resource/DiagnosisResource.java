@@ -6,6 +6,8 @@ import com.deep.domain.model.DiagnosisPlanExample;
 import com.deep.domain.model.DiagnosisPlanWithBLOBs;
 import com.deep.domain.model.OtherTime;
 import com.deep.domain.service.DiagnosisPlanService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +28,8 @@ import java.util.List;
  */
 @Controller
 public class DiagnosisResource {
+
+    private final Logger logger = LoggerFactory.getLogger(DiagnosisResource.class);
     @Resource
     private DiagnosisPlanService diagnosisPlanService;
 
@@ -48,6 +52,7 @@ public class DiagnosisResource {
     public Response addPlan(@Valid DiagnosisPlanWithBLOBs insert,
                             @Valid OtherTime otherTime,
                             BindingResult bindingResult) throws ParseException {
+        logger.info("invoke diagnosisInsert/show {}",insert,otherTime,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("诊疗实施档案录入失败");
             return response;
@@ -83,6 +88,7 @@ public class DiagnosisResource {
     @RequestMapping(value = "/diagnosisDeleteById/show",method = RequestMethod.DELETE)
     public Response dropPlan(@Valid DiagnosisPlanWithBLOBs diagnosisPlanWithBLOBs,
                              BindingResult bindingResult){
+        logger.info("invoke diagnosisDeleteById/show {}",diagnosisPlanWithBLOBs,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("育种实施档案删除失败");
             return response;
@@ -109,6 +115,7 @@ public class DiagnosisResource {
     public Response changePlanByOperator(@Valid DiagnosisPlanWithBLOBs operator,
                                          @Valid OtherTime otherTime,
                                          BindingResult bindingResult) throws ParseException {
+        logger.info("invoke diagnosisUpdateByOperator/show {}",operator,otherTime,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("诊疗实施档案更新(操作员页面)失败");
             return response;
@@ -141,6 +148,7 @@ public class DiagnosisResource {
     @RequestMapping(value = "/diagnosisUpdateByProfessor/show",method = RequestMethod.POST)
     public Response changePlanByProfessor(@Valid DiagnosisPlanWithBLOBs professor,
                                           BindingResult bindingResult){
+        logger.info("invoke diagnosisUpdateByProfessor/show {}",professor,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("诊疗实施档案更新(专家页面)失败");
             return response;
@@ -171,6 +179,7 @@ public class DiagnosisResource {
     @RequestMapping(value = "/diagnosisUpdateBySupervisor/show",method = RequestMethod.POST)
     public Response changePlanBySupervisor(@Valid DiagnosisPlanWithBLOBs supervisor,
                                            BindingResult bindingResult){
+        logger.info("invoke diagnosisUpdateBySupervisor/show {}",supervisor,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("诊疗实施档案更新(监督页面)失败");
             return response;
@@ -198,8 +207,9 @@ public class DiagnosisResource {
     @RequestMapping(value = "/diagnosisSelectById/show",method = RequestMethod.GET)
     public Response findPlanById(@Valid DiagnosisPlanWithBLOBs diagnosisPlanWithBLOBs,
                                  BindingResult bindingResult){
+        logger.info("invoke diagnosisSelectById/show {}",diagnosisPlanWithBLOBs,bindingResult);
         if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("育种实施档案(根据条件)查询失败");
+            Response response = Responses.errorResponse("育种实施档案(根据主键)查询失败");
             return response;
         } else {
             //查询语句的写法：一定要在声明对象时把值直接赋进去
@@ -224,6 +234,7 @@ public class DiagnosisResource {
     public Response findPlanSelective(@Valid DiagnosisPlanWithBLOBs diagnosisPlanWithBLOBs,
                                       @Valid OtherTime otherTime,
                                       BindingResult bindingResult) throws ParseException {
+        logger.info("invoke diagnosisSelective/show {}",diagnosisPlanWithBLOBs,otherTime,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("诊疗实施档案(根据条件)查询失败");
             return response;
@@ -295,6 +306,7 @@ public class DiagnosisResource {
     public Response findPlanByProfessor(@Valid DiagnosisPlanWithBLOBs diagnosisPlanWithBLOBs,
                                         @Valid OtherTime otherTime,
                                         BindingResult bindingResult){
+        logger.info("invoke diagnosisSelectByProfessor/show {}",diagnosisPlanWithBLOBs,otherTime,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("育种实施档案(根据条件)查询失败");
             return response;
@@ -334,6 +346,7 @@ public class DiagnosisResource {
     public Response findPlanSelectBySupervisor(@Valid DiagnosisPlanWithBLOBs diagnosisPlanWithBLOBs,
                                                @Valid OtherTime otherTime,
                                                BindingResult bindingResult){
+        logger.info("invoke diagnosisSelectBySupervisor/show {}",diagnosisPlanWithBLOBs,otherTime,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("育种实施档案(根据条件)查询失败");
             return response;

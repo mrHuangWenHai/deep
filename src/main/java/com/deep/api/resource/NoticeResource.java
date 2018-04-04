@@ -7,6 +7,8 @@ import com.deep.domain.model.NoticePlan;
 import com.deep.domain.model.NoticePlanExample;
 import com.deep.domain.model.OtherTime;
 import com.deep.domain.service.NoticePlanService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +35,8 @@ import java.util.List;
  */
 @Controller
 public class NoticeResource {
+
+    private final Logger logger = LoggerFactory.getLogger(NoticeResource.class);
     @Resource
     private NoticePlanService noticePlanService;
 
@@ -55,6 +59,7 @@ public class NoticeResource {
     public Response addPlan(@Valid NoticePlan insert,
                             HttpServletRequest request,
                             BindingResult bindingResult){
+        logger.info("invoke noticeInsert/show {}",insert,request,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("信息发布失败！");
             return response;
@@ -134,13 +139,20 @@ public class NoticeResource {
     }
     @ResponseBody
         @RequestMapping(value = "/noticeDeleteById/show",method = RequestMethod.DELETE)
-    public Response dropPlan(@Valid NoticePlan delete){
-        noticePlanService.dropPlan(delete.getId());
-        Response response = Responses.successResponse();
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("notice_plan",delete);
-        response.setData(data);
-        return response;
+    public Response dropPlan(@Valid NoticePlan delete,
+                             BindingResult bindingResult){
+        logger.info("invoke noticeDeleteById/show {}",delete,bindingResult);
+        if (bindingResult.hasErrors()) {
+            Response response = Responses.errorResponse("信息发布失败！");
+            return response;
+        }else {
+            noticePlanService.dropPlan(delete.getId());
+            Response response = Responses.successResponse();
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("notice_plan",delete);
+            response.setData(data);
+            return response;
+        }
     }
 
 //    按主键修改的接口：/noticeUpdate
@@ -155,6 +167,7 @@ public class NoticeResource {
     public Response changePlan(@Valid NoticePlan update,
                                HttpServletRequest request,
                                BindingResult bindingResult){
+        logger.info("invoke noticeUpdate/show {}",update,request,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("信息修改失败！");
             return response;
@@ -237,6 +250,7 @@ public class NoticeResource {
     @RequestMapping(value = "/noticeSelectById/show",method = RequestMethod.GET)
     public Response findPlanById(@Valid NoticePlan noticePlan,
                                  BindingResult bindingResult){
+        logger.info("invoke noticeSelectById/show {}",noticePlan,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("根据主键查询失败！");
             return response;
@@ -262,6 +276,7 @@ public class NoticeResource {
     public Response findPlanSelective(@Valid NoticePlan noticePlan,
                                       @Valid OtherTime otherTime,
                                       BindingResult bindingResult) throws ParseException{
+        logger.info("invoke noticeSelective/show {}",noticePlan,otherTime,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("根据条件查询失败！");
             return response;
@@ -316,6 +331,7 @@ public class NoticeResource {
     @RequestMapping(value = "/searchInSite/show",method = RequestMethod.GET)
     public Response searchInSite(@Valid OtherTime otherTime,
                                  BindingResult bindingResult){
+        logger.info("invoke searchInSite/show {}",otherTime,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("输入有误，站内搜索失败！");
             return response;
@@ -339,6 +355,7 @@ public class NoticeResource {
     @ResponseBody
     @RequestMapping(value = "/upload/show",method = RequestMethod.POST)
     public Response uploadFile(HttpServletRequest request){
+        logger.info("invoke upload/show {}",request);
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
         String filepath = request.getSession().getServletContext().getContextPath()+"../picture/rich_text_format/";
         List<String> path = new ArrayList<>();
@@ -395,8 +412,9 @@ public class NoticeResource {
     @ResponseBody
     @RequestMapping(value = "/downloadFile",method = RequestMethod.GET)
     public String downloadFile(@Valid OtherTime otherTime,
-                               BindingResult bindingResult,
-                               HttpServletResponse response){
+                               HttpServletResponse response,
+                               BindingResult bindingResult){
+        logger.info("invoke downloadFile {}",otherTime,response,bindingResult);
         if (bindingResult.hasErrors()) {
             System.out.println("下载文件失败，请重试!");
         }else {

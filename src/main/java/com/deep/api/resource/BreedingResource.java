@@ -7,6 +7,8 @@ import com.deep.domain.model.BreedingPlanExample;
 import com.deep.domain.model.OtherTime;
 import com.deep.domain.service.BreedingPlanService;
 import org.apache.ibatis.session.RowBounds;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +30,7 @@ import java.util.List;
 @Controller
 public class BreedingResource {
 
+    private final Logger logger = LoggerFactory.getLogger(BreedingResource.class);
     @Resource
     private BreedingPlanService breedingPlanService;
 
@@ -50,6 +53,7 @@ public class BreedingResource {
     public Response addPlan(@Valid BreedingPlan insert,
                             @Valid OtherTime otherTime,
                             BindingResult bindingResult) throws ParseException {
+        logger.info("invoke breedingInsert/show {}",insert,otherTime,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("育种实施档案录入失败");
             return response;
@@ -100,6 +104,7 @@ public class BreedingResource {
     @RequestMapping(value = "/breedingDeleteById/show",method = RequestMethod.DELETE)
     public Response dropPlan(@Valid BreedingPlan breedingPlan,
                              BindingResult bindingResult){
+        logger.info("invoke breedingDeleteById/show {}",breedingPlan,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("育种实施档案删除失败");
             return response;
@@ -126,6 +131,7 @@ public class BreedingResource {
     public Response changePlanByOperator(@Valid BreedingPlan operator,
                                          @Valid OtherTime otherTime,
                                          BindingResult bindingResult) throws ParseException {
+        logger.info("invoke breedingUpdateByOperator/show {}",operator,otherTime,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("育种实施档案(操作员页面)修改失败");
             return response;
@@ -173,6 +179,7 @@ public class BreedingResource {
     @RequestMapping(value = "/breedingUpdateByProfessor/show",method = RequestMethod.POST)
     public Response changePlanByProfessor(@Valid BreedingPlan professor,
                                           BindingResult bindingResult) {
+        logger.info("invoke breedingUpdateByProfessor/show {}",professor,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("育种实施档案(专家页面)修改失败");
             return response;
@@ -203,6 +210,7 @@ public class BreedingResource {
     @RequestMapping(value = "/breedingUpdateBySupervisor/show",method = RequestMethod.POST)
     public Response changePlanBySupervisor(@Valid BreedingPlan supervisor,
                                            BindingResult bindingResult) {
+        logger.info("invoke breedingUpdateBySupervisor/show {}",supervisor,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("育种实施档案(监督页面)修改失败");
             return response;
@@ -230,6 +238,7 @@ public class BreedingResource {
     @RequestMapping(value = "/breedingSelectById/show",method = RequestMethod.GET)
     public Response findPlanById(@Valid BreedingPlan breedingPlan,
                                  BindingResult bindingResult){
+        logger.info("invoke breedingSelectById/show {}",breedingPlan,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("育种实施档案(根据条件)查询失败");
             return response;
@@ -256,6 +265,7 @@ public class BreedingResource {
     public Response findPlanSelective(@Valid BreedingPlan breedingPlan,
                                       @Valid OtherTime otherTime,
                                       BindingResult bindingResult) throws ParseException {
+        logger.info("invoke breedingSelective/show {}",breedingPlan,otherTime,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("育种实施档案(根据条件)查询失败");
             return response;
@@ -363,6 +373,7 @@ public class BreedingResource {
     public Response findPlanSelectByProfessor(@Valid BreedingPlan breedingPlan,
                                               @Valid OtherTime otherTime,
                                               BindingResult bindingResult){
+        logger.info("invoke breedingSelectByProfessor/show {}",breedingPlan,otherTime,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("育种实施档案(监督页面)修改失败");
             return response;
@@ -402,6 +413,7 @@ public class BreedingResource {
     public Response findPlanSelectBySupervisor(@Valid BreedingPlan breedingPlan,
                                                @Valid OtherTime otherTime,
                                                BindingResult bindingResult){
+        logger.info("invoke breedingSelectBySupervisor/show {}",breedingPlan,otherTime,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("育种实施档案(监督页面)修改失败");
             return response;

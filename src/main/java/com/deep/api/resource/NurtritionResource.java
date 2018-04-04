@@ -6,6 +6,8 @@ import com.deep.domain.model.NutritionPlanExample;
 import com.deep.domain.model.NutritionPlanWithBLOBs;
 import com.deep.domain.model.OtherTime;
 import com.deep.domain.service.NutritionPlanService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +29,7 @@ import java.util.List;
 @Controller
 public class NurtritionResource {
 
+    private final Logger logger = LoggerFactory.getLogger(NurtritionResource.class);
     @Resource
     private NutritionPlanService nutritionPlanService;
 
@@ -51,6 +54,7 @@ public class NurtritionResource {
     public Response addPlan(@Valid NutritionPlanWithBLOBs insert,
                             @Valid OtherTime otherTime,
                             BindingResult bindingResult) throws ParseException {
+        logger.info("invoke nutritionInsert/show {}",insert,otherTime,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("营养实施档案录入失败");
             return response;
@@ -85,6 +89,7 @@ public class NurtritionResource {
     @RequestMapping(value = "/nutritionDeleteById/show",method = RequestMethod.DELETE)
     public Response dropPlan(@Valid NutritionPlanWithBLOBs nutritionPlanWithBLOBs,
                              BindingResult bindingResult){
+        logger.info("invoke nutritionDeleteById/show {}",nutritionPlanWithBLOBs,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("营养实施档案删除失败");
             return response;
@@ -111,6 +116,7 @@ public class NurtritionResource {
     public Response changePlanByOperator(@Valid NutritionPlanWithBLOBs operator,
                                          @Valid OtherTime otherTime,
                                          BindingResult bindingResult) throws ParseException {
+        logger.info("invoke nutritionUpdateByOperator/show {}",operator,otherTime,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("营养实施档案更新(操作员页面)失败");
             return response;
@@ -143,6 +149,7 @@ public class NurtritionResource {
     @RequestMapping(value = "/nutritionUpdateByProfessor/show",method = RequestMethod.POST)
     public Response changePlanByProfessor(@Valid NutritionPlanWithBLOBs professor,
                                           BindingResult bindingResult){
+        logger.info("invoke nutritionUpdateByProfessor/show {}",professor,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("营养实施档案更新(专家页面)失败");
             return response;
@@ -172,6 +179,7 @@ public class NurtritionResource {
     @RequestMapping(value = "/nutritionUpdateBySupervisor/show",method = RequestMethod.POST)
     public Response changePlanBySupervisor(@Valid NutritionPlanWithBLOBs supervisor,
                                            BindingResult bindingResult){
+        logger.info("invoke nutritionUpdateBySupervisor/show {}",supervisor,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("营养实施档案更新(监督页面)失败");
             return response;
@@ -199,6 +207,7 @@ public class NurtritionResource {
     @RequestMapping(value = "/nutritionSelectById/show",method = RequestMethod.GET)
     public Response findPlanById(@Valid NutritionPlanWithBLOBs nutritionPlanWithBLOBs,
                                  BindingResult bindingResult) {
+        logger.info("invoke nutritionSelectById/show {}",nutritionPlanWithBLOBs,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("营养实施档案(根据条件)查询失败");
             return response;
@@ -225,6 +234,7 @@ public class NurtritionResource {
     public Response findPlanSelective(@Valid NutritionPlanWithBLOBs nutritionPlanWithBLOBs,
                                       @Valid OtherTime otherTime,
                                       BindingResult bindingResult) throws ParseException {
+        logger.info("invoke nutritionSelective/show {}",nutritionPlanWithBLOBs,otherTime,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("营养实施档案(根据条件)查询失败");
             return response;
@@ -302,6 +312,7 @@ public class NurtritionResource {
     public Response findPlanSelectByProfessor(@Valid NutritionPlanWithBLOBs nutritionPlanWithBLOBs,
                                               @Valid OtherTime otherTime,
                                               BindingResult bindingResult) {
+        logger.info("invoke nutritionSelectByProfessor/show {}",nutritionPlanWithBLOBs,otherTime,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("营养实施档案(根据条件)查询失败");
             return response;
@@ -338,13 +349,10 @@ public class NurtritionResource {
     }
     @ResponseBody
     @RequestMapping(value = "/nutritionSelectBySupervisor/show",method = RequestMethod.GET)
-    public Response findPlanSelectBySupervisor(@Valid NutritionPlanWithBLOBs nutritionPlanWithBLOBs, BindingResult bindingResult) {
-        /*if(result.hasErrors()){
-            List<ObjectError> ls = result.getAllErrors();
-            for (int i = 0; i < ls.size(); i++) {
-                System.out.println("error:"+ls.get(i));
-            }
-        }else {}*/
+    public Response findPlanSelectBySupervisor(@Valid NutritionPlanWithBLOBs nutritionPlanWithBLOBs,
+                                               @Valid OtherTime otherTime,
+                                               BindingResult bindingResult) {
+        logger.info("invoke nutritionSelectBySupervisor/show {}",nutritionPlanWithBLOBs,otherTime,bindingResult);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("营养实施档案(根据条件)查询失败");
             return response;
