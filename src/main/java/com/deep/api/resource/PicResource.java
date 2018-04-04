@@ -18,38 +18,31 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Controller
 public class PicResource {
     @Resource
     private PicService picService;
 
-    @RequestMapping(value = "/uploadFile",method = RequestMethod.GET)
-    public String upload(){
+    private final Logger logger = LoggerFactory.getLogger(ExampleResource.class);
 
-        return "uploadFile";
-
-    }
+//    @RequestMapping(value = "/uploadFile",method = RequestMethod.GET)
+//    public String upload(){
+//
+//        return "uploadFile";
+//
+//    }
 
 
     @RequestMapping(value = "/uploadFile/upload",method = RequestMethod.POST)
     public @ResponseBody Response addPic(@Valid Pic pic,
                            @RequestParam("file")MultipartFile file,
-//                           @RequestParam(value = "uploader", required = true) String uploader,
                            HttpServletRequest request) {
-//        java.text.SimpleDateFormat formatter =new SimpleDateFormat("yyyy-MM-dd");
-//        Date udate=new Date();
-//        udate=formatter.parse(udate);
 
+        logger.info("invoke /uploadFile/upload [{},{},{}]",pic,file,request);
 
-        //pic.setUdate(new Date());
-//        pic.setVaccine(pic.getVaccine());
-//        pic.setBrand(pic.getBrand());
-//        pic.setUploader(pic.getUploader());
-//        pic.setSymptom(pic.getSymptom());
-//        pic.setSex(pic.getSex());
-//        pic.setSolution(pic.getSolution());
-//        pic.setExpert(pic.getExpert());
 
         try {
             String Header = FileUtil.getFileHeader(file);
@@ -133,6 +126,7 @@ public class PicResource {
 //    }
     @RequestMapping(value = "/searchfile/searchByExpert",method = RequestMethod.POST)
     public @ResponseBody Response getByExpert(@RequestBody Pic pic){
+        logger.info("invoke /searchfile/searchByExpert {}",pic);
         if (pic.getExpert().isEmpty())
         {
             Response response = Responses.errorResponse("查询条件不能为空！");
@@ -156,33 +150,63 @@ public class PicResource {
 //        return "searchByFilename";
 //
 //    }
-    @RequestMapping(value = "/searchfile/searchByFilename",method = RequestMethod.POST)
-    public @ResponseBody Response getByFilename(@RequestBody Pic pic){
-        if (pic.getFilename().isEmpty())
+    @RequestMapping(value = "/searchfile/searchByDate",method = RequestMethod.POST)
+    public @ResponseBody Response getByDate(@RequestBody Pic pic){
+        logger.info("invoke /searchfile/searchByDate [{},{}]",pic.getSdate(),pic.getEdate());
+        PicExample picExample=new PicExample();
+        PicExample.Criteria criteria=picExample.createCriteria();
+        criteria.andUdateBetween(pic.getSdate(),pic.getEdate());
+        List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
+
+        Response response = Responses.successResponse();
+        HashMap<String,Object>data = new HashMap<>();
+        data.put("searchByUdate",select);
+        response.setData(data);
+        return response;
+    }
+
+    @RequestMapping(value = "/searchfile/searchByBrand",method = RequestMethod.POST)
+    public @ResponseBody Response getByBrand(@RequestBody Pic pic){
+        logger.info("invoke /searchfile/searchByBrand {}",pic.getBrand());
+        if (pic.getBrand().isEmpty())
         {
             Response response = Responses.errorResponse("查询条件不能为空！");
             return response;
         }
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
-        criteria.andFilenameLike("%"+pic.getFilename()+"%");
+        criteria.andBrandLike("%"+pic.getBrand()+"%");
         List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
 
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
-        data.put("searchByFilename",select);
+        data.put("searchByBrand",select);
+        response.setData(data);
+        return response;
+    }
+    @RequestMapping(value = "/searchfile/searchByVaccine",method = RequestMethod.POST)
+    public @ResponseBody Response getByVaccine(@RequestBody Pic pic){
+        logger.info("invoke /searchfile/searchByVaccine {}",pic.getVaccine());
+        if (pic.getVaccine().isEmpty())
+        {
+            Response response = Responses.errorResponse("查询条件不能为空！");
+            return response;
+        }
+        PicExample picExample=new PicExample();
+        PicExample.Criteria criteria=picExample.createCriteria();
+        criteria.andVaccineLike("%"+pic.getVaccine()+"%");
+        List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
+
+        Response response = Responses.successResponse();
+        HashMap<String,Object>data = new HashMap<>();
+        data.put("searchByVaccine",select);
         response.setData(data);
         return response;
     }
 
-//    @RequestMapping(value = "/searchFile/searchBySymptom",method = RequestMethod.GET)
-//    public String searchBySymptom(){
-//
-//        return "searchBySymptom";
-//
-//    }
     @RequestMapping(value = "/searchfile/searchBySymptom",method = RequestMethod.POST)
     public @ResponseBody Response getBySymptom(@RequestBody Pic pic){
+        logger.info("invoke /searchfile/searchBySymptom {}",pic.getSymptom());
         if (pic.getSymptom().isEmpty())
         {
             Response response = Responses.errorResponse("查询条件不能为空！");
@@ -208,6 +232,7 @@ public class PicResource {
 //    }
     @RequestMapping(value = "/searchfile/searchByUploader",method = RequestMethod.POST)
     public @ResponseBody Response getByUploader(@RequestBody Pic pic){
+        logger.info("invoke /searchfile/searchByUploader {}",pic.getUploader());
         if (pic.getUploader().isEmpty())
         {
             Response response = Responses.errorResponse("查询条件不能为空！");

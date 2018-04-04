@@ -5,6 +5,8 @@ import com.deep.api.response.Responses;
 import com.deep.domain.model.Message;
 import com.deep.domain.model.MessageExample;
 import com.deep.domain.service.MessageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,12 +27,13 @@ public class MessageResource {
     @Resource
     private MessageService messageService;
 
+    private final Logger logger = LoggerFactory.getLogger(ExampleResource.class);
+
     @RequestMapping(value = "/messageBoard/insert",method = RequestMethod.POST)
     public @ResponseBody
     Response addMessage(@RequestBody @Valid Message message) {
-//        message.setUsername(message.getUsername());
-//        message.setContact(message.getContact());
-//        message.setMessage(message.getMessage());
+        logger.info("invoke/messageBoard/insert {}",message);
+
         message.setInserttime(new Date());
         String contact = message.getContact();
         try {
@@ -43,45 +46,6 @@ public class MessageResource {
             Response response = Responses.errorResponse(e.getMessage());
             return response;
         }
-//        //数据分析相关
-//        message.setTag(message.getTag());
-//        message.setAttitude(message.getAttitude());
-//        message.setIntention(message.getIntention());
-
-//        //留言追加写入到message.txt文件中用作数据分析
-//        String path=request.getSession().getServletContext().getContextPath()+"../message/";
-//
-//        File f = new File(path);
-//
-//        if(!f.exists())
-//        {
-//            f.mkdirs();
-//        }
-//
-//        String fileName = "message.txt";
-//
-//        File file = new File(path,fileName);
-//
-//        if (!file.exists()){
-//            try{
-//                file.createNewFile();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        String fileAddress = path+fileName;
-//
-//        try{
-//            FileWriter writer = new FileWriter(fileAddress,true);
-//            //由于在linux和windows中换行符的不同
-//            //在程序我们应尽量使用System.getProperty("line.separator")来获取当前系统的换
-//            //行符，而不是写/r/n或/n。
-//            writer.write(message.getMessage()+"\n");
-//            writer.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
 
         Integer id = messageService.insertMessage(message);
@@ -89,10 +53,6 @@ public class MessageResource {
         Integer messageId = message.getMessageId();
 
 
-//        MessageExample messageExample =new MessageExample();
-//        MessageExample.Criteria criteria=messageExample.createCriteria();
-//        criteria.andIdEqualTo(message.getId());
-//        List<Message> select=messageService.findMessageSelective(messageExample);
 
         if (id != 0) {
             Response response = Responses.successResponse();
@@ -111,6 +71,7 @@ public class MessageResource {
     public @ResponseBody
     Response searchByMessage( @RequestBody  Message message)
     {
+        logger.info("invoke /messageBoard/searchByMessage {}",message.getMessage());
         if(message.getMessage().isEmpty())
         {
             Response response = Responses.errorResponse("查询条件不能为空！");
@@ -132,10 +93,9 @@ public class MessageResource {
     public @ResponseBody
     Response searchByUsername(
                                 @RequestBody  Message message
-//                              @NotNull(message = "用户名不能为空") @RequestParam(value = "username",required = false,defaultValue = "")String username,
-//                              @RequestParam(value = "pageNumb",required = true)int pageNumb,
-//                              @RequestParam(value = "limit",required = true)int limit
+
     ) {
+        logger.info("invoke /messageBoard/searchByUsername {}",message.getUsername());
 
         if(message.getUsername().isEmpty())
         {
@@ -158,6 +118,7 @@ public class MessageResource {
     public @ResponseBody
     Response searchByTag(@RequestBody  Message message)
     {
+        logger.info("invoke /messageBoard/searchByTag {}",message.getTag());
         if(message.getTag().isEmpty())
         {
             Response response = Responses.errorResponse("查询条件不能为空！");
@@ -178,6 +139,7 @@ public class MessageResource {
     public @ResponseBody
     Response searchByAttitude(@RequestBody  Message message)
     {
+        logger.info("invoke /messageBoard/searchByAttitude {}",message.getAttitude());
         if(message.getAttitude().isEmpty())
         {
             Response response = Responses.errorResponse("查询条件不能为空！");
@@ -198,6 +160,7 @@ public class MessageResource {
     public @ResponseBody
     Response searchByIntention(@RequestBody  Message message)
     {
+        logger.info("invoke /messageBoard/searchByIntention {}",message.getIntention());
         if(message.getIntention().isEmpty())
         {
             Response response = Responses.errorResponse("查询条件不能为空！");
