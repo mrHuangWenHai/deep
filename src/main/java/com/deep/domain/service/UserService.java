@@ -5,9 +5,12 @@ import com.deep.domain.model.AgentModel;
 import com.deep.domain.model.FactoryModel;
 import com.deep.domain.model.UserModel;
 import com.deep.infra.persistence.sql.mapper.UserMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -304,7 +307,7 @@ public class UserService {
         userLogin.setUserPic(userModel.getUserPic());
         userLogin.setUserPwd(userModel.getUserPwd());
         // 角色名称
-        String roleName = roleService.getOneRoleByRolePkTypeID(userModel.getUserRole()).getTypeName();
+        String roleName = roleService.getOneRole(userModel.getUserRole()).getTypeName();
         roleMapper.put("roleName", roleName);
         roleMapper.put("roleNum", userModel.getUserRole());
         userLogin.setUserRole(roleMapper);
@@ -325,6 +328,10 @@ public class UserService {
         if (isFactory == 0) {
             // 代表羊场
             FactoryModel factoryModel = factoryService.getOneFactory(factoryId);
+            Logger logger = LoggerFactory.getLogger(UserService.class);
+            logger.info("isFactory", factoryModel);
+            System.out.println(factoryId);
+            System.out.println(factoryModel.getBreadName());
             if (factoryModel != null) {
                 factoryOrAgentMapper.put("factoryNum", factoryModel.getId());
                 factoryOrAgentMapper.put("factoryName",factoryModel.getBreadName());
@@ -358,5 +365,21 @@ public class UserService {
      */
     public Long updateUserPwd(String userPwd, String username) {
         return userMapper.updateUserPwd(userPwd, username);
+    }
+
+    /**
+     * 获取羊场上级代理的专家信息(测试, only 测试)
+     * @param factoryNumber
+     * @return
+     */
+    public List<String> getUserTelephoneByfactoryNum(BigInteger factoryNumber) {
+        short agentID = factoryService.getAgentIDByFactoryNumber(factoryNumber.toString());
+        System.out.println(agentID);
+        List<String> telephones = userMapper.queryTelephoneByAgentAndRole(agentID);
+        if (telephones.size() <= 0) {
+            return null;
+        } else {
+            return telephones;
+        }
     }
 }

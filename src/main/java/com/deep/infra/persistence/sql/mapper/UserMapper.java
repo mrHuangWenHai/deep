@@ -81,6 +81,24 @@ public interface UserMapper {
     })
     UserModel queryUserById(Long userId);
 
+    @Select("select id, pk_userid, user_telephone, user_role, user_email, QQ, official_phone from user_manage where is_factory = 1 and user_factory = #{agentID} and user_role = #{roleID}")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "pkUserid", column = "pk_userid"),
+            @Result(property = "userTelephone", column = "user_telephone"),
+            @Result(property = "userRole", column = "user_role"),
+            @Result(property = "userEmail", column = "user_email"),
+            @Result(property = "QQ", column = "QQ"),
+            @Result(property = "officialPhone", column = "official_phone")
+    })
+    UserService.UserRole queryByAgentAndRole(short agentID, short roleID);
+
+    @Select("select user_telephone from user_manage where is_factory = 1 and user_factory = #{agentID} and user_role in (4, 8, 12, 16)")
+    @Results({
+            @Result(property = "userTelephone", column = "user_telephone"),
+    })
+    List<String> queryTelephoneByAgentAndRole(short agentID);
+
     /**
      * 根据用户名获取单个用户
      * @param pkUserid

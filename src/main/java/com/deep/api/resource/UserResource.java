@@ -17,10 +17,12 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.lang.reflect.Field;
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 @RestController
@@ -340,6 +342,15 @@ public class UserResource {
         HashMap<String, Object> data = new HashMap<>();
         data.put("data", userModels);
         data.put("size", userModels.size());
+        response.setData(data);
+        return response;
+    }
+
+    @GetMapping(value = "/user/test/{id}")
+    public Response getTest(@PathVariable("id") String id) {
+        Response response = Responses.successResponse();
+        Map data = new HashMap<>();
+        data.put("data", userService.getUserTelephoneByfactoryNum(new BigInteger(id)));
         response.setData(data);
         return response;
     }

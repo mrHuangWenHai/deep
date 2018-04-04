@@ -42,7 +42,6 @@ public class RoleService {
      * @return
      */
     public RoleModel getOneRoleByRolePkTypeID(Long id) {
-        System.out.println(id);
         return roleMapper.queryRoleByPkTypeId(id);
     }
 
