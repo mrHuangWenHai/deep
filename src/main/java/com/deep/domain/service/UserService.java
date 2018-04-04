@@ -1,5 +1,6 @@
 package com.deep.domain.service;
 
+
 import com.deep.api.authorization.tools.RoleAndPermit;
 import com.deep.domain.model.AgentModel;
 import com.deep.domain.model.FactoryModel;
@@ -274,4 +275,5 @@ public class UserService {
     public Long updateUserPwd(String userPwd, String username) {
         return userMapper.updateUserPwd(userPwd, username);
     }
+
 }

@@ -1,13 +1,14 @@
 package com.deep.infra.persistence.sql.mapper;
 
+
 import com.deep.domain.model.PermitModel;
 import com.deep.domain.model.RoleModel;
 import org.apache.ibatis.annotations.*;
-
 import java.util.List;
 
 @Mapper
 public interface RoleMapper {
+
     /**
      * 列出角色列表
      * @return
@@ -96,4 +97,5 @@ public interface RoleMapper {
      */
     @Delete("delete from role_user where id = #{id}")
     Long deleteRole(Long roleID);
+
 }

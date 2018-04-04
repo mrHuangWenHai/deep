@@ -1,5 +1,6 @@
 package com.deep.infra.persistence.sql.mapper;
 
+
 import com.deep.domain.model.TestModel;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -13,7 +14,4 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface TestMapper {
-
-  //@Select("SELECT * FROM P")
-  TestModel getTestModelById(@Param("id") String id);
 }

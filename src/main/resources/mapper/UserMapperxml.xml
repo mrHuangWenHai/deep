@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--Mapper名称 对应infra中mapper类名-->
+<mapper namespace="com.deep.infra.persistence.sql.mapper.UserMapper">
+    <insert id="setUserModel" parameterType="com.deep.domain.model.UserModel">
+        INSERT INTO user(
+        username,
+        password,
+        name,
+        factory_num,
+        telephone,
+        question_1,
+        answer_1,
+        question_2,
+        answer_2,
+        question_3,
+        answer_3,
+        gmt_create
+        )
+        VALUES(
+        #{userModel.username},
+        #{userModel.password},
+        #{userModel.name},
+        #{userModel.factoryNum},
+        #{userModel.telephone},
+        #{userModel.question_1},
+        #{userModel.answer_1},
+        #{userModel.question_2},
+        #{userModel.answer_2},
+        #{userModel.question_3},
+        #{userModel.answer_3},
+        #{userModel.gmtCreate}
+        )
+    </insert>
+
+    <resultMap id="user" type="com.deep.domain.model.UserModel">
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="name" column="name"/>
+        <result property="factoryNum" column="factory_num"/>
+        <result property="telephone" column="telephone"/>
+        <result property="question_1" column="question_1"/>
+        <result property="answer_1" column="answer_1"/>
+        <result property="question_2" column="question_2"/>
+        <result property="answer_2" column="answer_2"/>
+        <result property="question_3" column="question_3"/>
+        <result property="answer_3" column="answer_3"/>
+        <result property="gmtCreate" column="gmt_create"/>
+    </resultMap>
+
+    <select id="getUserTelephoneByfactoryNum" resultMap="user">
+        SELECT
+        *
+        FROM
+        user
+        WHERE
+        factory_num = #{factoryNum}
+    </select>
+
+    <select id="getUserModelByusername" resultMap="user">
+        SELECT
+        *
+        FROM
+        user
+        WHERE
+        username = #{username}
+    </select>
+
+    <select id="getAllUserModel" resultMap="user">
+        SELECT
+        *
+        FROM
+        user
+    </select>
+
+    <delete id="deleteUserModelByid" >
+        DELETE FROM
+        user
+        WHERE
+        id = #{id}
+    </delete>
+
+</mapper>

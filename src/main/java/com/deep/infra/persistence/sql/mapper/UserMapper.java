@@ -2,11 +2,11 @@ package com.deep.infra.persistence.sql.mapper;
 
 import com.deep.domain.model.UserModel;
 import org.apache.ibatis.annotations.*;
-
 import java.util.List;
 
 @Mapper
 public interface UserMapper {
+
     /**
      * 列出用户列表
      * @return
@@ -267,4 +267,5 @@ public interface UserMapper {
      */
     @Update("update user_manage set user_pwd = #{userPwd} where username = #{username}")
     Long updateUserPwd(String userPwd, String username);
+
 }

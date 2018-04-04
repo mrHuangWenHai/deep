@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
 <!DOCTYPE configuration
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-    <typeAliases>
-        <package name="com.deep.domain.model"/>
-    </typeAliases>
+    <!-- 配置mybatis的分页插件PageHelper -->
+    <settings>
+        <setting name="cacheEnabled" value="false"/>
+        <setting name="localCacheScope" value="STATEMENT"/>
+    </settings>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver" />
+                <property name="url" value="jdbc:mysql://localhost:3306/DXSheep" />
+                <property name="username" value="root" />
+                <property name="password" value="change123" />
+            </dataSource>
+        </environment>
+    </environments>
+
     <mappers>
+
         <mapper resource="mapper/TestMapper.xml"/>
         <mapper class="com.deep.infra.persistence.sql.mapper.UserMapper"/>
         <mapper resource="mapper/BreedingPlanMapper.xml"/>
@@ -16,6 +30,14 @@
         <mapper resource="mapper/NoticePlanMapper.xml"/>
         <mapper resource="mapper/PicMapper.xml"/>
         <mapper resource="mapper/MessageMapper.xml"/>
+        <mapper resource="mapper/RoleMapperxml.xml"/>
+        <mapper resource="mapper/UserMapperxml.xml"/>
+        <mapper resource="mapper/GenealogicalFilesMapperxml.xml" />
+        <mapper resource="mapper/DisinfectFilesMapperxml.xml" />
+        <mapper resource="mapper/ImmunePlanMapperxml.xml"/>
+        <mapper resource="mapper/RepellentPlanMapperxml.xml"/>
+        <mapper resource="mapper/GenealogicalFilesTransMapper.xml"/>
 
     </mappers>
 </configuration>
+

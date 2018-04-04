@@ -10,10 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 @Service
 public class RoleService {
     @Resource
     private RoleMapper roleMapper;
+
     @Resource
     private PermitMapper permitMapper;
     /**
@@ -133,4 +135,5 @@ public class RoleService {
 
         return map;
     }
+
 }

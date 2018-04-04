@@ -3,6 +3,7 @@ package com.deep.domain.model;
 import java.sql.Timestamp;
 
 public class RoleModel {
+
     private long id;
     private Timestamp gmtCreate;
     private Timestamp gmtModified;
@@ -84,5 +85,6 @@ public class RoleModel {
         result = 31 * result + (typeName != null ? typeName.hashCode() : 0);
         result = 31 * result + (int) (defaultPermit ^ (defaultPermit >>> 32));
         return result;
+
     }
 }

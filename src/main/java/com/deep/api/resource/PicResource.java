@@ -132,10 +132,10 @@ public class PicResource {
             Response response = Responses.errorResponse("查询条件不能为空！");
             return response;
         }
-        PicExample picExample=new PicExample();
-        PicExample.Criteria criteria=picExample.createCriteria();
+        PicExample picExample = new PicExample();
+        PicExample.Criteria criteria = picExample.createCriteria();
         criteria.andExpertLike("%"+pic.getExpert()+"%");
-        List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
+        List<Pic> select = picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
 
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();

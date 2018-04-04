@@ -12,7 +12,6 @@ public class Responses {
    */
   public static Response successResponse() {
     Response response = new Response();
-
     RespMeta meta = new RespMeta();
     meta.setCode(0);
     response.setMeta(meta);

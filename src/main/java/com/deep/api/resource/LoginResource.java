@@ -1,5 +1,6 @@
 package com.deep.api.resource;
 
+
 import com.deep.api.Utils.JedisUtil;
 import com.deep.api.Utils.MobileAnnouncementUtil;
 import com.deep.api.authorization.token.TokenModel;
@@ -19,10 +20,12 @@ import java.util.logging.Logger;
 
 @RestController
 public class LoginResource {
+
     @Resource
     private UserService userService;
 
     @Resource
+
     private MobileAnnouncementUtil mobileAnnouncementModel;
 
     @Resource
@@ -234,4 +237,6 @@ public class LoginResource {
         response.setData(data);
         return response;
     }
+
+
 }

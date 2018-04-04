@@ -355,4 +355,5 @@ public class UserModel {
         public interface UserSimpleView {}
 
         public interface UserDetailView extends UserSimpleView {}
+
 }
