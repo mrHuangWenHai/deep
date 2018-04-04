@@ -27,7 +27,7 @@ public class MessageResource {
 
     @RequestMapping(value = "/messageBoard/insert",method = RequestMethod.POST)
     public @ResponseBody
-    Response addMessage(@Valid Message message) {
+    Response addMessage(@RequestBody @Valid Message message) {
 //        message.setUsername(message.getUsername());
 //        message.setContact(message.getContact());
 //        message.setMessage(message.getMessage());
