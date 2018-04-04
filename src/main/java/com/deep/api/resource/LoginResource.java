@@ -10,6 +10,7 @@ import com.deep.domain.model.UserModel;
 import com.deep.domain.service.UserService;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +20,9 @@ import java.util.logging.Logger;
 
 @RestController
 public class LoginResource {
+
+    private final org.slf4j.Logger logger = LoggerFactory.getLogger(LoginResource.class);
+
     @Resource
     private UserService userService;
 
@@ -35,6 +39,7 @@ public class LoginResource {
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Response LoginResult(@RequestBody UserModel userModelTest, HttpServletResponse httpServletResponse){
+        logger.info("invoke LoginResult{}, url is /login", userModelTest, httpServletResponse);
         String username = userModelTest.getPkUserid();
         String password = userModelTest.getUserPwd();
         UserModel userModel = userService.getUserByPkuserID(username);
@@ -78,6 +83,7 @@ public class LoginResource {
      */
     @RequestMapping(value = "/phonefind")
     public Response PhoneFind(@RequestParam("usernameP") String usernameP){
+        logger.info("invoke PhoneFind{}, url is /phonefind", usernameP);
         UserModel userModel = userService.getUserByPkuserID(usernameP);
         if (userModel == null) {
             return Responses.errorResponse("用户不存在");
@@ -148,6 +154,7 @@ public class LoginResource {
      */
     @GetMapping(value = "/ensureverify/{verifyCode}")
     public Response EnsureVerify(@PathVariable("verifyCode") String verifyCode){
+        logger.info("invoke EnsureVerify{}, url is /ensureverify/{vefiyCode}", verifyCode);
         if (verifyCode == null) {
             return Responses.errorResponse("error!");
         }
@@ -168,7 +175,7 @@ public class LoginResource {
 
     @GetMapping(value = "/question")
     public Response requestQuestion(@RequestParam("name") String name) {
-        System.out.println(name);
+        logger.info("invoke requestQuestion{}, url is requestQuestion", name);
         if (name == null) {
             return Responses.errorResponse("error!");
         }
@@ -191,7 +198,8 @@ public class LoginResource {
      * @return
      */
     @PostMapping(value = "/ensurequestion")
-    public Response EnsureQuestion(@RequestBody UserModel userModel){
+    public Response EnsureQuestion(@RequestBody UserModel userModel) {
+        logger.info("invoke ensureQuestion{}, url is /ensurequestion", userModel);
         if (userModel == null) {
             return Responses.errorResponse("error!");
 
@@ -222,6 +230,7 @@ public class LoginResource {
      */
     @GetMapping(value = "/logout/{id}")
     public Response logout(@PathVariable("id") String id) {
+        logger.info("invoke logout{}, url is /logout/{id}", id);
         if (id == null) {
             return Responses.errorResponse("error!");
         }

@@ -6,6 +6,8 @@ import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.RoleModel;
 import com.deep.domain.service.RoleService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +20,9 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "role")
 public class RoleResource {
+
+    private final Logger logger = LoggerFactory.getLogger(RoleResource.class);
+
     @Resource
     private RoleService roleService;
 
@@ -28,6 +33,7 @@ public class RoleResource {
     @Permit(modules = "role")
     @GetMapping(value = "/")
     public Response roleLists() {
+        logger.info("invoke roleLists, url is role/");
         List<RoleModel> roleModels = roleService.getAll();
         if (roleModels.size() <= 0) {
             return Responses.errorResponse("获取角色信息失败");
@@ -49,6 +55,7 @@ public class RoleResource {
     @Permit(modules = "role")
     @PostMapping(value = "/add")
     public Response addRole(@Valid @RequestBody RoleModel roleModel, BindingResult bindingResult) {
+        logger.info("invoke addRole{}, url is role/add", roleModel, bindingResult);
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("添加角色出错,请检查网络后重试");
         } else {
@@ -74,6 +81,7 @@ public class RoleResource {
     @Permit(modules = "role")
     @GetMapping(value = "/{id}")
     public Response findRole(@PathVariable("id")String id) {
+        logger.info("invoke findRole{}", id);
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -96,6 +104,7 @@ public class RoleResource {
     @Permit(modules = "role")
     @DeleteMapping(value = "/{id}")
     public Response deleteRole(@PathVariable("id")String id) {
+        logger.info("invoke deleteRole{}, url is role/{id}", id);
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -119,6 +128,7 @@ public class RoleResource {
     @Permit(modules = "role")
     @PutMapping(value = "/{id}")
     public Response roleUpdate(@RequestBody @Valid RoleModel roleModel, @PathVariable("id") String id, BindingResult bindingResult) {
+        logger.info("invoke roleUpdate{}, url is role/{id}", roleModel, id, bindingResult);
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");

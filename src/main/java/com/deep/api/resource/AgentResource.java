@@ -6,6 +6,8 @@ import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.AgentModel;
 import com.deep.domain.service.AgentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +21,9 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "agent")
 public class AgentResource {
+
+    private final Logger logger = LoggerFactory.getLogger(AgentResource.class);
+
     @Resource
     private AgentService agentService;
 
@@ -29,6 +34,7 @@ public class AgentResource {
     @Permit(modules = "dongxiang_factory_administrator", authorities = "select_agent")
     @GetMapping(value = "/")
     public Response agentLists() {
+        logger.info("invoke agentLists, url is agent/");
         List<AgentModel> agents = agentService.getAll();
         if (agents.size() <= 0) {
             return Responses.errorResponse("系统中暂时没有代理");
@@ -49,6 +55,7 @@ public class AgentResource {
     @Permit(modules = "dongxiang_factory_administrator", authorities = "select_agent")
     @GetMapping(value = "/{id}")
     public Response findOne(@PathVariable("id") String id) {
+        logger.info("invoke findOne{}, url is agent/{id}", id);
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -71,6 +78,7 @@ public class AgentResource {
     @Permit(modules = "dongxiang_factory_administrator", authorities = "delete_agent")
     @DeleteMapping(value = "/{id}")
     public Response deleteOne(@PathVariable("id") String id) {
+        logger.info("invoke deleteOne{}, url is agent/{id}", id);
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -95,6 +103,7 @@ public class AgentResource {
     @Permit(modules = "dongxiang_factory_administrator", authorities = "create_agent")
     @PostMapping(value = "/add")
     public Response addOne(@Valid @RequestBody AgentModel agentModel, BindingResult bindingResult) {
+        logger.info("invoke addOne{}, url is agent/add", agentModel);
         if (bindingResult.hasErrors())  {
             return Responses.errorResponse("添加代理失败, 验证错误!");
         } else {
@@ -123,6 +132,7 @@ public class AgentResource {
     @Permit(modules = "dongxiang_factory_administrator", authorities = "update_agent")
     @PutMapping("/{id}")
     public Response agentUpdate(@Valid @RequestBody AgentModel agentModel, @PathVariable("id") String id, BindingResult bindingResult) {
+        logger.info("invoke agentUpdate{}, url is agent/{id}", agentModel, id);
         int uid = StringToLongUtil.stringToInt(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -153,6 +163,7 @@ public class AgentResource {
      */
     @GetMapping(value = "/sons/{id}")
     public Response AgentsSon(@PathVariable("id") String id) {
+        logger.info("invoke agentsSon{}, url is agent/sons/{id}", id);
         int agentID = StringToLongUtil.stringToInt(id);
         if (agentID != -1) {
             return Responses.errorResponse("error");
@@ -177,6 +188,7 @@ public class AgentResource {
      */
     @GetMapping(value = "/father/{id}")
     public Response AgentFather(@PathVariable("id") String id) {
+        logger.info("invoke agentFather{}, url is agent/father/{id}", id);
         int agentID = StringToLongUtil.stringToInt(id);
         if (agentID != -1) {
             return Responses.errorResponse("error");

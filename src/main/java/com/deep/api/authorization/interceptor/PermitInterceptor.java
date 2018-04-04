@@ -3,6 +3,8 @@ package com.deep.api.authorization.interceptor;
 import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.authorization.token.TokenManagerRealization;
 import com.deep.api.authorization.tools.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -18,6 +20,8 @@ import java.util.Set;
 
 @Component
 public class PermitInterceptor extends HandlerInterceptorAdapter{
+    private final Logger logger = LoggerFactory.getLogger(PermitInterceptor.class);
+
     @Resource
     private TokenManagerRealization tokenManagerRealization;
     // static修饰的代码块在类进行初始化的时候肯定会执行
@@ -111,7 +115,9 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
 
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response, Object handler) throws Exception {
+        logger.info("invoke preHandle of PermitInterceptor", request, response, handler);
         if (request.getMethod().equals("OPTIONS")) {
+            logger.info("PermitInterceptor:request type is OPTIONS");
             return true;
         }
 
@@ -123,6 +129,7 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
                 request.getRequestURI().equals("/phonefind")||request.getRequestURI().equals("/ensurequestion") ||
                 request.getRequestURI().equals("/error") || request.getRequestURI().equals("/question")
                 ) {
+            logger.info("PermitInterceptor:don't need to interceptor");
             return true;
         }
         // 将handler强制转换为HandlerMethod
@@ -133,20 +140,19 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
         String authorization = request.getHeader(Constants.AUTHORIZATION);
         System.out.println("Permit拦截器" + authorization);
         if (authorization == null) {
-            System.out.println("无该权限");
+            logger.info("authorization == null");
             response.setStatus(401);
             return false;
         }
         tokenManagerRealization = new TokenManagerRealization();
-        System.out.println("进入拦截器");
         // 取出方法上的Permit注解
         Permit permit = method.getAnnotation(Permit.class);
         if (permit == null) {
-            System.out.println("没有设置权限");
+            logger.info("no permit message");
             return true;
         } else {
             // 如果注解Permit不为null
-            System.out.println(permit.modules().length);
+            logger.info("permit modules length", permit.modules().length);
             if (permit.modules().length > 0) {
                 String[] modules = permit.modules();
                 Set<String> authSet = new HashSet<>();
@@ -161,13 +167,14 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
 //                Jedis jedis = new Jedis(ServiceConfiguration.redisServer);
 //                String roleInt = jedis.get(String.valueOf(userID).split("-")[1]);
                 Long roleInt = tokenManagerRealization.getRoleID(authorization);
-                System.out.println("roleInt" + roleInt + ":roleInt");
+                logger.info("roleInt", roleInt);
                 // TODO 需要判断用户是否有拓展权限从而判断是否属于其它的用户从而决定是否进行拦截操作(PASS--用户可以自定义角色, 所以此功能可以舍弃)
                 // 根据roleInt去查询角色的名称, 需要实现roleInt与角色名称的一一对应, 所以通过静态的方法去处理相关的关系
                 // 这是相应的roleString角色
                 String roleString = map.get(roleInt);
                 if (authSet.contains(roleString)) {
                     // 校验通过返回true, 否则拦截请求
+                    logger.info("PermitInterceptor success");
                     return true;
                 }
             }
