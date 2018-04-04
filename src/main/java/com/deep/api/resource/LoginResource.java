@@ -9,8 +9,6 @@ import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.MD5Util;
 import com.deep.domain.service.RoleService;
 import com.deep.domain.service.UserService;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,9 +19,6 @@ import redis.clients.jedis.Jedis;
 import javax.annotation.Resource;
 import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Controller
 public class LoginResource {
@@ -166,7 +161,8 @@ public class LoginResource {
                 answer_3.equals(myuserModel.getAnswer_3())){
             TokenModel tokenModel = new TokenModel("Identify","Success");
             //记录找回名密码成功状态 时间：5分钟
-            JedisUtil jedisUtil = new JedisUtil(tokenModel.getIdentify(),tokenModel.getToken(),5*60);
+            JedisUtil.setCertainKeyValueWithExpireTime(tokenModel.getIdentify(),tokenModel.getToken(),5*60);
+
             return new Response().addData("Success","Continue input new password");
         }else {
             return new Response().addData("Error","Answer wrong");

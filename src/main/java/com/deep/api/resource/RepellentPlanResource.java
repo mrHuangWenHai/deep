@@ -10,6 +10,8 @@ import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.JudgeUtil;
 import com.deep.domain.util.UploadUtil;
 import org.apache.ibatis.session.RowBounds;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -26,7 +27,7 @@ import java.util.List;
 @Controller
 public class RepellentPlanResource {
 
-
+    Logger logger = LoggerFactory.getLogger(RepellentPlanResource.class);
     @Resource
     private RepellentPlanService repellentPlanService;
 
@@ -52,6 +53,7 @@ public class RepellentPlanResource {
     ) {
         //System.out.println("No requestBody");
 
+        logger.info("invoke saveShow {}", repellentEartagFile, repellentPlanModel, request);
         //判断文件头
 
         if (repellentPlanModel.getFactoryNum() == null ||
@@ -195,6 +197,7 @@ public class RepellentPlanResource {
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
     public Response FindShow(@RequestBody RepellentPlanModel repellentPlanModel){
 
+        logger.info("invoke finsShow {}", repellentPlanModel);
         if(repellentPlanModel.getSize() == 0){
             repellentPlanModel.setSize(10);
         }
@@ -223,6 +226,7 @@ public class RepellentPlanResource {
                                   @RequestParam(value = "page",defaultValue = "0") int page,
                                   @RequestParam(value = "size",defaultValue = "10") int size){
 
+        logger.info("invoke professorFind {}", isPass1, page, size);
         List<RepellentPlanModel> repellentPlanModels = repellentPlanService.getRepellentPlanModelByProfessor(isPass1,new RowBounds(page,size));
 
         return JudgeUtil.JudgeFind(repellentPlanModels,repellentPlanModels.size());
@@ -241,6 +245,7 @@ public class RepellentPlanResource {
     @RequestMapping(value = "pupdate",method = RequestMethod.PATCH)
     public Response ProfessorUpdate(@RequestBody RepellentPlanModel repellentPlanModel) {
 
+        logger.info("invoke professorUpdate {}", repellentPlanModel);
 
         if (repellentPlanModel.getId() == null ||
                 repellentPlanModel.getProfessor() == null ||
@@ -311,6 +316,8 @@ public class RepellentPlanResource {
     public Response SupervisorFind(@RequestParam("isPass2") Integer isPass2,
                                    @RequestParam(value = "page",defaultValue = "0") int page,
                                    @RequestParam(value = "size",defaultValue = "10") int size){
+        logger.info("invoke supervisorFind {}", isPass2, page, size);
+
         List<RepellentPlanModel> repellentPlanModels = repellentPlanService.getRepellentPlanModelBySupervisor(isPass2,new RowBounds(page,size));
 
         return JudgeUtil.JudgeFind(repellentPlanModels,repellentPlanModels.size());
@@ -326,6 +333,7 @@ public class RepellentPlanResource {
     @RequestMapping(value = "supdate",method = RequestMethod.PATCH)
     public Response SupervisorUpdate(@RequestBody RepellentPlanModel repellentPlanModel){
 
+        logger.info("invoke supervisorUpdate {}", repellentPlanModel);
 
         if( repellentPlanModel.getId() == null||
                 repellentPlanModel.getSupervisor() == null||
@@ -396,6 +404,7 @@ public class RepellentPlanResource {
     @RequestMapping(value = "oupdate",method = RequestMethod.PATCH)
     public Response OperatorUpdate(@RequestBody RepellentPlanModel repellentPlanModel) {
 
+        logger.info("invoke operatorUpdate {}", repellentPlanModel);
         if (repellentPlanModel.getId() == null) {
             return Responses.errorResponse("Operate wrong");
         } else {
@@ -453,6 +462,8 @@ public class RepellentPlanResource {
     @ResponseBody
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
     public Response Delete(@RequestParam("id") Long id){
+
+        logger.info("invoke delete {}", id);
         int row = repellentPlanService.deleteRepellentPlanModelByid(id);
         return JudgeUtil.JudgeDelete(row);
     }

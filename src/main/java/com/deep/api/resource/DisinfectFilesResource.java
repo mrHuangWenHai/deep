@@ -9,11 +9,15 @@ import com.deep.domain.service.UserService;
 import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.JudgeUtil;
 import org.apache.ibatis.session.RowBounds;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.math.BigInteger;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.sql.Timestamp;
 
 import java.text.SimpleDateFormat;
@@ -23,6 +27,8 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/df",method = RequestMethod.GET)
 public class DisinfectFilesResource {
+
+    private final Logger logger = LoggerFactory.getLogger(DisinfectFilesResource.class);
 
     @Resource
     private DisinfectFilesService disinfectFilesService;
@@ -46,24 +52,19 @@ public class DisinfectFilesResource {
      */
     @ResponseBody
     @RequestMapping(value = "/saveshow",method = RequestMethod.POST)
-    public Response SaveShow(@RequestBody DisinfectFilesModel disinfectFilesModel
-                             //@RequestParam("professor") String professor,    //可空 技术审核时自动生成
-                             //@RequestParam("supervisor") String supervisor,   //可空 监督员审核时自动生成
-                             //@RequestParam("isPass") String isPass,    //可空 由技术审核填写 默认值 未审核
-                             //@RequestParam("unpassReason") String unpassReason,   //可空 由技术审核填写 默认值 无
-                             //表单提交自动生成
-                             //@RequestParam("gmtCreate") Timestamp gmtCreate,
-                             //@RequestParam("gmtModified") Timestamp gmtModified,
-                             //@RequestParam("gmtProfessor") Timestamp gmtProfessor,   //可空 技术审核填写后自动生成
-                             //@RequestParam("gmtSupervise") Timestamp gmtSupervise    //可空 监督员审核后自动生成
+    public Response SaveShow(@Valid DisinfectFilesModel disinfectFilesModel,
+                             @RequestParam("disinfectEartagFile") MultipartFile disinfectEartagFile,
+                             HttpServletRequest request
                             ){
+        logger.info("invoke saveShow {}", disinfectFilesModel);
         if("".equals(disinfectFilesModel.getFactoryNum().toString())||
                 "".equals(disinfectFilesModel.getDisinfectTime())||
                 "".equals(disinfectFilesModel.getDisinfectName())||
                 "".equals(disinfectFilesModel.getDisinfectQuality())||
                 "".equals(disinfectFilesModel.getDisinfectWay())||
                 "".equals(disinfectFilesModel.getOperator())||
-                "".equals(disinfectFilesModel.getRemark())){
+                "".equals(disinfectFilesModel.getRemark())||
+                disinfectEartagFile.isEmpty()){
             return Responses.errorResponse("Lack Item");
 
         }else {
@@ -174,6 +175,8 @@ public class DisinfectFilesResource {
     @ResponseBody
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
     public Response FindShow(@RequestBody DisinfectFilesModel disinfectFilesModel){
+        logger.info("invoke findShow {}",disinfectFilesModel);
+
         if(disinfectFilesModel.getSize() == 0){
             disinfectFilesModel.setSize(10);
         }
@@ -202,6 +205,8 @@ public class DisinfectFilesResource {
     public Response ProfessorFind(@RequestParam("isPass1") Integer isPass1,
                                   @RequestParam(value = "page",defaultValue = "0") int page,
                                   @RequestParam(value = "size",defaultValue = "10") int size){
+
+        logger.info("invoke professorFind {}", isPass1, page, size);
         List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesService.getDisinfectFilesModelByProfessor(isPass1,new RowBounds(page,size));
 
         return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
@@ -218,6 +223,8 @@ public class DisinfectFilesResource {
     @ResponseBody
     @RequestMapping(value = "/pupdate",method = RequestMethod.PATCH)
     public Response ProfessorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel) {
+
+        logger.info("invoke professorUpdate{}", disinfectFilesModel);
 
         if (disinfectFilesModel.getId() == null ||
                 disinfectFilesModel.getProfessor() == null ||
@@ -278,6 +285,8 @@ public class DisinfectFilesResource {
     public Response SupervisorFind(@RequestParam("isPass2") Integer isPass2,
                                    @RequestParam(value = "page",defaultValue = "0") int page,
                                    @RequestParam(value = "size",defaultValue = "10") int size){
+
+        logger.info("invoke supervisorFind", isPass2, page, size);
         List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesService.getDisinfectFilesModelBySupervisor(isPass2,new RowBounds(page,size));
 
         return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
@@ -288,6 +297,8 @@ public class DisinfectFilesResource {
     @ResponseBody
     @RequestMapping(value = "/supdate",method = RequestMethod.PATCH)
     public Response SupervisorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel){
+
+        logger.info("invoke supervisorUpdate {}", disinfectFilesModel);
 
         if (disinfectFilesModel.getId() == null ||
                 disinfectFilesModel.getSupervisor() == null ||
@@ -362,7 +373,10 @@ public class DisinfectFilesResource {
     @RequestMapping(value = "oupdate",method = RequestMethod.PATCH)
     public Response OperatorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel) {
 
+        logger.info("invoke operatorUpdate {}", disinfectFilesModel);
+
         if (disinfectFilesModel.getId() == null) {
+
             return Responses.errorResponse("Operate wrong");
         } else {
             DisinfectFilesModel disinfectFilesModel1 = this.disinfectFilesService.getDisinfectFilesModelByid(disinfectFilesModel.getId());
@@ -421,6 +435,9 @@ public class DisinfectFilesResource {
     @ResponseBody
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
     public Response Delete(@RequestParam("id") Long id){
+
+        logger.info("invoke delete {}", id);
+
         int row = this.disinfectFilesService.deleteDisinfectFilesModelByid(id);
 
         return JudgeUtil.JudgeDelete(row);

@@ -10,6 +10,8 @@ import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.JudgeUtil;
 import com.deep.domain.util.UploadUtil;
 import org.apache.ibatis.session.RowBounds;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,8 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.*;
-import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -27,6 +27,8 @@ import java.util.*;
 @Controller
 @RequestMapping(value = "/ip")
 public class ImmunePlanResource {
+
+    private Logger logger = LoggerFactory.getLogger(ImmunePlanResource.class);
 
     @Resource
     private ImmunePlanService immunePlanService;
@@ -51,16 +53,11 @@ public class ImmunePlanResource {
      */
     @ResponseBody
     @RequestMapping(value = "/saveshow", method = RequestMethod.POST)
-    public Response SaveShow(@RequestParam("immuneEartagFile") MultipartFile immuneEartagFile,
-                             @Valid ImmunePlanModel immunePlanModel,
+    public Response SaveShow(@Valid ImmunePlanModel immunePlanModel,
+                             @RequestParam("immuneEartagFile") MultipartFile immuneEartagFile,
                              HttpServletRequest request)  {
-        //System.out.println("running");
-      //  System.out.println(immuneEartag.getOriginalFilename());
-        /*Jedis jedis = new Jedis("localhost");
-        jedis.get("userId");
-        jedis.get("token");
-        System.out.println(jedis.get("userId")+ jedis.get("token"));
-        System.out.println("查看userId的剩余生存时间："+jedis.ttl("userId"));*/
+
+        logger.info("invoke saveShow {}",immuneEartagFile,immunePlanModel,request);
 
         if (immunePlanModel.getFactoryNum() == null ||
                 immunePlanModel.getCrowdNum() == null ||
@@ -210,6 +207,9 @@ public class ImmunePlanResource {
     @ResponseBody
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
     public Response FindShow(@RequestBody ImmunePlanModel immunePlanModel) {
+
+        logger.info("invoke findShow {}", immunePlanModel);
+
         if (immunePlanModel.getSize() == 0){
             immunePlanModel.setSize(10);
         }
@@ -234,6 +234,8 @@ public class ImmunePlanResource {
     public Response ProfessorFind(@RequestParam("isPass1") Integer isPass1,
                                   @RequestParam(value = "page",defaultValue = "0") int page,
                                   @RequestParam(value = "size",defaultValue = "10") int size){
+        logger.info("invoke professorFind {}", isPass1, page, size);
+
         List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModelByProfessor(isPass1,new RowBounds(page,size));
 
         return JudgeUtil.JudgeFind(immunePlanModels,immunePlanModels.size());
@@ -251,6 +253,7 @@ public class ImmunePlanResource {
     @RequestMapping(value = "pupdate",method = RequestMethod.PATCH)
     public Response ProfessorUpdate(@RequestBody ImmunePlanModel immunePlanModel){
 
+        logger.info("invoke professorUpdate {}", immunePlanModel);
         if(immunePlanModel.getId() == null||
                 immunePlanModel.getProfessor() == null||
                 immunePlanModel.getIsPass1() == null||
@@ -331,6 +334,8 @@ public class ImmunePlanResource {
     public Response SupervisorFind(@RequestParam("isPass2") Integer isPass2,
                                    @RequestParam(value = "page",defaultValue = "0") int page,
                                    @RequestParam(value = "size",defaultValue = "10") int size){
+
+        logger.info("invoke supervisorFind {}", isPass2, page, size);
         List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModelBySupervisor(isPass2,new RowBounds(page,size));
 
         System.out.println("size:"+immunePlanModels.size());
@@ -349,6 +354,7 @@ public class ImmunePlanResource {
     @RequestMapping(value = "supdate",method = RequestMethod.PATCH)
     public Response SupervisorUpdate(@RequestBody ImmunePlanModel immunePlanModel){
 
+        logger.info("invoke supervisorUpdate {}", immunePlanModel);
         if(immunePlanModel.getId() == null||
                 immunePlanModel.getSupervisor() == null||
                 immunePlanModel.getIsPass2() == null||
@@ -436,6 +442,7 @@ public class ImmunePlanResource {
     @RequestMapping(value = "oupdate",method = RequestMethod.PATCH)
     public Response OperatorUpdate(@RequestBody ImmunePlanModel immunePlanModel) {
 
+        logger.info("invoke operatorUpdate {}", immunePlanModel);
         if (immunePlanModel.getId() == null) {
             return Responses.errorResponse("Operate wrong");
         } else {
@@ -506,8 +513,9 @@ public class ImmunePlanResource {
     @ResponseBody
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
     public Response Delete(@RequestParam("id") Long id){
-        int row = immunePlanService.deleteImmunePlanModelByid(id);
 
+        logger.info("invoke delete {}", id);
+        int row = immunePlanService.deleteImmunePlanModelByid(id);
         return JudgeUtil.JudgeDelete(row);
     }
 

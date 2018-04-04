@@ -5,6 +5,10 @@ import com.deep.api.response.Responses;
 import com.deep.domain.model.RedisDataModel;
 import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.JudgeUtil;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,10 +23,13 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class GeditMessageResource {
 
+    private final Logger logger = LoggerFactory.getLogger(GeditMessageResource.class);
 
     @ResponseBody
     @RequestMapping(value = "/geditshow",method = RequestMethod.POST)
     public Response GreditShow(@RequestBody RedisDataModel redisDataModel) {
+
+        logger.info("invoke greditShow {}", redisDataModel);
 
         if (redisDataModel.getMessage() == null ||
                 redisDataModel.getExpireTime() == null||

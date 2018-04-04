@@ -6,11 +6,12 @@ import com.deep.domain.model.GenealogicalFilesModel;
 import com.deep.domain.service.GenealogicalFilesService;
 import com.deep.domain.util.JudgeUtil;
 import org.apache.ibatis.session.RowBounds;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequestMapping(value = "/gf")
 public class GenealogicalFilesResource {
 
+    Logger logger = LoggerFactory.getLogger(GenealogicalFilesResource.class);
     //替代注册bean
     @Resource
     private GenealogicalFilesService genealogicalFilesService;
@@ -42,6 +44,8 @@ public class GenealogicalFilesResource {
     @RequestMapping(value = "/saveshow",method = RequestMethod.POST)
     public Response SaveShow(@RequestBody GenealogicalFilesModel genealogicalFilesModel) {
         //System.out.println("传参数成功");
+
+        logger.info("invoke saveShow {}",genealogicalFilesModel);
 
         if("".equals(genealogicalFilesModel.getSelfEartag())||
                 "".equals(genealogicalFilesModel.getImmuneEartag())||
@@ -99,7 +103,9 @@ public class GenealogicalFilesResource {
     //bound为必传参数
     @ResponseBody
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
-    public Response FindResult(@RequestBody GenealogicalFilesModel genealogicalFilesModel){
+    public Response FindShow(@RequestBody GenealogicalFilesModel genealogicalFilesModel){
+
+        logger.info("invoke findShow {}",genealogicalFilesModel);
         //System.out.println("selfEartag:"+genealogicalFilesModel.getSelfEartag());
         if (genealogicalFilesModel.getPage() == 0){
             genealogicalFilesModel.setPage(0);
@@ -125,8 +131,10 @@ public class GenealogicalFilesResource {
      */
     @ResponseBody
     @RequestMapping(value = "/findshowbyid",method = RequestMethod.GET)
-    public Response FindIdShow(@RequestParam("id") Long id ) {
-        System.out.println("id:"+id);
+    public Response FindShowById(@RequestParam("id") Long id ) {
+
+        logger.info("invoke findShowById {}", id);
+        //System.out.println("id:"+id);
         GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesService.getGenealogicalFilesModelByid(id);
         //System.out.println(genealogicalFilesModel.getSelfEartag());
 
@@ -145,6 +153,9 @@ public class GenealogicalFilesResource {
     @ResponseBody
     @RequestMapping(value = "/update",method = RequestMethod.PATCH)
     public Response Update(@RequestBody GenealogicalFilesModel genealogicalFilesModel){
+
+        logger.info("invoke update {}", genealogicalFilesModel);
+
         if (genealogicalFilesService.getGenealogicalFilesModelByselfEartag(genealogicalFilesModel.getSelfEartag()) == null&&
                 genealogicalFilesService.getGenealogicalFilesModelByimmuneEartag(genealogicalFilesModel.getImmuneEartag()) == null&&
                 genealogicalFilesService.getGenealogicalFilesModelBytradeMarkEartag(genealogicalFilesModel.getTradeMarkEartag()) == null){
@@ -167,6 +178,9 @@ public class GenealogicalFilesResource {
     @ResponseBody
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
     public Response Delete(@RequestParam("id") Long id){
+
+        logger.info("invoke delete {}", id);
+
         int row = genealogicalFilesService.deleteGenealogicalFilesModel(id);
         return JudgeUtil.JudgeDelete(row);
     }

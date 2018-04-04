@@ -6,6 +6,8 @@ import com.deep.domain.model.MobileAnnouncementModel;
 import com.deep.domain.model.PositiveSendModel;
 import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.JudgeUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class PositiveSendResource {
 
 
+    private Logger logger = LoggerFactory.getLogger(PositiveSendResource.class);
     /**
      * positiveSendModel中手机号以","相隔
      * @param positiveSendModel
@@ -29,6 +32,8 @@ public class PositiveSendResource {
     @ResponseBody
     @RequestMapping(value = "/psend",method = RequestMethod.POST)
     public Response PositiveSend(@RequestBody PositiveSendModel positiveSendModel){
+
+        logger.info("invoke positiveSend {}", positiveSendModel);
         MobileAnnouncementModel mobileAnnouncementModel = new MobileAnnouncementModel(positiveSendModel.getMobile_list(),positiveSendModel.getMessage());
         mobileAnnouncementModel.testSendMany();
         mobileAnnouncementModel.testStatus();

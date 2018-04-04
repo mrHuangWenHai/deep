@@ -17,43 +17,11 @@ import java.util.logging.Logger;
  * 用于操作与redis相关的数据行为
  */
 public class JedisUtil {
-    private String key;
-    private String value;
-    private int expireTime;
 
 
     private static Jedis jedis = new Jedis("localhost");
 
     public JedisUtil() {
-    }
-
-    /**
-     * 构造函数 传入(String) key和(String) value时 直接存入redis中
-     * 无过期时间
-     *
-     * @param key
-     * @param value
-     */
-    public JedisUtil(String key, String value) {
-        this.key = key;
-        this.value = value;
-        jedis.set(key, value);
-    }
-
-    /**
-     * 构造函数 传入(String)key (String)value 和 (int)expireTime
-     * 过期时间未expireTime
-     *
-     * @param key
-     * @param value
-     * @param expireTime
-     */
-    public JedisUtil(String key, String value, int expireTime) {
-        this.expireTime = expireTime;
-        this.key = key;
-        this.value = value;
-        jedis.set(key, value);
-        jedis.expire(key, expireTime);
     }
 
     /**
@@ -257,21 +225,4 @@ public class JedisUtil {
         jedis.expire(key,expireTime);
     }
 
-
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
 }
