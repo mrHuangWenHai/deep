@@ -6,6 +6,7 @@ import com.deep.domain.model.ImmunePlanModel;
 import com.deep.domain.model.UserModel;
 import com.deep.domain.service.ImmunePlanService;
 import com.deep.domain.service.UserService;
+import com.deep.domain.util.FileUtil;
 import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.JudgeUtil;
 import com.deep.domain.util.UploadUtil;
@@ -72,6 +73,13 @@ public class ImmunePlanResource {
             return Responses.errorResponse("Lack Item");
         } else {
 
+            String Header = FileUtil.getFileHeader(immuneEartagFile);
+
+            if ( !"75736167".equals(Header) && !"7B5C727466".equals(Header) &&
+                    !"D0CF11E0".equals(Header) && !"504B0304".equals(Header)) {
+                return Responses.errorResponse("Wrong file form");
+            }
+
             ImmunePlanModel immunePlanModel1 = immunePlanService.getImmunePlanModelByfactoryNumAndcrowdNumAndimmuneTime(immunePlanModel.getFactoryNum(), immunePlanModel.getCrowdNum(), immunePlanModel.getImmuneTime());
             //文件上传并将数据保存到数据库中
             //System.out.println("save before");
@@ -103,9 +111,10 @@ public class ImmunePlanResource {
                         immunePlanModel.setIsPass1("0");
                         immunePlanModel.setIsPass2("0");
                         immunePlanModel.setGmtCreate(simpleDateFormat.format(new Timestamp(System.currentTimeMillis())));
+
                         immunePlanService.setImmunePlanModel(immunePlanModel);
 
-                        System.out.println("id:"+immunePlanModel.getId());
+                        //System.out.println("id:"+immunePlanModel.getId());
                         //return new Response().addData("Obiject",immunePlanModel);
                         //System.out.println("running after insert");
 
@@ -116,8 +125,8 @@ public class ImmunePlanResource {
                         String supervisorKey = immunePlanModel.getFactoryNum().toString() + "_immunePlan_supervisor";
                         String testSendProfessor = immunePlanModel.getFactoryNum().toString() + "_immunePlan_professor_AlreadySend";
                         String testSendSupervisor = immunePlanModel.getFactoryNum().toString() + "_immunePlan_supervisor_AlreadySend";
-                        String professorWorkInRedis = immunePlanModel.getId() + "_immunePlan_professor_worked";
-                        String supervisorWorkInRedis = immunePlanModel.getId() + "_immunePlan_supervisor_worked";
+                        String professorWorkInRedis = immunePlanModel.getId().toString() + "_immunePlan_professor_worked";
+                        String supervisorWorkInRedis = immunePlanModel.getId().toString() + "_immunePlan_supervisor_worked";
 
                         //System.out.println("before operator insert supervisorKey:"+supervisorKey);
                         //System.out.println("before operator insert supervisorKey value:"+JedisUtil.getCertainKeyValue(supervisorKey));
@@ -190,9 +199,11 @@ public class ImmunePlanResource {
                         e.printStackTrace();
                     }
 
+                }else {
+                    return Responses.errorResponse("Already Exist");
                 }
             }
-            return Responses.errorResponse("Already Exist");
+        return Responses.errorResponse("Exception");
     }
 
 
@@ -244,7 +255,7 @@ public class ImmunePlanResource {
 
     /**
      * 专家入口 审核isPass1 = 0或者isPass1 = 1的数据
-     * @param immunePlanModel
+     * @param immunePlanModel 通过id修改
      * METHOD:PATCH
      * @return
      */

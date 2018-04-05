@@ -4,7 +4,11 @@
 <!--Mapper名称 对应infra中mapper类名-->
 <mapper namespace="com.deep.infra.persistence.sql.mapper.DisinfectFilesMapper">
     <insert id="setDisinfectFilesModel">
+        <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="disinfectFilesModel.id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
         INSERT INTO disinfection_files(
+        disinfect_eartag,
         factory_num,
         disinfect_time,
         disinfect_name,
@@ -17,6 +21,7 @@
         gmt_create
         )
         VALUES(
+        #{disinfectFilesModel.disinfectEartag},
         #{disinfectFilesModel.factoryNum},
         #{disinfectFilesModel.disinfectTime},
         #{disinfectFilesModel.disinfectName},

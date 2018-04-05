@@ -121,13 +121,13 @@
         factory_num = #{factoryNum} AND repellent_time BETWEEN #{gmtCreate} AND #{gmtTrans}
     </select>
 
-    <select id="getRepellentPlanModelByfactoryNumAndrepellentTimeAndrepellentName" resultMap="RepellentPlan">
+    <select id="getRepellentPlanModelByfactoryNumAndcrowdNumAndrepellentTimeAndrepellentName" resultMap="RepellentPlan">
         SELECT
         *
         FROM
         repellent_plan
         WHERE
-        factory_num = #{factoryNum} AND repellent_time = #{repellentTime} AND repellent_name = #{repellentName}
+        factory_num = #{factoryNum} AND crowd_num = #{crowdNum} AND repellent_time = #{repellentTime} AND repellent_name = #{repellentName}
     </select>
 
     <select id="getRepellentPlanModelByid" resultMap="RepellentPlan">

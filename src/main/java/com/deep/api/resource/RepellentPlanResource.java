@@ -6,6 +6,7 @@ import com.deep.domain.model.RepellentPlanModel;
 import com.deep.domain.model.UserModel;
 import com.deep.domain.service.RepellentPlanService;
 import com.deep.domain.service.UserService;
+import com.deep.domain.util.FileUtil;
 import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.JudgeUtil;
 import com.deep.domain.util.UploadUtil;
@@ -70,7 +71,15 @@ public class RepellentPlanResource {
             return Responses.errorResponse("Lack Item");
 
         } else {
-            RepellentPlanModel repellentPlanModel1 = repellentPlanService.getRepellentPlanModelByfactoryNumAndrepellentTimeAndrepellentName(repellentPlanModel.getFactoryNum(),repellentPlanModel.getRepellentTime(),repellentPlanModel.getRepellentName());
+
+            String Header = FileUtil.getFileHeader(repellentEartagFile);
+
+            if ( !"75736167".equals(Header) && !"7B5C727466".equals(Header) &&
+                    !"D0CF11E0".equals(Header) && !"504B0304".equals(Header)) {
+                return Responses.errorResponse("Wrong file form");
+            }
+
+            RepellentPlanModel repellentPlanModel1 = repellentPlanService.getRepellentPlanModelByfactoryNumAndcrowdNumAndrepellentTimeAndrepellentName(repellentPlanModel.getFactoryNum(),repellentPlanModel.getCrowdNum(),repellentPlanModel.getRepellentTime(),repellentPlanModel.getRepellentName());
             if (repellentPlanModel1 == null) {
 
                 //上传文件
@@ -87,11 +96,11 @@ public class RepellentPlanResource {
                     //数据插入数据库
                     //System.out.println("mysql执行前");
 
+
                     //设置插入数据
                     //耳牌地址
                     //ispass 默认 0
                     //插入时间
-
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
 
                     repellentPlanModel.setRepellentEartag(fileAddress);
@@ -110,14 +119,15 @@ public class RepellentPlanResource {
                     String professorWorkInRedis = repellentPlanModel.getId().toString() + "_repellentPlan_professor_worked";
                     String supervisorWorkInRedis = repellentPlanModel.getId().toString() + "_repellentPlan_supervisor_worked";
 
-                    JedisUtil.setCertainKeyValue(professorWorkInRedis, "0");
-                    JedisUtil.setCertainKeyValue(supervisorWorkInRedis, "0");
 
                     JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
                     JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
 
                     //System.out.println("testSendProfessorValue:"+jedisUtil.getCertainKeyValue(testSendProfessor));
                     //System.out.println("judge equal:"+"1".equals(jedisUtil.getCertainKeyValue(testSendProfessor)));
+
+                    JedisUtil.setCertainKeyValue(professorWorkInRedis, "0");
+                    JedisUtil.setCertainKeyValue(supervisorWorkInRedis, "0");
 
                     //若redis中 若干天未发送短信
                     //若未完成超过50条
@@ -179,10 +189,11 @@ public class RepellentPlanResource {
                     e.printStackTrace();
                 }
 
+            }else {
+                return  Responses.errorResponse("Already Exist");
             }
-
         }
-        return  Responses.errorResponse("Already Exist");
+        return Responses.errorResponse("Exception");
     }
 
 

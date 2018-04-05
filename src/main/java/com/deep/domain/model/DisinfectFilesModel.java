@@ -5,6 +5,7 @@ import java.math.BigInteger;
 
 public class DisinfectFilesModel {
     private Long id;      //id
+    private String disinfectEartag;
     private BigInteger factoryNum;     //工厂号
     private String disinfectTime;     //消毒时间
     private String disinfectName;     //消毒药品名称
@@ -69,6 +70,14 @@ public class DisinfectFilesModel {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getDisinfectEartag() {
+        return disinfectEartag;
+    }
+
+    public void setDisinfectEartag(String disinfectEartag) {
+        this.disinfectEartag = disinfectEartag;
     }
 
     public BigInteger getFactoryNum() {

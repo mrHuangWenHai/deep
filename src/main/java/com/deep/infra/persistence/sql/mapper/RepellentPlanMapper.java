@@ -15,9 +15,10 @@ public interface RepellentPlanMapper {
     List<RepellentPlanModel> getRepellentPlanModel(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel,
                                                    RowBounds bounds);
 
-    RepellentPlanModel getRepellentPlanModelByfactoryNumAndrepellentTimeAndrepellentName(@Param("factoryNum")BigInteger factoryNum,
-                                                                                         @Param("repellentTime")String repellentTime,
-                                                                                         @Param("repellentName")String repellentName);
+    RepellentPlanModel getRepellentPlanModelByfactoryNumAndcrowdNumAndrepellentTimeAndrepellentName(@Param("factoryNum")BigInteger factoryNum,
+                                                                                                    @Param("crowdNum")String crowdNum,
+                                                                                                    @Param("repellentTime")String repellentTime,
+                                                                                                    @Param("repellentName")String repellentName);
 
 
     List<RepellentPlanModel> getRepellentPlanModelByProfessor(@Param("isPass1") Integer isPass1,
