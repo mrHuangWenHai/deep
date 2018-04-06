@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -390,5 +388,18 @@ public class UserService {
      */
     public List<UserModel> getAllUserOfFactoryOrAgent(Long factoryOrAgentID) {
         return userMapper.getAllUsersOfOneFactoryOrOneAgent(factoryOrAgentID);
+    }
+
+    /**
+     * 获得该代理下的所有专家
+     * @param agents
+     * @return
+     */
+    public List<UserRole> getProfessor(List<AgentModel> agents) {
+        List<UserRole> models = new ArrayList<>();
+        for(AgentModel attribute : agents) {
+            models.addAll(userMapper.getProfessor((long)attribute.getId()));
+        }
+        return models;
     }
 }

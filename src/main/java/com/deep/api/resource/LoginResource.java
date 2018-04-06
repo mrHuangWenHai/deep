@@ -83,19 +83,12 @@ public class LoginResource {
      */
     @RequestMapping(value = "/phonefind")
     public Response PhoneFind(@RequestParam("usernameP") String usernameP){
-        logger.info("invoke PhoneFind{}, url is /phonefind", usernameP);
+        logger.info("invoke PhoneFind {}, url is /phonefind", usernameP);
         UserModel userModel = userService.getUserByPkuserID(usernameP);
         if (userModel == null) {
             return Responses.errorResponse("用户不存在");
         }
         mobileAnnouncementModel = new MobileAnnouncementUtil(userModel.getUserTelephone());
-        if (mobileAnnouncementModel == null){
-            Response response = Responses.errorResponse("发送失败");
-            HashMap<String, Object> data = new HashMap<>();
-            data.put("successMessage", "验证码发送失败!");
-            response.setData(data);
-            return response;
-        }
         String httpResponse =  mobileAnnouncementModel.testSend();
         try {
             JSONObject jsonObj = new JSONObject( httpResponse );
@@ -112,7 +105,7 @@ public class LoginResource {
                 System.out.println("Send message failed,code is "+error_code+",msg is "+error_msg);
                 Response response = Responses.errorResponse("发送消息失败");
                 HashMap<String, Object> data = new HashMap<>();
-                data.put("successMessage", "Send message failed,code is "+error_code+",msg is "+error_msg);
+                data.put("errorMessage", "Send message failed,code is "+error_code+",msg is "+error_msg);
                 response.setData(data);
                 return response;
 
@@ -130,14 +123,17 @@ public class LoginResource {
                 Response response = Responses.successResponse();
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("successMessage", "验证码发送成功!");
+                data.put("phone", userModel.getUserTelephone());
                 response.setData(data);
+                JedisUtil.setValue(usernameP+userModel.getUserTelephone(),mobileAnnouncementModel.getIdentityCode());
+                JedisUtil.doExpire(usernameP+userModel.getUserTelephone());
                 return response;
             }else{
                 String error_msg = jsonObj.getString("msg");
                 System.out.println("Fetch deposit failed,code is "+error_code+",msg is "+error_msg);
                 Response response = Responses.errorResponse("发送消息失败");
                 HashMap<String, Object> data = new HashMap<>();
-                data.put("successMessage", "Fetch deposit failed,code is "+error_code+",msg is "+error_msg);
+                data.put("errorMessage", "Fetch deposit failed,code is "+error_code+",msg is "+error_msg);
                 response.setData(data);
                 return response;
             }
@@ -153,13 +149,13 @@ public class LoginResource {
      * @return
      */
     @GetMapping(value = "/ensureverify/{verifyCode}")
-    public Response EnsureVerify(@PathVariable("verifyCode") String verifyCode){
+    public Response EnsureVerify(@PathVariable("verifyCode") String verifyCode, UserModel userModel){
         logger.info("invoke EnsureVerify{}, url is /ensureverify/{vefiyCode}", verifyCode);
-        if (verifyCode == null) {
+        if (verifyCode == null || userModel == null || userModel.getUserTelephone().equals("") || userModel.getPkUserid().equals("")) {
             return Responses.errorResponse("error!");
         }
         Response response;
-        if(verifyCode.equals(mobileAnnouncementModel.getIdentityCode())){
+        if(verifyCode.equals(JedisUtil.getValue(userModel.getPkUserid()+userModel.getUserTelephone()))) {
             response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("errorMessage", "valid success");

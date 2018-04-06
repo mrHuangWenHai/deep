@@ -6,6 +6,7 @@ import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.AgentModel;
 import com.deep.domain.service.AgentService;
+import com.deep.domain.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
@@ -113,7 +114,6 @@ public class AgentResource {
             if (addID <= 0) {
                 return Responses.errorResponse("添加用户信息失败");
             }
-
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("oneAgent", addID);
@@ -165,7 +165,7 @@ public class AgentResource {
     public Response AgentsSon(@PathVariable("id") String id) {
         logger.info("invoke agentsSon{}, url is agent/sons/{id}", id);
         int agentID = StringToLongUtil.stringToInt(id);
-        if (agentID != -1) {
+        if (agentID == -1) {
             return Responses.errorResponse("error");
         } else {
             List<AgentModel> agentModels = agentService.getSons(agentID);
@@ -188,16 +188,64 @@ public class AgentResource {
      */
     @GetMapping(value = "/father/{id}")
     public Response AgentFather(@PathVariable("id") String id) {
-        logger.info("invoke agentFather{}, url is agent/father/{id}", id);
-        int agentID = StringToLongUtil.stringToInt(id);
-        if (agentID != -1) {
+        logger.info("invoke agentFather {}, url is agent/father/{id}", id);
+        long agentID = StringToLongUtil.stringToLong(id);
+        if (agentID == -1) {
             return Responses.errorResponse("error");
         } else {
             AgentModel agentModel = agentService.getFather(agentID);
-            if (agentModel == null) {
+            if (agentModel != null) {
                 Response response = Responses.successResponse();
                 Map<String, Object> data = new HashMap<>();
                 data.put("father", agentModel);
+                response.setData(data);
+                return response;
+            }
+            return Responses.errorResponse("error");
+        }
+    }
+
+    /**
+     * 获取所有的上级操作
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "ancestors/{id}")
+    public Response getAncestors(@PathVariable("id") String id) {
+        logger.info("invoke getAncestors {}", id);
+        long agentID = StringToLongUtil.stringToLong(id);
+        if (agentID == -1) {
+            return Responses.errorResponse("error");
+        } else {
+            List<AgentModel> agents = agentService.getAncestors(agentID);
+            if (agents.size() > 0) {
+                Response response = Responses.successResponse();
+                Map<String, Object> data = new HashMap<>();
+                data.put("ancestors", agents);
+                response.setData(data);
+                return response;
+            }
+            return Responses.errorResponse("error");
+        }
+    }
+
+    /**
+     * 获取上级对应的所有专家
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "ancestors/professor/{id}")
+    public Response getAncestorsProfessor(@PathVariable("id") String id) {
+        logger.info("invoke getAncestors {}", id);
+        long agentID = StringToLongUtil.stringToLong(id);
+        if (agentID == -1) {
+            return Responses.errorResponse("error");
+        } else {
+            List<UserService.UserRole> agents = agentService.getAncestorsProfessor(agentID);
+            if (agents.size() > 0) {
+                Response response = Responses.successResponse();
+                Map<String, Object> data = new HashMap<>();
+                data.put("ancestors", agents);
                 response.setData(data);
                 return response;
             }
