@@ -382,4 +382,13 @@ public class UserService {
             return telephones;
         }
     }
+
+    /**
+     * 查询某个羊场下的所有用户
+     * @param factoryOrAgentID
+     * @return
+     */
+    public List<UserModel> getAllUserOfFactoryOrAgent(Long factoryOrAgentID) {
+        return userMapper.getAllUsersOfOneFactoryOrOneAgent(factoryOrAgentID);
+    }
 }

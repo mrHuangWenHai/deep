@@ -7,7 +7,7 @@ public class StringToLongUtil {
         long uid;
         try {
             uid = Integer.parseInt(user);
-            if (uid <= 0) {
+            if (uid < 0) {
                 return -1;
             }
         } catch (Exception e) {
@@ -19,7 +19,7 @@ public class StringToLongUtil {
         int uid;
         try {
             uid = Integer.parseInt(user);
-            if (uid <= 0) {
+            if (uid < 0) {
                 return -1;
             }
         } catch (Exception e) {

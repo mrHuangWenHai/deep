@@ -348,10 +348,33 @@ public class UserResource {
 
     @GetMapping(value = "/user/test/{id}")
     public Response getTest(@PathVariable("id") String id) {
+        logger.info("invoke getRolesOfProfessor {}, url is /user/high/{id}", id);
         Response response = Responses.successResponse();
         Map data = new HashMap<>();
         data.put("data", userService.getUserTelephoneByfactoryNum(new BigInteger(id)));
         response.setData(data);
         return response;
+    }
+
+    @GetMapping(value = "/user/factory/lists/{factoryAgentID}")
+    public Response getFactoryLists(@PathVariable("factoryAgentID") String id) {
+        logger.info("invoke getFactoryLists {}, url is /user/factory/lists/{factoryAgentID}", id);
+        long uid = StringToLongUtil.stringToLong(id);
+        if (uid == -1) {
+            return Responses.errorResponse("error");
+        } else {
+            Response response;
+            List<UserModel> userLists = userService.getAllUserOfFactoryOrAgent(uid);
+            if (userLists.size() <= 0) {
+                return Responses.errorResponse("error");
+            } else {
+                response = Responses.successResponse();
+                Map<String, Object> data = new HashMap<>();
+                data.put("data", userLists);
+                data.put("size", userLists.size());
+                response.setData(data);
+                return response;
+            }
+        }
     }
 }

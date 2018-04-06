@@ -303,4 +303,41 @@ public interface UserMapper {
             @Result(property = "QQ", column = "QQ")
     })
     List<UserService.UserRole> getOneRoles(long roleID);
+
+    /**
+     * 查找某一个羊场或者代理下的所有用户
+     * @param userFactory
+     * @return
+     */
+    @Select("select * from user_manage where user_factory = #{userFactory}")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "gmtCreate", column = "gmt_create"),
+            @Result(property = "gmtModified", column = "gmt_modified"),
+            @Result(property = "pkUserid", column = "pk_userid"),
+            @Result(property = "userPwd", column = "user_pwd"),
+            @Result(property = "userNum", column = "user_num"),
+            @Result(property = "userPic", column = "user_pic"),
+            @Result(property = "userRealname", column = "user_realname"),
+            @Result(property = "userLocation", column = "user_location"),
+            @Result(property = "userTelephone", column = "user_telephone"),
+            @Result(property = "userRemark", column = "user_remark"),
+            @Result(property = "userFactory", column = "user_factory"),
+            @Result(property = "userRole", column = "user_role"),
+            @Result(property = "userPermit", column = "user_permit"),
+            @Result(property = "isExtended", column = "is_extended"),
+            @Result(property = "isFactory", column = "is_factory"),
+            @Result(property = "question_1", column = "question_1"),
+            @Result(property = "question_2", column = "question_2"),
+            @Result(property = "question_3", column = "question_3"),
+            @Result(property = "answer_1", column = "answer_1"),
+            @Result(property = "answer_2", column = "answer_2"),
+            @Result(property = "answer_3", column = "answer_3"),
+            @Result(property = "userEmail", column = "user_email"),
+            @Result(property = "MSN", column = "MSN"),
+            @Result(property = "QQ", column = "QQ"),
+            @Result(property = "officialPhone", column = "official_phone"),
+            @Result(property = "familyPhone", column = "family_phone")
+    })
+    List<UserModel> getAllUsersOfOneFactoryOrOneAgent(Long userFactory);
 }
