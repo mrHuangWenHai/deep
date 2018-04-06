@@ -308,8 +308,8 @@ public interface UserMapper {
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "pkUserid", column = "pk_userid"),
-            @Result(property = "userTelephone", column = "user_telephone"),
             @Result(property = "userRole", column = "user_role"),
+            @Result(property = "userTelephone", column = "user_telephone"),
             @Result(property = "userEmail", column = "user_email"),
             @Result(property = "officialPhone", column = "official_phone"),
             @Result(property = "QQ", column = "QQ")
