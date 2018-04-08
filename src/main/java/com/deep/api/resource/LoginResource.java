@@ -11,6 +11,7 @@ import com.deep.domain.model.UserModel;
 import com.deep.domain.service.UserService;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +21,9 @@ import java.util.logging.Logger;
 
 @RestController
 public class LoginResource {
+
+
+    private final org.slf4j.Logger logger = LoggerFactory.getLogger(LoginResource.class);
 
     @Resource
     private UserService userService;
@@ -38,6 +42,7 @@ public class LoginResource {
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Response LoginResult(@RequestBody UserModel userModelTest, HttpServletResponse httpServletResponse){
+        logger.info("invoke LoginResult{}, url is /login", userModelTest, httpServletResponse);
         String username = userModelTest.getPkUserid();
         String password = userModelTest.getUserPwd();
         UserModel userModel = userService.getUserByPkuserID(username);
@@ -81,18 +86,12 @@ public class LoginResource {
      */
     @RequestMapping(value = "/phonefind")
     public Response PhoneFind(@RequestParam("usernameP") String usernameP){
+        logger.info("invoke PhoneFind {}, url is /phonefind", usernameP);
         UserModel userModel = userService.getUserByPkuserID(usernameP);
         if (userModel == null) {
             return Responses.errorResponse("用户不存在");
         }
         mobileAnnouncementModel = new MobileAnnouncementUtil(userModel.getUserTelephone());
-        if (mobileAnnouncementModel == null){
-            Response response = Responses.errorResponse("发送失败");
-            HashMap<String, Object> data = new HashMap<>();
-            data.put("successMessage", "验证码发送失败!");
-            response.setData(data);
-            return response;
-        }
         String httpResponse =  mobileAnnouncementModel.testSend();
         try {
             JSONObject jsonObj = new JSONObject( httpResponse );
@@ -109,7 +108,7 @@ public class LoginResource {
                 System.out.println("Send message failed,code is "+error_code+",msg is "+error_msg);
                 Response response = Responses.errorResponse("发送消息失败");
                 HashMap<String, Object> data = new HashMap<>();
-                data.put("successMessage", "Send message failed,code is "+error_code+",msg is "+error_msg);
+                data.put("errorMessage", "Send message failed,code is "+error_code+",msg is "+error_msg);
                 response.setData(data);
                 return response;
 
@@ -127,14 +126,17 @@ public class LoginResource {
                 Response response = Responses.successResponse();
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("successMessage", "验证码发送成功!");
+                data.put("phone", userModel.getUserTelephone());
                 response.setData(data);
+                JedisUtil.setValue(usernameP+userModel.getUserTelephone(),mobileAnnouncementModel.getIdentityCode());
+                JedisUtil.doExpire(usernameP+userModel.getUserTelephone());
                 return response;
             }else{
                 String error_msg = jsonObj.getString("msg");
                 System.out.println("Fetch deposit failed,code is "+error_code+",msg is "+error_msg);
                 Response response = Responses.errorResponse("发送消息失败");
                 HashMap<String, Object> data = new HashMap<>();
-                data.put("successMessage", "Fetch deposit failed,code is "+error_code+",msg is "+error_msg);
+                data.put("errorMessage", "Fetch deposit failed,code is "+error_code+",msg is "+error_msg);
                 response.setData(data);
                 return response;
             }
@@ -150,12 +152,13 @@ public class LoginResource {
      * @return
      */
     @GetMapping(value = "/ensureverify/{verifyCode}")
-    public Response EnsureVerify(@PathVariable("verifyCode") String verifyCode){
-        if (verifyCode == null) {
+    public Response EnsureVerify(@PathVariable("verifyCode") String verifyCode, UserModel userModel){
+        logger.info("invoke EnsureVerify{}, url is /ensureverify/{vefiyCode}", verifyCode);
+        if (verifyCode == null || userModel == null || userModel.getUserTelephone().equals("") || userModel.getPkUserid().equals("")) {
             return Responses.errorResponse("error!");
         }
         Response response;
-        if(verifyCode.equals(mobileAnnouncementModel.getIdentityCode())){
+        if(verifyCode.equals(JedisUtil.getValue(userModel.getPkUserid()+userModel.getUserTelephone()))) {
             response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("errorMessage", "valid success");
@@ -171,7 +174,7 @@ public class LoginResource {
 
     @GetMapping(value = "/question")
     public Response requestQuestion(@RequestParam("name") String name) {
-        System.out.println(name);
+        logger.info("invoke requestQuestion{}, url is requestQuestion", name);
         if (name == null) {
             return Responses.errorResponse("error!");
         }
@@ -194,7 +197,8 @@ public class LoginResource {
      * @return
      */
     @PostMapping(value = "/ensurequestion")
-    public Response EnsureQuestion(@RequestBody UserModel userModel){
+    public Response EnsureQuestion(@RequestBody UserModel userModel) {
+        logger.info("invoke ensureQuestion{}, url is /ensurequestion", userModel);
         if (userModel == null) {
             return Responses.errorResponse("error!");
 
@@ -225,6 +229,7 @@ public class LoginResource {
      */
     @GetMapping(value = "/logout/{id}")
     public Response logout(@PathVariable("id") String id) {
+        logger.info("invoke logout{}, url is /logout/{id}", id);
         if (id == null) {
             return Responses.errorResponse("error!");
         }

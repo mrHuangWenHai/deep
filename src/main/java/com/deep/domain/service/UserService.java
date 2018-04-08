@@ -6,12 +6,13 @@ import com.deep.domain.model.AgentModel;
 import com.deep.domain.model.FactoryModel;
 import com.deep.domain.model.UserModel;
 import com.deep.infra.persistence.sql.mapper.UserMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigInteger;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -95,6 +96,82 @@ public class UserService {
 
         public void setUserPermit(Map userPermit) {
             this.userPermit = userPermit;
+        }
+    }
+
+    public class UserRole {
+        private long id;;                      // 用户表的主键
+        private String pkUserid;               // 用户名
+        private long userRole;
+        private String userEmail;
+        private String QQ;
+        private String officialPhone;
+        private String userTelephone;
+
+        public String getUserTelephone() {
+            return userTelephone;
+        }
+
+        public void setUserTelephone(String userTelephone) {
+            this.userTelephone = userTelephone;
+        }
+
+        public long getId() {
+            return id;
+        }
+
+        public void setId(long id) {
+            this.id = id;
+        }
+
+        public String getPkUserid() {
+            return pkUserid;
+        }
+
+        public void setPkUserid(String pkUserid) {
+            this.pkUserid = pkUserid;
+        }
+
+        public long getUserRole() {
+            return userRole;
+        }
+
+        public void setUserRole(long userRole) {
+            this.userRole = userRole;
+        }
+
+        public String getUserEmail() {
+            return userEmail;
+        }
+
+        public void setUserEmail(String userEmail) {
+            this.userEmail = userEmail;
+        }
+
+        public String getQQ() {
+            return QQ;
+        }
+
+        public void setQQ(String QQ) {
+            this.QQ = QQ;
+        }
+
+        public String getOfficialPhone() {
+            return officialPhone;
+        }
+
+        public void setOfficialPhone(String officialPhone) {
+            this.officialPhone = officialPhone;
+        }
+
+        public UserRole(long id, String pkUserid, long userRole, String userEmail, String QQ, String officialPhone, String userTelephone) {
+            this.id = id;
+            this.pkUserid = pkUserid;
+            this.userRole = userRole;
+            this.userEmail = userEmail;
+            this.QQ = QQ;
+            this.officialPhone = officialPhone;
+            this.userTelephone = userTelephone;
         }
     }
 
@@ -229,7 +306,7 @@ public class UserService {
         userLogin.setUserPic(userModel.getUserPic());
         userLogin.setUserPwd(userModel.getUserPwd());
         // 角色名称
-        String roleName = roleService.getOneRoleByRolePkTypeID(userModel.getUserRole()).getTypeName();
+        String roleName = roleService.getOneRole(userModel.getUserRole()).getTypeName();
         roleMapper.put("roleName", roleName);
         roleMapper.put("roleNum", userModel.getUserRole());
         userLogin.setUserRole(roleMapper);
@@ -250,6 +327,10 @@ public class UserService {
         if (isFactory == 0) {
             // 代表羊场
             FactoryModel factoryModel = factoryService.getOneFactory(factoryId);
+            Logger logger = LoggerFactory.getLogger(UserService.class);
+            logger.info("isFactory", factoryModel);
+            System.out.println(factoryId);
+            System.out.println(factoryModel.getBreadName());
             if (factoryModel != null) {
                 factoryOrAgentMapper.put("factoryNum", factoryModel.getId());
                 factoryOrAgentMapper.put("factoryName",factoryModel.getBreadName());
@@ -268,12 +349,60 @@ public class UserService {
     }
 
     /**
+     * 获取同类的角色
+     * @param roleID
+     * @return
+     */
+    public List<UserRole> getRoles(long roleID) {
+        return userMapper.getOneRoles(roleID);
+    }
+
+    /**
      * 修改用户密码
      * @param userPwd
      * @return
      */
     public Long updateUserPwd(String userPwd, String username) {
         return userMapper.updateUserPwd(userPwd, username);
+    }
+
+
+    /**
+     * 获取羊场上级代理的专家信息(测试, only 测试)
+     * @param factoryNumber
+     * @return
+     */
+    public List<String> getUserTelephoneByfactoryNum(BigInteger factoryNumber) {
+        short agentID = factoryService.getAgentIDByFactoryNumber(factoryNumber.toString());
+        System.out.println(agentID);
+        List<String> telephones = userMapper.queryTelephoneByAgentAndRole(agentID);
+        if (telephones.size() <= 0) {
+            return null;
+        } else {
+            return telephones;
+        }
+    }
+
+    /**
+     * 查询某个羊场下的所有用户
+     * @param factoryOrAgentID
+     * @return
+     */
+    public List<UserModel> getAllUserOfFactoryOrAgent(Long factoryOrAgentID) {
+        return userMapper.getAllUsersOfOneFactoryOrOneAgent(factoryOrAgentID);
+    }
+
+    /**
+     * 获得该代理下的所有专家
+     * @param agents
+     * @return
+     */
+    public List<UserRole> getProfessor(List<AgentModel> agents) {
+        List<UserRole> models = new ArrayList<>();
+        for(AgentModel attribute : agents) {
+            models.addAll(userMapper.getProfessor((long)attribute.getId()));
+        }
+        return models;
     }
 
 }

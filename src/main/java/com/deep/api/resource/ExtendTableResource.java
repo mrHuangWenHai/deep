@@ -4,6 +4,8 @@ import com.deep.api.Utils.ExtendTableUtil;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.ExtendModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -16,6 +18,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "extend")
 public class ExtendTableResource {
+    private final Logger logger = LoggerFactory.getLogger(ExtendTableResource.class);
     /**
      * 方法功能: 创建数据库
      * @param extendModel
@@ -23,6 +26,7 @@ public class ExtendTableResource {
      */
     @PostMapping(value = "/add/")
     public Response createTable(@RequestBody ExtendModel extendModel) {
+        logger.info("invoke createTable{}, url is extend/add/", extendModel);
         if (!ExtendTableUtil.createTable(extendModel.getTableName(), extendModel.getColumns())) {
             return Responses.errorResponse("failed to create a table");
         } else {
@@ -37,7 +41,7 @@ public class ExtendTableResource {
      */
     @DeleteMapping(value = "/delete/{tableName}")
     public Response deleteTable(@PathVariable("tableName") String tableName) {
-        System.out.println(tableName);
+        logger.info("invoke deleteTable{}, url is extend/delete/{tableName}", tableName);
         if (!ExtendTableUtil.dropTable(tableName)) {
             return Responses.errorResponse("failed to drop a table");
         } else {
@@ -51,6 +55,7 @@ public class ExtendTableResource {
      */
     @GetMapping(value = "/tableLists")
     public Response getAllTable() {
+        logger.info("invoke getAllTable");
         Map<String, Object> userExtendedTables =  ExtendTableUtil.getAllTable();
         if (userExtendedTables == null) {
             return Responses.errorResponse("查询错误!");
@@ -67,7 +72,8 @@ public class ExtendTableResource {
      * 获取用户自定义表的列名称
      */
     @GetMapping(value = "/columnLists/{tableName}")
-    public static Response getTableColumns(@PathVariable("tableName") String tableName) {
+    public Response getTableColumns(@PathVariable("tableName") String tableName) {
+        logger.info("invoke getTableColumns{}, url is extend/columnLists/{tableName}", tableName);
         Map<String, String> userExtendedTablesColumns =  ExtendTableUtil.getAllColumns(tableName);
         if (userExtendedTablesColumns == null) {
             return Responses.errorResponse("查询错误!");

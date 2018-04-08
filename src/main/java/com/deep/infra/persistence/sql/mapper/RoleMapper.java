@@ -1,7 +1,5 @@
 package com.deep.infra.persistence.sql.mapper;
 
-
-import com.deep.domain.model.PermitModel;
 import com.deep.domain.model.RoleModel;
 import org.apache.ibatis.annotations.*;
 import java.util.List;

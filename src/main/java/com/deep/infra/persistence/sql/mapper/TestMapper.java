@@ -14,4 +14,5 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface TestMapper {
+  TestModel getTestModelById(@Param("id") String id);
 }
