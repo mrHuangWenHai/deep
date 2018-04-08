@@ -126,13 +126,13 @@ public class RepellentPlanResource {
                         if (JedisUtil.redisJudgeTime(professorKey)) {
                             System.out.println(professorKey);
 
-                            List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(repellentPlanModel.getFactoryNum());
+                            List<String> userModels = userService.getUserTelephoneByfactoryNum(repellentPlanModel.getFactoryNum());
 
                             //需完成:userModels.getTelephone()赋值给String
                             //获得StringBuffer手机号
                             StringBuffer phoneList = new StringBuffer("");
                             for (int i = 0; i < userModels.size(); i++) {
-                                phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
+                                phoneList = phoneList.append(userModels.get(i)).append(",");
                             }
 
                             //发送成功 更新redis中字段
@@ -149,13 +149,13 @@ public class RepellentPlanResource {
                     if (!("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
                         if (JedisUtil.redisJudgeTime(supervisorKey)) {
 
-                            List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(repellentPlanModel.getFactoryNum());
+                            List<String> userModels = userService.getUserTelephoneByfactoryNum(repellentPlanModel.getFactoryNum());
 
                             System.out.println(JedisUtil.redisJudgeTime(supervisorKey));
 
                             StringBuffer phoneList = new StringBuffer("");
                             for (int i = 0; i < userModels.size(); i++) {
-                                phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
+                                phoneList = phoneList.append(userModels.get(i)).append(",");
                             }
                             if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
 

@@ -138,13 +138,13 @@ public class ImmunePlanResource {
                             System.out.println("testSendProfessorValue:" + JedisUtil.getCertainKeyValue(testSendProfessor));
                             if (JedisUtil.redisJudgeTime(professorKey)) {
 
-                                List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(immunePlanModel.getFactoryNum());
+                                List<String> userModels = userService.getUserTelephoneByfactoryNum(immunePlanModel.getFactoryNum());
 
                                 //需完成:userModels.getTelephone()赋值给String
                                 //获得StringBuffer手机号
                                 StringBuffer phoneList = new StringBuffer("");
                                 for (int i = 0; i < userModels.size(); i++) {
-                                    phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
+                                    phoneList = phoneList.append(userModels.get(i)).append(",");
                                 }
 
                                 //发送成功 更新redis中字段
@@ -160,12 +160,12 @@ public class ImmunePlanResource {
 
                         if (!("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
                             if (JedisUtil.redisJudgeTime(supervisorKey)) {
-                                List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(immunePlanModel.getFactoryNum());
+                                List<String> userModels = userService.getUserTelephoneByfactoryNum(immunePlanModel.getFactoryNum());
 
                                 StringBuffer phoneList = new StringBuffer("");
 
                                 for (int i = 0; i < userModels.size(); i++) {
-                                    phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
+                                    phoneList = phoneList.append(userModels.get(i)).append(",");
                                 }
                                 if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {    System.out.println("发送成功！");
                                     JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);

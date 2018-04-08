@@ -103,13 +103,13 @@ public class DisinfectFilesResource {
                         if(JedisUtil.redisJudgeTime(professorKey)){
 
                             System.out.println("in redis:");
-                            List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(disinfectFilesModel.getFactoryNum());
+                            List<String> userModels = userService.getUserTelephoneByfactoryNum(disinfectFilesModel.getFactoryNum());
 
                             //需完成:userModels.getTelephone()赋值给String
                             //获得StringBuffer手机号
                             StringBuffer phoneList = new StringBuffer("");
                             for(int i = 0; i < userModels.size(); i++){
-                                phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
+                                phoneList = phoneList.append(userModels.get(i)).append(",");
                             }
 
                             //发送成功 更新redis中字段
@@ -124,11 +124,11 @@ public class DisinfectFilesResource {
 
                         if(!("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))){
                             if(JedisUtil.redisJudgeTime(supervisorKey)){
-                                List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(disinfectFilesModel.getFactoryNum());
+                                List<String> userModels = userService.getUserTelephoneByfactoryNum(disinfectFilesModel.getFactoryNum());
 
                                 StringBuffer phoneList = new StringBuffer("");
                                 for(int i = 0; i < userModels.size(); i++){
-                                    phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
+                                    phoneList = phoneList.append(userModels.get(i)).append(",");
                                 }
                                 if(JedisUtil.redisSendMessage(phoneList.toString(),JedisUtil.getCertainKeyValue("Message"))){
                                     //System.out.println("发送成功！");
