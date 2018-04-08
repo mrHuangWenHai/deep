@@ -79,4 +79,27 @@ public class JudgeUtil {
         return Responses.successResponse(data);
     }
 
+
+    /**
+     * 用于返回成功方法
+     * 多个S->O
+     * 内部构造HashMap
+     * @param details1
+     * @param o1
+     * @param details2
+     * @param o2
+     * @param details3
+     * @param o3
+     * @return
+     */
+    public static Response JudgeSuccess(String details1,Object o1,
+                                        String details2,Object o2,
+                                        String details3,Object o3){
+        HashMap<String,Object> data = new HashMap<>();
+        data.put(details1,o1);
+        data.put(details2,o2);
+        data.put(details3,o3);
+        return Responses.successResponse(data);
+    }
+
 }

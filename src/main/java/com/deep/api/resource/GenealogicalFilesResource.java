@@ -21,7 +21,7 @@ import java.util.List;
 @RequestMapping(value = "/gf")
 public class GenealogicalFilesResource {
 
-    Logger logger = LoggerFactory.getLogger(GenealogicalFilesResource.class);
+    private Logger logger = LoggerFactory.getLogger(GenealogicalFilesResource.class);
     //替代注册bean
     @Resource
     private GenealogicalFilesService genealogicalFilesService;
@@ -131,9 +131,12 @@ public class GenealogicalFilesResource {
      */
     @ResponseBody
     @RequestMapping(value = "/findshowbyid",method = RequestMethod.GET)
-    public Response FindShowById(@RequestParam("id") Long id ) {
+    public Response FindShowById(@RequestParam(value = "id",defaultValue = "0") Long id ) {
 
         logger.info("invoke findShowById {}", id);
+        if ("0".equals(id.toString())){
+            return Responses.errorResponse("Wrong id");
+        }
         //System.out.println("id:"+id);
         GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesService.getGenealogicalFilesModelByid(id);
         //System.out.println(genealogicalFilesModel.getSelfEartag());
@@ -177,10 +180,13 @@ public class GenealogicalFilesResource {
      */
     @ResponseBody
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
-    public Response Delete(@RequestParam("id") Long id){
+    public Response Delete(@RequestParam(value = "id",defaultValue = "0") Long id){
 
         logger.info("invoke delete {}", id);
 
+        if ("0".equals(id.toString())){
+            return Responses.errorResponse("Wrong id");
+        }
         int row = genealogicalFilesService.deleteGenealogicalFilesModel(id);
         return JudgeUtil.JudgeDelete(row);
     }

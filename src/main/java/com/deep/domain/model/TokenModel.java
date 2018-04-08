@@ -7,14 +7,14 @@ import java.util.UUID;
  * identify:记录密码找回成功后状态
  */
 public class TokenModel {
-    private Integer userId;
+    private long userId;
     private String identify;
     private String token;    //随机生成UUID
 
     public TokenModel() {
     }
 
-    public TokenModel(Integer userId) {
+    public TokenModel(Long userId) {
         this.userId = userId;
         this.token = UUID.randomUUID().toString();
     }
@@ -24,21 +24,18 @@ public class TokenModel {
         this.token = UUID.randomUUID().toString();
     }
 
-    public TokenModel(Integer userId, String token) {
-        this.userId = userId;
-        this.token = token;
-    }
+
 
     public TokenModel(String identify, String token) {
         this.identify = identify;
         this.token = token;
     }
 
-    public Integer getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 

@@ -3,9 +3,9 @@ package com.deep.api.resource;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.ImmunePlanModel;
-import com.deep.domain.model.UserModel;
+import com.deep.domain.model.UseriotModel;
 import com.deep.domain.service.ImmunePlanService;
-import com.deep.domain.service.UserService;
+import com.deep.domain.service.UseriotService;
 import com.deep.domain.util.FileUtil;
 import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.JudgeUtil;
@@ -35,8 +35,8 @@ public class ImmunePlanResource {
     private ImmunePlanService immunePlanService;
 
     //用于查询专家/监督员电话并抉择发送短信
-    @Resource
-    private UserService userService;
+    //@Resource
+    //private UseriotService useriotService;
 
 
     /**
@@ -147,19 +147,19 @@ public class ImmunePlanResource {
                             System.out.println("testSendProfessorValue:" + JedisUtil.getCertainKeyValue(testSendProfessor));
                             if (JedisUtil.redisJudgeTime(professorKey)) {
 
-                                List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(immunePlanModel.getFactoryNum());
+//                                List<UseriotModel> userModels = useriotService.getUserTelephoneByfactoryNum(immunePlanModel.getFactoryNum());
+//
+//                                //需完成:userModels.getTelephone()赋值给String
+//                                //获得StringBuffer手机号
+//                                StringBuffer phoneList = new StringBuffer("");
+//                                for (int i = 0; i < userModels.size(); i++) {
+//                                    phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
+//                                }
 
-                                //需完成:userModels.getTelephone()赋值给String
-                                //获得StringBuffer手机号
-                                StringBuffer phoneList = new StringBuffer("");
-                                for (int i = 0; i < userModels.size(); i++) {
-                                    phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
-                                }
-
-                                //发送成功 更新redis中字段
-                                if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
-                                    JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
-                                }
+//                                //发送成功 更新redis中字段
+//                                if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
+//                                    JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
+//                                }
 
                                 //System.out.println(phoneList);
                             }
@@ -169,13 +169,13 @@ public class ImmunePlanResource {
 
                         if (!("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
                             if (JedisUtil.redisJudgeTime(supervisorKey)) {
-                                List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(immunePlanModel.getFactoryNum());
+//                                List<UseriotModel> userModels = useriotService.getUserTelephoneByfactoryNum(immunePlanModel.getFactoryNum());
 
                                 StringBuffer phoneList = new StringBuffer("");
-
-                                for (int i = 0; i < userModels.size(); i++) {
-                                    phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
-                                }
+//
+//                                for (int i = 0; i < userModels.size(); i++) {
+//                                    phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
+//                                }
                                 if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {    System.out.println("发送成功！");
                                     JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
 
@@ -242,11 +242,14 @@ public class ImmunePlanResource {
      */
     @ResponseBody
     @RequestMapping(value = "pfind",method = RequestMethod.GET)
-    public Response ProfessorFind(@RequestParam("isPass1") Integer isPass1,
+    public Response ProfessorFind(@RequestParam(value = "isPass1",defaultValue = "2") Integer isPass1,
                                   @RequestParam(value = "page",defaultValue = "0") int page,
                                   @RequestParam(value = "size",defaultValue = "10") int size){
         logger.info("invoke professorFind {}", isPass1, page, size);
 
+        if ("2".equals(isPass1.toString())){
+            return Responses.errorResponse("Wrong Pass num");
+        }
         List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModelByProfessor(isPass1,new RowBounds(page,size));
 
         return JudgeUtil.JudgeFind(immunePlanModels,immunePlanModels.size());
@@ -342,11 +345,14 @@ public class ImmunePlanResource {
      */
     @ResponseBody
     @RequestMapping(value = "sfind",method = RequestMethod.GET)
-    public Response SupervisorFind(@RequestParam("isPass2") Integer isPass2,
+    public Response SupervisorFind(@RequestParam(value = "isPass2",defaultValue = "2") Integer isPass2,
                                    @RequestParam(value = "page",defaultValue = "0") int page,
                                    @RequestParam(value = "size",defaultValue = "10") int size){
 
         logger.info("invoke supervisorFind {}", isPass2, page, size);
+        if ("2".equals(isPass2.toString())){
+            return Responses.errorResponse("Wrong Pass num");
+        }
         List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModelBySupervisor(isPass2,new RowBounds(page,size));
 
         System.out.println("size:"+immunePlanModels.size());
@@ -523,9 +529,12 @@ public class ImmunePlanResource {
      */
     @ResponseBody
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
-    public Response Delete(@RequestParam("id") Long id){
+    public Response Delete(@RequestParam(value = "id",defaultValue = "0") Long id){
 
         logger.info("invoke delete {}", id);
+        if ("0".equals(id.toString())){
+            return Responses.errorResponse("Wrong id");
+        }
         int row = immunePlanService.deleteImmunePlanModelByid(id);
         return JudgeUtil.JudgeDelete(row);
     }

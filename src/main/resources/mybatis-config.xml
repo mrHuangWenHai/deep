@@ -21,8 +21,10 @@
     </environments>
 
     <mappers>
-        <mapper resource="mapper/RoleMapperxml.xml"/>
-        <mapper resource="mapper/UserMapperxml.xml"/>
+        <!--
+        <mapper resource="mapper/RoleiotMapperxml.xml"/>
+        <mapper resource="mapper/UseriotMapperxml.xml"/>
+        -->
         <mapper resource="mapper/GenealogicalFilesMapperxml.xml" />
         <mapper resource="mapper/DisinfectFilesMapperxml.xml" />
         <mapper resource="mapper/ImmunePlanMapperxml.xml"/>

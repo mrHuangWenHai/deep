@@ -3,9 +3,9 @@ package com.deep.api.resource;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.RepellentPlanModel;
-import com.deep.domain.model.UserModel;
+import com.deep.domain.model.UseriotModel;
 import com.deep.domain.service.RepellentPlanService;
-import com.deep.domain.service.UserService;
+import com.deep.domain.service.UseriotService;
 import com.deep.domain.util.FileUtil;
 import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.JudgeUtil;
@@ -28,12 +28,12 @@ import java.util.List;
 @Controller
 public class RepellentPlanResource {
 
-    Logger logger = LoggerFactory.getLogger(RepellentPlanResource.class);
+    private Logger logger = LoggerFactory.getLogger(RepellentPlanResource.class);
     @Resource
     private RepellentPlanService repellentPlanService;
 
-    @Resource
-    private UserService userService;
+    //@Resource
+    //private UseriotService useriotService;
 
 
 
@@ -136,14 +136,14 @@ public class RepellentPlanResource {
                         if (JedisUtil.redisJudgeTime(professorKey)) {
                             System.out.println(professorKey);
 
-                            List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(repellentPlanModel.getFactoryNum());
+//                            List<UseriotModel> userModels = useriotService.getUserTelephoneByfactoryNum(repellentPlanModel.getFactoryNum());
 
                             //需完成:userModels.getTelephone()赋值给String
                             //获得StringBuffer手机号
                             StringBuffer phoneList = new StringBuffer("");
-                            for (int i = 0; i < userModels.size(); i++) {
-                                phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
-                            }
+//                            for (int i = 0; i < userModels.size(); i++) {
+//                                phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
+//                            }
 
                             //发送成功 更新redis中字段
                             if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
@@ -159,14 +159,14 @@ public class RepellentPlanResource {
                     if (!("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
                         if (JedisUtil.redisJudgeTime(supervisorKey)) {
 
-                            List<UserModel> userModels = userService.getUserTelephoneByfactoryNum(repellentPlanModel.getFactoryNum());
+//                            List<UseriotModel> userModels = useriotService.getUserTelephoneByfactoryNum(repellentPlanModel.getFactoryNum());
 
                             System.out.println(JedisUtil.redisJudgeTime(supervisorKey));
 
                             StringBuffer phoneList = new StringBuffer("");
-                            for (int i = 0; i < userModels.size(); i++) {
-                                phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
-                            }
+//                            for (int i = 0; i < userModels.size(); i++) {
+//                                phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
+//                            }
                             if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
 
                                 JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
