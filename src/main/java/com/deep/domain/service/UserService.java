@@ -352,7 +352,7 @@ public class UserService {
      * @param roleID
      * @return
      */
-    public List<UserRole> getRoles(long roleID) {
+    public List<UserModel> getRoles(long roleID) {
         return userMapper.getOneRoles(roleID);
     }
 
@@ -395,11 +395,12 @@ public class UserService {
      * @param agents
      * @return
      */
-    public List<UserRole> getProfessor(List<AgentModel> agents) {
-        List<UserRole> models = new ArrayList<>();
+    public Map<String, Object> getProfessor(List<AgentModel> agents) {
+        Map<String, Object> allProfessor = new HashMap<>();
         for(AgentModel attribute : agents) {
-            models.addAll(userMapper.getProfessor((long)attribute.getId()));
+            System.out.println(attribute.getId());
+            allProfessor.put("上级代理" + attribute.getAgentRank(), userMapper.getProfessor((long)attribute.getId()));
         }
-        return models;
+        return allProfessor;
     }
 }

@@ -334,7 +334,7 @@ public class UserResource {
         if (uid == -1) {
             return Responses.errorResponse("error!");
         }
-        List<UserService.UserRole> userModels = userService.getRoles(uid);
+        List<UserModel> userModels = userService.getRoles(uid);
         if (userModels.size() <= 0) {
             return Responses.errorResponse("error!");
         }

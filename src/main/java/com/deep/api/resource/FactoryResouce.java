@@ -51,7 +51,7 @@ public class FactoryResouce {
     @Permit(modules = "factory", authorities = "select_factory")
     @GetMapping(value = "/{id}")
     public Response getFactoryOne(@PathVariable("id") String id) {
-        logger.info("invoke getFactoryOne{}, url is factory/{id}", id);
+        logger.info("invoke getFactoryOne {}, url is factory/{id}", id);
         long uid = StringToLongUtil.stringToInt(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");

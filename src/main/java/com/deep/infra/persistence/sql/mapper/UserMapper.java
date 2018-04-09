@@ -302,7 +302,7 @@ public interface UserMapper {
             @Result(property = "officialPhone", column = "official_phone"),
             @Result(property = "QQ", column = "QQ")
     })
-    List<UserService.UserRole> getOneRoles(long roleID);
+    List<UserModel> getOneRoles(long roleID);
 
     @Select("select id, pk_userid, user_telephone, user_role, user_email, official_phone, QQ from user_manage where user_role in (4, 8, 12, 16) and user_factory = #{agentID}")
     @Results({
@@ -314,7 +314,7 @@ public interface UserMapper {
             @Result(property = "officialPhone", column = "official_phone"),
             @Result(property = "QQ", column = "QQ")
     })
-    List<UserService.UserRole> getProfessor(Long agentID);
+    List<UserModel> getProfessor(Long agentID);
 
     /**
      * 查找某一个羊场或者代理下的所有用户

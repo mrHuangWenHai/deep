@@ -241,7 +241,7 @@ public class AgentResource {
         if (agentID == -1) {
             return Responses.errorResponse("error");
         } else {
-            List<UserService.UserRole> agents = agentService.getAncestorsProfessor(agentID);
+            Map<String, Object> agents = agentService.getAncestorsProfessor(agentID);
             if (agents.size() > 0) {
                 Response response = Responses.successResponse();
                 Map<String, Object> data = new HashMap<>();

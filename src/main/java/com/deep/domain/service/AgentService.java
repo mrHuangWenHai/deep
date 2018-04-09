@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AgentService {
@@ -54,16 +56,16 @@ public class AgentService {
     public List<AgentModel> getAncestors(Long id) {
         List<AgentModel> lists = new ArrayList<>();
         AgentModel agentModel = agentMapper.queryAgentByID(id);
-        while (agentModel != null) {
+        while (agentModel != null && agentModel.getAgentFather() != 0) {
             agentModel = agentMapper.queryAgentByID((long)agentModel.getAgentFather());
             lists.add(agentModel);
         }
         return lists;
     }
 
-    public List<UserService.UserRole> getAncestorsProfessor(Long id) {
+    public Map<String, Object> getAncestorsProfessor(Long id) {
         List<AgentModel> lists = getAncestors(id);
-        List<UserService.UserRole> userRole = userService.getProfessor(lists);
+        Map<String, Object> userRole = userService.getProfessor(lists);
         return userRole;
     }
 
