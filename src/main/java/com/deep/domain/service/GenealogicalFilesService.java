@@ -33,8 +33,8 @@ public class  GenealogicalFilesService {
         return this.genealogicalFilesMapper.getGenealogicalFilesModelByid(id);
     }
 
-    public GenealogicalFilesModel getGenealogicalFilesModelByselfEartag(String selfEartag) {
-        return this.genealogicalFilesMapper.getGenealogicalFilesModelByNativeEartag(selfEartag);
+    public GenealogicalFilesModel getGenealogicalFilesModelByNativeEartag(String nativeEartag) {
+        return this.genealogicalFilesMapper.getGenealogicalFilesModelByNativeEartag(nativeEartag);
     }
 
     public GenealogicalFilesModel getGenealogicalFilesModelByimmuneEartag(String immuneEartag) {

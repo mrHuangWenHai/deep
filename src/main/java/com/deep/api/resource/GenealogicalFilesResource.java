@@ -152,7 +152,7 @@ public class GenealogicalFilesResource {
 
         logger.info("invoke update {}", genealogicalFilesModel);
 
-        if (genealogicalFilesService.getGenealogicalFilesModelByselfEartag(genealogicalFilesModel.getNativeEartag()) == null
+        if (genealogicalFilesService.getGenealogicalFilesModelByNativeEartag(genealogicalFilesModel.getNativeEartag()) == null
             && genealogicalFilesService.getGenealogicalFilesModelByimmuneEartag(genealogicalFilesModel.getImmuneEartag()) == null
             && genealogicalFilesService.getGenealogicalFilesModelBytradeMarkEartag(genealogicalFilesModel.getTradeMarkEartag()) == null) {
             int row = genealogicalFilesService.updateGenealogicalFilesModel(genealogicalFilesModel);

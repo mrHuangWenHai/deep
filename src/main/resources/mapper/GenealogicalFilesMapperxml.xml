@@ -5,7 +5,7 @@
 <mapper namespace="com.deep.infra.persistence.sql.mapper.GenealogicalFilesMapper">
     <insert id="setGenealogicalFilesModel" parameterType="com.deep.domain.model.GenealogicalFilesModel">
         INSERT INTO genealogical_files(
-          self_eartag,
+          native_eartag,
           immune_eartag,
           trademark_eartag,
           breedingsheep_base,
@@ -23,7 +23,7 @@
           gmt_create
         )
         VALUES(
-          #{genealogicalFilesModel.selfEartag},
+          #{genealogicalFilesModel.native_eartag},
           #{genealogicalFilesModel.immuneEartag},
           #{genealogicalFilesModel.tradeMarkEartag},
           #{genealogicalFilesModel.breedingSheepBase},
@@ -44,7 +44,7 @@
 
     <resultMap id="GenealogicalFiles" type="com.deep.domain.model.GenealogicalFilesModel">
         <id property="id" column="id"/>
-        <result property="selfEartag" column="self_eartag"/>
+        <result property="nativeEartag" column="native_eartag"/>
         <result property="immuneEartag" column="immune_eartag"/>
         <result property="tradeMarkEartag" column="trademark_eartag"/>
         <result property="breedingSheepBase" column="breedingsheep_base"/>
@@ -78,8 +78,8 @@
         FROM
         genealogical_files
         WHERE 1 = 1
-            <if test="genealogicalFilesModel.selfEartag != null and genealogicalFilesModel.selfEartag !='' ">
-                AND self_eartag = #{genealogicalFilesModel.selfEartag}
+            <if test="genealogicalFilesModel.nativeEartag != null and genealogicalFilesModel.nativeEartag !='' ">
+                AND native_eartag = #{genealogicalFilesModel.nativeEartag}
             </if>
             <if test="genealogicalFilesModel.immuneEartag!= null and genealogicalFilesModel.immuneEartag != '' ">
                 AND immune_eartag = #{genealogicalFilesModel.immuneEartag}
@@ -125,13 +125,13 @@
     </select>
 
 
-    <select id="getGenealogicalFilesModelByselfEartag" resultType="com.deep.domain.model.GenealogicalFilesModel">
+    <select id="getGenealogicalFilesModelByNativeEartag" resultType="com.deep.domain.model.GenealogicalFilesModel">
         SELECT
         *
         FROM
         genealogical_files
         WHERE
-        self_eartag = #{selfEartag}
+        native_eartag = #{nativeEartag}
     </select>
 
     <select id="getGenealogicalFilesModelByimmuneEartag" resultType="com.deep.domain.model.GenealogicalFilesModel">
@@ -157,8 +157,8 @@
         UPDATE
         genealogical_files
         <set>
-            <if test="genealogicalFilesModel.selfEartag != null and genealogicalFilesModel.selfEartag !=''">
-                self_eartag = #{genealogicalFilesModel.selfEartag},
+            <if test="genealogicalFilesModel.nativeEartag != null and genealogicalFilesModel.nativeEartag !=''">
+                native_eartag = #{genealogicalFilesModel.nativeEartag},
             </if>
             <if test="genealogicalFilesModel.immuneEartag!= null and genealogicalFilesModel.immuneEartag != '' ">
                 immune_eartag = #{genealogicalFilesModel.immuneEartag},

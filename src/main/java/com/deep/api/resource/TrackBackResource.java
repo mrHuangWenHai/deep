@@ -57,4 +57,18 @@ public class TrackBackResource {
     return response;
   }
 
+  @RequestMapping("/native")
+  Response trackBackSheepByNativeEarTag(@RequestParam("nativeEarTag") @NotNull String nativeEarTag) {
+    logger.info("/trackBack/trademark nativeEarTag = {}",nativeEarTag);
+    if (nativeEarTag.length() == 0) {
+      return Responses.errorResponse("trademarkEarTag is empty");
+    }
+    GenealogicalFilesModel genealogicalFilesModel = trackBackService.getGenealogicalFilesModelByNativeEartag(nativeEarTag);
+    Map<String, Object> data = new  HashMap<String, Object>();
+    data.put("GenealogicalFilesModel", genealogicalFilesModel);
+    Response response = Responses.successResponse();
+    response.setData(data);
+    return response;
+  }
+
 }

@@ -30,5 +30,10 @@ public class TrackBackService {
     return genealogicalFilesModel;
   }
 
+  public GenealogicalFilesModel getGenealogicalFilesModelByNativeEartag(String nativeEartag) {
+    GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesMapper.getGenealogicalFilesModelByNativeEartag(nativeEartag);
+    return genealogicalFilesModel;
+  }
+
 
 }
