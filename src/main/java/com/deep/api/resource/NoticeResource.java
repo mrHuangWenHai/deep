@@ -359,6 +359,7 @@ public class NoticeResource {
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
         String filepath = request.getSession().getServletContext().getContextPath()+"../picture/rich_text_format/";
         List<String> path = new ArrayList<>();
+//        request.getAttribute(); 获取前端Token
         for (int i = 0; i < files.size(); i++) {
             MultipartFile file = files.get(i);
             String filename = file.getOriginalFilename();
