@@ -25,11 +25,7 @@ public class NutritionPlanService {
         int drop = this.nutritionPlanMapper.deleteByPrimaryKey(id);
         return drop;
     }
-    public int changePlanByProfessor(NutritionPlanWithBLOBs nutritionPlanWithBLOBs){
-        int change = this.nutritionPlanMapper.updateByPrimaryKeySelective(nutritionPlanWithBLOBs);
-        return change;
-    }
-    public int changePlanBySupervisor(NutritionPlanWithBLOBs nutritionPlanWithBLOBs){
+    public int changePlanSelective(NutritionPlanWithBLOBs nutritionPlanWithBLOBs){
         int change = this.nutritionPlanMapper.updateByPrimaryKeySelective(nutritionPlanWithBLOBs);
         return change;
     }
@@ -38,19 +34,6 @@ public class NutritionPlanService {
         return find;
     }
     public List<NutritionPlanWithBLOBs> findPlanSelective(NutritionPlanExample nutritionPlanExample){
-        List<NutritionPlanWithBLOBs> find = this.nutritionPlanMapper.selectByExampleWithBLOBs(nutritionPlanExample);
-        return find;
-    }
-
-    public List<NutritionPlanWithBLOBs> findPlanSelectByDate(NutritionPlanExample nutritionPlanExample){
-        List<NutritionPlanWithBLOBs> find = this.nutritionPlanMapper.selectByExampleWithBLOBs(nutritionPlanExample);
-        return find;
-    }
-    public List<NutritionPlanWithBLOBs> findPlanSelectByProfessor(NutritionPlanExample nutritionPlanExample){
-        List<NutritionPlanWithBLOBs> find = this.nutritionPlanMapper.selectByExampleWithBLOBs(nutritionPlanExample);
-        return find;
-    }
-    public List<NutritionPlanWithBLOBs> findPlanSelectBySupervisor(NutritionPlanExample nutritionPlanExample){
         List<NutritionPlanWithBLOBs> find = this.nutritionPlanMapper.selectByExampleWithBLOBs(nutritionPlanExample);
         return find;
     }

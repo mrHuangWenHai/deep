@@ -288,6 +288,7 @@ public interface UserMapper {
     Long updateUserPwd(String userPwd, String username);
 
 
+
     /**
      * 获取某一类专家
      * @param roleID
@@ -353,5 +354,6 @@ public interface UserMapper {
             @Result(property = "familyPhone", column = "family_phone")
     })
     List<UserModel> getAllUsersOfOneFactoryOrOneAgent(Long userFactory);
+
 
 }

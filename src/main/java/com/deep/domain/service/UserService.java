@@ -306,7 +306,9 @@ public class UserService {
         userLogin.setUserPic(userModel.getUserPic());
         userLogin.setUserPwd(userModel.getUserPwd());
         // 角色名称
+
         String roleName = roleService.getOneRole(userModel.getUserRole()).getTypeName();
+
         roleMapper.put("roleName", roleName);
         roleMapper.put("roleNum", userModel.getUserRole());
         userLogin.setUserRole(roleMapper);
@@ -327,10 +329,12 @@ public class UserService {
         if (isFactory == 0) {
             // 代表羊场
             FactoryModel factoryModel = factoryService.getOneFactory(factoryId);
+
             Logger logger = LoggerFactory.getLogger(UserService.class);
             logger.info("isFactory", factoryModel);
             System.out.println(factoryId);
             System.out.println(factoryModel.getBreadName());
+
             if (factoryModel != null) {
                 factoryOrAgentMapper.put("factoryNum", factoryModel.getId());
                 factoryOrAgentMapper.put("factoryName",factoryModel.getBreadName());
@@ -358,6 +362,7 @@ public class UserService {
     }
 
     /**
+
      * 修改用户密码
      * @param userPwd
      * @return
@@ -365,6 +370,7 @@ public class UserService {
     public Long updateUserPwd(String userPwd, String username) {
         return userMapper.updateUserPwd(userPwd, username);
     }
+
 
 
     /**

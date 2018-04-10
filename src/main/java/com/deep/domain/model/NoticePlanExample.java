@@ -485,6 +485,146 @@ public class NoticePlanExample {
             return (Criteria) this;
         }
 
+        public Criteria andFilepathIsNull() {
+            addCriterion("filepath is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilepathIsNotNull() {
+            addCriterion("filepath is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilepathEqualTo(String value) {
+            addCriterion("filepath =", value, "filepath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilepathNotEqualTo(String value) {
+            addCriterion("filepath <>", value, "filepath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilepathGreaterThan(String value) {
+            addCriterion("filepath >", value, "filepath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilepathGreaterThanOrEqualTo(String value) {
+            addCriterion("filepath >=", value, "filepath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilepathLessThan(String value) {
+            addCriterion("filepath <", value, "filepath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilepathLessThanOrEqualTo(String value) {
+            addCriterion("filepath <=", value, "filepath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilepathLike(String value) {
+            addCriterion("filepath like", value, "filepath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilepathNotLike(String value) {
+            addCriterion("filepath not like", value, "filepath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilepathIn(List<String> values) {
+            addCriterion("filepath in", values, "filepath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilepathNotIn(List<String> values) {
+            addCriterion("filepath not in", values, "filepath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilepathBetween(String value1, String value2) {
+            addCriterion("filepath between", value1, value2, "filepath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilepathNotBetween(String value1, String value2) {
+            addCriterion("filepath not between", value1, value2, "filepath");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixnameIsNull() {
+            addCriterion("suffixname is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixnameIsNotNull() {
+            addCriterion("suffixname is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixnameEqualTo(String value) {
+            addCriterion("suffixname =", value, "suffixname");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixnameNotEqualTo(String value) {
+            addCriterion("suffixname <>", value, "suffixname");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixnameGreaterThan(String value) {
+            addCriterion("suffixname >", value, "suffixname");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixnameGreaterThanOrEqualTo(String value) {
+            addCriterion("suffixname >=", value, "suffixname");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixnameLessThan(String value) {
+            addCriterion("suffixname <", value, "suffixname");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixnameLessThanOrEqualTo(String value) {
+            addCriterion("suffixname <=", value, "suffixname");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixnameLike(String value) {
+            addCriterion("suffixname like", value, "suffixname");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixnameNotLike(String value) {
+            addCriterion("suffixname not like", value, "suffixname");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixnameIn(List<String> values) {
+            addCriterion("suffixname in", values, "suffixname");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixnameNotIn(List<String> values) {
+            addCriterion("suffixname not in", values, "suffixname");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixnameBetween(String value1, String value2) {
+            addCriterion("suffixname between", value1, value2, "suffixname");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixnameNotBetween(String value1, String value2) {
+            addCriterion("suffixname not between", value1, value2, "suffixname");
+            return (Criteria) this;
+        }
+
         public Criteria andProfessorLikeInsensitive(String value) {
             addCriterion("upper(professor) like", value.toUpperCase(), "professor");
             return (Criteria) this;
@@ -492,6 +632,16 @@ public class NoticePlanExample {
 
         public Criteria andTitleLikeInsensitive(String value) {
             addCriterion("upper(title) like", value.toUpperCase(), "title");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilepathLikeInsensitive(String value) {
+            addCriterion("upper(filepath) like", value.toUpperCase(), "filepath");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixnameLikeInsensitive(String value) {
+            addCriterion("upper(suffixname) like", value.toUpperCase(), "suffixname");
             return (Criteria) this;
         }
     }

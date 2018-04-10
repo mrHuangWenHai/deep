@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import redis.clients.jedis.Jedis;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -144,22 +145,27 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
             response.setStatus(401);
             return false;
         }
+
         tokenManagerRealization = new TokenManagerRealization();
+
         // 取出方法上的Permit注解
         Permit permit = method.getAnnotation(Permit.class);
         if (permit == null) {
             logger.info("no permit message");
             return true;
         } else {
+
             // 如果注解Permit不为null
             logger.info("permit modules length", permit.modules().length);
             if (permit.modules().length > 0) {
+
                 String[] modules = permit.modules();
                 Set<String> authSet = new HashSet<>();
                 for (String module : modules) {
                     authSet.add(module);
                 }
                 // 从参数中获取用户的ID
+
                 // TODO 从参数中获取用户的RoleID
 //                Long userID = model.getUserId();
 //                System.out.println(userID);
@@ -181,5 +187,9 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
         }
         response.setStatus(401);
         return false;
+    }
+
+    public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
+        System.out.println("this is the afterCompletion of PermitInterceptor");
     }
 }

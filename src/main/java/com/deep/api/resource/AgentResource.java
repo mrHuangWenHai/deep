@@ -35,7 +35,9 @@ public class AgentResource {
     @Permit(modules = "dongxiang_factory_administrator", authorities = "select_agent")
     @GetMapping(value = "/")
     public Response agentLists() {
+
         logger.info("invoke agentLists, url is agent/");
+
         List<AgentModel> agents = agentService.getAll();
         if (agents.size() <= 0) {
             return Responses.errorResponse("系统中暂时没有代理");
@@ -56,7 +58,9 @@ public class AgentResource {
     @Permit(modules = "dongxiang_factory_administrator", authorities = "select_agent")
     @GetMapping(value = "/{id}")
     public Response findOne(@PathVariable("id") String id) {
+
         logger.info("invoke findOne{}, url is agent/{id}", id);
+
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -79,7 +83,9 @@ public class AgentResource {
     @Permit(modules = "dongxiang_factory_administrator", authorities = "delete_agent")
     @DeleteMapping(value = "/{id}")
     public Response deleteOne(@PathVariable("id") String id) {
+
         logger.info("invoke deleteOne{}, url is agent/{id}", id);
+
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -105,6 +111,7 @@ public class AgentResource {
     @PostMapping(value = "/add")
     public Response addOne(@Valid @RequestBody AgentModel agentModel, BindingResult bindingResult) {
         logger.info("invoke addOne{}, url is agent/add", agentModel);
+
         if (bindingResult.hasErrors())  {
             return Responses.errorResponse("添加代理失败, 验证错误!");
         } else {
@@ -114,6 +121,7 @@ public class AgentResource {
             if (addID <= 0) {
                 return Responses.errorResponse("添加用户信息失败");
             }
+
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("oneAgent", addID);
@@ -133,6 +141,7 @@ public class AgentResource {
     @PutMapping("/{id}")
     public Response agentUpdate(@Valid @RequestBody AgentModel agentModel, @PathVariable("id") String id, BindingResult bindingResult) {
         logger.info("invoke agentUpdate{}, url is agent/{id}", agentModel, id);
+
         int uid = StringToLongUtil.stringToInt(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -163,9 +172,11 @@ public class AgentResource {
      */
     @GetMapping(value = "/sons/{id}")
     public Response AgentsSon(@PathVariable("id") String id) {
+
         logger.info("invoke agentsSon{}, url is agent/sons/{id}", id);
         int agentID = StringToLongUtil.stringToInt(id);
         if (agentID == -1) {
+
             return Responses.errorResponse("error");
         } else {
             List<AgentModel> agentModels = agentService.getSons(agentID);
@@ -180,6 +191,7 @@ public class AgentResource {
             return Responses.errorResponse("error");
         }
     }
+
 
     /**
      * 获取上级代理操作
@@ -252,4 +264,5 @@ public class AgentResource {
             return Responses.errorResponse("error");
         }
     }
+
 }

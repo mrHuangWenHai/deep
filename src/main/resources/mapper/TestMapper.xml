@@ -5,7 +5,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.deep.infra.persistence.sql.mapper.TestMapper">
+
     <select id="getTestModelById" resultType="com.deep.domain.model.TestModel">
+
         select
         *
         from test

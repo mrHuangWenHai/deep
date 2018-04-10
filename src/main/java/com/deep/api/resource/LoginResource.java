@@ -29,7 +29,6 @@ public class LoginResource {
     private UserService userService;
 
     @Resource
-
     private MobileAnnouncementUtil mobileAnnouncementModel;
 
     @Resource
@@ -92,6 +91,7 @@ public class LoginResource {
             return Responses.errorResponse("用户不存在");
         }
         mobileAnnouncementModel = new MobileAnnouncementUtil(userModel.getUserTelephone());
+
         String httpResponse =  mobileAnnouncementModel.testSend();
         try {
             JSONObject jsonObj = new JSONObject( httpResponse );
@@ -152,6 +152,7 @@ public class LoginResource {
      * @return
      */
     @GetMapping(value = "/ensureverify/{verifyCode}")
+
     public Response EnsureVerify(@PathVariable("verifyCode") String verifyCode, UserModel userModel){
         logger.info("invoke EnsureVerify{}, url is /ensureverify/{vefiyCode}", verifyCode);
         if (verifyCode == null || userModel == null || userModel.getUserTelephone().equals("") || userModel.getPkUserid().equals("")) {
@@ -159,6 +160,7 @@ public class LoginResource {
         }
         Response response;
         if(verifyCode.equals(JedisUtil.getValue(userModel.getPkUserid()+userModel.getUserTelephone()))) {
+
             response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("errorMessage", "valid success");
@@ -174,7 +176,9 @@ public class LoginResource {
 
     @GetMapping(value = "/question")
     public Response requestQuestion(@RequestParam("name") String name) {
+
         logger.info("invoke requestQuestion{}, url is requestQuestion", name);
+
         if (name == null) {
             return Responses.errorResponse("error!");
         }
@@ -197,8 +201,10 @@ public class LoginResource {
      * @return
      */
     @PostMapping(value = "/ensurequestion")
+
     public Response EnsureQuestion(@RequestBody UserModel userModel) {
         logger.info("invoke ensureQuestion{}, url is /ensurequestion", userModel);
+
         if (userModel == null) {
             return Responses.errorResponse("error!");
 
@@ -229,7 +235,9 @@ public class LoginResource {
      */
     @GetMapping(value = "/logout/{id}")
     public Response logout(@PathVariable("id") String id) {
+
         logger.info("invoke logout{}, url is /logout/{id}", id);
+
         if (id == null) {
             return Responses.errorResponse("error!");
         }

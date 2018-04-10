@@ -18,6 +18,7 @@ public class Pic implements Serializable {
 
     private Date udate;
 
+
     public Date getSdate() {
         return sdate;
     }
@@ -60,6 +61,7 @@ public class Pic implements Serializable {
      private String filename;
 
     private Integer returnId;
+
 
     private Integer pageNumb;
 

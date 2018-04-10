@@ -37,7 +37,10 @@ public interface AgentMapper {
     })
     List<AgentModel> getSons(int id);
 
+
+
     /**
+
      * 根据ID获取单个代理
      * @param id
      * @return

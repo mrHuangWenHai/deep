@@ -3,6 +3,7 @@ package com.deep.domain.service;
 import com.deep.domain.model.BreedingPlan;
 import com.deep.domain.model.BreedingPlanExample;
 import com.deep.infra.persistence.sql.mapper.BreedingPlanMapper;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -46,6 +47,7 @@ public class BreedingPlanService {
     public List<BreedingPlan> findPlanSelective(BreedingPlanExample breedingPlanExample) {
         List<BreedingPlan> find = this.breedingPlanMapper.selectByExample(breedingPlanExample);
         return find;
+
     }
 }
 

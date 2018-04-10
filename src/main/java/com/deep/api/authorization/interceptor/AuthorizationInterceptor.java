@@ -31,12 +31,14 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
      * @throws Exception
      */
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
         logger.info("invoke preHandle of AuthorizationInterceptor", request, response, handler);
         // 加相关的回应头
         response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
         response.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET, PUT, POST, DELETE");
         response.setHeader("Access-Control-Expose-Headers", "Authorization");
+
         if (request.getMethod().equals("OPTIONS")) {
             logger.info("AuthorizationInterceptor:request type is OPTIONS");
             return true;
@@ -54,11 +56,14 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         }
         // 从header中获取token
         String authorization = request.getHeader(Constants.AUTHORIZATION);
+
         System.out.println(authorization);
+
         tokenManagerRealization = new TokenManagerRealization();
         // 从authorization中获取用户名以及token
         TokenModel model = tokenManagerRealization.getToken(authorization);
         if (model == null) {
+
             // 登录验证失败, 请登录
             logger.info("model == null");
             response.setStatus(401);
@@ -74,6 +79,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             System.out.println(model.getToken());
             System.out.println("second false");
             response.setStatus(401);
+
             return false;
         }
         // 从Redis数据库中获取用户原来的token, 然后取得其权限, 加入新的token
@@ -86,6 +92,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         JedisUtil.doExpire(String.valueOf(model.getUserId()));
         response.setHeader("Authorization", model.getUserId() + ":" + tokenModel.getToken());
         logger.info("Authorization pass");
+
         return true;
     }
 }

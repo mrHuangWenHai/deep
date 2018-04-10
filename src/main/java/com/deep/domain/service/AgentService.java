@@ -35,6 +35,7 @@ public class AgentService {
     }
 
     /**
+
      * 查询一个代理的直属上级
      * @param id
      * @return
@@ -66,6 +67,7 @@ public class AgentService {
         List<AgentModel> lists = getAncestors(id);
         List<UserService.UserRole> userRole = userService.getProfessor(lists);
         return userRole;
+
     }
 
     /**

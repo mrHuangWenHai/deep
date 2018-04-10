@@ -76,6 +76,7 @@ public class UserModel {
 
         public String getUserEmail() {
             return userEmail;
+<<<<<<< HEAD
         }
 
         public void setUserEmail(String userEmail) {
@@ -110,6 +111,42 @@ public class UserModel {
             return familyPhone;
         }
 
+=======
+        }
+
+        public void setUserEmail(String userEmail) {
+            this.userEmail = userEmail;
+        }
+
+        public String getMSN() {
+            return MSN;
+        }
+
+        public void setMSN(String MSN) {
+            this.MSN = MSN;
+        }
+
+        public String getQQ() {
+            return QQ;
+        }
+
+        public void setQQ(String QQ) {
+            this.QQ = QQ;
+        }
+
+        public String getOfficialPhone() {
+            return officialPhone;
+        }
+
+        public void setOfficialPhone(String officialPhone) {
+            this.officialPhone = officialPhone;
+        }
+
+        public String getFamilyPhone() {
+            return familyPhone;
+        }
+
+>>>>>>> 3728191649fbcca17337f50d6ee625042b263f50
         public void setFamilyPhone(String familyPhone) {
             this.familyPhone = familyPhone;
         }

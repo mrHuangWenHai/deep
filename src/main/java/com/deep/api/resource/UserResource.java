@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -44,7 +43,9 @@ public class UserResource {
     })
     @GetMapping(value = "user/")
     public Response userList() {
+
         logger.info("invoke userList, url is user/");
+
         List<UserModel> userLists = userService.getAll();
         if (userLists.size() <= 0) {
             return Responses.errorResponse("系统中暂时没有用户");
@@ -62,6 +63,7 @@ public class UserResource {
      * @param id 获取用户的信息(简略信息)
      * @return
      */
+
     @Permit(modules = {
             "dongxiang_factory_administrator", "total_system_administrator", "province_agent_total_administrator",
             "province_agent_administrator", "city_agent_total_administrator", "city_agent_administrator",
@@ -74,6 +76,7 @@ public class UserResource {
     @GetMapping(value = "user/{id}")
     public Response getUserOne(@PathVariable("id")String id) {
         logger.info("invoke getUserOne{}, url is user/{id}", id);
+
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -94,6 +97,7 @@ public class UserResource {
      * @param id 获取用户的信息(简略信息)
      * @return
      */
+
     @Permit(modules = {
             "dongxiang_factory_administrator", "total_system_administrator", "province_agent_total_administrator",
             "province_agent_administrator", "city_agent_total_administrator", "city_agent_administrator",
@@ -106,6 +110,7 @@ public class UserResource {
     @GetMapping(value = "user/detail/{id}")
     public Response getUserOneDetail(@PathVariable("id") String id) {
         logger.info("invoke getUserOneDetail{}, url is user/detail/{id}", id);
+
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -137,7 +142,9 @@ public class UserResource {
     })
     @GetMapping(value = "user/name/{realname}")
     public Response getUserByUserRealname(@PathVariable("realname") String realname) {
+
         logger.info("invoke getUserByUserRealname{}, url is user/name/{realname}", realname);
+
         UserModel userModel = userService.getUserByUserRealnameLike(realname);
         if (realname.equals("")) {
             return Responses.errorResponse("用户名格式错误");
@@ -168,7 +175,9 @@ public class UserResource {
     })
     @GetMapping(value = "user/id/{pkUserid}")
     public Response getUserByUserID(@PathVariable("pkUserid") String pkUserid) {
+
         logger.info("invoke getUserByUserID{}, url is user/id/{pkUserid}", pkUserid);
+
         // 检查用户名输入的是否合法
         if (!Pattern.matches("^[0-9a-z]+$", pkUserid)) {
             return Responses.errorResponse("请输入正确的用户名");
@@ -190,9 +199,11 @@ public class UserResource {
      * @param bindingResult
      * @return
      */
+
     @PostMapping("/register")
     public Response addUser(@RequestBody @Valid UserModel userModel,  BindingResult bindingResult) {
         logger.info("invoke addUser{}, url is register", userModel, bindingResult);
+
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("验证失败");
             HashMap<String, Object> data = new HashMap<>();
@@ -235,9 +246,11 @@ public class UserResource {
      * @param bindingResult
      * @return
      */
+
     @PutMapping(value = "user/{id}")
     public Response modifyUser(@RequestBody @Valid UserModel userModel, @PathVariable("id") String id, BindingResult bindingResult) {
         logger.info("invoke modifyUser{}, url is user/{id}", userModel, id, bindingResult);
+
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -261,6 +274,7 @@ public class UserResource {
             return Responses.errorResponse("用户信息修改失败,请检查网络后重试");
         }
         response = Responses.successResponse();
+
         HashMap<String, Object> data = new HashMap<>();
         data.put("updateID", updateID);
         response.setData(data);
@@ -286,6 +300,7 @@ public class UserResource {
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
         data.put("deleteID", deleteId);
+
         response.setData(data);
         return response;
     }
@@ -327,6 +342,7 @@ public class UserResource {
      * @param id
      * @return
      */
+
     @GetMapping(value = "/user/high/{id}")
     public Response getRolesOfProfessor(@PathVariable("id") String id) {
         logger.info("invoke getRolesOfProfessor{}, url is /user/high/{id}", id);
@@ -376,5 +392,6 @@ public class UserResource {
                 return response;
             }
         }
+
     }
 }
