@@ -1,6 +1,7 @@
 package com.deep.domain.service;
 
 import com.deep.domain.model.AgentModel;
+import com.deep.domain.model.UserModel;
 import com.deep.infra.persistence.sql.mapper.AgentMapper;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +49,6 @@ public class AgentService {
             return agentMapper.queryAgentByID((long)agentModel.getAgentFather());
         }
     }
-
     /**
      * 查询一个代理的所有上级
      * TODO 最好将其优化成数据库的查询, 提高查询的效率, 目前没有找到数据库树型查询的方法

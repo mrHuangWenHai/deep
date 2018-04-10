@@ -1,6 +1,8 @@
 package com.deep.domain.service;
 
+import com.deep.api.Utils.JedisUtil;
 import com.deep.api.authorization.tools.RoleAndPermit;
+import com.deep.api.response.Responses;
 import com.deep.domain.model.AgentModel;
 import com.deep.domain.model.FactoryModel;
 import com.deep.domain.model.UserModel;
@@ -391,7 +393,7 @@ public class UserService {
     }
 
     /**
-     * 获得该代理下的所有专家
+     * 获取所有的专家信息, 包括在线和没有在线的专家
      * @param agents
      * @return
      */
@@ -402,5 +404,21 @@ public class UserService {
             allProfessor.put("上级代理" + attribute.getAgentRank(), userMapper.getProfessor((long)attribute.getId()));
         }
         return allProfessor;
+    }
+
+    /**
+     * 获取上级专家的在线信息
+     * @param agentID
+     * @return
+     */
+    public List<UserModel> getFatherProfessors(long agentID) {
+        List<UserModel> models = userMapper.getProfessor(agentID);
+        List<UserModel> users = new ArrayList<>();
+        for (int i = 0; i < models.size(); i++) {
+            if (JedisUtil.getValue(String.valueOf(models.get(i).getId())) == null) {
+                users.add(models.get(i));
+            }
+        }
+        return users;
     }
 }

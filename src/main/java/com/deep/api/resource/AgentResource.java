@@ -5,6 +5,7 @@ import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.AgentModel;
+import com.deep.domain.model.UserModel;
 import com.deep.domain.service.AgentService;
 import com.deep.domain.service.UserService;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import javax.ws.rs.POST;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;

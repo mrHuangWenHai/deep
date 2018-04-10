@@ -2,6 +2,7 @@ package com.deep.api.resource;
 
 import com.deep.api.Utils.ExcelData;
 import com.deep.api.Utils.ExportExcelUtil;
+import com.deep.api.Utils.JedisUtil;
 import com.deep.api.Utils.StringToLongUtil;
 import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.response.Response;
@@ -375,6 +376,38 @@ public class UserResource {
                 response.setData(data);
                 return response;
             }
+        }
+    }
+
+    @GetMapping(value = "/user/online/{id}")
+    public Response getOnline(@PathVariable("id") String id) {
+        logger.info("invoke getOnline {}", id);
+        if(JedisUtil.getValue(id) == null) {
+            return Responses.errorResponse("not on line");
+        } else {
+            return Responses.successResponse();
+        }
+    }
+
+    /**
+     * 获取直属上级所有在线的专家, 如果没有, 则返回直属上级的上级的专家
+     */
+    @GetMapping(value = "ancestors/professor/online/{id}")
+    public Response getOnlineAncestors(@PathVariable("id") String id) {
+        logger.info("invoke getAncestors {}", id);
+        long agentID = StringToLongUtil.stringToLong(id);
+        if (agentID == -1) {
+            return Responses.errorResponse("error");
+        } else {
+            List<UserModel> agent = userService.getFatherProfessors(agentID);
+            if (agent.size() > 0) {
+                Response response = Responses.successResponse();
+                Map<String, Object> data = new HashMap<>();
+                data.put("ancestors", agent);
+                response.setData(data);
+                return response;
+            }
+            return Responses.errorResponse("error");
         }
     }
 }
