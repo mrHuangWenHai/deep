@@ -52,16 +52,17 @@ public class DisinfectFilesResource {
      */
     @ResponseBody
     @RequestMapping(value = "/saveshow",method = RequestMethod.POST)
-    public Response SaveShow(@Valid DisinfectFilesModel disinfectFilesModel,
+    public Response saveShow(@Valid DisinfectFilesModel disinfectFilesModel,
                              @RequestParam("disinfectEartagFile") MultipartFile disinfectEartagFile,
                              HttpServletRequest request
-                            ){
+                            ) {
         logger.info("invoke saveShow {}", disinfectFilesModel);
-        if("".equals(disinfectFilesModel.getFactoryNum().toString())||
-                "".equals(disinfectFilesModel.getDisinfectTime())||
-                "".equals(disinfectFilesModel.getDisinfectName())||
-                "".equals(disinfectFilesModel.getDisinfectQuality())||
-                "".equals(disinfectFilesModel.getDisinfectWay())||
+
+        if("".equals(disinfectFilesModel.getFactoryNum().toString())
+            || "".equals(disinfectFilesModel.getDisinfectTime())
+            || "".equals(disinfectFilesModel.getDisinfectName())
+            || "".equals(disinfectFilesModel.getDisinfectQuality())
+            || "".equals(disinfectFilesModel.getDisinfectWay())||
                 "".equals(disinfectFilesModel.getOperator())||
                 "".equals(disinfectFilesModel.getRemark())||
                 disinfectEartagFile.isEmpty()){
@@ -122,20 +123,21 @@ public class DisinfectFilesResource {
                             System.out.println("professor:3天内已发送");
                         }
 
-                        if(!("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))){
-                            if(JedisUtil.redisJudgeTime(supervisorKey)){
-                                List<String> userModels = userService.getUserTelephoneByfactoryNum(disinfectFilesModel.getFactoryNum());
+                        if(!("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
 
+                            if(JedisUtil.redisJudgeTime(supervisorKey)) {
+
+                                List<String> userModels = userService.getUserTelephoneByfactoryNum(disinfectFilesModel.getFactoryNum());
                                 StringBuffer phoneList = new StringBuffer("");
-                                for(int i = 0; i < userModels.size(); i++){
+
+                                for(int i = 0; i < userModels.size(); i++) {
                                     phoneList = phoneList.append(userModels.get(i)).append(",");
                                 }
-                                if(JedisUtil.redisSendMessage(phoneList.toString(),JedisUtil.getCertainKeyValue("Message"))){
+
+                                if( JedisUtil.redisSendMessage(phoneList.toString(),JedisUtil.getCertainKeyValue("Message")) ) {
                                     //System.out.println("发送成功！");
                                     JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime"))*24*60*60);
-
                                     return JudgeUtil.JudgeSuccess("successMessage","Message Sent");
-
                                 }
                             }
                         }else {
@@ -174,7 +176,7 @@ public class DisinfectFilesResource {
      */
     @ResponseBody
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
-    public Response FindShow(@RequestBody DisinfectFilesModel disinfectFilesModel){
+    public Response findShow(@RequestBody DisinfectFilesModel disinfectFilesModel){
         logger.info("invoke findShow {}",disinfectFilesModel);
 
         if(disinfectFilesModel.getSize() == 0){
@@ -202,7 +204,7 @@ public class DisinfectFilesResource {
 
     @ResponseBody
     @RequestMapping(value = "/pfind",method = RequestMethod.GET)
-    public Response ProfessorFind(@RequestParam("isPass1") Integer isPass1,
+    public Response professorFind(@RequestParam("isPass1") Integer isPass1,
                                   @RequestParam(value = "page",defaultValue = "0") int page,
                                   @RequestParam(value = "size",defaultValue = "10") int size){
 
@@ -222,15 +224,17 @@ public class DisinfectFilesResource {
 
     @ResponseBody
     @RequestMapping(value = "/pupdate",method = RequestMethod.PATCH)
-    public Response ProfessorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel) {
+    public Response professorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel) {
 
         logger.info("invoke professorUpdate{}", disinfectFilesModel);
 
-        if (disinfectFilesModel.getId() == null ||
-                disinfectFilesModel.getProfessor() == null ||
-                disinfectFilesModel.getIsPass1() == null ||
-                disinfectFilesModel.getUnpassReason1() == null) {
+        if (disinfectFilesModel.getId() == null
+            || disinfectFilesModel.getProfessor() == null
+            || disinfectFilesModel.getIsPass1() == null
+            || disinfectFilesModel.getUnpassReason1() == null) {
+
             return Responses.errorResponse("Lack Item");
+
         } else {
 
             DisinfectFilesModel disinfectFilesModel1 = disinfectFilesService.getDisinfectFilesModelByid(disinfectFilesModel.getId());
@@ -239,7 +243,7 @@ public class DisinfectFilesResource {
             if (disinfectFilesModel1.getIsPass1().equals("1") ) {
 
                 return Responses.errorResponse("Already update");
-            }else {
+            } else {
 
                 if ("1".equals(JedisUtil.getCertainKeyValue(professorWorkInRedis))) {
 
@@ -248,9 +252,8 @@ public class DisinfectFilesResource {
                     disinfectFilesModel.setGmtProfessor(simpleDateFormat.format(new Timestamp(System.currentTimeMillis())));
 
                     int row = this.disinfectFilesService.updateDisinfectFilesModelByProfessor(disinfectFilesModel);
-
                     return JudgeUtil.JudgeUpdate(row);
-                }else{
+                } else {
 
                     int row = this.disinfectFilesService.updateDisinfectFilesModelByProfessor(disinfectFilesModel);
 
@@ -264,7 +267,6 @@ public class DisinfectFilesResource {
 
                         //key->value-1 返回true
                         if (JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
-
                             return JudgeUtil.JudgeUpdate(row);
                         } else {
                             //此时数据库出现较大问题
@@ -282,9 +284,9 @@ public class DisinfectFilesResource {
 
     @ResponseBody
     @RequestMapping(value = "/sfind",method = RequestMethod.GET)
-    public Response SupervisorFind(@RequestParam("isPass2") Integer isPass2,
+    public Response supervisorFind(@RequestParam("isPass2") Integer isPass2,
                                    @RequestParam(value = "page",defaultValue = "0") int page,
-                                   @RequestParam(value = "size",defaultValue = "10") int size){
+                                   @RequestParam(value = "size",defaultValue = "10") int size) {
 
         logger.info("invoke supervisorFind", isPass2, page, size);
         List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesService.getDisinfectFilesModelBySupervisor(isPass2,new RowBounds(page,size));
@@ -292,19 +294,19 @@ public class DisinfectFilesResource {
         return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
     }
 
-
-
     @ResponseBody
     @RequestMapping(value = "/supdate",method = RequestMethod.PATCH)
-    public Response SupervisorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel){
+    public Response supervisorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel) {
 
         logger.info("invoke supervisorUpdate {}", disinfectFilesModel);
 
-        if (disinfectFilesModel.getId() == null ||
-                disinfectFilesModel.getSupervisor() == null ||
-                disinfectFilesModel.getIsPass2() == null ||
-                disinfectFilesModel.getUnpassReason2() == null) {
+        if (disinfectFilesModel.getId() == null
+            || disinfectFilesModel.getSupervisor() == null
+            || disinfectFilesModel.getIsPass2() == null
+            || disinfectFilesModel.getUnpassReason2() == null) {
+
             return Responses.errorResponse("Lack Item");
+
         } else {
 
             DisinfectFilesModel disinfectFilesModel1 = disinfectFilesService.getDisinfectFilesModelByid(disinfectFilesModel.getId());
@@ -371,7 +373,7 @@ public class DisinfectFilesResource {
      */
     @ResponseBody
     @RequestMapping(value = "oupdate",method = RequestMethod.PATCH)
-    public Response OperatorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel) {
+    public Response operatorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel) {
 
         logger.info("invoke operatorUpdate {}", disinfectFilesModel);
 
@@ -385,7 +387,7 @@ public class DisinfectFilesResource {
             String supervisorWorkInRedis = disinfectFilesModel1.getId().toString()+ "_immunePlan_supervisor_worked";
 
             //即专家未审核 操作员需要修改
-            if("0".equals(JedisUtil.getCertainKeyValue(professorWorkInRedis))){
+            if("0".equals(JedisUtil.getCertainKeyValue(professorWorkInRedis))) {
                 //无需修改 在下个语句修改
                 System.out.println("running");
 
@@ -402,7 +404,7 @@ public class DisinfectFilesResource {
             }
 
             //监督员未审核 操作员需要修改
-            if ("0".equals(JedisUtil.getCertainKeyValue(supervisorWorkInRedis))){
+            if ("0".equals(JedisUtil.getCertainKeyValue(supervisorWorkInRedis))) {
                 //System.out.println("No redis");
 
                 int row = this.disinfectFilesService.updateDisinfectFilesModelByOperator(disinfectFilesModel);
@@ -424,8 +426,6 @@ public class DisinfectFilesResource {
         }
     }
 
-
-
     /**
      * 删除id = certain 的数据
      * 权限设置
@@ -434,7 +434,7 @@ public class DisinfectFilesResource {
      */
     @ResponseBody
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
-    public Response Delete(@RequestParam("id") Long id){
+    public Response delete(@RequestParam("id") Long id){
 
         logger.info("invoke delete {}", id);
 

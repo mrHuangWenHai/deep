@@ -29,26 +29,28 @@ public class  GenealogicalFilesService {
 
 
 
-    public GenealogicalFilesModel getGenealogicalFilesModelByid(Long id){
+    public GenealogicalFilesModel getGenealogicalFilesModelByid(Long id) {
         return this.genealogicalFilesMapper.getGenealogicalFilesModelByid(id);
     }
 
-    public GenealogicalFilesModel getGenealogicalFilesModelByselfEartag(String selfEartag){
-        return this.genealogicalFilesMapper.getGenealogicalFilesModelByselfEartag(selfEartag);
+    public GenealogicalFilesModel getGenealogicalFilesModelByselfEartag(String selfEartag) {
+        return this.genealogicalFilesMapper.getGenealogicalFilesModelByNativeEartag(selfEartag);
     }
+
     public GenealogicalFilesModel getGenealogicalFilesModelByimmuneEartag(String immuneEartag) {
         return this.genealogicalFilesMapper.getGenealogicalFilesModelByimmuneEartag(immuneEartag);
     }
-    public GenealogicalFilesModel getGenealogicalFilesModelBytradeMarkEartag(String tradeMarkEartag){
+
+    public GenealogicalFilesModel getGenealogicalFilesModelBytradeMarkEartag(String tradeMarkEartag) {
         return this.genealogicalFilesMapper.getGenealogicalFilesModelBytradeMarkEartag(tradeMarkEartag);
     }
 
 
-    public int deleteGenealogicalFilesModel(Long id){
+    public int deleteGenealogicalFilesModel(Long id) {
         return this.genealogicalFilesMapper.deleteGenealogicalFilesModel(id);
     }
 
-    public int updateGenealogicalFilesModel(GenealogicalFilesModel genealogicalFilesModel){
+    public int updateGenealogicalFilesModel(GenealogicalFilesModel genealogicalFilesModel) {
         return this.genealogicalFilesMapper.updateGenealogicalFilesModel(genealogicalFilesModel);
     }
 }

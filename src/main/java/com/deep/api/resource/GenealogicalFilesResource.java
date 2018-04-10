@@ -26,9 +26,6 @@ public class GenealogicalFilesResource {
     @Resource
     private GenealogicalFilesService genealogicalFilesService;
 
-    //localhost:9090/allfunction/gf/function
-
-
     /**
      * 返回插入结果
      * 成功：success
@@ -47,7 +44,7 @@ public class GenealogicalFilesResource {
 
         logger.info("invoke saveShow {}",genealogicalFilesModel);
 
-        if("".equals(genealogicalFilesModel.getSelfEartag())||
+        if("".equals(genealogicalFilesModel.getNativeEartag())||
                 "".equals(genealogicalFilesModel.getImmuneEartag())||
                 "".equals(genealogicalFilesModel.getTradeMarkEartag())||
                 "".equals(genealogicalFilesModel.getBreedingSheepBase())||
@@ -61,7 +58,7 @@ public class GenealogicalFilesResource {
                 "".equals(genealogicalFilesModel.getEartagOfFathersMother())||
                 "".equals(genealogicalFilesModel.getEartagOfMothersFather())||
                 "".equals(genealogicalFilesModel.getEartagOfMothersMother())||
-                "".equals(genealogicalFilesModel.getRemark())){
+                "".equals(genealogicalFilesModel.getRemark())) {
             return Responses.errorResponse("Lack Item");
         }else{
             //System.out.println(SelfEartag);
@@ -71,9 +68,8 @@ public class GenealogicalFilesResource {
             if( genealogicalFilesModelByimmuneEartag == null && genealogicalFilesModelBytradeMarkEartag == null){
 
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
                 //System.out.println(timestamp);
-                genealogicalFilesService.setGenealogicalFilesModel(new GenealogicalFilesModel(genealogicalFilesModel.getSelfEartag(),genealogicalFilesModel.getImmuneEartag(),
+                genealogicalFilesService.setGenealogicalFilesModel(new GenealogicalFilesModel(genealogicalFilesModel.getNativeEartag(),genealogicalFilesModel.getImmuneEartag(),
                         genealogicalFilesModel.getTradeMarkEartag(),genealogicalFilesModel.getBreedingSheepBase(),genealogicalFilesModel.getBirthTime(),genealogicalFilesModel.getBirthWeight(),
                         genealogicalFilesModel.getColor(),genealogicalFilesModel.getSex(), genealogicalFilesModel.getEartagOfFather(),genealogicalFilesModel.getEartagOfMother(),
                         genealogicalFilesModel.getEartagOfFathersFather(),genealogicalFilesModel.getEartagOfFathersMother(),genealogicalFilesModel.getEartagOfMothersFather(),
@@ -156,10 +152,9 @@ public class GenealogicalFilesResource {
 
         logger.info("invoke update {}", genealogicalFilesModel);
 
-        if (genealogicalFilesService.getGenealogicalFilesModelByselfEartag(genealogicalFilesModel.getSelfEartag()) == null&&
-                genealogicalFilesService.getGenealogicalFilesModelByimmuneEartag(genealogicalFilesModel.getImmuneEartag()) == null&&
-                genealogicalFilesService.getGenealogicalFilesModelBytradeMarkEartag(genealogicalFilesModel.getTradeMarkEartag()) == null){
-
+        if (genealogicalFilesService.getGenealogicalFilesModelByselfEartag(genealogicalFilesModel.getNativeEartag()) == null
+            && genealogicalFilesService.getGenealogicalFilesModelByimmuneEartag(genealogicalFilesModel.getImmuneEartag()) == null
+            && genealogicalFilesService.getGenealogicalFilesModelBytradeMarkEartag(genealogicalFilesModel.getTradeMarkEartag()) == null) {
             int row = genealogicalFilesService.updateGenealogicalFilesModel(genealogicalFilesModel);
             return JudgeUtil.JudgeUpdate(row);
         }else {
@@ -167,7 +162,6 @@ public class GenealogicalFilesResource {
         }
 
     }
-
 
     /**
      * 返回删除内容行号

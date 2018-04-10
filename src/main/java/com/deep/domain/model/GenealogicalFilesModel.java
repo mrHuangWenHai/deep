@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 public class GenealogicalFilesModel {
 
     private Long id;
-    private String selfEartag;  //8位表示原耳牌
+    private String nativeEartag;  //8位表示原耳牌
     private String immuneEartag;  //免疫耳牌
     private String tradeMarkEartag;  //商标耳牌
     private String breedingSheepBase;  //种羊基地
@@ -43,7 +43,7 @@ public class GenealogicalFilesModel {
 
     public GenealogicalFilesModel(String selfEartag, String immuneEartag, String tradeMarkEartag, String breedingSheepBase, String birthTime, float birthWeight, String color, String sex, String eartagOfFather, String eartagOfMother, String eartagOfFathersFather, String eartagOfFathersMother, String eartagOfMothersFather, String eartagOfMothersMother, String remark) {
 
-        this.selfEartag = selfEartag;
+        this.nativeEartag = selfEartag;
         this.immuneEartag = immuneEartag;
         this.tradeMarkEartag = tradeMarkEartag;
         this.breedingSheepBase = breedingSheepBase;
@@ -61,7 +61,7 @@ public class GenealogicalFilesModel {
     }
     public GenealogicalFilesModel( String selfEartag, String immuneEartag, String tradeMarkEartag, String breedingSheepBase, String birthTime, float birthWeight, String color, String sex, String eartagOfFather, String eartagOfMother, String eartagOfFathersFather, String eartagOfFathersMother, String eartagOfMothersFather, String eartagOfMothersMother, String remark,String gmtCreate) {
 
-        this.selfEartag = selfEartag;
+        this.nativeEartag = selfEartag;
         this.immuneEartag = immuneEartag;
         this.tradeMarkEartag = tradeMarkEartag;
         this.breedingSheepBase = breedingSheepBase;
@@ -87,12 +87,12 @@ public class GenealogicalFilesModel {
         this.id = id;
     }
 
-    public String getSelfEartag() {
-        return selfEartag;
+    public String getNativeEartag() {
+        return nativeEartag;
     }
 
-    public void setSelfEartag(String selfEartag) {
-        this.selfEartag = selfEartag;
+    public void setNativeEartag(String nativeEartag) {
+        this.nativeEartag = nativeEartag;
     }
 
     public String getImmuneEartag() {

@@ -353,7 +353,6 @@ public class ImmunePlanResource {
     @ResponseBody
     @RequestMapping(value = "supdate",method = RequestMethod.PATCH)
     public Response SupervisorUpdate(@RequestBody ImmunePlanModel immunePlanModel){
-
         logger.info("invoke supervisorUpdate {}", immunePlanModel);
         if(immunePlanModel.getId() == null||
                 immunePlanModel.getSupervisor() == null||

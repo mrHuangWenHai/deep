@@ -21,8 +21,7 @@ public interface GenealogicalFilesMapper {
                                                            RowBounds rowBounds
                                                            );
     GenealogicalFilesModel getGenealogicalFilesModelByid(@Param("id") Long id);
-
-    GenealogicalFilesModel getGenealogicalFilesModelByselfEartag(@Param("selfEartag") String selfEartag);
+    GenealogicalFilesModel getGenealogicalFilesModelByNativeEartag(@Param("nativeEartag") String selfEartag);
     GenealogicalFilesModel getGenealogicalFilesModelByimmuneEartag(@Param("immuneEartag") String immuneEartag);
     GenealogicalFilesModel getGenealogicalFilesModelBytradeMarkEartag(@Param("tradeMarkEartag") String tradeMarkEartag);
 
