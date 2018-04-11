@@ -407,7 +407,7 @@ public class UserResource {
                 response.setData(data);
                 return response;
             }
-            return Responses.errorResponse("error");
+            return Responses.errorResponse("there is no online father agents");
         }
     }
 }
