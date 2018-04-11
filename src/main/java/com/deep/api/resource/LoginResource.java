@@ -63,7 +63,12 @@ public class LoginResource {
 
                 Long roleInt = userRoleAndPermit.getRole();
                 byte extend = userRoleAndPermit.getExtended();                  // 拓展权限标志
-                Long extendPermit = userRoleAndPermit.getExtendedPermit();      // 拓展权限
+                String extendPermit = userRoleAndPermit.getExtendedPermit();      // 拓展权限
+
+                // 记录其拓展权限, should be roll back
+                String allPermit = "0000000000000000000000000000000000000000000000000000000000000000" +
+                        "0000000000000000000000000000000000000000000000000000000000000000" +
+                        "0000000000000000000000000000000000000000000000000000000000000000";
 
                 TokenModel tokenModel = new TokenModel(userModel.getId(), String.valueOf(roleInt));
                 JedisUtil.setValue(String.valueOf(userModel.getId()),tokenModel.getToken());

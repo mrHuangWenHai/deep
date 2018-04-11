@@ -73,33 +73,31 @@ public class RoleService {
     }
 
     /**
-     * 获取角色的固定权限, 通过位运算操作
+     * 获取角色的固定权限, 返回本身格式String
+     * @param id
+     * @return
+     */
+    public String findRoleDefaultPermits(long id) {
+        RoleModel roleModel = roleMapper.queryRoleByPkTypeId(id);
+        if (roleModel == null) {
+            return "";
+        } else {
+            return roleModel.getDefaultPermit();
+        }
+    }
+    /**
+     * 获取角色的固定权限返回map前端使用, 通过位运算操作
      * @return
      */
     public Map findRolePermits(long id) {
         System.out.println(id);
-        long permit = roleMapper.queryRoleByPkTypeId(id).getDefaultPermit();
+        String permit = roleMapper.queryRoleByPkTypeId(id).getDefaultPermit();
         Map map = new HashMap();
-        // 位运算基础
-        long basic = 1;
-        long result = 0;
-        result = basic & permit;
-        if (result == 0) {
-
-        } else {
-            map.put("1", permitMapper.queryPermitById(1).getPermitName());
-        }
-
-        for (int i = 2; i <= 64; i++) {
-            basic <<= 1;
-            result = basic & permit;
-            if (Math.pow(2, i-1) == result) {
-                map.put(i, permitMapper.queryPermitById(i).getPermitName());
-            } else {
-
+        for (int i = 0; i < permit.length(); i++) {
+            if (permit.charAt(i) == '1') {
+                map.put(i, permitMapper.queryPermitById(i+1).getPermitName());
             }
         }
-
         return map;
     }
 
@@ -109,27 +107,13 @@ public class RoleService {
      * @param permit
      * @return
      */
-    public Map findExtendPermit(Map map, long permit) {
+    public Map findExtendPermit(Map map, String permit) {
         // 位运算基础
-        long basic = 1;
-        long result = 0;
-        result = basic & permit;
-        if (result == 0) {
-
-        } else {
-            map.put("1", permitMapper.queryPermitById(1).getPermitName());
-        }
-
-        for (int i = 2; i <= 64; i++) {
-            basic <<= 1;
-            result = basic & permit;
-            if (Math.pow(2, i-1) == result) {
-                map.put(i, permitMapper.queryPermitById(i).getPermitName());
-            } else {
-
+        for (int i = 0; i < permit.length(); i++) {
+            if (permit.charAt(i) == '1') {
+                map.put(i, permitMapper.queryPermitById(i+1).getPermitName());
             }
         }
-
         return map;
     }
 }

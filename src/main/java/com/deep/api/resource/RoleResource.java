@@ -61,6 +61,12 @@ public class RoleResource {
         } else {
             roleModel.setGmtCreate(new Timestamp(System.currentTimeMillis()));
             roleModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
+            if (roleModel.getDefaultPermit().equals("")) {
+                // 默认权限的位数为64*3 = 192位, in database, it uses 192 Bytes
+                roleModel.setDefaultPermit("0000000000000000000000000000000000000000000000000000000000000000" +
+                                           "0000000000000000000000000000000000000000000000000000000000000000" +
+                                           "0000000000000000000000000000000000000000000000000000000000000000");
+            }
             Long addId = roleService.addRole(roleModel);
             if (addId <= 0) {
                 return Responses.errorResponse("添加失败");

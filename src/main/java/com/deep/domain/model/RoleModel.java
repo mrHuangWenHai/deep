@@ -7,10 +7,26 @@ public class RoleModel {
     private long id;
     private Timestamp gmtCreate;
     private Timestamp gmtModified;
-    private long pkTypeid;
+    private String pkTypeid;
     @NotBlank(message = "角色名称不能为空")
     private String typeName;
-    private long defaultPermit;
+    private String defaultPermit;
+
+    public String getPkTypeid() {
+        return pkTypeid;
+    }
+
+    public void setPkTypeid(String pkTypeid) {
+        this.pkTypeid = pkTypeid;
+    }
+
+    public String getDefaultPermit() {
+        return defaultPermit;
+    }
+
+    public void setDefaultPermit(String defaultPermit) {
+        this.defaultPermit = defaultPermit;
+    }
 
     public long getId() {
         return id;
@@ -36,28 +52,12 @@ public class RoleModel {
         this.gmtModified = gmtModified;
     }
 
-    public long getPkTypeid() {
-        return pkTypeid;
-    }
-
-    public void setPkTypeid(long pkTypeid) {
-        this.pkTypeid = pkTypeid;
-    }
-
     public String getTypeName() {
         return typeName;
     }
 
     public void setTypeName(String typeName) {
         this.typeName = typeName;
-    }
-
-    public long getDefaultPermit() {
-        return defaultPermit;
-    }
-
-    public void setDefaultPermit(long defaultPermit) {
-        this.defaultPermit = defaultPermit;
     }
 
     @Override
@@ -82,9 +82,9 @@ public class RoleModel {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (gmtCreate != null ? gmtCreate.hashCode() : 0);
         result = 31 * result + (gmtModified != null ? gmtModified.hashCode() : 0);
-        result = 31 * result + (int) (pkTypeid ^ (pkTypeid >>> 32));
         result = 31 * result + (typeName != null ? typeName.hashCode() : 0);
-        result = 31 * result + (int) (defaultPermit ^ (defaultPermit >>> 32));
+        result = 31 * result + (pkTypeid != null ? pkTypeid.hashCode() : 0);
+        result = 31 * result + (defaultPermit != null ? defaultPermit.hashCode() : 0);
         return result;
     }
 }

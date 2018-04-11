@@ -309,7 +309,6 @@ public class UserService {
         roleMapper.put("roleName", roleName);
         roleMapper.put("roleNum", userModel.getUserRole());
         userLogin.setUserRole(roleMapper);
-
         permitMapper = roleService.findRolePermits(userModel.getUserRole());
         // 判断是否有拓展权限
         if (userModel.getIsExtended() == 0) {
@@ -318,10 +317,8 @@ public class UserService {
             permitMapper = roleService.findExtendPermit(permitMapper, userModel.getUserPermit());
         }
         userLogin.setUserPermit(permitMapper);
-
         int isFactory = userModel.getIsFactory();
         long factoryId = userModel.getUserFactory();
-
         // 判断客户的类型(代理(总公司)\羊场\游客)
         if (isFactory == 0) {
             // 代表羊场

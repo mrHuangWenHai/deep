@@ -213,7 +213,9 @@ public class UserResource {
             userModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
 
             userModel.setIsFactory((byte)0);
-            userModel.setUserPermit((byte)0);
+            if (userModel.getUserPermit().equals("")) {
+                userModel.setUserPermit("000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+            }
             userModel.setIsExtended((byte)0);
             userModel.setUserRole(0);
 
