@@ -2,7 +2,6 @@ package com.deep.domain.service;
 
 import com.deep.api.Utils.JedisUtil;
 import com.deep.api.authorization.tools.RoleAndPermit;
-import com.deep.api.response.Responses;
 import com.deep.domain.model.AgentModel;
 import com.deep.domain.model.FactoryModel;
 import com.deep.domain.model.UserModel;
@@ -248,7 +247,6 @@ public class UserService {
         roleAndPermit.setRole(userModel.getUserRole());
         roleAndPermit.setExtended(userModel.getIsExtended());
         roleAndPermit.setExtendedPermit(userModel.getUserPermit());
-
         return roleAndPermit;
     }
     /**

@@ -1,5 +1,6 @@
 package com.deep.domain.model;
 
+import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 
 public class RoleModel {
@@ -7,6 +8,7 @@ public class RoleModel {
     private Timestamp gmtCreate;
     private Timestamp gmtModified;
     private long pkTypeid;
+    @NotBlank(message = "角色名称不能为空")
     private String typeName;
     private long defaultPermit;
 

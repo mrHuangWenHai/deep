@@ -60,7 +60,11 @@ public class LoginResource {
                 data.put("id", userModel.getId());
                 response.setData(data);
                 RoleAndPermit userRoleAndPermit = userService.findRoleByUserID(userModel.getId());
+
                 Long roleInt = userRoleAndPermit.getRole();
+                byte extend = userRoleAndPermit.getExtended();                  // 拓展权限标志
+                Long extendPermit = userRoleAndPermit.getExtendedPermit();      // 拓展权限
+
                 TokenModel tokenModel = new TokenModel(userModel.getId(), String.valueOf(roleInt));
                 JedisUtil.setValue(String.valueOf(userModel.getId()),tokenModel.getToken());
                 JedisUtil.doExpire(String.valueOf(userModel.getId()));
