@@ -99,18 +99,18 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
         permitMap.put(new Long(40) , "select_agent");
         permitMap.put(new Long(41) , "create_delete_professor");
         permitMap.put(new Long(42) , "update_professor");
-        permitMap.put(new Long(44) , "select_professor");
-        permitMap.put(new Long(45) , "create_delete_technician");
-        permitMap.put(new Long(46) , "update_technician");
-        permitMap.put(new Long(47) , "select_technician");
-        permitMap.put(new Long(48) , "create_delete_operator");
-        permitMap.put(new Long(49) , "update_operator");
-        permitMap.put(new Long(50) , "select_operator");
-        permitMap.put(new Long(51) , "create_delete_factory");
-        permitMap.put(new Long(52) , "update_factory");
-        permitMap.put(new Long(53) , "select_factory");
-        permitMap.put(new Long(54) , "create_delete_extend_table");
-        permitMap.put(new Long(55) , "create_delete_update_select_extend_table");
+        permitMap.put(new Long(43) , "select_professor");
+        permitMap.put(new Long(44) , "create_delete_technician");
+        permitMap.put(new Long(45) , "update_technician");
+        permitMap.put(new Long(46) , "select_technician");
+        permitMap.put(new Long(47) , "create_delete_operator");
+        permitMap.put(new Long(48) , "update_operator");
+        permitMap.put(new Long(49) , "select_operator");
+        permitMap.put(new Long(50) , "create_delete_factory");
+        permitMap.put(new Long(51) , "update_factory");
+        permitMap.put(new Long(52) , "select_factory");
+        permitMap.put(new Long(53) , "create_delete_extend_table");
+        permitMap.put(new Long(54) , "create_delete_update_select_extend_table");
     }
 
     public boolean preHandle(HttpServletRequest request,
