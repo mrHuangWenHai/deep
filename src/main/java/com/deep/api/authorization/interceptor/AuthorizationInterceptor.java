@@ -32,13 +32,14 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
      */
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
+        System.out.println("dddddddddddddddddddddddddddddd");
         logger.info("invoke preHandle of AuthorizationInterceptor", request, response, handler);
         // 加相关的回应头
        // response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        response.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET, PUT, POST, DELETE");
-        response.setHeader("Access-Control-Expose-Headers", "Authorization");
+//        response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+//        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//        response.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET, PUT, POST, DELETE");
+//        response.setHeader("Access-Control-Expose-Headers", "Authorization");
 
 
 //        if (request.getMethod().equals("OPTIONS")) {
