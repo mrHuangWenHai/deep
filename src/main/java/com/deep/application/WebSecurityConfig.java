@@ -13,7 +13,7 @@ public class WebSecurityConfig implements WebMvcConfigurer{
 
   //        registry.addInterceptor(new PermitInterceptor()).addPathPatterns("/**");
 
-  //       registry.addInterceptor(new AuthorizationInterceptor()).addPathPatterns("/**");
+         registry.addInterceptor(new AuthorizationInterceptor()).addPathPatterns("/**");
 
 
 //        registry.addInterceptor(new AuthorizationInterceptor()).addPathPatterns("/**");
