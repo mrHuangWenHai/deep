@@ -79,9 +79,15 @@ public class MessageResource {
         }
         MessageExample messageExample = new MessageExample();
         MessageExample.Criteria criteria = messageExample.createCriteria();
-        criteria.andMessageLike("%" + message.getMessage()+"%");
+        if(message.getMessage()!=null && !message.getMessage().isEmpty())
+            criteria.andMessageLike("%" + message.getMessage()+"%");
+        if(message.getAttitude()!=null && !message.getAttitude().isEmpty())
+            criteria.andAttitudeLike("%"+message.getAttitude()+"%");
+        if(message.getIntention()!=null && !message.getIntention().isEmpty())
+            criteria.andIntentionLike("%"+message.getIntention()+"%");
+        if(message.getsTime()!=null && message.geteTime()!=null)
+           criteria.andInserttimeBetween(message.getsTime(),message.geteTime());
         List<Message>select = messageService.findMessageSelectiveWithRowbounds(messageExample,message.getPageNumb(),message.getLimit());
-
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
         data.put("searchByMessage",select);
@@ -177,6 +183,27 @@ public class MessageResource {
         response.setData(data);
         return response;
     }
-
+    @RequestMapping(value = "/messageBoard/search",method = RequestMethod.POST)
+    public @ResponseBody
+    Response search( @RequestBody  Message message)
+    {
+        logger.info("invoke /messageBoard/search {}",message);
+        MessageExample messageExample = new MessageExample();
+        MessageExample.Criteria criteria = messageExample.createCriteria();
+        if(message.getMessage()!=null && !message.getMessage().isEmpty())
+            criteria.andMessageLike("%" + message.getMessage()+"%");
+        if(message.getAttitude()!=null && !message.getAttitude().isEmpty())
+            criteria.andAttitudeLike("%"+message.getAttitude()+"%");
+        if(message.getIntention()!=null && !message.getIntention().isEmpty())
+            criteria.andIntentionLike("%"+message.getIntention()+"%");
+        if(message.getsTime()!=null && message.geteTime()!=null)
+            criteria.andInserttimeBetween(message.getsTime(),message.geteTime());
+        List<Message>select = messageService.findMessageSelectiveWithRowbounds(messageExample,message.getPageNumb(),message.getLimit());
+        Response response = Responses.successResponse();
+        HashMap<String,Object>data = new HashMap<>();
+        data.put("searchByMessage",select);
+        response.setData(data);
+        return response;
+    }
 
 }

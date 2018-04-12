@@ -61,9 +61,9 @@ public class Pic implements Serializable {
 
     private Integer returnId;
 
-    private Integer pageNumb;
+    private Integer pageNumb = 1;
 
-    private Integer limit;
+    private Integer limit = 10;
 
     public Integer getPageNumb() {
         return pageNumb;
