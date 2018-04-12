@@ -16,10 +16,9 @@ public class ImmunePlanModel {
     private String professor;    //技术审核
     private String supervisor;    //监督员
     private String remark;      //备注
-    private String isPass1;      //是否通过审核 默认 未审核 0
-    private String unpassReason1;   //未通过审核原因
-    private String isPass2;      //是否通过监督 默认 未监督 0
-    private String unpassReason2;   //未通过监督原因
+    private String isPass;      //是否通过审核 默认 未审核 0
+    private String unpassReason;   //未通过审核原因
+    private String isPass1;      //是否通过监督 默认 未监督 0
     private String gmtCreate;    //创建时间
     private String gmtModified;  //修改时间
     private String gmtProfessor;    //技术审核时间 可空
@@ -31,27 +30,12 @@ public class ImmunePlanModel {
     private int page;
     private int size;
 
+
     public ImmunePlanModel() {
     }
 
-    public ImmunePlanModel(BigInteger factoryNum, String crowdNum, String immuneEartag, String immuneTime, String immuneKind, String immuneWay, String immuneQuality, String immuneDuring, String operator, String remark, String isPass1, String isPass2, String gmtCreate, String gmtModified) {
-        this.factoryNum = factoryNum;
-        this.crowdNum = crowdNum;
-        this.immuneEartag = immuneEartag;
-        this.immuneTime = immuneTime;
-        this.immuneKind = immuneKind;
-        this.immuneWay = immuneWay;
-        this.immuneQuality = immuneQuality;
-        this.immuneDuring = immuneDuring;
-        this.operator = operator;
-        this.remark = remark;
-        this.isPass1 = isPass1;
-        this.isPass2 = isPass2;
-        this.gmtCreate = gmtCreate;
-        this.gmtModified = gmtModified;
-    }
-
-    public ImmunePlanModel(BigInteger factoryNum, String crowdNum, String immuneEartag, String immuneTime, String immuneKind, String immuneWay, String immuneQuality, String immuneDuring, String operator, String professor, String supervisor, String remark, String isPass1,  String isPass2, String gmtCreate, String gmtModified, String gmtProfessor, String gmtSupervise) {
+    public ImmunePlanModel(Long id, BigInteger factoryNum, String crowdNum, String immuneEartag, String immuneTime, String immuneKind, String immuneWay, String immuneQuality, String immuneDuring, String operator, String professor, String supervisor, String remark, String isPass, String unpassReason, String isPass1, String gmtCreate, String gmtModified, String gmtProfessor, String gmtSupervise, String immuneTimeStart, String immuneTimeEnd, int page, int size) {
+        this.id = id;
         this.factoryNum = factoryNum;
         this.crowdNum = crowdNum;
         this.immuneEartag = immuneEartag;
@@ -64,21 +48,37 @@ public class ImmunePlanModel {
         this.professor = professor;
         this.supervisor = supervisor;
         this.remark = remark;
+        this.isPass = isPass;
+        this.unpassReason = unpassReason;
         this.isPass1 = isPass1;
-        this.isPass2 = isPass2;
         this.gmtCreate = gmtCreate;
         this.gmtModified = gmtModified;
         this.gmtProfessor = gmtProfessor;
         this.gmtSupervise = gmtSupervise;
-
+        this.immuneTimeStart = immuneTimeStart;
+        this.immuneTimeEnd = immuneTimeEnd;
+        this.page = page;
+        this.size = size;
     }
 
-    public String getImmuneEartag() {
-        return immuneEartag;
-    }
+    public ImmunePlanModel( BigInteger factoryNum, String crowdNum, String immuneTime, String immuneKind, String immuneWay, String immuneQuality, String immuneDuring, String operator, String professor, String supervisor, String remark, String isPass, String unpassReason, String isPass1, String gmtCreate) {
 
-    public void setImmuneEartag(String immuneEartag) {
-        this.immuneEartag = immuneEartag;
+        this.factoryNum = factoryNum;
+        this.crowdNum = crowdNum;
+        this.immuneTime = immuneTime;
+        this.immuneKind = immuneKind;
+        this.immuneWay = immuneWay;
+        this.immuneQuality = immuneQuality;
+        this.immuneDuring = immuneDuring;
+        this.operator = operator;
+        this.professor = professor;
+        this.supervisor = supervisor;
+        this.remark = remark;
+        this.isPass = isPass;
+        this.unpassReason = unpassReason;
+        this.isPass1 = isPass1;
+        this.gmtCreate = gmtCreate;
+
     }
 
     public Long getId() {
@@ -103,6 +103,14 @@ public class ImmunePlanModel {
 
     public void setCrowdNum(String crowdNum) {
         this.crowdNum = crowdNum;
+    }
+
+    public String getImmuneEartag() {
+        return immuneEartag;
+    }
+
+    public void setImmuneEartag(String immuneEartag) {
+        this.immuneEartag = immuneEartag;
     }
 
     public String getImmuneTime() {
@@ -177,36 +185,28 @@ public class ImmunePlanModel {
         this.remark = remark;
     }
 
+    public String getIsPass() {
+        return isPass;
+    }
+
+    public void setIsPass(String isPass) {
+        this.isPass = isPass;
+    }
+
+    public String getUnpassReason() {
+        return unpassReason;
+    }
+
+    public void setUnpassReason(String unpassReason) {
+        this.unpassReason = unpassReason;
+    }
+
     public String getIsPass1() {
         return isPass1;
     }
 
     public void setIsPass1(String isPass1) {
         this.isPass1 = isPass1;
-    }
-
-    public String getUnpassReason1() {
-        return unpassReason1;
-    }
-
-    public void setUnpassReason1(String unpassReason1) {
-        this.unpassReason1 = unpassReason1;
-    }
-
-    public String getIsPass2() {
-        return isPass2;
-    }
-
-    public void setIsPass2(String isPass2) {
-        this.isPass2 = isPass2;
-    }
-
-    public String getUnpassReason2() {
-        return unpassReason2;
-    }
-
-    public void setUnpassReason2(String unpassReason2) {
-        this.unpassReason2 = unpassReason2;
     }
 
     public String getGmtCreate() {

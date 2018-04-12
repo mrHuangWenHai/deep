@@ -108,7 +108,7 @@ public class JedisUtil {
      * @param mobileAnnouncementModel
      * @return
      */
-    public static Response oneMessageSendResult(MobileAnnouncementModel mobileAnnouncementModel){
+    public static boolean oneMessageSendResult(MobileAnnouncementModel mobileAnnouncementModel){
         String httpResponse =  mobileAnnouncementModel.testSendSingle();
         try {
             JSONObject jsonObj = new JSONObject( httpResponse );
@@ -116,7 +116,7 @@ public class JedisUtil {
             String error_msg = jsonObj.getString("msg");
             if(error_code==0){
                 System.out.println("Send message success.");
-                return new Response().addData("Success","");
+                return true;
             }else{
                 System.out.println("Send message failed,code is "+error_code+",msg is "+error_msg);
             }
@@ -138,7 +138,7 @@ public class JedisUtil {
         } catch (JSONException ex) {
             Logger.getLogger(MobileAnnouncementModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return new Response().addData("Error","Send Error");
+        return false;
     }
 
 

@@ -3,9 +3,8 @@ package com.deep.api.resource;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.ImmunePlanModel;
-import com.deep.domain.model.UserModel;
 import com.deep.domain.service.ImmunePlanService;
-import com.deep.domain.service.UserService;
+import com.deep.domain.util.FileUtil;
 import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.JudgeUtil;
 import com.deep.domain.util.UploadUtil;
@@ -34,8 +33,8 @@ public class ImmunePlanResource {
     private ImmunePlanService immunePlanService;
 
     //用于查询专家/监督员电话并抉择发送短信
-    @Resource
-    private UserService userService;
+    //@Resource
+    //private UseriotService useriotService;
 
 
     /**
@@ -72,6 +71,13 @@ public class ImmunePlanResource {
             return Responses.errorResponse("Lack Item");
         } else {
 
+            String Header = FileUtil.getFileHeader(immuneEartagFile);
+
+            /*if ( !"75736167".equals(Header) && !"7B5C727466".equals(Header) &&
+                    !"D0CF11E0".equals(Header) && !"504B0304".equals(Header)) {
+                return Responses.errorResponse("Wrong file form");
+            }*/
+
             ImmunePlanModel immunePlanModel1 = immunePlanService.getImmunePlanModelByfactoryNumAndcrowdNumAndimmuneTime(immunePlanModel.getFactoryNum(), immunePlanModel.getCrowdNum(), immunePlanModel.getImmuneTime());
             //文件上传并将数据保存到数据库中
             //System.out.println("save before");
@@ -100,12 +106,13 @@ public class ImmunePlanResource {
                         //插入时间
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         immunePlanModel.setImmuneEartag(fileAddress);
+                        immunePlanModel.setIsPass("0");
                         immunePlanModel.setIsPass1("0");
-                        immunePlanModel.setIsPass2("0");
                         immunePlanModel.setGmtCreate(simpleDateFormat.format(new Timestamp(System.currentTimeMillis())));
+
                         immunePlanService.setImmunePlanModel(immunePlanModel);
 
-                        System.out.println("id:"+immunePlanModel.getId());
+                        //System.out.println("id:"+immunePlanModel.getId());
                         //return new Response().addData("Obiject",immunePlanModel);
                         //System.out.println("running after insert");
 
@@ -116,21 +123,15 @@ public class ImmunePlanResource {
                         String supervisorKey = immunePlanModel.getFactoryNum().toString() + "_immunePlan_supervisor";
                         String testSendProfessor = immunePlanModel.getFactoryNum().toString() + "_immunePlan_professor_AlreadySend";
                         String testSendSupervisor = immunePlanModel.getFactoryNum().toString() + "_immunePlan_supervisor_AlreadySend";
-                        String professorWorkInRedis = immunePlanModel.getId() + "_immunePlan_professor_worked";
-                        String supervisorWorkInRedis = immunePlanModel.getId() + "_immunePlan_supervisor_worked";
+                        String professorWorkInRedis = immunePlanModel.getId().toString() + "_immunePlan_professor_worked";
+                        String supervisorWorkInRedis = immunePlanModel.getId().toString() + "_immunePlan_supervisor_worked";
 
-                        //System.out.println("before operator insert supervisorKey:"+supervisorKey);
-                        //System.out.println("before operator insert supervisorKey value:"+JedisUtil.getCertainKeyValue(supervisorKey));
-
-                        //System.out.println("professor:"+professorKey);
                         JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
                         JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
 
                         JedisUtil.setCertainKeyValue(professorWorkInRedis, "0");
                         JedisUtil.setCertainKeyValue(supervisorWorkInRedis, "0");
 
-                        //System.out.println("before operator insert supervisorKey:"+supervisorKey);
-                        //System.out.println("before operator insert supervisorKey value:"+JedisUtil.getCertainKeyValue(supervisorKey));
 
                         //若redis中 若干天未发送短信
                         //若未完成超过50条
@@ -138,19 +139,21 @@ public class ImmunePlanResource {
                             System.out.println("testSendProfessorValue:" + JedisUtil.getCertainKeyValue(testSendProfessor));
                             if (JedisUtil.redisJudgeTime(professorKey)) {
 
-                                List<String> userModels = userService.getUserTelephoneByfactoryNum(immunePlanModel.getFactoryNum());
 
-                                //需完成:userModels.getTelephone()赋值给String
-                                //获得StringBuffer手机号
-                                StringBuffer phoneList = new StringBuffer("");
-                                for (int i = 0; i < userModels.size(); i++) {
-                                    phoneList = phoneList.append(userModels.get(i)).append(",");
-                                }
+//                                List<UseriotModel> userModels = useriotService.getUserTelephoneByfactoryNum(immunePlanModel.getFactoryNum());
+//
+//                                //需完成:userModels.getTelephone()赋值给String
+//                                //获得StringBuffer手机号
+//                                StringBuffer phoneList = new StringBuffer("");
+//                                for (int i = 0; i < userModels.size(); i++) {
+//                                    phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
+//                                }
 
-                                //发送成功 更新redis中字段
-                                if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
-                                    JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
-                                }
+//                                //发送成功 更新redis中字段
+//                                if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
+//                                    JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
+//                                }
+
 
                                 //System.out.println(phoneList);
                             }
@@ -160,13 +163,15 @@ public class ImmunePlanResource {
 
                         if (!("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
                             if (JedisUtil.redisJudgeTime(supervisorKey)) {
-                                List<String> userModels = userService.getUserTelephoneByfactoryNum(immunePlanModel.getFactoryNum());
+
+//                                List<UseriotModel> userModels = useriotService.getUserTelephoneByfactoryNum(immunePlanModel.getFactoryNum());
 
                                 StringBuffer phoneList = new StringBuffer("");
+//
+//                                for (int i = 0; i < userModels.size(); i++) {
+//                                    phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
+//                                }
 
-                                for (int i = 0; i < userModels.size(); i++) {
-                                    phoneList = phoneList.append(userModels.get(i)).append(",");
-                                }
                                 if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {    System.out.println("发送成功！");
                                     JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
 
@@ -190,9 +195,11 @@ public class ImmunePlanResource {
                         e.printStackTrace();
                     }
 
+                }else {
+                    return Responses.errorResponse("Already Exist");
                 }
             }
-            return Responses.errorResponse("Already Exist");
+        return Responses.errorResponse("Exception");
     }
 
 
@@ -223,7 +230,7 @@ public class ImmunePlanResource {
 
     /**
      * 专家入口 展示所有isPass1 = 0或者isPass1 = 1的数据
-     * @param isPass1
+     * @param isPass
      * @param page
      * @param size
      * METHOD:GET
@@ -231,12 +238,15 @@ public class ImmunePlanResource {
      */
     @ResponseBody
     @RequestMapping(value = "pfind",method = RequestMethod.GET)
-    public Response ProfessorFind(@RequestParam("isPass1") Integer isPass1,
+    public Response ProfessorFind(@RequestParam(value = "isPass",defaultValue = "2") Integer isPass,
                                   @RequestParam(value = "page",defaultValue = "0") int page,
                                   @RequestParam(value = "size",defaultValue = "10") int size){
-        logger.info("invoke professorFind {}", isPass1, page, size);
+        logger.info("invoke professorFind {}", isPass, page, size);
 
-        List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModelByProfessor(isPass1,new RowBounds(page,size));
+        if ("2".equals(isPass.toString())){
+            return Responses.errorResponse("Wrong Pass num");
+        }
+        List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModelByProfessor(isPass,new RowBounds(page,size));
 
         return JudgeUtil.JudgeFind(immunePlanModels,immunePlanModels.size());
     }
@@ -244,7 +254,7 @@ public class ImmunePlanResource {
 
     /**
      * 专家入口 审核isPass1 = 0或者isPass1 = 1的数据
-     * @param immunePlanModel
+     * @param immunePlanModel 通过id修改
      * METHOD:PATCH
      * @return
      */
@@ -256,15 +266,15 @@ public class ImmunePlanResource {
         logger.info("invoke professorUpdate {}", immunePlanModel);
         if(immunePlanModel.getId() == null||
                 immunePlanModel.getProfessor() == null||
-                immunePlanModel.getIsPass1() == null||
-                immunePlanModel.getUnpassReason1() == null){
+                immunePlanModel.getIsPass() == null||
+                immunePlanModel.getUnpassReason() == null){
             return Responses.errorResponse("Lack Item");
         }else {
             ImmunePlanModel immunePlanModel1 = immunePlanService.getImmunePlanModelByid(immunePlanModel.getId());
 
             String professorWorkInRedis = immunePlanModel1.getId().toString() + "_immunePlan_professor_worked";
 
-            if (immunePlanModel1.getIsPass1().equals("1")){
+            if (immunePlanModel1.getIsPass().equals("1")){
 
                 return Responses.errorResponse("Already update");
 
@@ -322,8 +332,8 @@ public class ImmunePlanResource {
 
 
     /**
-     * 审核入口 展示所有isPass2 = 0或者isPass2 = 1的数据
-     * @param isPass2
+     * 审核入口 展示所有isPass1 = 0或者isPass1 = 1的数据
+     * @param isPass1
      * @param page
      * @param size
      * METHOD:GET
@@ -331,12 +341,15 @@ public class ImmunePlanResource {
      */
     @ResponseBody
     @RequestMapping(value = "sfind",method = RequestMethod.GET)
-    public Response SupervisorFind(@RequestParam("isPass2") Integer isPass2,
+    public Response SupervisorFind(@RequestParam(value = "isPass1",defaultValue = "2") Integer isPass1,
                                    @RequestParam(value = "page",defaultValue = "0") int page,
                                    @RequestParam(value = "size",defaultValue = "10") int size){
 
-        logger.info("invoke supervisorFind {}", isPass2, page, size);
-        List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModelBySupervisor(isPass2,new RowBounds(page,size));
+        logger.info("invoke supervisorFind {}", isPass1, page, size);
+        if ("2".equals(isPass1.toString())){
+            return Responses.errorResponse("Wrong Pass num");
+        }
+        List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModelBySupervisor(isPass1,new RowBounds(page,size));
 
         System.out.println("size:"+immunePlanModels.size());
         return JudgeUtil.JudgeFind(immunePlanModels,immunePlanModels.size());
@@ -344,7 +357,7 @@ public class ImmunePlanResource {
     }
 
     /**
-     * 专家入口 审核isPass2 = 0的数据
+     * 监督员入口 审核isPass1 = 0的数据
      * 审核要求:审核时要求条例写完整 审核后无权限再修改
      * @param immunePlanModel
      * METHOD:PATCH
@@ -356,8 +369,7 @@ public class ImmunePlanResource {
         logger.info("invoke supervisorUpdate {}", immunePlanModel);
         if(immunePlanModel.getId() == null||
                 immunePlanModel.getSupervisor() == null||
-                immunePlanModel.getIsPass2() == null||
-                immunePlanModel.getUnpassReason2() == null){
+                immunePlanModel.getIsPass1() == null){
             return Responses.errorResponse("Lack Item");
 
         }else {
@@ -367,7 +379,7 @@ public class ImmunePlanResource {
             String supervisorWorkInRedis = immunePlanModel1.getId().toString() + "_immunePlan_supervisor_worked";
 
             //System.out.println("direct in DB"+immunePlanModel1.getFlag());
-            if (immunePlanModel1.getIsPass2().equals("1")){
+            if (immunePlanModel1.getIsPass1().equals("1")){
 
                 return Responses.errorResponse("Already update");
 
@@ -511,9 +523,12 @@ public class ImmunePlanResource {
      */
     @ResponseBody
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
-    public Response Delete(@RequestParam("id") Long id){
+    public Response Delete(@RequestParam(value = "id",defaultValue = "0") Long id){
 
         logger.info("invoke delete {}", id);
+        if ("0".equals(id.toString())){
+            return Responses.errorResponse("Wrong id");
+        }
         int row = immunePlanService.deleteImmunePlanModelByid(id);
         return JudgeUtil.JudgeDelete(row);
     }

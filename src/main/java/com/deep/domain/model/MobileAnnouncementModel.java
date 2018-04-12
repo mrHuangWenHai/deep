@@ -87,10 +87,15 @@ public class MobileAnnouncementModel {
     public String testSendSingle(){
         // just replace key here
         Random random = new Random();
+
+        //生成验证码 并.toString()赋值给成员
+        StringBuffer temp = new StringBuffer("");
         for(int i=0; i<6; i++){
-            identityCode = identityCode+random.nextInt(10);
+            temp = temp.append(random.nextInt(10));
         }
-        message = message+identityCode+"【东翔验证】";
+        identityCode = temp.toString();
+        message = message+temp+"【东翔验证】";
+
         Client client = Client.create();
         client.addFilter(new HTTPBasicAuthFilter(
                 "api","key-22c3576f6f618dfd8aabb19de974d99f"));

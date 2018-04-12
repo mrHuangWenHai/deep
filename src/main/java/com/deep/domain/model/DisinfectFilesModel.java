@@ -5,6 +5,7 @@ import java.math.BigInteger;
 
 public class DisinfectFilesModel {
     private Long id;      //id
+    private String disinfectEartag;
     private BigInteger factoryNum;     //工厂号
     private String disinfectTime;     //消毒时间
     private String disinfectName;     //消毒药品名称
@@ -14,10 +15,9 @@ public class DisinfectFilesModel {
     private String professor;       //技术审核(审核表人员 专家) 可空
     private String supervisor;       //监督员(监督操作员人员) 可空
     private String remark;        //备注
+    private String isPass;       //是否通过审核 可空 默认为 0
+    private String unpassReason;   //未通过审核原因 可空 默认未 无
     private String isPass1;       //是否通过审核 可空 默认为 0
-    private String unpassReason1;   //未通过审核原因 可空 默认未 无
-    private String isPass2;       //是否通过审核 可空 默认为 0
-    private String unpassReason2;   //未通过审核原因 可空 默认未 无
     private String gmtCreate;   //创建时间
     private String gmtModified;     //修改时间
     private String gmtProfessor;     //审核时间 可空
@@ -35,7 +35,7 @@ public class DisinfectFilesModel {
     public DisinfectFilesModel() {
     }
 
-    public DisinfectFilesModel(BigInteger factoryNum, String disinfectTime, String disinfectName, String disinfectQuality, String disinfectWay, String operator, String remark, String isPass1,String isPass2, String gmtCreate, String gmtModified) {
+    public DisinfectFilesModel(BigInteger factoryNum, String disinfectTime, String disinfectName, String disinfectQuality, String disinfectWay, String operator, String remark, String isPass,String isPass1, String gmtCreate, String gmtModified) {
         this.factoryNum = factoryNum;
         this.disinfectTime = disinfectTime;
         this.disinfectName = disinfectName;
@@ -43,25 +43,12 @@ public class DisinfectFilesModel {
         this.disinfectWay = disinfectWay;
         this.operator = operator;
         this.remark = remark;
+        this.isPass = isPass;
         this.isPass1 = isPass1;
-        this.isPass2 = isPass2;
         this.gmtCreate = gmtCreate;
         this.gmtModified = gmtModified;
     }
 
-    public DisinfectFilesModel(BigInteger factoryNum, String  disinfectTime, String disinfectName, String disinfectQuality, String disinfectWay, String operator, String remark, String isPass1, String isPass2, String gmtCreate) {
-        this.factoryNum = factoryNum;
-        this.disinfectTime = disinfectTime;
-        this.disinfectName = disinfectName;
-        this.disinfectQuality = disinfectQuality;
-        this.disinfectWay = disinfectWay;
-        this.operator = operator;
-        this.remark = remark;
-        this.isPass1 = isPass1;
-        this.isPass2 = isPass2;
-        this.gmtCreate = gmtCreate;
-
-    }
 
     public Long getId() {
         return id;
@@ -69,6 +56,14 @@ public class DisinfectFilesModel {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getDisinfectEartag() {
+        return disinfectEartag;
+    }
+
+    public void setDisinfectEartag(String disinfectEartag) {
+        this.disinfectEartag = disinfectEartag;
     }
 
     public BigInteger getFactoryNum() {
@@ -143,36 +138,28 @@ public class DisinfectFilesModel {
         this.remark = remark;
     }
 
+    public String getIsPass() {
+        return isPass;
+    }
+
+    public void setIsPass(String isPass) {
+        this.isPass = isPass;
+    }
+
+    public String getUnpassReason() {
+        return unpassReason;
+    }
+
+    public void setUnpassReason(String unpassReason) {
+        this.unpassReason = unpassReason;
+    }
+
     public String getIsPass1() {
         return isPass1;
     }
 
     public void setIsPass1(String isPass1) {
         this.isPass1 = isPass1;
-    }
-
-    public String getUnpassReason1() {
-        return unpassReason1;
-    }
-
-    public void setUnpassReason1(String unpassReason1) {
-        this.unpassReason1 = unpassReason1;
-    }
-
-    public String getIsPass2() {
-        return isPass2;
-    }
-
-    public void setIsPass2(String isPass2) {
-        this.isPass2 = isPass2;
-    }
-
-    public String getUnpassReason2() {
-        return unpassReason2;
-    }
-
-    public void setUnpassReason2(String unpassReason2) {
-        this.unpassReason2 = unpassReason2;
     }
 
     public String getGmtCreate() {

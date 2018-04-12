@@ -23,6 +23,7 @@
 
     <mappers>
 
+
         <mapper resource="mapper/TestMapper.xml"/>
         <mapper class="com.deep.infra.persistence.sql.mapper.UserMapper"/>
         <mapper class="com.deep.infra.persistence.sql.mapper.AgentMapper"/>
@@ -33,6 +34,7 @@
         <mapper resource="mapper/PicMapper.xml"/>
         <mapper resource="mapper/MessageMapper.xml"/>
         <mapper resource="mapper/RoleMapperxml.xml"/>
+
         <mapper resource="mapper/GenealogicalFilesMapperxml.xml" />
         <mapper resource="mapper/DisinfectFilesMapperxml.xml" />
         <mapper resource="mapper/ImmunePlanMapperxml.xml"/>

@@ -36,12 +36,12 @@ public class DisinfectFilesService {
         return this.disinfectFilesMapper.getDisinfectFilesModelByfactoryNumAnddisinfectTimeAnddisinfectName(factoryNum,disinfectTime,disinfectName);
     }
 
-    public List<DisinfectFilesModel> getDisinfectFilesModelByProfessor(Integer isPass1,RowBounds bounds){
-        return this.disinfectFilesMapper.getDisinfectFilesModelByProfessor(isPass1,bounds);
+    public List<DisinfectFilesModel> getDisinfectFilesModelByProfessor(Integer isPass,RowBounds bounds){
+        return this.disinfectFilesMapper.getDisinfectFilesModelByProfessor(isPass,bounds);
     }
 
-    public List<DisinfectFilesModel> getDisinfectFilesModelBySupervisor(Integer isPass2,RowBounds bounds){
-        return this.disinfectFilesMapper.getDisinfectFilesModelBySupervisor(isPass2,bounds);
+    public List<DisinfectFilesModel> getDisinfectFilesModelBySupervisor(Integer isPass1,RowBounds bounds){
+        return this.disinfectFilesMapper.getDisinfectFilesModelBySupervisor(isPass1,bounds);
     }
 
     public DisinfectFilesModel getDisinfectFilesModelByid(Long id){

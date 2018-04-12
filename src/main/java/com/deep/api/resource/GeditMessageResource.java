@@ -25,23 +25,66 @@ public class GeditMessageResource {
 
     private final Logger logger = LoggerFactory.getLogger(GeditMessageResource.class);
 
+    /**
+     * 编辑默认短信内容
+     * @param Message
+     * @return
+     */
     @ResponseBody
-    @RequestMapping(value = "/geditshow",method = RequestMethod.POST)
-    public Response GreditShow(@RequestBody RedisDataModel redisDataModel) {
+    @RequestMapping(value = "/mgedit",method = RequestMethod.GET)
+    public Response MessageGredit(
+            @RequestParam(value = "Message" , defaultValue = "") String Message) {
 
-        logger.info("invoke greditShow {}", redisDataModel);
+        logger.info("invoke messageGredit {}", Message);
 
-        if (redisDataModel.getMessage() == null ||
-                redisDataModel.getExpireTime() == null||
-                redisDataModel.getPressureTips() == null){
+        if (Message == null){
             return Responses.errorResponse("Lack Item");
         }else {
+            JedisUtil.setCertainKeyValue("Message", Message);
 
-            JedisUtil.setCertainKeyValue("Message",redisDataModel.getMessage());
-            JedisUtil.setCertainKeyValue("ExpireTime",redisDataModel.getExpireTime());
-            JedisUtil.setCertainKeyValue("PressureTips",redisDataModel.getPressureTips());
+            return JudgeUtil.JudgeSuccess("Success","Setting");
+        }
+    }
 
-            return JudgeUtil.JudgeSuccess("Success","All Setting");
+    /**
+     * 用于编辑短信通知间隔时间
+     * @param ExpireTime
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/egedit",method = RequestMethod.GET)
+    public Response ExpireTimeGredit(
+            @RequestParam(value = "ExpireTime" , defaultValue = "") String ExpireTime) {
+
+        logger.info("invoke expireTimeGredit {}", ExpireTime);
+
+        if (ExpireTime == null){
+            return Responses.errorResponse("Lack Item");
+        }else {
+            JedisUtil.setCertainKeyValue("ExpireTime", ExpireTime);
+
+            return JudgeUtil.JudgeSuccess("Success","Setting");
+        }
+    }
+
+    /**
+     * 用于编辑短信通知界限
+     * @param PressureTips
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/pgedit",method = RequestMethod.GET)
+    public Response PressureTipsGredit(
+            @RequestParam(value = "PressureTips" , defaultValue = "") String PressureTips) {
+
+        logger.info("invoke pressureTipsGredit {}", PressureTips);
+
+        if (PressureTips == null){
+            return Responses.errorResponse("Lack Item");
+        }else {
+            JedisUtil.setCertainKeyValue("ExpireTime", PressureTips);
+
+            return JudgeUtil.JudgeSuccess("Success","Setting");
         }
     }
 }

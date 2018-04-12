@@ -37,10 +37,10 @@ public interface DisinfectFilesMapper {
 
     DisinfectFilesModel getDisinfectFilesModelByid(@Param("id") Long id);
 
-    List<DisinfectFilesModel> getDisinfectFilesModelByProfessor(@Param("isPass1") Integer isPass1,
+    List<DisinfectFilesModel> getDisinfectFilesModelByProfessor(@Param("isPass") Integer isPass,
                                                                 RowBounds bounds);
 
-    List<DisinfectFilesModel> getDisinfectFilesModelBySupervisor(@Param("isPass2") Integer isPass2,
+    List<DisinfectFilesModel> getDisinfectFilesModelBySupervisor(@Param("isPass1") Integer isPass1,
                                                                  RowBounds bounds);
 
 

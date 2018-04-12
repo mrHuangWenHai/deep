@@ -21,10 +21,9 @@ public class RepellentPlanModel {
     private String professor;
     private String supervisor;
     private String remark;
+    private String isPass;
+    private String unpassReason;
     private String isPass1;
-    private String unpassReason1;
-    private String isPass2;
-    private String unpassReason2;
     private String gmtCreate;
     private String gmtModified;
     private String gmtProfessor;
@@ -39,7 +38,7 @@ public class RepellentPlanModel {
     public RepellentPlanModel() {
     }
 
-    public RepellentPlanModel(BigInteger factoryNum, String crowdNum, String repellentEartag, String repellentTime, String repellentName, String repellentWay, String repellentQuality, String operator, String remark, String isPass1, String isPass2, String gmtCreate) {
+    public RepellentPlanModel(BigInteger factoryNum, String crowdNum, String repellentEartag, String repellentTime, String repellentName, String repellentWay, String repellentQuality, String operator, String remark, String isPass, String isPass1, String gmtCreate) {
         this.factoryNum = factoryNum;
         this.crowdNum = crowdNum;
         this.repellentEartag = repellentEartag;
@@ -49,27 +48,12 @@ public class RepellentPlanModel {
         this.repellentQuality = repellentQuality;
         this.operator = operator;
         this.remark = remark;
+        this.isPass = isPass;
         this.isPass1 = isPass1;
-        this.isPass2 =isPass2;
         this.gmtCreate = gmtCreate;
     }
 
-    public RepellentPlanModel(BigInteger factoryNum, String crowdNum, String repellentEartag, String repellentTime, String repellentName, String repellentWay, String repellentQuality, String operator, String professor, String supervisor, String remark, String isPass1, String isPass2, String gmtCreate) {
-        this.factoryNum = factoryNum;
-        this.crowdNum = crowdNum;
-        this.repellentEartag = repellentEartag;
-        this.repellentTime = repellentTime;
-        this.repellentName = repellentName;
-        this.repellentWay = repellentWay;
-        this.repellentQuality = repellentQuality;
-        this.operator = operator;
-        this.professor = professor;
-        this.supervisor = supervisor;
-        this.remark = remark;
-        this.isPass1 = isPass1;
-        this.isPass2 = isPass2;
-        this.gmtCreate = gmtCreate;
-    }
+
 
     public Long getId() {
         return id;
@@ -169,36 +153,28 @@ public class RepellentPlanModel {
         this.remark = remark;
     }
 
+    public String getIsPass() {
+        return isPass;
+    }
+
+    public void setIsPass(String isPass) {
+        this.isPass = isPass;
+    }
+
+    public String getUnpassReason() {
+        return unpassReason;
+    }
+
+    public void setUnpassReason(String unpassReason) {
+        this.unpassReason = unpassReason;
+    }
+
     public String getIsPass1() {
         return isPass1;
     }
 
     public void setIsPass1(String isPass1) {
         this.isPass1 = isPass1;
-    }
-
-    public String getUnpassReason1() {
-        return unpassReason1;
-    }
-
-    public void setUnpassReason1(String unpassReason1) {
-        this.unpassReason1 = unpassReason1;
-    }
-
-    public String getIsPass2() {
-        return isPass2;
-    }
-
-    public void setIsPass2(String isPass2) {
-        this.isPass2 = isPass2;
-    }
-
-    public String getUnpassReason2() {
-        return unpassReason2;
-    }
-
-    public void setUnpassReason2(String unpassReason2) {
-        this.unpassReason2 = unpassReason2;
     }
 
     public String getGmtCreate() {

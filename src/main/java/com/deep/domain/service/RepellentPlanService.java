@@ -22,16 +22,16 @@ public class RepellentPlanService {
         return this.repellentPlanMapper.getRepellentPlanModel(repellentPlanModel,bounds);
     }
 
-    public RepellentPlanModel getRepellentPlanModelByfactoryNumAndrepellentTimeAndrepellentName(BigInteger factoryNum,String repellentTime,String repellentName){
-        return this.repellentPlanMapper.getRepellentPlanModelByfactoryNumAndrepellentTimeAndrepellentName(factoryNum, repellentTime, repellentName);
+    public RepellentPlanModel getRepellentPlanModelByfactoryNumAndcrowdNumAndrepellentTimeAndrepellentName(BigInteger factoryNum,String crowdNum,String repellentTime,String repellentName){
+        return this.repellentPlanMapper.getRepellentPlanModelByfactoryNumAndcrowdNumAndrepellentTimeAndrepellentName(factoryNum, crowdNum, repellentTime, repellentName);
     }
 
-    public List<RepellentPlanModel> getRepellentPlanModelByProfessor(Integer isPass1, RowBounds bounds){
-        return this.repellentPlanMapper.getRepellentPlanModelByProfessor(isPass1,bounds);
+    public List<RepellentPlanModel> getRepellentPlanModelByProfessor(Integer isPass, RowBounds bounds){
+        return this.repellentPlanMapper.getRepellentPlanModelByProfessor(isPass,bounds);
     }
 
-    public List<RepellentPlanModel> getRepellentPlanModelBySupervisor(Integer isPass2, RowBounds bounds){
-        return this.repellentPlanMapper.getRepellentPlanModelBySupervisor(isPass2,bounds);
+    public List<RepellentPlanModel> getRepellentPlanModelBySupervisor(Integer isPass1, RowBounds bounds){
+        return this.repellentPlanMapper.getRepellentPlanModelBySupervisor(isPass1,bounds);
     }
 
     public RepellentPlanModel getRepellentPlanModelByid(Long id){
