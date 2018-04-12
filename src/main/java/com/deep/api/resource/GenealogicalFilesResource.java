@@ -8,16 +8,16 @@ import com.deep.domain.util.JudgeUtil;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping(value = "/gf")
 public class GenealogicalFilesResource {
 
@@ -37,57 +37,23 @@ public class GenealogicalFilesResource {
      * @param genealogicalFilesModel
      * @return
      */
-    @ResponseBody
     @RequestMapping(value = "/saveshow",method = RequestMethod.POST)
-    public Response SaveShow(@RequestBody GenealogicalFilesModel genealogicalFilesModel) {
-        //System.out.println("传参数成功");
-
-        logger.info("invoke saveShow {}",genealogicalFilesModel);
-
-        if("".equals(genealogicalFilesModel.getNativeEartag())||
-                "".equals(genealogicalFilesModel.getImmuneEartag())||
-                "".equals(genealogicalFilesModel.getTradeMarkEartag())||
-                "".equals(genealogicalFilesModel.getBreedingSheepBase())||
-                "".equals(genealogicalFilesModel.getBirthTime())||
-                0 == genealogicalFilesModel.getBirthWeight()||
-                "".equals(genealogicalFilesModel.getColor())||
-                "".equals(genealogicalFilesModel.getSex())||
-                "".equals(genealogicalFilesModel.getEartagOfFather())||
-                "".equals(genealogicalFilesModel.getEartagOfMother())||
-                "".equals(genealogicalFilesModel.getEartagOfFathersFather())||
-                "".equals(genealogicalFilesModel.getEartagOfFathersMother())||
-                "".equals(genealogicalFilesModel.getEartagOfMothersFather())||
-                "".equals(genealogicalFilesModel.getEartagOfMothersMother())||
-                "".equals(genealogicalFilesModel.getRemark())) {
-            return Responses.errorResponse("Lack Item");
-        }else{
-            //System.out.println(SelfEartag);
-            GenealogicalFilesModel genealogicalFilesModelByimmuneEartag = genealogicalFilesService.getGenealogicalFilesModelByimmuneEartag(genealogicalFilesModel.getImmuneEartag());
-            GenealogicalFilesModel genealogicalFilesModelBytradeMarkEartag = genealogicalFilesService.getGenealogicalFilesModelBytradeMarkEartag(genealogicalFilesModel.getTradeMarkEartag());
-            //System.out.println(genealogicalFilesModelByboth.getSelfEartag());
-            if( genealogicalFilesModelByimmuneEartag == null && genealogicalFilesModelBytradeMarkEartag == null){
-
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                //System.out.println(timestamp);
-                genealogicalFilesService.setGenealogicalFilesModel(new GenealogicalFilesModel(genealogicalFilesModel.getNativeEartag(),genealogicalFilesModel.getImmuneEartag(),
-                        genealogicalFilesModel.getTradeMarkEartag(),genealogicalFilesModel.getBreedingSheepBase(),genealogicalFilesModel.getBirthTime(),genealogicalFilesModel.getBirthWeight(),
-                        genealogicalFilesModel.getColor(),genealogicalFilesModel.getSex(), genealogicalFilesModel.getEartagOfFather(),genealogicalFilesModel.getEartagOfMother(),
-                        genealogicalFilesModel.getEartagOfFathersFather(),genealogicalFilesModel.getEartagOfFathersMother(),genealogicalFilesModel.getEartagOfMothersFather(),
-                        genealogicalFilesModel.getEartagOfMothersMother(),genealogicalFilesModel.getRemark(),simpleDateFormat.format(new Timestamp(System.currentTimeMillis()))));
-
-
-                HashMap<String,Object> data = new HashMap<>();
-                data.put("successMessage","save");
-                return Responses.successResponse(data);
-
-            }else{
-
-                return Responses.errorResponse("Already Exist");
-            }
-        }
+    public Response saveShow(@RequestBody @Validated GenealogicalFilesModel genealogicalFilesModel) {
+      logger.info("invoke saveShow {}",genealogicalFilesModel);
+      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+      String time = simpleDateFormat.format(new Timestamp(System.currentTimeMillis()));
+      genealogicalFilesModel.setGmtCreate(time);
+      genealogicalFilesModel.setGmtModified(time);
+      int id = genealogicalFilesService.insertGenealogicalFilesModel(genealogicalFilesModel);
+      if (id == 0) {
+        return Responses.errorResponse("add data error");
+      } else {
+        HashMap<String,Object> data = new HashMap<>();
+        data.put("id",genealogicalFilesModel.getId());
+        return Responses.successResponse(data);
+      }
 
     }
-
 
     /**
      * 用于条件查找
@@ -97,24 +63,21 @@ public class GenealogicalFilesResource {
      * @return
      */
     //bound为必传参数
-    @ResponseBody
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
-    public Response FindShow(@RequestBody GenealogicalFilesModel genealogicalFilesModel){
+    public Response findShow(@RequestBody GenealogicalFilesModel genealogicalFilesModel){
 
         logger.info("invoke findShow {}",genealogicalFilesModel);
-        //System.out.println("selfEartag:"+genealogicalFilesModel.getSelfEartag());
-        if (genealogicalFilesModel.getPage() == 0){
+
+        if ( genealogicalFilesModel.getPage() == 0 ) {
             genealogicalFilesModel.setPage(0);
         }
 
-        if (genealogicalFilesModel.getSize() == 0){
+        if ( genealogicalFilesModel.getSize() == 0 ) {
             genealogicalFilesModel.setSize(10);
         }
-        List<GenealogicalFilesModel> genealogicalFilesModels = genealogicalFilesService.getGenealogicalFilesModel(genealogicalFilesModel,new RowBounds(genealogicalFilesModel.getPage(),genealogicalFilesModel.getSize()));
-        //System.out.println("ModelSize:"+genealogicalFilesModels.size());
-        //System.out.println("ModelId:"+genealogicalFilesModels.get(0).getId());
 
-        //System.out.println(""+genealogicalFilesModels.get(0).getId());
+        List<GenealogicalFilesModel> genealogicalFilesModels = null;
+        genealogicalFilesModels = genealogicalFilesService.getGenealogicalFilesModel(genealogicalFilesModel,new RowBounds(genealogicalFilesModel.getPage(),genealogicalFilesModel.getSize()));
         return JudgeUtil.JudgeFind(genealogicalFilesModels,genealogicalFilesModels.size());
     }
 
@@ -127,12 +90,11 @@ public class GenealogicalFilesResource {
      */
     @ResponseBody
     @RequestMapping(value = "/findshowbyid",method = RequestMethod.GET)
-    public Response FindShowById(@RequestParam("id") Long id ) {
+    public Response findShowById(@RequestParam("id") int id ) {
 
         logger.info("invoke findShowById {}", id);
-        //System.out.println("id:"+id);
+
         GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesService.getGenealogicalFilesModelByid(id);
-        //System.out.println(genealogicalFilesModel.getSelfEartag());
 
         return JudgeUtil.JudgeFind(genealogicalFilesModel);
 
@@ -148,7 +110,7 @@ public class GenealogicalFilesResource {
      */
     @ResponseBody
     @RequestMapping(value = "/update",method = RequestMethod.PATCH)
-    public Response Update(@RequestBody GenealogicalFilesModel genealogicalFilesModel){
+    public Response update(@RequestBody GenealogicalFilesModel genealogicalFilesModel){
 
         logger.info("invoke update {}", genealogicalFilesModel);
 
@@ -171,10 +133,9 @@ public class GenealogicalFilesResource {
      */
     @ResponseBody
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
-    public Response Delete(@RequestParam("id") Long id){
+    public Response delete(@RequestParam("id") int id){
 
         logger.info("invoke delete {}", id);
-
         int row = genealogicalFilesService.deleteGenealogicalFilesModel(id);
         return JudgeUtil.JudgeDelete(row);
     }

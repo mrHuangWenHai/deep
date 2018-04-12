@@ -10,7 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import com.deep.api.response.Response;
 import java.util.Map;
 import java.util.HashMap;
-import org.springframework.validation.BindingResult;
+
 
 /**
  * Created by huangwenhai on 2018/3/12.

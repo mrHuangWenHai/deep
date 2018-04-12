@@ -7,6 +7,7 @@
     <settings>
         <setting name="cacheEnabled" value="false"/>
         <setting name="localCacheScope" value="STATEMENT"/>
+        <setting name="useGeneratedKeys" value="true"/>
     </settings>
     <environments default="development">
         <environment id="development">

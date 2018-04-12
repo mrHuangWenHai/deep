@@ -22,9 +22,4 @@ public class GenealogicalFilesTransResource {
         return "GenealogicalFilesHTML/GenealogicalFilesFunctionChoiceForm";
     }
 
-
-
-
-
-
 }

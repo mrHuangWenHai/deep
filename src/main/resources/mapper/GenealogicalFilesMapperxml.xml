@@ -3,44 +3,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--Mapper名称 对应infra中mapper类名-->
 <mapper namespace="com.deep.infra.persistence.sql.mapper.GenealogicalFilesMapper">
-    <insert id="setGenealogicalFilesModel" parameterType="com.deep.domain.model.GenealogicalFilesModel">
-        INSERT INTO genealogical_files(
-          native_eartag,
-          immune_eartag,
-          trademark_eartag,
-          breedingsheep_base,
-          birth_time,
-          birth_weight,
-          color,
-          sex,
-          eartag_of_father,
-          eartag_of_mother,
-          eartag_of_fathersfather,
-          eartag_of_fathersmother,
-          eartag_of_mothersfather,
-          eartag_of_mothersmother,
-          remark,
-          gmt_create
-        )
-        VALUES(
-          #{genealogicalFilesModel.native_eartag},
-          #{genealogicalFilesModel.immuneEartag},
-          #{genealogicalFilesModel.tradeMarkEartag},
-          #{genealogicalFilesModel.breedingSheepBase},
-          #{genealogicalFilesModel.birthTime},
-          #{genealogicalFilesModel.birthWeight},
-          #{genealogicalFilesModel.color},
-          #{genealogicalFilesModel.sex},
-          #{genealogicalFilesModel.eartagOfFather},
-          #{genealogicalFilesModel.eartagOfMother},
-          #{genealogicalFilesModel.eartagOfFathersFather},
-          #{genealogicalFilesModel.eartagOfFathersMother},
-          #{genealogicalFilesModel.eartagOfMothersFather},
-          #{genealogicalFilesModel.eartagOfMothersMother},
-          #{genealogicalFilesModel.remark},
-          #{genealogicalFilesModel.gmtCreate}
-        )
-    </insert>
 
     <resultMap id="GenealogicalFiles" type="com.deep.domain.model.GenealogicalFilesModel">
         <id property="id" column="id"/>
@@ -62,6 +24,53 @@
         <result property="gmtCreate" column="gmt_create"/>
         <result property="gmtModified" column="gmt_modified"/>
     </resultMap>
+
+
+    <insert id="insertGenealogicalFilesModel" parameterType="com.deep.domain.model.GenealogicalFilesModel" useGeneratedKeys="true" keyColumn = "id" keyProperty = "genealogicalFilesModel.id">
+
+        INSERT INTO genealogical_files(
+          id,
+          native_eartag,
+          immune_eartag,
+          trademark_eartag,
+          breedingsheep_base,
+          birth_time,
+          birth_weight,
+          color,
+          sex,
+          eartag_of_father,
+          eartag_of_mother,
+          eartag_of_fatherfather,
+          eartag_of_fathermother,
+          eartag_of_motherfather,
+          eartag_of_mothermother,
+          remark,
+          gmt_create,
+          gmt_modified
+        )
+        VALUES(
+          #{genealogicalFilesModel.id},
+          #{genealogicalFilesModel.nativeEartag},
+          #{genealogicalFilesModel.immuneEartag},
+          #{genealogicalFilesModel.tradeMarkEartag},
+          #{genealogicalFilesModel.breedingSheepBase},
+          #{genealogicalFilesModel.birthTime},
+          #{genealogicalFilesModel.birthWeight},
+          #{genealogicalFilesModel.color},
+          #{genealogicalFilesModel.sex},
+          #{genealogicalFilesModel.eartagOfFather},
+          #{genealogicalFilesModel.eartagOfMother},
+          #{genealogicalFilesModel.eartagOfFathersFather},
+          #{genealogicalFilesModel.eartagOfFathersMother},
+          #{genealogicalFilesModel.eartagOfMothersFather},
+          #{genealogicalFilesModel.eartagOfMothersMother},
+          #{genealogicalFilesModel.remark},
+          #{genealogicalFilesModel.gmtCreate},
+          #{genealogicalFilesModel.gmtModified}
+        )
+    </insert>
+
+
     <select id="getGenealogicalFilesModelByid" resultMap="GenealogicalFiles">
         SELECT
         *
@@ -94,34 +103,47 @@
                         genealogicalFilesModel.birthTimeEnd != null and genealogicalFilesModel.birthTimeEnd != '' ">
                 AND birth_time BETWEEN #{genealogicalFilesModel.birthTimeStart} AND #{genealogicalFilesModel.birthTimeEnd}
             </if>
-            <if test="genealogicalFilesModel.birthWeightStart != null and genealogicalFilesModel.birthWeightStart != '' and
-                        genealogicalFilesModel.birthWeightEnd != null and genealogicalFilesModel.birthWeightEnd != ''">
-                AND birth_weight BETWEEN #{genealogicalFilesModel.birthWeightStart} AND #{genealogicalFilesModel.birthWeightEnd}
+
+            <if test="genealogicalFilesModel.birthTimeStart != null and genealogicalFilesModel.birthTimeStart != '' and
+                     (genealogicalFilesModel.birthTimeEnd == null and genealogicalFilesModel.birthTimeEnd == '') ">
+                AND birth_time &gt;= #{genealogicalFilesModel.birthTimeStart}
             </if>
-            <if test="genealogicalFilesModel.color != null and genealogicalFilesModel.color != '' ">
-                AND color = #{genealogicalFilesModel.color}
-            </if>
-            <if test="genealogicalFilesModel.sex != null and genealogicalFilesModel.sex != '' ">
-                AND sex = #{genealogicalFilesModel.sex}
-            </if>
-            <if test="genealogicalFilesModel.eartagOfFather != null and genealogicalFilesModel.eartagOfFather != '' ">
-                AND eartag_of_father = #{genealogicalFilesModel.eartagOfFather}
-            </if>
-            <if test="genealogicalFilesModel.eartagOfMother != null and genealogicalFilesModel.eartagOfMother != '' ">
-                AND eartag_of_mother = #{genealogicalFilesModel.eartagOfMother}
-            </if>
-            <if test="genealogicalFilesModel.eartagOfFathersFather != null and genealogicalFilesModel.eartagOfFathersFather != '' ">
-                AND eartag_of_fathersfather = #{genealogicalFilesModel.eartagOfFathersFather}
-            </if>
-            <if test="genealogicalFilesModel.eartagOfFathersMother != null and genealogicalFilesModel.eartagOfFathersMother != '' ">
-                AND eartag_of_fathersmother = #{genealogicalFilesModel.eartagOfFathersMother}
-            </if>
-            <if test="genealogicalFilesModel.eartagOfMothersFather != null and genealogicalFilesModel.eartagOfMothersFather != '' ">
-                AND eartag_of_mothersfather = #{genealogicalFilesModel.eartagOfMothersFather}
-            </if>
-            <if test="genealogicalFilesModel.eartagOfMothersMother != null and genealogicalFilesModel.eartagOfMothersMother != '' ">
-                AND eartag_of_mothersmother = #{genealogicalFilesModel.eartagOfMothersMother}
-            </if>
+
+
+            <!--<if test="genealogicalFilesModel.birthWeightStart != null and genealogicalFilesModel.birthWeightStart != '' and-->
+                        <!--genealogicalFilesModel.birthWeightEnd != null and genealogicalFilesModel.birthWeightEnd != ''">-->
+                <!--AND birth_weight BETWEEN #{genealogicalFilesModel.birthWeightStart} AND #{genealogicalFilesModel.birthWeightEnd}-->
+            <!--</if>-->
+
+            <!--<if test="genealogicalFilesModel.birthWeightStart != null and genealogicalFilesModel.birthWeightStart != '' and-->
+                   <!--(genealogicalFilesModel.birthWeightEnd == null or genealogicalFilesModel.birthWeightEnd == '') ">-->
+                <!--AND birth_weight &gt;= #{genealogicalFilesModel.birthWeightStart}-->
+            <!--</if>-->
+
+            <!--<if test="genealogicalFilesModel.color != null and genealogicalFilesModel.color != '' ">-->
+                <!--AND color = #{genealogicalFilesModel.color}-->
+            <!--</if>-->
+            <!--<if test="genealogicalFilesModel.sex != null and genealogicalFilesModel.sex != '' ">-->
+                <!--AND sex = #{genealogicalFilesModel.sex}-->
+            <!--</if>-->
+            <!--<if test="genealogicalFilesModel.eartagOfFather != null and genealogicalFilesModel.eartagOfFather != '' ">-->
+                <!--AND eartag_of_father = #{genealogicalFilesModel.eartagOfFather}-->
+            <!--</if>-->
+            <!--<if test="genealogicalFilesModel.eartagOfMother != null and genealogicalFilesModel.eartagOfMother != '' ">-->
+                <!--AND eartag_of_mother = #{genealogicalFilesModel.eartagOfMother}-->
+            <!--</if>-->
+            <!--<if test="genealogicalFilesModel.eartagOfFathersFather != null and genealogicalFilesModel.eartagOfFathersFather != '' ">-->
+                <!--AND eartag_of_fatherfather = #{genealogicalFilesModel.eartagOfFathersFather}-->
+            <!--</if>-->
+            <!--<if test="genealogicalFilesModel.eartagOfFathersMother != null and genealogicalFilesModel.eartagOfFathersMother != '' ">-->
+                <!--AND eartag_of_fathermother = #{genealogicalFilesModel.eartagOfFathersMother}-->
+            <!--</if>-->
+            <!--<if test="genealogicalFilesModel.eartagOfMothersFather != null and genealogicalFilesModel.eartagOfMothersFather != '' ">-->
+                <!--AND eartag_of_motherfather = #{genealogicalFilesModel.eartagOfMothersFather}-->
+            <!--</if>-->
+            <!--<if test="genealogicalFilesModel.eartagOfMothersMother != null and genealogicalFilesModel.eartagOfMothersMother != '' ">-->
+                <!--AND eartag_of_mothermother = #{genealogicalFilesModel.eartagOfMothersMother}-->
+            <!--</if>-->
     </select>
 
 

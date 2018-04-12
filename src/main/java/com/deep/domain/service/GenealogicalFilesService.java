@@ -17,9 +17,8 @@ public class  GenealogicalFilesService {
     @Resource
     private GenealogicalFilesMapper genealogicalFilesMapper;
 
-
-    public void setGenealogicalFilesModel(GenealogicalFilesModel genealogicalFilesModel) {
-        this.genealogicalFilesMapper.setGenealogicalFilesModel(genealogicalFilesModel);
+    public int insertGenealogicalFilesModel(GenealogicalFilesModel genealogicalFilesModel) {
+        return this.genealogicalFilesMapper.insertGenealogicalFilesModel(genealogicalFilesModel);
     }
 
     public List<GenealogicalFilesModel> getGenealogicalFilesModel(GenealogicalFilesModel genealogicalFilesModel,
@@ -29,7 +28,7 @@ public class  GenealogicalFilesService {
 
 
 
-    public GenealogicalFilesModel getGenealogicalFilesModelByid(Long id) {
+    public GenealogicalFilesModel getGenealogicalFilesModelByid(int id) {
         return this.genealogicalFilesMapper.getGenealogicalFilesModelByid(id);
     }
 
@@ -46,7 +45,7 @@ public class  GenealogicalFilesService {
     }
 
 
-    public int deleteGenealogicalFilesModel(Long id) {
+    public int deleteGenealogicalFilesModel(int id) {
         return this.genealogicalFilesMapper.deleteGenealogicalFilesModel(id);
     }
 

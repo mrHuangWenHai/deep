@@ -8,25 +8,25 @@ import org.apache.ibatis.session.RowBounds;
 import java.math.BigInteger;
 import java.util.List;
 
-/**
+/**int
  * create by zhongrui on 2018/2/1
  **/
 @Mapper
 public interface GenealogicalFilesMapper {
 
-    void setGenealogicalFilesModel(@Param("genealogicalFilesModel") GenealogicalFilesModel genealogicalFilesModel);
+    int insertGenealogicalFilesModel(@Param("genealogicalFilesModel") GenealogicalFilesModel genealogicalFilesModel);
 
 
     List<GenealogicalFilesModel> getGenealogicalFilesModel(@Param("genealogicalFilesModel") GenealogicalFilesModel genealogicalFilesModel,
                                                            RowBounds rowBounds
                                                            );
-    GenealogicalFilesModel getGenealogicalFilesModelByid(@Param("id") Long id);
+    GenealogicalFilesModel getGenealogicalFilesModelByid(@Param("id") int id);
     GenealogicalFilesModel getGenealogicalFilesModelByNativeEartag(@Param("nativeEartag") String nativeEartag);
     GenealogicalFilesModel getGenealogicalFilesModelByimmuneEartag(@Param("immuneEartag") String immuneEartag);
     GenealogicalFilesModel getGenealogicalFilesModelBytradeMarkEartag(@Param("tradeMarkEartag") String tradeMarkEartag);
 
     //@Delete(FROM genealogical_files WHERE self_eartag = #{SelfEartag})
-    int deleteGenealogicalFilesModel(@Param("id") Long id);
+    int deleteGenealogicalFilesModel(@Param("genealogId") int genealogId);
 
     int updateGenealogicalFilesModel(@Param("genealogicalFilesModel") GenealogicalFilesModel genealogicalFilesModel);
 
