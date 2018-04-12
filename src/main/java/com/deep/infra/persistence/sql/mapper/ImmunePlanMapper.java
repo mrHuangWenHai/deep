@@ -19,9 +19,9 @@ public interface ImmunePlanMapper {
                                                                            @Param("crowdNum") String crowdNum,
                                                                            @Param("immuneTime") String immuneTime);
 
-    List<ImmunePlanModel> getImmunePlanModelByProfessor(@Param("isPass1") Integer isPass1,
+    List<ImmunePlanModel> getImmunePlanModelByProfessor(@Param("isPass") Integer isPass ,
                                                         RowBounds bounds);
-    List<ImmunePlanModel> getImmunePlanModelBySupervisor(@Param("isPass2") Integer isPass2,
+    List<ImmunePlanModel> getImmunePlanModelBySupervisor(@Param("isPass1") Integer isPass1,
                                                          RowBounds bounds);
     ImmunePlanModel getImmunePlanModelByid(@Param("id") Long id);
 

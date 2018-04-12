@@ -74,13 +74,13 @@ public class DisinfectFilesResource {
 
         }else {
 
-            String Header = FileUtil.getFileHeader(disinfectEartagFile);
+
 
             //仅允许上传.txt .rtf(日记本格式) .doc .docx
-            if ( !"75736167".equals(Header) && !"7B5C727466".equals(Header) &&
+            /*if ( !"75736167".equals(Header) && !"7B5C727466".equals(Header) &&
                     !"D0CF11E0".equals(Header) && !"504B0304".equals(Header)) {
                 return Responses.errorResponse("Wrong file form");
-            }
+            }*/
 
             DisinfectFilesModel disinfectFilesModel1 = disinfectFilesService.getDisinfectFilesModelByfactoryNumAnddisinfectTimeAnddisinfectName(disinfectFilesModel.getFactoryNum(), disinfectFilesModel.getDisinfectTime(), disinfectFilesModel.getDisinfectName());
             if (disinfectFilesModel1 == null) {
@@ -97,8 +97,8 @@ public class DisinfectFilesResource {
 
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     disinfectFilesModel.setDisinfectEartag(fileAddress);
+                    disinfectFilesModel.setIsPass("0");
                     disinfectFilesModel.setIsPass1("0");
-                    disinfectFilesModel.setIsPass2("0");
                     disinfectFilesModel.setGmtCreate(dateFormat.format(new Timestamp(System.currentTimeMillis())));
 
                     disinfectFilesService.setDisinfectFilesModel(disinfectFilesModel);
@@ -222,7 +222,7 @@ public class DisinfectFilesResource {
     /**
      * 专家入口 查看isPass1 = 0或者isPass1 = 1的数据
      * METHOD:GET
-     * @param isPass1
+     * @param isPass
      * @param page
      * @param size
      * @return
@@ -230,15 +230,15 @@ public class DisinfectFilesResource {
 
     @ResponseBody
     @RequestMapping(value = "/pfind",method = RequestMethod.GET)
-    public Response ProfessorFind(@RequestParam(value = "isPass1",defaultValue = "2") Integer isPass1,
+    public Response ProfessorFind(@RequestParam(value = "isPass",defaultValue = "2") Integer isPass,
                                   @RequestParam(value = "page",defaultValue = "0") int page,
                                   @RequestParam(value = "size",defaultValue = "10") int size){
 
-        logger.info("invoke professorFind {}", isPass1, page, size);
-        if ("2".equals(isPass1.toString())){
+        logger.info("invoke professorFind {}", isPass, page, size);
+        if ("2".equals(isPass.toString())){
             return Responses.errorResponse("Wrong Pass num");
         }
-        List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesService.getDisinfectFilesModelByProfessor(isPass1,new RowBounds(page,size));
+        List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesService.getDisinfectFilesModelByProfessor(isPass,new RowBounds(page,size));
 
         return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
     }
@@ -259,15 +259,15 @@ public class DisinfectFilesResource {
 
         if (disinfectFilesModel.getId() == null ||
                 disinfectFilesModel.getProfessor() == null ||
-                disinfectFilesModel.getIsPass1() == null ||
-                disinfectFilesModel.getUnpassReason1() == null) {
+                disinfectFilesModel.getIsPass() == null ||
+                disinfectFilesModel.getUnpassReason() == null) {
             return Responses.errorResponse("Lack Item");
         } else {
 
             DisinfectFilesModel disinfectFilesModel1 = disinfectFilesService.getDisinfectFilesModelByid(disinfectFilesModel.getId());
             String professorWorkInRedis = disinfectFilesModel1.getId().toString() + "_disinfectFiles_professor_worked";
 
-            if (disinfectFilesModel1.getIsPass1().equals("1") ) {
+            if (disinfectFilesModel1.getIsPass().equals("1") ) {
 
                 return Responses.errorResponse("Already update");
             }else {
@@ -313,15 +313,15 @@ public class DisinfectFilesResource {
 
     @ResponseBody
     @RequestMapping(value = "/sfind",method = RequestMethod.GET)
-    public Response SupervisorFind(@RequestParam(value = "isPass2",defaultValue = "2") Integer isPass2,
+    public Response SupervisorFind(@RequestParam(value = "isPass1",defaultValue = "2") Integer isPass1,
                                    @RequestParam(value = "page",defaultValue = "0") int page,
                                    @RequestParam(value = "size",defaultValue = "10") int size){
 
-        logger.info("invoke supervisorFind {}", isPass2, page, size);
-        if ("2".equals(isPass2.toString())){
+        logger.info("invoke supervisorFind {}", isPass1, page, size);
+        if ("2".equals(isPass1.toString())){
             return Responses.errorResponse("Wrong Pass Num");
         }
-        List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesService.getDisinfectFilesModelBySupervisor(isPass2,new RowBounds(page,size));
+        List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesService.getDisinfectFilesModelBySupervisor(isPass1,new RowBounds(page,size));
 
         return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
     }
@@ -336,8 +336,7 @@ public class DisinfectFilesResource {
 
         if (disinfectFilesModel.getId() == null ||
                 disinfectFilesModel.getSupervisor() == null ||
-                disinfectFilesModel.getIsPass2() == null ||
-                disinfectFilesModel.getUnpassReason2() == null) {
+                disinfectFilesModel.getIsPass1() == null ) {
             return Responses.errorResponse("Lack Item");
         } else {
 
@@ -345,7 +344,7 @@ public class DisinfectFilesResource {
             String supervisorWorkInRedis = disinfectFilesModel1.getId().toString() + "_disinfectFiles_supervisor_worked";
 
 
-            if (disinfectFilesModel1.getIsPass2().equals("1") ) {
+            if (disinfectFilesModel1.getIsPass1().equals("1") ) {
 
                 return Responses.errorResponse("Already update");
             }else {
@@ -404,7 +403,7 @@ public class DisinfectFilesResource {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "oupdate",method = RequestMethod.PATCH)
+    @RequestMapping(value = "/oupdate",method = RequestMethod.PATCH)
     public Response OperatorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel) {
 
         logger.info("invoke operatorUpdate {}", disinfectFilesModel);
@@ -412,7 +411,10 @@ public class DisinfectFilesResource {
         if (disinfectFilesModel.getId() == null) {
 
             return Responses.errorResponse("Operate wrong");
-        } else {
+        } else if("1".equals(disinfectFilesModel.getIsPass()) && "1".equals(disinfectFilesModel.getIsPass1() )){
+            return Responses.errorResponse("Already update");
+
+        } else{
             DisinfectFilesModel disinfectFilesModel1 = this.disinfectFilesService.getDisinfectFilesModelByid(disinfectFilesModel.getId());
 
             String professorWorkInRedis = disinfectFilesModel1.getId().toString()+ "_immunePlan_professor_worked";

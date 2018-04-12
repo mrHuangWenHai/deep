@@ -28,12 +28,12 @@ public class ImmunePlanService {
         return this.immunePlanMapper.getImmunePlanModelByfactoryNumAndcrowdNumAndimmuneTime(factoryNum,crowdNum,immuneTime);
     }
 
-    public List<ImmunePlanModel> getImmunePlanModelByProfessor(Integer isPass1, RowBounds bounds){
-        return this.immunePlanMapper.getImmunePlanModelByProfessor(isPass1,bounds);
+    public List<ImmunePlanModel> getImmunePlanModelByProfessor(Integer isPass, RowBounds bounds){
+        return this.immunePlanMapper.getImmunePlanModelByProfessor(isPass,bounds);
     }
 
-    public List<ImmunePlanModel> getImmunePlanModelBySupervisor(Integer isPass2, RowBounds bounds){
-        return this.immunePlanMapper.getImmunePlanModelBySupervisor(isPass2,bounds);
+    public List<ImmunePlanModel> getImmunePlanModelBySupervisor(Integer isPass1, RowBounds bounds){
+        return this.immunePlanMapper.getImmunePlanModelBySupervisor(isPass1,bounds);
     }
 
     public ImmunePlanModel getImmunePlanModelByid(Long id){

@@ -74,10 +74,10 @@ public class RepellentPlanResource {
 
             String Header = FileUtil.getFileHeader(repellentEartagFile);
 
-            if ( !"75736167".equals(Header) && !"7B5C727466".equals(Header) &&
+            /*if ( !"75736167".equals(Header) && !"7B5C727466".equals(Header) &&
                     !"D0CF11E0".equals(Header) && !"504B0304".equals(Header)) {
                 return Responses.errorResponse("Wrong file form");
-            }
+            }*/
 
             RepellentPlanModel repellentPlanModel1 = repellentPlanService.getRepellentPlanModelByfactoryNumAndcrowdNumAndrepellentTimeAndrepellentName(repellentPlanModel.getFactoryNum(),repellentPlanModel.getCrowdNum(),repellentPlanModel.getRepellentTime(),repellentPlanModel.getRepellentName());
             if (repellentPlanModel1 == null) {
@@ -104,8 +104,8 @@ public class RepellentPlanResource {
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
 
                     repellentPlanModel.setRepellentEartag(fileAddress);
+                    repellentPlanModel.setIsPass("0");
                     repellentPlanModel.setIsPass1("0");
-                    repellentPlanModel.setIsPass2("0");
                     repellentPlanModel.setGmtCreate(simpleDateFormat.format(new Timestamp(System.currentTimeMillis())));
 
                     repellentPlanService.setRepellentPlanModel(repellentPlanModel);
@@ -225,7 +225,7 @@ public class RepellentPlanResource {
 
     /**
      * 专家入口 展示所有isPass1 = 0或者isPass1 = 1的数据
-     * @param isPass1
+     * @param isPass
      * @param page
      * @param size
      * METHOD:GET
@@ -233,12 +233,12 @@ public class RepellentPlanResource {
      */
     @ResponseBody
     @RequestMapping(value = "pfind",method = RequestMethod.GET)
-    public Response ProfessorFind(@RequestParam("isPass1") Integer isPass1,
+    public Response ProfessorFind(@RequestParam(value = "isPass",defaultValue = "2") Integer isPass,
                                   @RequestParam(value = "page",defaultValue = "0") int page,
                                   @RequestParam(value = "size",defaultValue = "10") int size){
 
-        logger.info("invoke professorFind {}", isPass1, page, size);
-        List<RepellentPlanModel> repellentPlanModels = repellentPlanService.getRepellentPlanModelByProfessor(isPass1,new RowBounds(page,size));
+        logger.info("invoke professorFind {}", isPass, page, size);
+        List<RepellentPlanModel> repellentPlanModels = repellentPlanService.getRepellentPlanModelByProfessor(isPass,new RowBounds(page,size));
 
         return JudgeUtil.JudgeFind(repellentPlanModels,repellentPlanModels.size());
     }
@@ -260,8 +260,8 @@ public class RepellentPlanResource {
 
         if (repellentPlanModel.getId() == null ||
                 repellentPlanModel.getProfessor() == null ||
-                repellentPlanModel.getIsPass1() == null ||
-                repellentPlanModel.getUnpassReason1() == null) {
+                repellentPlanModel.getIsPass() == null ||
+                repellentPlanModel.getUnpassReason() == null) {
             return Responses.errorResponse("Lack Item");
         } else {
             //System.out.println("before:"+repellentPlanModel.getId());
@@ -272,7 +272,8 @@ public class RepellentPlanResource {
 
             //return new Response().addData("",repellentPlanModel1);
             //System.out.println("isNull?"+repellentPlanModel1.getId());
-            if (repellentPlanModel1.getIsPass1().equals("1") ) {
+            //System.out.println("in redis:"+ JedisUtil.getCertainKeyValue(professorWorkInRedis));
+            if (repellentPlanModel1.getIsPass().equals("1") ) {
 
                 return Responses.errorResponse("Already update");
             } else {
@@ -316,7 +317,7 @@ public class RepellentPlanResource {
 
     /**
      * 审核入口 展示所有isPass2 = 0或者isPass2 = 1的数据
-     * @param isPass2
+     * @param isPass1
      * @param page
      * @param size
      * METHOD:GET
@@ -324,12 +325,12 @@ public class RepellentPlanResource {
      */
     @ResponseBody
     @RequestMapping(value = "sfind",method = RequestMethod.GET)
-    public Response SupervisorFind(@RequestParam("isPass2") Integer isPass2,
+    public Response SupervisorFind(@RequestParam(value = "isPass1",defaultValue = "2") Integer isPass1,
                                    @RequestParam(value = "page",defaultValue = "0") int page,
                                    @RequestParam(value = "size",defaultValue = "10") int size){
-        logger.info("invoke supervisorFind {}", isPass2, page, size);
+        logger.info("invoke supervisorFind {}", isPass1, page, size);
 
-        List<RepellentPlanModel> repellentPlanModels = repellentPlanService.getRepellentPlanModelBySupervisor(isPass2,new RowBounds(page,size));
+        List<RepellentPlanModel> repellentPlanModels = repellentPlanService.getRepellentPlanModelBySupervisor(isPass1,new RowBounds(page,size));
 
         return JudgeUtil.JudgeFind(repellentPlanModels,repellentPlanModels.size());
     }
@@ -348,8 +349,7 @@ public class RepellentPlanResource {
 
         if( repellentPlanModel.getId() == null||
                 repellentPlanModel.getSupervisor() == null||
-                repellentPlanModel.getIsPass2()== null||
-                repellentPlanModel.getUnpassReason2() == null){
+                repellentPlanModel.getIsPass1()== null){
             return Responses.errorResponse("Lack Item");
 
         }else {
@@ -359,7 +359,7 @@ public class RepellentPlanResource {
             String supervisorWorkInRedis = repellentPlanModel1.getId().toString() + "_repellentPlan_supervisor_worked";
 
 
-            if (repellentPlanModel1.getIsPass2().equals("1")){
+            if (repellentPlanModel1.getIsPass1().equals("1")){
 
                 return Responses.errorResponse("Already update");
             }else {
@@ -418,6 +418,7 @@ public class RepellentPlanResource {
         logger.info("invoke operatorUpdate {}", repellentPlanModel);
         if (repellentPlanModel.getId() == null) {
             return Responses.errorResponse("Operate wrong");
+
         } else {
 
             RepellentPlanModel repellentPlanModel1 = this.repellentPlanService.getRepellentPlanModelByid(repellentPlanModel.getId());

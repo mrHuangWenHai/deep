@@ -21,9 +21,9 @@ public interface RepellentPlanMapper {
                                                                                                     @Param("repellentName")String repellentName);
 
 
-    List<RepellentPlanModel> getRepellentPlanModelByProfessor(@Param("isPass1") Integer isPass1,
+    List<RepellentPlanModel> getRepellentPlanModelByProfessor(@Param("isPass") Integer isPass,
                                                               RowBounds bounds);
-    List<RepellentPlanModel> getRepellentPlanModelBySupervisor(@Param("isPass2") Integer isPass2,
+    List<RepellentPlanModel> getRepellentPlanModelBySupervisor(@Param("isPass1") Integer isPass1,
                                                                RowBounds bounds);
 
     RepellentPlanModel getRepellentPlanModelByid(@Param("id") Long id);
