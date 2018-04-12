@@ -58,14 +58,13 @@ public class Pic implements Serializable {
     @Size(min =8, max =8, message = "检疫耳牌长度错误")
     private String vaccine;
 
-     private String filename;
+    private String filename;
 
     private Integer returnId;
 
+    private Integer pageNumb = 1;
 
-    private Integer pageNumb;
-
-    private Integer limit;
+    private Integer limit = 10;
 
     public Integer getPageNumb() {
         return pageNumb;

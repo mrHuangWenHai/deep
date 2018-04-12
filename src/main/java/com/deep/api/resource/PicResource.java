@@ -28,14 +28,6 @@ public class PicResource {
 
     private final Logger logger = LoggerFactory.getLogger(ExampleResource.class);
 
-//    @RequestMapping(value = "/uploadFile",method = RequestMethod.GET)
-//    public String upload(){
-//
-//        return "uploadFile";
-//
-//    }
-
-
     @RequestMapping(value = "/uploadFile/upload",method = RequestMethod.POST)
     public @ResponseBody Response addPic(@Valid Pic pic,
                            @RequestParam("file")MultipartFile file,
@@ -46,12 +38,12 @@ public class PicResource {
 
         try {
             String Header = FileUtil.getFileHeader(file);
-            if (!Header.equals("FFD8FF") && !Header.equals("89504E47")  && !Header.equals("47494638") &&
-                    !Header.equals("49492A00")  && !Header.equals("424D") &&
+            if ( !Header.equals("89504E47")  && !Header.equals("47494638") &&
+                    !Header.equals("49492A00")  && !Header.equals("4D546864")&&
                     !Header.equals("57415645")  && !Header.equals("41564920") &&
                     !Header.equals("2E7261FD")  && !Header.equals("2E524D46") &&
                     !Header.equals("000001BA")  && !Header.equals("6D6F6F76") &&
-                    !Header.equals("3026B2758E66CF11") && !Header.equals("4D546864") &&
+                    !Header.equals("3026B27") && !Header.equals("58E66CF11") &&
                     !Header.equals("00000020") && !Header.equals("FFD8FFE0")
                     ) {
                 throw new Exception("文件格式错误！");
@@ -61,7 +53,6 @@ public class PicResource {
 
             Date udate = new Date();
             pic.setUdate(udate);
-//            pic.setUploader(uploader);
 
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String dateString = formatter.format(udate);
@@ -95,11 +86,6 @@ public class PicResource {
             int id = picService.insertPic(pic);
             Integer returnId = pic.getReturnId();
 
-//        PicExample picExample=new PicExample();
-//        PicExample.Criteria criteria=picExample.createCriteria();
-//        criteria.andFilenameEqualTo(pic.getFilename());
-//        List<Pic> select=picService.findPicSelective(picExample);
-
             if (id != 0) {
                 Response response = Responses.successResponse();
                 HashMap<String, Object> data = new HashMap<>();
@@ -118,12 +104,6 @@ public class PicResource {
         }
     }
 
-//    @RequestMapping(value = "/searchFile/searchByExpert",method = RequestMethod.GET)
-//    public String searchByExpert(){
-//
-//        return "searchByExpert";
-//
-//    }
     @RequestMapping(value = "/searchfile/searchByExpert",method = RequestMethod.POST)
     public @ResponseBody Response getByExpert(@RequestBody Pic pic){
         logger.info("invoke /searchfile/searchByExpert {}",pic);
@@ -143,13 +123,6 @@ public class PicResource {
         response.setData(data);
         return response;
     }
-
-//    @RequestMapping(value = "/searchFile/searchByFilename",method = RequestMethod.GET)
-//    public String searchByFilename(){
-//
-//        return "searchByFilename";
-//
-//    }
     @RequestMapping(value = "/searchfile/searchByDate",method = RequestMethod.POST)
     public @ResponseBody Response getByDate(@RequestBody Pic pic){
         logger.info("invoke /searchfile/searchByDate [{},{}]",pic.getSdate(),pic.getEdate());

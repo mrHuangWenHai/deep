@@ -269,4 +269,21 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="multiFind" parameterType="com.deep.domain.model.Message" resultMap="BaseResultMap">
+      SELECT *
+      <where>
+          <if test="message != null and message != ''">
+              and message like contact ('%', #{message}, '%')
+          </if>
+          <if test="attitude != null and attitude != ''">
+              and attitude like contact ('%', #{attitude}, '%')
+          </if>
+          <if test="intention != null and intention != ''">
+              and intention like contact ('%', #{intention}, '%')
+          </if>
+          <if test="sTime != null and sTime != '' and eTime != null and eTime != ''">
+              and inserttime BETWEEN #{sTime} AND #{eTime}
+          </if>
+      </where>
+  </select>
 </mapper>
