@@ -3,6 +3,7 @@ package com.deep.domain.service;
 import com.deep.domain.model.DiagnosisPlanExample;
 import com.deep.domain.model.DiagnosisPlanWithBLOBs;
 import com.deep.infra.persistence.sql.mapper.DiagnosisPlanMapper;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -18,23 +19,18 @@ public class DiagnosisPlanService {
     private DiagnosisPlanMapper diagnosisPlanMapper;
 
     public int addPlan(DiagnosisPlanWithBLOBs diagnosisPlanWithBLOBs){
-        int add = this.diagnosisPlanMapper.insert(diagnosisPlanWithBLOBs);
-        return add;
+        return this.diagnosisPlanMapper.insert(diagnosisPlanWithBLOBs);
     }
     public int dropPlan(Integer id){
-        int drop = this.diagnosisPlanMapper.deleteByPrimaryKey(id);
-        return drop;
+        return this.diagnosisPlanMapper.deleteByPrimaryKey(id);
     }
     public int changePlanSelective(DiagnosisPlanWithBLOBs diagnosisPlanWithBLOBs){
-        int change = this.diagnosisPlanMapper.updateByPrimaryKeySelective(diagnosisPlanWithBLOBs);
-        return change;
+        return this.diagnosisPlanMapper.updateByPrimaryKeySelective(diagnosisPlanWithBLOBs);
     }
     public DiagnosisPlanWithBLOBs findPlanById(Integer id){
-        DiagnosisPlanWithBLOBs find = this.diagnosisPlanMapper.selectByPrimaryKey(id);
-        return find;
+        return this.diagnosisPlanMapper.selectByPrimaryKey(id);
     }
-    public List<DiagnosisPlanWithBLOBs> findPlanSelective(DiagnosisPlanExample diagnosisPlanExample){
-        List<DiagnosisPlanWithBLOBs> find = this.diagnosisPlanMapper.selectByExampleWithBLOBs(diagnosisPlanExample);
-        return find;
+    public List<DiagnosisPlanWithBLOBs> findPlanSelective(DiagnosisPlanExample diagnosisPlanExample, RowBounds rowBounds){
+        return this.diagnosisPlanMapper.selectByExampleWithBLOBsWithRowbounds(diagnosisPlanExample,rowBounds);
     }
 }

@@ -19,24 +19,19 @@ public class BreedingPlanService {
     private BreedingPlanMapper breedingPlanMapper;
 
         public int addPlan(BreedingPlan breedingPlan){
-            int add = this.breedingPlanMapper.insert(breedingPlan);
-            return add;
+            return this.breedingPlanMapper.insert(breedingPlan);
     }
         public int dropPlan(Integer id){
-            int drop = this.breedingPlanMapper.deleteByPrimaryKey(id);
-            return drop;
+            return this.breedingPlanMapper.deleteByPrimaryKey(id);
     }
         public int changePlanSelective(BreedingPlan breedingPlan){
-            int changeByOperator = this.breedingPlanMapper.updateByPrimaryKeySelective(breedingPlan);
-            return changeByOperator;
+            return this.breedingPlanMapper.updateByPrimaryKeySelective(breedingPlan);
     }
         public BreedingPlan findPlanById(Integer id){
-            BreedingPlan findById = this.breedingPlanMapper.selectByPrimaryKey(id);
-            return findById;
+            return this.breedingPlanMapper.selectByPrimaryKey(id);
     }
         public List<BreedingPlan> findPlanSelective(BreedingPlanExample breedingPlanExample, RowBounds rowBounds){
-            List<BreedingPlan> findSelective = this.breedingPlanMapper.selectByExampleWithRowbounds(breedingPlanExample,rowBounds);
-            return findSelective;
+            return this.breedingPlanMapper.selectByExampleWithRowbounds(breedingPlanExample,rowBounds);
     }
 }
 

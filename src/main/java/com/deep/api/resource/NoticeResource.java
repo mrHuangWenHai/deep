@@ -1,16 +1,17 @@
 package com.deep.api.resource;
 
 import com.deep.api.Utils.FileUtil;
+import com.deep.api.request.NoticePlanModel;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.NoticePlan;
 import com.deep.domain.model.NoticePlanExample;
 import com.deep.domain.model.OtherTime;
 import com.deep.domain.service.NoticePlanService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,8 +36,6 @@ import java.util.List;
  */
 @Controller
 public class NoticeResource {
-
-    private final Logger logger = LoggerFactory.getLogger(NoticeResource.class);
     @Resource
     private NoticePlanService noticePlanService;
 
@@ -59,10 +58,8 @@ public class NoticeResource {
     public Response addPlan(@Valid NoticePlan insert,
                             HttpServletRequest request,
                             BindingResult bindingResult){
-        logger.info("invoke noticeInsert/show {}",insert,request,bindingResult);
         if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("信息发布失败！");
-            return response;
+            return Responses.errorResponse("信息发布失败！");
         }else {
             List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
             if (files.size() !=0){
@@ -98,8 +95,7 @@ public class NoticeResource {
                     }
                 }catch (Exception e){
                     System.out.println(e.getMessage());
-                    Response response = Responses.errorResponse(e.getMessage());
-                    return response;
+                    return Responses.errorResponse(e.getMessage());
                 }
                 if (!file.isEmpty()) {
                     try {
@@ -139,20 +135,13 @@ public class NoticeResource {
     }
     @ResponseBody
         @RequestMapping(value = "/noticeDeleteById/show",method = RequestMethod.DELETE)
-    public Response dropPlan(@Valid NoticePlan delete,
-                             BindingResult bindingResult){
-        logger.info("invoke noticeDeleteById/show {}",delete,bindingResult);
-        if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("信息发布失败！");
-            return response;
-        }else {
-            noticePlanService.dropPlan(delete.getId());
-            Response response = Responses.successResponse();
-            HashMap<String, Object> data = new HashMap<>();
-            data.put("notice_plan",delete);
-            response.setData(data);
-            return response;
-        }
+    public Response dropPlan(@RequestBody @Valid NoticePlan delete){
+        noticePlanService.dropPlan(delete.getId());
+        Response response = Responses.successResponse();
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("notice_plan",delete);
+        response.setData(data);
+        return response;
     }
 
 //    按主键修改的接口：/noticeUpdate
@@ -167,10 +156,8 @@ public class NoticeResource {
     public Response changePlan(@Valid NoticePlan update,
                                HttpServletRequest request,
                                BindingResult bindingResult){
-        logger.info("invoke noticeUpdate/show {}",update,request,bindingResult);
         if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("信息修改失败！");
-            return response;
+            return Responses.errorResponse("信息修改失败！");
         }else {
             List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
             if (files.size() !=0){
@@ -206,8 +193,7 @@ public class NoticeResource {
                     }
                 }catch (Exception e){
                     System.out.println(e.getMessage());
-                    Response response = Responses.errorResponse(e.getMessage());
-                    return response;
+                    return Responses.errorResponse(e.getMessage());
                 }
                 if (!file.isEmpty()) {
                     try {
@@ -250,10 +236,8 @@ public class NoticeResource {
     @RequestMapping(value = "/noticeSelectById/show",method = RequestMethod.GET)
     public Response findPlanById(@Valid NoticePlan noticePlan,
                                  BindingResult bindingResult){
-        logger.info("invoke noticeSelectById/show {}",noticePlan,bindingResult);
         if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("根据主键查询失败！");
-            return response;
+            return Responses.errorResponse("根据主键查询失败！");
         }else {
             NoticePlan selectById = noticePlanService.findPlanById(noticePlan.getId());
             Response response = Responses.successResponse();
@@ -272,15 +256,56 @@ public class NoticeResource {
         return "NoticeSelective";
     }
     @ResponseBody
-    @RequestMapping(value = "/noticeSelective/show",method = RequestMethod.GET)
-    public Response findPlanSelective(@Valid NoticePlan noticePlan,
-                                      @Valid OtherTime otherTime,
+    @RequestMapping(value = "/noticeSelective/show",method = RequestMethod.POST)
+    public Response findPlanSelective(@RequestBody @Valid NoticePlanModel planModel,
                                       BindingResult bindingResult) throws ParseException{
-        logger.info("invoke noticeSelective/show {}",noticePlan,otherTime,bindingResult);
         if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("根据条件查询失败！");
-            return response;
+            return Responses.errorResponse("根据条件查询失败！");
         }else {
+            //将planModel部分变量拆分传递给对象insert
+            NoticePlan noticePlan = new NoticePlan();
+            noticePlan.setId(planModel.getId());
+            noticePlan.setGmtCreate(planModel.getGmtCreate());
+            noticePlan.setGmtModified(planModel.getGmtModified());
+            noticePlan.setProfessor(planModel.getProfessor());
+            noticePlan.setType(planModel.getType());
+            noticePlan.setTitle(planModel.getTitle());
+            noticePlan.setFilepath(planModel.getFilepath());
+            noticePlan.setSuffixname(planModel.getSuffixname());
+            noticePlan.setContent(planModel.getContent());
+            //将planModel部分变量拆分传递给对象otherTime
+            OtherTime otherTime = new OtherTime();
+            otherTime.setSearch_string(planModel.getSearch_string());
+            otherTime.setS_breedingT(planModel.getS_breedingT());
+            System.out.println(otherTime.getS_breedingT());
+            otherTime.setS_gestationT(planModel.getS_gestationT());
+            System.out.println(otherTime.getS_gestationT());
+            otherTime.setS_prenatalIT(planModel.getS_prenatalIT());
+            System.out.println(otherTime.getS_prenatalIT());
+            otherTime.setS_cubT(planModel.getS_cubT());
+            System.out.println(otherTime.getS_cubT());
+            otherTime.setS_diagnosisT(planModel.getS_diagnosisT());
+            otherTime.setS_nutritionT(planModel.getS_nutritionT());
+            otherTime.setS_gmtCreate1(planModel.getS_gmtCreate1());
+            otherTime.setS_gmtCreate2(planModel.getS_gmtCreate2());
+            otherTime.setS_gmtModified1(planModel.getS_gmtModified1());
+            otherTime.setS_gmtModified2(planModel.getS_gmtModified2());
+            otherTime.setS_breedingT1(planModel.getS_breedingT1());
+            otherTime.setS_breedingT2(planModel.getS_breedingT2());
+            otherTime.setS_prenatalIT1(planModel.getS_prenatalIT1());
+            otherTime.setS_prenatalIT2(planModel.getS_prenatalIT2());
+            otherTime.setS_gestationT1(planModel.getS_gestationT1());
+            otherTime.setS_gestationT2(planModel.getS_gestationT2());
+            otherTime.setS_cubT1(planModel.getS_cubT1());
+            otherTime.setS_cubT2(planModel.getS_cubT2());
+            otherTime.setS_diagnosisT1(planModel.getS_diagnosisT1());
+            otherTime.setS_diagnosisT2(planModel.getS_diagnosisT2());
+            otherTime.setS_nutritionT1(planModel.getS_nutritionT1());
+            otherTime.setS_nutritionT2(planModel.getS_nutritionT2());
+            otherTime.setDownloadPath(planModel.getDownloadPath());
+            otherTime.setPage(planModel.getPage());
+            otherTime.setSize(planModel.getSize());
+
             Date gmtCreate1 = null;
             Date gmtCreate2 = null;
             Date gmtModified1 = null;
@@ -288,30 +313,30 @@ public class NoticeResource {
             SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd HH:mm:SS");
             NoticePlanExample noticePlanExample = new NoticePlanExample();
             NoticePlanExample.Criteria criteria = noticePlanExample.createCriteria();
-            if (otherTime.getS_gmtCreate1() != null && otherTime.getS_gmtCreate1() != "" && otherTime.getS_gmtCreate2() != null && otherTime.getS_gmtCreate2() != ""){
+            if (otherTime.getS_gmtCreate1() != null && !otherTime.getS_gmtCreate1().isEmpty() && otherTime.getS_gmtCreate2() != null && !otherTime.getS_gmtCreate2().isEmpty()){
                 gmtCreate1 =  formatter.parse(otherTime.getS_gmtCreate1());
                 gmtCreate2 =  formatter.parse(otherTime.getS_gmtCreate2());
             }
-            if (otherTime.getS_gmtModified1() != null && otherTime.getS_gmtModified1() != "" && otherTime.getS_gmtModified2() != null && otherTime.getS_gmtModified2() != ""){
+            if (otherTime.getS_gmtModified1() != null && !otherTime.getS_gmtModified1().isEmpty() && otherTime.getS_gmtModified2() != null && !otherTime.getS_gmtModified2().isEmpty()){
                 gmtModified1 =  formatter.parse(otherTime.getS_gmtModified1());
                 gmtModified2 =  formatter.parse(otherTime.getS_gmtModified2());
             }
-            if(noticePlan.getGmtCreate() != null && noticePlan.getGmtCreate().toString() !=""){
+            if(noticePlan.getGmtCreate() != null && !noticePlan.getGmtCreate().toString().isEmpty()){
                 criteria.andGmtCreateBetween(gmtCreate1,gmtCreate2);
             }
-            if(noticePlan.getGmtModified() != null && noticePlan.getGmtModified().toString() !=""){
+            if(noticePlan.getGmtModified() != null && !noticePlan.getGmtModified().toString().isEmpty()){
                 criteria.andGmtModifiedBetween(gmtModified1,gmtModified2);
             }
-            if(noticePlan.getId() != null && noticePlan.getId().toString() !=""){
+            if(noticePlan.getId() != null && !noticePlan.getId().toString().isEmpty()){
                 criteria.andIdEqualTo(noticePlan.getId());
             }
-            if(noticePlan.getProfessor() != null && noticePlan.getProfessor() !=""){
+            if(noticePlan.getProfessor() != null && !noticePlan.getProfessor().isEmpty()){
                 criteria.andProfessorEqualTo(noticePlan.getProfessor());
             }
-            if(noticePlan.getType() != null && noticePlan.getType().toString() !=""){
+            if(noticePlan.getType() != null && !noticePlan.getType().toString().isEmpty()){
                 criteria.andTypeEqualTo(noticePlan.getType());
             }
-            List<NoticePlan> selective = noticePlanService.findPlanSelective(noticePlanExample);
+            List<NoticePlan> selective = noticePlanService.findPlanSelective(noticePlanExample,new RowBounds(otherTime.getPage(),otherTime.getSize()));
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("notice_plan",selective);
@@ -328,13 +353,11 @@ public class NoticeResource {
         return "SearchInSite";
     }
     @ResponseBody
-    @RequestMapping(value = "/searchInSite/show",method = RequestMethod.GET)
-    public Response searchInSite(@Valid OtherTime otherTime,
+    @RequestMapping(value = "/searchInSite/show",method = RequestMethod.POST)
+    public Response searchInSite(@RequestBody @Valid OtherTime otherTime,
                                  BindingResult bindingResult){
-        logger.info("invoke searchInSite/show {}",otherTime,bindingResult);
         if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("输入有误，站内搜索失败！");
-            return response;
+            return Responses.errorResponse("输入有误，站内搜索失败！");
         }else {
             List<NoticePlan> selectInSite = noticePlanService.selectInSite(otherTime.getSearch_string());
             Response response = Responses.successResponse();
@@ -355,11 +378,9 @@ public class NoticeResource {
     @ResponseBody
     @RequestMapping(value = "/upload/show",method = RequestMethod.POST)
     public Response uploadFile(HttpServletRequest request){
-        logger.info("invoke upload/show {}",request);
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
-        String filepath = request.getSession().getServletContext().getContextPath()+"../picture/rich_text_format/";
+        String filepath = "../picture/rich_text_format/";
         List<String> path = new ArrayList<>();
-//        request.getAttribute(); 获取前端Token
         for (int i = 0; i < files.size(); i++) {
             MultipartFile file = files.get(i);
             String filename = file.getOriginalFilename();
@@ -384,8 +405,7 @@ public class NoticeResource {
                 }
             }catch (Exception e){
                 System.out.println(e.getMessage());
-                Response response = Responses.errorResponse(e.getMessage());
-                return response;
+                return Responses.errorResponse(e.getMessage());
             }
             if (!file.isEmpty()) {
                 try {
@@ -411,11 +431,10 @@ public class NoticeResource {
         return "Download";
     }
     @ResponseBody
-    @RequestMapping(value = "/downloadFile",method = RequestMethod.GET)
-    public String downloadFile(@Valid OtherTime otherTime,
-                               HttpServletResponse response,
-                               BindingResult bindingResult){
-        logger.info("invoke downloadFile {}",otherTime,response,bindingResult);
+    @RequestMapping(value = "/downloadFile",method = RequestMethod.POST)
+    public String downloadFile(@RequestBody @Valid OtherTime otherTime,
+                               BindingResult bindingResult,
+                               HttpServletResponse response){
         if (bindingResult.hasErrors()) {
             System.out.println("下载文件失败，请重试!");
         }else {
