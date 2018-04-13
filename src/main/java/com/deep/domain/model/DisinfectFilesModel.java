@@ -1,19 +1,32 @@
 package com.deep.domain.model;
 
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 
 public class DisinfectFilesModel {
+
     private Long id;      //id
+
     private String disinfectEartag;
+    @NotNull
+    @Min(0)
     private BigInteger factoryNum;     //工厂号
+    @NotBlank
     private String disinfectTime;     //消毒时间
+    @NotBlank
     private String disinfectName;     //消毒药品名称
+    @NotBlank
     private String disinfectQuality;    //用药剂量
+    @NotBlank
     private String disinfectWay;     //消毒方法
+    @NotBlank
     private String operator;      //操作员(创建表操作人员)
     private String professor;       //技术审核(审核表人员 专家) 可空
     private String supervisor;       //监督员(监督操作员人员) 可空
+    @NotBlank
     private String remark;        //备注
     private String isPass;       //是否通过审核 可空 默认为 0
     private String unpassReason;   //未通过审核原因 可空 默认未 无
@@ -225,4 +238,32 @@ public class DisinfectFilesModel {
     public void setSize(int size) {
         this.size = size;
     }
+
+  @Override
+  public String toString() {
+    return "DisinfectFilesModel{" +
+        "id=" + id +
+        ", disinfectEartag='" + disinfectEartag + '\'' +
+        ", factoryNum=" + factoryNum +
+        ", disinfectTime='" + disinfectTime + '\'' +
+        ", disinfectName='" + disinfectName + '\'' +
+        ", disinfectQuality='" + disinfectQuality + '\'' +
+        ", disinfectWay='" + disinfectWay + '\'' +
+        ", operator='" + operator + '\'' +
+        ", professor='" + professor + '\'' +
+        ", supervisor='" + supervisor + '\'' +
+        ", remark='" + remark + '\'' +
+        ", isPass='" + isPass + '\'' +
+        ", unpassReason='" + unpassReason + '\'' +
+        ", isPass1='" + isPass1 + '\'' +
+        ", gmtCreate='" + gmtCreate + '\'' +
+        ", gmtModified='" + gmtModified + '\'' +
+        ", gmtProfessor='" + gmtProfessor + '\'' +
+        ", gmtSupervise='" + gmtSupervise + '\'' +
+        ", disinfectTimeStart='" + disinfectTimeStart + '\'' +
+        ", disinfectTimeEnd='" + disinfectTimeEnd + '\'' +
+        ", page=" + page +
+        ", size=" + size +
+        '}';
+  }
 }

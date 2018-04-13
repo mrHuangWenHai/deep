@@ -5,10 +5,12 @@ import com.deep.api.response.Responses;
 import com.deep.domain.model.MobileAnnouncementModel;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 
 import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 
 /**
@@ -19,9 +21,14 @@ import java.util.logging.Logger;
 public class JedisUtil {
 
 
-    private static Jedis jedis = new Jedis("localhost");
+    private static Jedis jedis = new Jedis("localhost",6379,5000);
+    private final static Logger logger = LoggerFactory.getLogger(JedisUtil.class);
+    private final static String pressureTips = "50";
+    private final static String message = "请尽快完成任务";
+    private final static String expireTime = "3";
 
     public JedisUtil() {
+
     }
 
     /**
@@ -31,6 +38,20 @@ public class JedisUtil {
      * @param key
      */
     public static boolean redisJudgeTime(String key){
+
+        String valuei = jedis.get(key);
+        String valuej = jedis.get("PressureTips");
+
+        if (valuei == null || valuei.equals("")) {
+          jedis.set(key,"0");
+          valuei = "0";
+        }
+
+        if (valuej == null || valuej.equals("")) {
+          jedis.set("PressureTips",pressureTips);
+          valuej = pressureTips;
+        }
+
         int i = Integer.parseInt(jedis.get(key));
         int j = Integer.parseInt(jedis.get("PressureTips"));
         return i > j;
@@ -48,11 +69,14 @@ public class JedisUtil {
      * 功能：在操作员添加了一条数据后,redis中对应数据+1
      * @param key
      */
-    public static void redisSaveProfessorSupervisorWorks(String key){
+    public static void redisSaveProfessorSupervisorWorks(String key) {
+
         String temValue = jedis.get(key);
-        if (temValue == null){
+
+        if (temValue == null) {
+
             jedis.set(key,"1");
-        }else {
+        } else {
             //System.out.println("断点1");
             Integer v = Integer.parseInt(temValue);
             v += 1;
@@ -69,9 +93,9 @@ public class JedisUtil {
      * 功能：在专家/审核员 处理了一条数据后,redis中对应数据-1
      * @param key
      */
-    public static boolean redisCancelProfessorSupervisorWorks(String key){
+    public static boolean redisCancelProfessorSupervisorWorks(String key) {
         String temValue = jedis.get(key);
-        if (temValue == null || "0".equals(temValue)){
+        if (temValue == null || "0".equals(temValue)) {
             return false;
         }else {
             //System.out.println("断点1");
@@ -121,7 +145,7 @@ public class JedisUtil {
                 System.out.println("Send message failed,code is "+error_code+",msg is "+error_msg);
             }
         } catch (JSONException ex) {
-            Logger.getLogger(MobileAnnouncementModel.class.getName()).log(Level.SEVERE, null, ex);
+        //    Logger.getLogger(MobileAnnouncementModel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         httpResponse =  mobileAnnouncementModel.testStatus();
@@ -136,7 +160,7 @@ public class JedisUtil {
                 System.out.println("Fetch deposit failed,code is "+error_code+",msg is "+error_msg);
             }
         } catch (JSONException ex) {
-            Logger.getLogger(MobileAnnouncementModel.class.getName()).log(Level.SEVERE, null, ex);
+           // Logger.getLogger(MobileAnnouncementModel.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -161,7 +185,7 @@ public class JedisUtil {
                 System.out.println("Send message failed,code is "+error_code+",msg is "+error_msg);
             }
         } catch (JSONException ex) {
-            Logger.getLogger(MobileAnnouncementModel.class.getName()).log(Level.SEVERE, null, ex);
+           // Logger.getLogger(MobileAnnouncementModel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         httpResponse =  mobileAnnouncementModel.testStatus();
@@ -176,7 +200,7 @@ public class JedisUtil {
                 System.out.println("Fetch deposit failed,code is "+error_code+",msg is "+error_msg);
             }
         } catch (JSONException ex) {
-            Logger.getLogger(MobileAnnouncementModel.class.getName()).log(Level.SEVERE, null, ex);
+          //  Logger.getLogger(MobileAnnouncementModel.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -188,7 +212,8 @@ public class JedisUtil {
      * @param key
      * @param expireTime
      */
-    public static void expireCertainKey(String key, int expireTime){
+    public static void expireCertainKey(String key, int expireTime) {
+
         jedis.expire(key, expireTime);
     }
 
@@ -197,7 +222,15 @@ public class JedisUtil {
      * @param key
      * @return
      */
-    public static String getCertainKeyValue(String key){
+    public static String getCertainKeyValue(String key) {
+        String message = jedis.get(key);
+        if (message == null || message.length() == 0) {
+          if (key.equals("Message")) {
+            jedis.set(key, JedisUtil.message);
+          } else if (key.equals("ExpireTime")) {
+            jedis.set(key, JedisUtil.expireTime);
+          }
+        }
         return jedis.get(key);
     }
 

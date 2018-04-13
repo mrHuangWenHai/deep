@@ -14,14 +14,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
 
 @Controller
 @RequestMapping(value = "/ip")
@@ -52,7 +50,7 @@ public class ImmunePlanResource {
      */
     @ResponseBody
     @RequestMapping(value = "/saveshow", method = RequestMethod.POST)
-    public Response SaveShow(@Valid ImmunePlanModel immunePlanModel,
+    public Response saveShow(@Valid ImmunePlanModel immunePlanModel,
                              @RequestParam("immuneEartagFile") MultipartFile immuneEartagFile,
                              HttpServletRequest request)  {
 
@@ -69,6 +67,7 @@ public class ImmunePlanResource {
                 immunePlanModel.getRemark() == null ||
                 immuneEartagFile.isEmpty()) {
             return Responses.errorResponse("Lack Item");
+
         } else {
 
             String Header = FileUtil.getFileHeader(immuneEartagFile);
@@ -195,7 +194,7 @@ public class ImmunePlanResource {
                         e.printStackTrace();
                     }
 
-                }else {
+                } else {
                     return Responses.errorResponse("Already Exist");
                 }
             }
@@ -213,7 +212,7 @@ public class ImmunePlanResource {
      */
     @ResponseBody
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
-    public Response FindShow(@RequestBody ImmunePlanModel immunePlanModel) {
+    public Response findShow(@RequestBody ImmunePlanModel immunePlanModel) {
 
         logger.info("invoke findShow {}", immunePlanModel);
 
@@ -238,7 +237,7 @@ public class ImmunePlanResource {
      */
     @ResponseBody
     @RequestMapping(value = "pfind",method = RequestMethod.GET)
-    public Response ProfessorFind(@RequestParam(value = "isPass",defaultValue = "2") Integer isPass,
+    public Response professorFind(@RequestParam(value = "isPass",defaultValue = "2") Integer isPass,
                                   @RequestParam(value = "page",defaultValue = "0") int page,
                                   @RequestParam(value = "size",defaultValue = "10") int size){
         logger.info("invoke professorFind {}", isPass, page, size);
@@ -283,7 +282,7 @@ public class ImmunePlanResource {
                 //isPass1=0 审核未通过
             }else {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                if ("1".equals(JedisUtil.getCertainKeyValue(professorWorkInRedis))){
+                if ("1".equals(JedisUtil.getCertainKeyValue(professorWorkInRedis))) {
 
                     //System.out.println("professor No redis");
                     immunePlanModel.setGmtProfessor(simpleDateFormat.format(new Timestamp(System.currentTimeMillis())));
@@ -297,9 +296,9 @@ public class ImmunePlanResource {
                     immunePlanModel.setGmtProfessor(simpleDateFormat.format(new Timestamp(System.currentTimeMillis())));
                     int row = immunePlanService.updateImmunePlanModelByProfessor(immunePlanModel);
 
-                    if( row == 0){
+                    if( row == 0) {
                         return JudgeUtil.JudgeUpdate(row);
-                    }else {
+                    } else {
                         //更新成功 redis数据库种对应数据-1
                         JedisUtil.setCertainKeyValue(professorWorkInRedis,"1");
 

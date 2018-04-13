@@ -17,8 +17,7 @@ public class UploadUtil {
         }
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMddhhMMss");
         Calendar calendar = Calendar.getInstance();
-
-        fileName = dateFormat.format(calendar.getTime());
+        fileName = dateFormat.format(calendar.getTime()) + fileName;
         FileOutputStream out = new FileOutputStream(filePath + fileName);
         fileAddress = filePath + fileName;
 //        System.out.println("filePath:"+filePath);

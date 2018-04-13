@@ -135,10 +135,8 @@ public class GenealogicalFilesResource {
     @ResponseBody
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
 
-    public Response delete(@RequestParam("id") int id){
-
+    public Response delete(@RequestParam("id") int id) {
         logger.info("invoke delete {}", id);
-
         int row = genealogicalFilesService.deleteGenealogicalFilesModel(id);
         return JudgeUtil.JudgeDelete(row);
     }
