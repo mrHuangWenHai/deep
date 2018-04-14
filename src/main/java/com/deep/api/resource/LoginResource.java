@@ -3,7 +3,7 @@ package com.deep.api.resource;
 import com.deep.api.Utils.JedisUtil;
 import com.deep.api.Utils.MobileAnnouncementUtil;
 import com.deep.api.authorization.token.TokenModel;
-import com.deep.api.authorization.tools.RoleAndPermit;
+import com.deep.api.request.LoginRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.AgentModel;
@@ -11,6 +11,7 @@ import com.deep.domain.model.FactoryModel;
 import com.deep.domain.model.UserModel;
 import com.deep.domain.service.AgentService;
 import com.deep.domain.service.FactoryService;
+import com.deep.domain.service.RoleService;
 import com.deep.domain.service.UserService;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +38,9 @@ public class LoginResource {
     private AgentService agentService;
 
     @Resource
+    private RoleService roleService;
+
+    @Resource
     private MobileAnnouncementUtil mobileAnnouncementModel;
 
     @Resource
@@ -44,14 +48,14 @@ public class LoginResource {
 
     /**
      * 用户登录验证并且返回结果
-     * @param userModelTest 用户登录加的模型
+     * @param loginRequest 用户登录加的模型
      * @return0
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public Response LoginResult(@RequestBody UserModel userModelTest, HttpServletResponse httpServletResponse){
-        logger.info("invoke LoginResult{}, url is /login", userModelTest, httpServletResponse);
-        String username = userModelTest.getPkUserid();
-        String password = userModelTest.getUserPwd();
+    public Response LoginResult(@RequestBody LoginRequest loginRequest, HttpServletResponse httpServletResponse){
+        logger.info("invoke LoginResult{}, url is /login", loginRequest, httpServletResponse);
+        String username = loginRequest.getUsername();
+        String password = loginRequest.getPassword();
         UserModel userModel = userService.getUserByPkuserID(username);
         if(userModel == null) {
             //数据库中未查到用户名
@@ -60,7 +64,6 @@ public class LoginResource {
             data.put("errorMessage", "error");
             response.setData(data);
             return response;
-
         }else {
             // 验证密码信息, 忽略大小写
             if(userModel.getUserPwd().equalsIgnoreCase(password)){
@@ -80,20 +83,17 @@ public class LoginResource {
 
                 }
                 response.setData(data);
-                RoleAndPermit userRoleAndPermit = userService.findRoleByUserID(userModel.getId());
-
-                Long roleInt = userRoleAndPermit.getRole();
-                byte extend = userRoleAndPermit.getExtended();                  // 拓展权限标志
-                String extendPermit = userRoleAndPermit.getExtendedPermit();      // 拓展权限
-
-                // 记录其拓展权限, should be roll back
-                String allPermit = "0000000000000000000000000000000000000000000000000000000000000000" +
-                        "0000000000000000000000000000000000000000000000000000000000000000" +
-                        "0000000000000000000000000000000000000000000000000000000000000000";
+                Long roleInt = userModel.getUserRole();
+                String defaultPermit = roleService.findRoleDefaultPermits(userModel.getUserRole());
+                defaultPermit =  roleService.findExtendPermit(defaultPermit, userModel.getUserPermit());
 
                 TokenModel tokenModel = new TokenModel(userModel.getId(), String.valueOf(roleInt));
-                JedisUtil.setValue(String.valueOf(userModel.getId()),tokenModel.getToken());
+                JedisUtil.setValue(String.valueOf(userModel.getId()), tokenModel.getToken());
                 JedisUtil.doExpire(String.valueOf(userModel.getId()));
+
+                JedisUtil.setValue("defaultPermit" + userModel.getId(), defaultPermit);
+                JedisUtil.doExpire("defaultPermit" + userModel.getId());
+
                 httpServletResponse.setHeader("Authorization", userModel.getId() + ":" + tokenModel.getToken());
                 return response;
             }else {

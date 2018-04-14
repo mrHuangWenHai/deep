@@ -37,7 +37,7 @@ public class UserService {
         private long id;;                      // 用户表的主键
         private String pkUserid;               // 用户名
         private Map userRole;                  // 用户角色
-        private Map userPermit;                // 用户所具有的权限
+        private String userPermit;                // 用户所具有的权限
         private Map userFactory;               // 用户所属羊场
         private long agentFather;            // 用户所在的ＡＧＥＮＴ，如果是羊场，则不为空，否则为空
 
@@ -84,11 +84,11 @@ public class UserService {
             this.userRole = userRole;
         }
 
-        public Map getUserPermit() {
+        public String getUserPermit() {
             return userPermit;
         }
 
-        public void setUserPermit(Map userPermit) {
+        public void setUserPermit(String userPermit) {
             this.userPermit = userPermit;
         }
     }
@@ -290,8 +290,6 @@ public class UserService {
         UserLogin userLogin = new UserLogin();
         // 用户角色信息
         Map roleMapper = new HashMap();
-        // 用户权限信息
-        Map permitMapper = new HashMap();
         // 用户代理羊场信息
         Map factoryOrAgentMapper = new HashMap();
         userLogin.setId(userModel.getId());
@@ -300,14 +298,12 @@ public class UserService {
         roleMapper.put("roleName", roleName);
         roleMapper.put("roleNum", userModel.getUserRole());
         userLogin.setUserRole(roleMapper);
-        permitMapper = roleService.findRolePermits(userModel.getUserRole());
+        String allPermits = roleService.findRolePermits(userModel.getUserRole());
         // 判断是否有拓展权限
-        if (userModel.getIsExtended() == 0) {
-            // 没有拓展权限
-        } else {
-            permitMapper = roleService.findExtendPermit(permitMapper, userModel.getUserPermit());
+        if (userModel.getIsExtended() == 1) {
+            allPermits = roleService.findExtendPermit(allPermits, userModel.getUserPermit());
         }
-        userLogin.setUserPermit(permitMapper);
+        userLogin.setUserPermit(allPermits);
         int isFactory = userModel.getIsFactory();
         long factoryId = userModel.getUserFactory();
         // 判断客户的类型(代理(总公司)\羊场\游客)
@@ -316,8 +312,6 @@ public class UserService {
             FactoryModel factoryModel = factoryService.getOneFactory(factoryId);
             Logger logger = LoggerFactory.getLogger(UserService.class);
             logger.info("isFactory", factoryModel);
-            System.out.println(factoryId);
-            System.out.println(factoryModel.getBreadName());
             if (factoryModel != null) {
                 factoryOrAgentMapper.put("factoryNum", factoryModel.getId());
                 factoryOrAgentMapper.put("factoryName",factoryModel.getBreadName());
@@ -338,8 +332,8 @@ public class UserService {
 
     /**
      * 获取同类的角色
-     * @param roleID
-     * @return
+     * @param roleID    角色ID
+     * @return  人员列表
      */
     public List<UserModel> getRoles(long roleID) {
         return userMapper.getOneRoles(roleID);
@@ -347,8 +341,8 @@ public class UserService {
 
     /**
      * 修改用户密码
-     * @param userPwd
-     * @return
+     * @param userPwd   用户密码
+     * @return  影响行数
      */
     public Long updateUserPwd(String userPwd, String username) {
         return userMapper.updateUserPwd(userPwd, username);
@@ -356,8 +350,8 @@ public class UserService {
 
     /**
      * 获取羊场上级代理的专家信息(测试, only 测试)
-     * @param factoryNumber
-     * @return
+     * @param factoryNumber 羊场编号
+     * @return  羊场对应专家的电话号码集合
      */
     public List<String> getUserTelephoneByfactoryNum(BigInteger factoryNumber) {
         short agentID = factoryService.getAgentIDByFactoryNumber(factoryNumber.toString());
@@ -372,7 +366,7 @@ public class UserService {
 
     /**
      * 查询某个羊场下的所有用户
-     * @param factoryOrAgentID
+     * @param factoryOrAgentID  羊场或者代理的ID
      * @return
      */
     public List<UserModel> getAllUserOfFactoryOrAgent(Long factoryOrAgentID) {
@@ -381,7 +375,7 @@ public class UserService {
 
     /**
      * 获取所有的专家信息, 包括在线和没有在线的专家
-     * @param agents
+     * @param agents    代理的集合
      * @return
      */
     public Map<String, Object> getProfessor(List<AgentModel> agents) {
@@ -395,8 +389,8 @@ public class UserService {
 
     /**
      * 获取上级专家的在线信息
-     * @param agentID
-     * @return
+     * @param agentID   代理主键ID
+     * @return 数据的类型, 之后要将其改成Request的模板类
      */
     public UserModel getFatherProfessors(long agentID) {
         List<UserModel> models = new ArrayList<>();
