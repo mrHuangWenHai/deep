@@ -36,11 +36,13 @@ public class UserService {
     public class UserLogin {
         private long id;;                      // 用户表的主键
         private String pkUserid;               // 用户名
-        private String userPwd;                // 密码
-        private String userPic;                // 用户照片存储路径
         private Map userRole;                  // 用户角色
         private Map userPermit;                // 用户所具有的权限
         private Map userFactory;               // 用户所属羊场
+        private long agentFather;            // 用户所在的ＡＧＥＮＴ，如果是羊场，则不为空，否则为空
+
+        public UserLogin() {
+        }
 
         public Map getUserFactory() {
             return userFactory;
@@ -66,20 +68,12 @@ public class UserService {
             this.pkUserid = pkUserid;
         }
 
-        public String getUserPwd() {
-            return userPwd;
+        public long getAgentFather() {
+            return agentFather;
         }
 
-        public void setUserPwd(String userPwd) {
-            this.userPwd = userPwd;
-        }
-
-        public String getUserPic() {
-            return userPic;
-        }
-
-        public void setUserPic(String userPic) {
-            this.userPic = userPic;
+        public void setAgentFather(long agentFather) {
+            this.agentFather = agentFather;
         }
 
         public Map getUserRole() {
@@ -301,9 +295,6 @@ public class UserService {
         // 用户代理羊场信息
         Map factoryOrAgentMapper = new HashMap();
         userLogin.setId(userModel.getId());
-        userLogin.setPkUserid(userModel.getPkUserid());
-        userLogin.setUserPic(userModel.getUserPic());
-        userLogin.setUserPwd(userModel.getUserPwd());
         // 角色名称
         String roleName = roleService.getOneRole(userModel.getUserRole()).getTypeName();
         roleMapper.put("roleName", roleName);
@@ -331,6 +322,7 @@ public class UserService {
                 factoryOrAgentMapper.put("factoryNum", factoryModel.getId());
                 factoryOrAgentMapper.put("factoryName",factoryModel.getBreadName());
             }
+            userLogin.setAgentFather(userModel.getUserFactory());
         } else if (isFactory == 1){
             // 代表代理
             AgentModel agentModel = agentService.getOneAgent(factoryId);
@@ -406,14 +398,42 @@ public class UserService {
      * @param agentID
      * @return
      */
-    public List<UserModel> getFatherProfessors(long agentID) {
-        List<UserModel> models = userMapper.getProfessor(agentID);
+    public UserModel getFatherProfessors(long agentID) {
+        List<UserModel> models = new ArrayList<>();
         List<UserModel> users = new ArrayList<>();
+        long fatherID = agentID;
+        //　首先查询上级代理有木有在线的专家
+        models = userMapper.getProfessor(agentID);
         for (int i = 0; i < models.size(); i++) {
-            if (JedisUtil.getValue(String.valueOf(models.get(i).getId())) == null) {
+            if (JedisUtil.getValue(String.valueOf(models.get(i).getId())) != null) {
                 users.add(models.get(i));
             }
         }
-        return users;
+        while (users.size() <= 0) {
+            // 找到所有在线的上级
+            for (int i = 0; i < models.size(); i++) {
+                if (JedisUtil.getValue(String.valueOf(models.get(i).getId())) != null) {
+                    users.add(models.get(i));
+                }
+            }
+            if (users.size() > 0) {
+                break;
+            } else {
+//                fatherID = agentService.getFather(agentID).getAgentFather();
+                System.out.println(fatherID);
+                if (fatherID == 0) {
+                    return null;
+                }
+                AgentModel temp = agentService.getFather(fatherID);
+                if (temp == null) {
+                    return null;
+                }
+                fatherID = temp.getId();
+                // 如果没有上级, 即最高级, fatherID 为0
+                models = userMapper.getProfessor(fatherID);
+            }
+        }
+        int random = (int) (Math.random()*users.size());
+        return users.get(random);
     }
 }

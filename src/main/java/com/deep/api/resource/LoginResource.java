@@ -6,7 +6,11 @@ import com.deep.api.authorization.token.TokenModel;
 import com.deep.api.authorization.tools.RoleAndPermit;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
+import com.deep.domain.model.AgentModel;
+import com.deep.domain.model.FactoryModel;
 import com.deep.domain.model.UserModel;
+import com.deep.domain.service.AgentService;
+import com.deep.domain.service.FactoryService;
 import com.deep.domain.service.UserService;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,6 +29,12 @@ public class LoginResource {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private FactoryService factoryService;
+
+    @Resource
+    private AgentService agentService;
 
     @Resource
     private MobileAnnouncementUtil mobileAnnouncementModel;
@@ -58,6 +68,17 @@ public class LoginResource {
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("successMessage", "登录成功!");
                 data.put("id", userModel.getId());
+                if (userModel.getIsFactory() == 0) {
+                    FactoryModel factoryModel = factoryService.getOneFactory(userModel.getUserFactory());
+                    data.put("factory_id", userModel.getUserFactory());
+                    data.put("agent_id", factoryModel.getAgent());
+                }else if (userModel.getIsFactory() == 1) {
+                    AgentModel agentModel = agentService.getOneAgent(userModel.getUserFactory());
+                    data.put("id", userModel.getUserFactory());
+                    data.put("agent_id", agentModel.getAgentFather());
+                } else {
+
+                }
                 response.setData(data);
                 RoleAndPermit userRoleAndPermit = userService.findRoleByUserID(userModel.getId());
 
@@ -207,7 +228,6 @@ public class LoginResource {
         logger.info("invoke ensureQuestion{}, url is /ensurequestion", userModel);
         if (userModel == null) {
             return Responses.errorResponse("error!");
-
         }
         String username = userModel.getPkUserid();
         UserModel user = userService.getUserByPkuserID(username);

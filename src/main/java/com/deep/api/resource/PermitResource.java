@@ -51,7 +51,7 @@ public class PermitResource {
      * @return
      */
     @Permit(modules = "permit")
-    @PostMapping(value = "/add")
+    @PostMapping(value = "/")
     public Response addRole(@Valid PermitModel permitModel, BindingResult bindingResult) {
         logger.info("invoke addRole{}, url is permit/add", permitModel, bindingResult);
         if (bindingResult.hasErrors()) {

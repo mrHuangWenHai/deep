@@ -381,6 +381,11 @@ public class UserResource {
         }
     }
 
+    /**
+     * 判断专家是否在线
+     * @param id
+     * @return
+     */
     @GetMapping(value = "/user/online/{id}")
     public Response getOnline(@PathVariable("id") String id) {
         logger.info("invoke getOnline {}", id);
@@ -392,20 +397,21 @@ public class UserResource {
     }
 
     /**
-     * 获取直属上级所有在线的专家, 如果没有, 则返回直属上级的上级的专家
+     * 获取已发展羊场的直属上级所有在线的专家, 如果没有, 则返回直属上级的上级的专家
      */
-    @GetMapping(value = "ancestors/professor/online/{id}")
-    public Response getOnlineAncestors(@PathVariable("id") String id) {
+    @GetMapping(value = "getExpert/{agent_id}")
+    public Response getOnlineAncestors(@PathVariable("agent_id") String id) {
         logger.info("invoke getAncestors {}", id);
         long agentID = StringToLongUtil.stringToLong(id);
         if (agentID == -1) {
             return Responses.errorResponse("error");
         } else {
-            List<UserModel> agent = userService.getFatherProfessors(agentID);
-            if (agent.size() > 0) {
+            UserModel agent = userService.getFatherProfessors(agentID);
+            if (agent != null) {
                 Response response = Responses.successResponse();
                 Map<String, Object> data = new HashMap<>();
-                data.put("ancestors", agent);
+                data.put("expert", agent.getPkUserid());
+                data.put("expert_id", agent.getId());
                 response.setData(data);
                 return response;
             }
