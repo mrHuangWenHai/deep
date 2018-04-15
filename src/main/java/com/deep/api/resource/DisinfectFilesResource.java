@@ -20,7 +20,6 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-
 @RestController
 @RequestMapping(value = "/df",method = RequestMethod.GET)
 public class DisinfectFilesResource {
@@ -199,8 +198,6 @@ public class DisinfectFilesResource {
     }
 
     //更新接口
-
-
     //权限仅为专家和监督员
     /**
      * 专家入口 查看isPass1 = 0或者isPass1 = 1的数据
@@ -212,7 +209,6 @@ public class DisinfectFilesResource {
      */
 
     @RequestMapping(value = "/pfind",method = RequestMethod.GET)
-
     public Response professorFind(@RequestParam(value = "isPass",defaultValue = "2") Integer isPass,
                                   @RequestParam(value = "page",defaultValue = "0") int page,
                                   @RequestParam(value = "size",defaultValue = "10") int size){
