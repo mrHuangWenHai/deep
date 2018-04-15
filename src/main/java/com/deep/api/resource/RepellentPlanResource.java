@@ -1,9 +1,13 @@
 package com.deep.api.resource;
 
+
+import com.deep.api.request.RepellentRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
+import com.deep.api.response.ValidResponse;
 import com.deep.domain.model.RepellentPlanModel;
 import com.deep.domain.service.RepellentPlanService;
+import com.deep.domain.service.UserService;
 import com.deep.domain.util.FileUtil;
 import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.JudgeUtil;
@@ -11,10 +15,9 @@ import com.deep.domain.util.UploadUtil;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -22,16 +25,18 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+
+
+@RestController
 @RequestMapping(value = "/rp")
-@Controller
 public class RepellentPlanResource {
 
     private Logger logger = LoggerFactory.getLogger(RepellentPlanResource.class);
     @Resource
     private RepellentPlanService repellentPlanService;
+    @Resource
+    private UserService userService;
 
-    //@Resource
-    //private UseriotService useriotService;
 
 
 
@@ -44,28 +49,20 @@ public class RepellentPlanResource {
      * @param request
      * @return
      */
-    @ResponseBody
+
     @RequestMapping(value = "/saveshow",method = RequestMethod.POST)
     public Response SaveShow(@Valid RepellentPlanModel repellentPlanModel,
+                             BindingResult bindingResult,
                              @RequestParam("repellentEartagFile") MultipartFile repellentEartagFile,
-                             HttpServletRequest request
-    ) {
-        //System.out.println("No requestBody");
+                             HttpServletRequest request) {
+
+        if (bindingResult.hasErrors()){
+            return ValidResponse.bindExceptionHandler();
+        }
 
         logger.info("invoke saveShow {}", repellentEartagFile, repellentPlanModel, request);
         //判断文件头
-
-        if (repellentPlanModel.getFactoryNum() == null ||
-                repellentPlanModel.getCrowdNum() == null ||
-                repellentPlanModel.getRepellentTime() == null ||
-                repellentPlanModel.getRepellentName() == null ||
-                repellentPlanModel.getRepellentWay()  == null ||
-                repellentPlanModel.getRepellentQuality() == null ||
-                repellentPlanModel.getOperator() == null ||
-                repellentPlanModel.getRemark() == null ||
-                repellentEartagFile.isEmpty()
-                ) {
-
+        if (repellentEartagFile.isEmpty()) {
             return Responses.errorResponse("Lack Item");
 
         } else {
@@ -121,6 +118,15 @@ public class RepellentPlanResource {
                     JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
                     JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
 
+                    System.out.println("插入后,审核前");
+                    System.out.println("pk+"+professorKey+" "+"pv:"+JedisUtil.getCertainKeyValue(professorKey));
+                    System.out.println("sk+"+supervisorKey+" "+"sv:"+JedisUtil.getCertainKeyValue(supervisorKey));
+                    System.out.println("tpk+"+testSendProfessor+" "+"tpv:"+JedisUtil.getCertainKeyValue(testSendProfessor));
+                    System.out.println("tsk+"+testSendSupervisor+" "+"tsv:"+JedisUtil.getCertainKeyValue(testSendSupervisor));
+                    System.out.println("pkir+"+professorWorkInRedis+" "+"pvir:"+JedisUtil.getCertainKeyValue(professorWorkInRedis));
+                    System.out.println("skir+"+supervisorWorkInRedis+" "+"svir:"+JedisUtil.getCertainKeyValue(supervisorWorkInRedis));
+
+
                     //System.out.println("testSendProfessorValue:"+jedisUtil.getCertainKeyValue(testSendProfessor));
                     //System.out.println("judge equal:"+"1".equals(jedisUtil.getCertainKeyValue(testSendProfessor)));
 
@@ -135,21 +141,25 @@ public class RepellentPlanResource {
                             System.out.println(professorKey);
 
 
-//                            List<UseriotModel> userModels = useriotService.getUserTelephoneByfactoryNum(repellentPlanModel.getFactoryNum());
+
+                            List<String> phone = userService.getUserTelephoneByfactoryNum(repellentPlanModel.getFactoryNum());
+
 
 
                             //需完成:userModels.getTelephone()赋值给String
                             //获得StringBuffer手机号
                             StringBuffer phoneList = new StringBuffer("");
+                            for (int i = 0; i < phone.size(); i++) {
+                                phoneList = phoneList.append(phone.get(i)).append(",");
+                            }
+                            if ("".equals(phoneList.toString())){
+                                System.out.println("No phoneList");
+                            }else {
 
-//                            for (int i = 0; i < userModels.size(); i++) {
-//                                phoneList = phoneList.append(userModels.get(i)).append(",");
-//                            }
-
-
-                            //发送成功 更新redis中字段
-                            if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
-                                JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
+                                //发送成功 更新redis中字段
+                                if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
+                                    JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
+                                }
                             }
 
                             //System.out.println(phoneList);
@@ -162,23 +172,32 @@ public class RepellentPlanResource {
                         if (JedisUtil.redisJudgeTime(supervisorKey)) {
 
 
-//                            List<UseriotModel> userModels = useriotService.getUserTelephoneByfactoryNum(repellentPlanModel.getFactoryNum());
+
+                            List<String> phone = userService.getUserTelephoneByfactoryNum(repellentPlanModel.getFactoryNum());
+
 
 
                             System.out.println(JedisUtil.redisJudgeTime(supervisorKey));
 
                             StringBuffer phoneList = new StringBuffer("");
 
-//                            for (int i = 0; i < userModels.size(); i++) {
-//                                phoneList = phoneList.append(userModels.get(i).getTelephone()).append(",");
-//                            }
+                            for (int i = 0; i < phone.size(); i++) {
+                                phoneList = phoneList.append(phone.get(i)).append(",");
+                            }
+                            if ("".equals(phoneList.toString())){
 
-                            if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
+                                return Responses.errorResponse("Not found telephone");
 
-                                JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
-                                System.out.println("发送成功！");
+                            } else {
 
-                                return JudgeUtil.JudgeSuccess("successMessage", "Message Sent");
+                                if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
+
+                                    JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
+                                    System.out.println("发送成功！");
+
+                                    return JudgeUtil.JudgeSuccess("successMessage", "Message Sent");
+
+                                }
 
                             }
                         }
@@ -207,21 +226,24 @@ public class RepellentPlanResource {
      * 返回查询结果
      * 以json格式返回前端
      * METHOD:POST
-     * @param repellentPlanModel
+
+     * @param repellentRequest
      * @return
      */
-    @ResponseBody
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
-    public Response FindShow(@RequestBody RepellentPlanModel repellentPlanModel){
+    public Response FindShow(@RequestBody RepellentRequest repellentRequest){
+        //System.out.println(repellentRequest.getRepellentPlanModel().getFactoryNum());
 
-        logger.info("invoke finsShow {}", repellentPlanModel);
-        if(repellentPlanModel.getSize() == 0){
-            repellentPlanModel.setSize(10);
+        logger.info("invoke finsShow {}", repellentRequest);
+        if(repellentRequest.getSize() == 0){
+            repellentRequest.setSize(10);
         }
-        System.out.println(repellentPlanModel.getFactoryNum());
+        //System.out.println(repellentPlanModel.getFactoryNum());
 
-        List<RepellentPlanModel> repellentPlanModels =repellentPlanService.getRepellentPlanModel(repellentPlanModel,
-                new RowBounds(repellentPlanModel.getPage(),repellentPlanModel.getSize()));
+
+        List<RepellentPlanModel> repellentPlanModels =repellentPlanService.getRepellentPlanModel(repellentRequest,
+                new RowBounds(repellentRequest.getPage(),repellentRequest.getSize()));
+
 
         return JudgeUtil.JudgeFind(repellentPlanModels,repellentPlanModels.size());
 
@@ -230,14 +252,14 @@ public class RepellentPlanResource {
 
 
     /**
-     * 专家入口 展示所有isPass1 = 0或者isPass1 = 1的数据
+     * 专家入口 展示所有isPass = 0或者isPass = 1的数据
      * @param isPass
      * @param page
      * @param size
      * METHOD:GET
      * @return
      */
-    @ResponseBody
+
     @RequestMapping(value = "pfind",method = RequestMethod.GET)
     public Response ProfessorFind(@RequestParam(value = "isPass",defaultValue = "2") Integer isPass,
                                   @RequestParam(value = "page",defaultValue = "0") int page,
@@ -251,14 +273,13 @@ public class RepellentPlanResource {
 
 
     /**
-     * 专家入口 审核isPass1 = 0的数据
+     * 专家入口 审核isPass = 0的数据
      * redis中数据-1
      * @param repellentPlanModel
      * METHOD:PATCH
      * @return
      */
 
-    @ResponseBody
     @RequestMapping(value = "pupdate",method = RequestMethod.PATCH)
     public Response ProfessorUpdate(@RequestBody RepellentPlanModel repellentPlanModel) {
 
@@ -329,7 +350,7 @@ public class RepellentPlanResource {
      * METHOD:GET
      * @return
      */
-    @ResponseBody
+
     @RequestMapping(value = "sfind",method = RequestMethod.GET)
     public Response SupervisorFind(@RequestParam(value = "isPass1",defaultValue = "2") Integer isPass1,
                                    @RequestParam(value = "page",defaultValue = "0") int page,
@@ -347,7 +368,8 @@ public class RepellentPlanResource {
      * METHOD:PATCH
      * @return
      */
-    @ResponseBody
+
+
     @RequestMapping(value = "supdate",method = RequestMethod.PATCH)
     public Response SupervisorUpdate(@RequestBody RepellentPlanModel repellentPlanModel){
 
@@ -417,7 +439,6 @@ public class RepellentPlanResource {
      * @param repellentPlanModel
      * @return
      */
-    @ResponseBody
     @RequestMapping(value = "oupdate",method = RequestMethod.PATCH)
     public Response OperatorUpdate(@RequestBody RepellentPlanModel repellentPlanModel) {
 
@@ -477,7 +498,7 @@ public class RepellentPlanResource {
      * @param id
      * @return
      */
-    @ResponseBody
+
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
     public Response Delete(@RequestParam("id") Long id){
 

@@ -1,20 +1,31 @@
 package com.deep.domain.model;
 
+import javax.validation.constraints.*;
 import java.math.BigInteger;
 
 public class ImmunePlanModel {
     private Long id;      //id
+    @NotNull
+    @Min(0)
     private BigInteger factoryNum;  //工厂编号
+    @NotBlank
     private String crowdNum;     //羊群号
     private String immuneEartag;    //耳牌附件名
+    @NotBlank
     private String immuneTime;     //接种时间
+    @NotBlank
     private String immuneKind;     //免疫种类
+    @NotBlank
     private String immuneWay;       //免疫方法
+    @NotBlank
     private String immuneQuality;    //免疫剂量
+    @NotBlank
     private String immuneDuring;    //免疫期
+    @NotBlank
     private String operator;     //操作员
     private String professor;    //技术审核
     private String supervisor;    //监督员
+    @NotBlank
     private String remark;      //备注
     private String isPass;      //是否通过审核 默认 未审核 0
     private String unpassReason;   //未通过审核原因
@@ -23,18 +34,11 @@ public class ImmunePlanModel {
     private String gmtModified;  //修改时间
     private String gmtProfessor;    //技术审核时间 可空
     private String gmtSupervise;    //监督审核时间 可空
-
-    //
-    private String immuneTimeStart;
-    private String immuneTimeEnd;
-    private int page;
-    private int size;
-
-
     public ImmunePlanModel() {
     }
 
-    public ImmunePlanModel(Long id, BigInteger factoryNum, String crowdNum, String immuneEartag, String immuneTime, String immuneKind, String immuneWay, String immuneQuality, String immuneDuring, String operator, String professor, String supervisor, String remark, String isPass, String unpassReason, String isPass1, String gmtCreate, String gmtModified, String gmtProfessor, String gmtSupervise, String immuneTimeStart, String immuneTimeEnd, int page, int size) {
+    public ImmunePlanModel(Long id, BigInteger factoryNum, String crowdNum, String immuneEartag, String immuneTime, String immuneKind, String immuneWay, String immuneQuality, String immuneDuring, String operator, String professor, String supervisor, String remark, String isPass, String unpassReason, String isPass1, String gmtCreate, String gmtModified, String gmtProfessor, String gmtSupervise) {
+
         this.id = id;
         this.factoryNum = factoryNum;
         this.crowdNum = crowdNum;
@@ -55,10 +59,6 @@ public class ImmunePlanModel {
         this.gmtModified = gmtModified;
         this.gmtProfessor = gmtProfessor;
         this.gmtSupervise = gmtSupervise;
-        this.immuneTimeStart = immuneTimeStart;
-        this.immuneTimeEnd = immuneTimeEnd;
-        this.page = page;
-        this.size = size;
     }
 
     public ImmunePlanModel( BigInteger factoryNum, String crowdNum, String immuneTime, String immuneKind, String immuneWay, String immuneQuality, String immuneDuring, String operator, String professor, String supervisor, String remark, String isPass, String unpassReason, String isPass1, String gmtCreate) {
@@ -241,35 +241,4 @@ public class ImmunePlanModel {
         this.gmtSupervise = gmtSupervise;
     }
 
-    public String getImmuneTimeStart() {
-        return immuneTimeStart;
-    }
-
-    public void setImmuneTimeStart(String immuneTimeStart) {
-        this.immuneTimeStart = immuneTimeStart;
-    }
-
-    public String getImmuneTimeEnd() {
-        return immuneTimeEnd;
-    }
-
-    public void setImmuneTimeEnd(String immuneTimeEnd) {
-        this.immuneTimeEnd = immuneTimeEnd;
-    }
-
-    public int getPage() {
-        return page;
-    }
-
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
 }

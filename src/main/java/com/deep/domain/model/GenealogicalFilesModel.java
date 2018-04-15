@@ -1,14 +1,9 @@
 package com.deep.domain.model;
 
-import org.apache.ibatis.session.RowBounds;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.util.Date;
+import javax.validation.constraints.Size;
 
 
 /**
@@ -25,6 +20,7 @@ public class GenealogicalFilesModel {
     private String immuneEartag;  //免疫耳牌
     @NotEmpty
     @NotNull
+    @Size(min = 15, max = 15, message = "trademarkEartag need size:15 ")
     private String tradeMarkEartag;  //商标耳牌
     @NotEmpty
     @NotNull

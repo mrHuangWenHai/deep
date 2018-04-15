@@ -1,30 +1,25 @@
-package com.deep.domain.model;
+package com.deep.api.request;
 
-import javax.validation.constraints.*;
+import com.deep.domain.model.RepellentPlanModel;
+
 import java.math.BigInteger;
 
-public class RepellentPlanModel {
-    private Long id;      //id
+/**
+ * create by zhongrui on 18-4-13.
+ */
+public class RepellentRequest {
 
-    @NotNull
-    @Min(0)
-    private BigInteger factoryNum;   //工厂编号
-    @NotBlank
-    private String crowdNum;       //羊群号
-    private String repellentEartag;    //耳牌附件名
-    @NotBlank
-    private String repellentTime;    //驱虫时间
-    @NotBlank
-    private String repellentName;   //药物名称
-    @NotBlank
-    private String repellentWay;     //给药方式
-    @NotBlank
-    private String repellentQuality;    //给药剂量
-    @NotBlank
+    private Long id;
+    private BigInteger factoryNum;
+    private String crowdNum;
+    private String repellentEartag;
+    private String repellentTime;
+    private String repellentName;
+    private String repellentWay;
+    private String repellentQuality;
     private String operator;
     private String professor;
     private String supervisor;
-    @NotBlank
     private String remark;
     private String isPass;
     private String unpassReason;
@@ -34,28 +29,10 @@ public class RepellentPlanModel {
     private String gmtProfessor;
     private String gmtSupervise;
 
-
-
-
-
-    public RepellentPlanModel() {
-    }
-
-    public RepellentPlanModel(BigInteger factoryNum, String crowdNum, String repellentEartag, String repellentTime, String repellentName, String repellentWay, String repellentQuality, String operator, String remark, String isPass, String isPass1, String gmtCreate) {
-        this.factoryNum = factoryNum;
-        this.crowdNum = crowdNum;
-        this.repellentEartag = repellentEartag;
-        this.repellentTime = repellentTime;
-        this.repellentName = repellentName;
-        this.repellentWay = repellentWay;
-        this.repellentQuality = repellentQuality;
-        this.operator = operator;
-        this.remark = remark;
-        this.isPass = isPass;
-        this.isPass1 = isPass1;
-        this.gmtCreate = gmtCreate;
-    }
-
+    private String repellentTimeStart;
+    private String repellentTimeEnd;
+    private int page;
+    private int size;
 
 
     public Long getId() {
@@ -81,8 +58,6 @@ public class RepellentPlanModel {
     public void setCrowdNum(String crowdNum) {
         this.crowdNum = crowdNum;
     }
-
-
 
     public String getRepellentEartag() {
         return repellentEartag;
@@ -212,4 +187,35 @@ public class RepellentPlanModel {
         this.gmtSupervise = gmtSupervise;
     }
 
+    public String getRepellentTimeStart() {
+        return repellentTimeStart;
+    }
+
+    public void setRepellentTimeStart(String repellentTimeStart) {
+        this.repellentTimeStart = repellentTimeStart;
+    }
+
+    public String getRepellentTimeEnd() {
+        return repellentTimeEnd;
+    }
+
+    public void setRepellentTimeEnd(String repellentTimeEnd) {
+        this.repellentTimeEnd = repellentTimeEnd;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
 }

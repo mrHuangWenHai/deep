@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 @Component
 public class UserModel {
         private long id;
-        private Timestamp gmtCreate;;
+        private Timestamp gmtCreate;
         private Timestamp gmtModified;
 
         @NotBlank(message = "用户名不能为空!")

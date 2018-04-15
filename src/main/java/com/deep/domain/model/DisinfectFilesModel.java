@@ -4,6 +4,7 @@ package com.deep.domain.model;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.math.BigInteger;
 
 public class DisinfectFilesModel {

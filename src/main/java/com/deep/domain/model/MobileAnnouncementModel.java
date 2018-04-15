@@ -98,7 +98,7 @@ public class MobileAnnouncementModel {
 
         Client client = Client.create();
         client.addFilter(new HTTPBasicAuthFilter(
-                "api","key-22c3576f6f618dfd8aabb19de974d99f"));
+                "api","key-c4e35f50b45ba853c3d6eff6633f42a7"));
         WebResource webResource = client.resource(
                 "http://sms-api.luosimao.com/v1/send.json");
         MultivaluedMapImpl formData = new MultivaluedMapImpl();
@@ -123,7 +123,7 @@ public class MobileAnnouncementModel {
         this.message = message+"【东翔验证】";
         Client client = Client.create();
         client.addFilter(new HTTPBasicAuthFilter(
-                "api","key-22c3576f6f618dfd8aabb19de974d99f"));
+                "api","key-c4e35f50b45ba853c3d6eff6633f42a7"));
         WebResource webResource = client.resource(
                 "http://sms-api.luosimao.com/v1/send_batch.json");
         MultivaluedMapImpl formData = new MultivaluedMapImpl();
@@ -146,7 +146,7 @@ public class MobileAnnouncementModel {
     public String testStatus(){
         Client client = Client.create();
         client.addFilter(new HTTPBasicAuthFilter(
-                "api","key-22c3576f6f618dfd8aabb19de974d99f"));
+                "api","key-c4e35f50b45ba853c3d6eff6633f42a7"));
         WebResource webResource = client.resource( "http://sms-api.luosimao.com/v1/status.json" );
         MultivaluedMapImpl formData = new MultivaluedMapImpl();
         ClientResponse response =  webResource.get( ClientResponse.class );

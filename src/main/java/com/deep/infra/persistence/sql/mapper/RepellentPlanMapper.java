@@ -1,5 +1,7 @@
 package com.deep.infra.persistence.sql.mapper;
 
+
+import com.deep.api.request.RepellentRequest;
 import com.deep.domain.model.RepellentPlanModel;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -12,7 +14,9 @@ import java.util.List;
 public interface RepellentPlanMapper {
     void setRepellentPlanModel(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel);
 
-    List<RepellentPlanModel> getRepellentPlanModel(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel,
+
+    List<RepellentPlanModel> getRepellentPlanModel(@Param("repellentPlanModel") RepellentRequest repellentPlanModel,
+
                                                    RowBounds bounds);
 
     RepellentPlanModel getRepellentPlanModelByfactoryNumAndcrowdNumAndrepellentTimeAndrepellentName(@Param("factoryNum")BigInteger factoryNum,

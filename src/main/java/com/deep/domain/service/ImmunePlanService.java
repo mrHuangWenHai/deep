@@ -1,5 +1,7 @@
 package com.deep.domain.service;
 
+
+import com.deep.api.request.ImmuneRequest;
 import com.deep.domain.model.ImmunePlanModel;
 import com.deep.infra.persistence.sql.mapper.ImmunePlanMapper;
 import org.apache.ibatis.session.RowBounds;
@@ -18,7 +20,8 @@ public class ImmunePlanService {
         this.immunePlanMapper.setImmunePlanModel(immunePlanModel);
     }
 
-    public List<ImmunePlanModel> getImmunePlanModel(ImmunePlanModel immunePlanModel,
+
+    public List<ImmunePlanModel> getImmunePlanModel(ImmuneRequest immunePlanModel,
                                                     RowBounds bounds){
         return this.immunePlanMapper.getImmunePlanModel(immunePlanModel,bounds);
     }

@@ -1,30 +1,25 @@
-package com.deep.domain.model;
+package com.deep.api.request;
 
-import javax.validation.constraints.*;
+import com.deep.domain.model.ImmunePlanModel;
+
 import java.math.BigInteger;
 
-public class RepellentPlanModel {
-    private Long id;      //id
+/**
+ * create by zhongrui on 18-4-13.
+ */
+public class ImmuneRequest {
 
-    @NotNull
-    @Min(0)
-    private BigInteger factoryNum;   //工厂编号
-    @NotBlank
-    private String crowdNum;       //羊群号
-    private String repellentEartag;    //耳牌附件名
-    @NotBlank
-    private String repellentTime;    //驱虫时间
-    @NotBlank
-    private String repellentName;   //药物名称
-    @NotBlank
-    private String repellentWay;     //给药方式
-    @NotBlank
-    private String repellentQuality;    //给药剂量
-    @NotBlank
+    private BigInteger factoryNum;
+    private String crowdNum;
+    private String immuneEartag;
+    private String immuneTime;
+    private String immuneKind;
+    private String immuneWay;
+    private String immuneQuality;
+    private String immuneDuring;
     private String operator;
     private String professor;
     private String supervisor;
-    @NotBlank
     private String remark;
     private String isPass;
     private String unpassReason;
@@ -34,37 +29,10 @@ public class RepellentPlanModel {
     private String gmtProfessor;
     private String gmtSupervise;
 
-
-
-
-
-    public RepellentPlanModel() {
-    }
-
-    public RepellentPlanModel(BigInteger factoryNum, String crowdNum, String repellentEartag, String repellentTime, String repellentName, String repellentWay, String repellentQuality, String operator, String remark, String isPass, String isPass1, String gmtCreate) {
-        this.factoryNum = factoryNum;
-        this.crowdNum = crowdNum;
-        this.repellentEartag = repellentEartag;
-        this.repellentTime = repellentTime;
-        this.repellentName = repellentName;
-        this.repellentWay = repellentWay;
-        this.repellentQuality = repellentQuality;
-        this.operator = operator;
-        this.remark = remark;
-        this.isPass = isPass;
-        this.isPass1 = isPass1;
-        this.gmtCreate = gmtCreate;
-    }
-
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private String immuneTimeStart;
+    private String immuneTimeEnd;
+    private int page;
+    private int size;
 
     public BigInteger getFactoryNum() {
         return factoryNum;
@@ -82,46 +50,52 @@ public class RepellentPlanModel {
         this.crowdNum = crowdNum;
     }
 
-
-
-    public String getRepellentEartag() {
-        return repellentEartag;
+    public String getImmuneEartag() {
+        return immuneEartag;
     }
 
-    public void setRepellentEartag(String repellentEartag) {
-        this.repellentEartag = repellentEartag;
+    public void setImmuneEartag(String immuneEartag) {
+        this.immuneEartag = immuneEartag;
     }
 
-    public String getRepellentTime() {
-        return repellentTime;
+    public String getImmuneTime() {
+        return immuneTime;
     }
 
-    public void setRepellentTime(String repellentTime) {
-        this.repellentTime = repellentTime;
+    public void setImmuneTime(String immuneTime) {
+        this.immuneTime = immuneTime;
     }
 
-    public String getRepellentName() {
-        return repellentName;
+    public String getImmuneKind() {
+        return immuneKind;
     }
 
-    public void setRepellentName(String repellentName) {
-        this.repellentName = repellentName;
+    public void setImmuneKind(String immuneKind) {
+        this.immuneKind = immuneKind;
     }
 
-    public String getRepellentWay() {
-        return repellentWay;
+    public String getImmuneWay() {
+        return immuneWay;
     }
 
-    public void setRepellentWay(String repellentWay) {
-        this.repellentWay = repellentWay;
+    public void setImmuneWay(String immuneWay) {
+        this.immuneWay = immuneWay;
     }
 
-    public String getRepellentQuality() {
-        return repellentQuality;
+    public String getImmuneQuality() {
+        return immuneQuality;
     }
 
-    public void setRepellentQuality(String repellentQuality) {
-        this.repellentQuality = repellentQuality;
+    public void setImmuneQuality(String immuneQuality) {
+        this.immuneQuality = immuneQuality;
+    }
+
+    public String getImmuneDuring() {
+        return immuneDuring;
+    }
+
+    public void setImmuneDuring(String immuneDuring) {
+        this.immuneDuring = immuneDuring;
     }
 
     public String getOperator() {
@@ -212,4 +186,35 @@ public class RepellentPlanModel {
         this.gmtSupervise = gmtSupervise;
     }
 
+    public String getImmuneTimeStart() {
+        return immuneTimeStart;
+    }
+
+    public void setImmuneTimeStart(String immuneTimeStart) {
+        this.immuneTimeStart = immuneTimeStart;
+    }
+
+    public String getImmuneTimeEnd() {
+        return immuneTimeEnd;
+    }
+
+    public void setImmuneTimeEnd(String immuneTimeEnd) {
+        this.immuneTimeEnd = immuneTimeEnd;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
 }
