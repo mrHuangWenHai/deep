@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--Mapper名称 对应infra中mapper类名-->
+<mapper namespace="com.deep.infra.persistence.sql.mapper.ImmunePlanMapper">
+    <insert id="setImmunePlanModel" parameterType="com.deep.domain.model.ImmunePlanModel">
+        <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="immunePlanModel.id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO immune_plan(
+        factory_num,
+        crowd_num,
+        immune_et,
+        immune_t,
+        immune_k,
+        immune_m,
+        immune_q,
+        immune_d,
+        operator,
+        remark,
+        is_pass,
+        is_pass1,
+        gmt_create
+        )
+        VALUES(
+        #{immunePlanModel.factoryNum},
+        #{immunePlanModel.crowdNum},
+        #{immunePlanModel.immuneEartag},
+        #{immunePlanModel.immuneTime},
+        #{immunePlanModel.immuneKind},
+        #{immunePlanModel.immuneWay},
+        #{immunePlanModel.immuneQuality},
+        #{immunePlanModel.immuneDuring},
+        #{immunePlanModel.operator},
+        #{immunePlanModel.remark},
+        #{immunePlanModel.isPass},
+        #{immunePlanModel.isPass1},
+        #{immunePlanModel.gmtCreate}
+        )
+    </insert>
+    <resultMap id="ImmunePlan" type="com.deep.domain.model.ImmunePlanModel">
+        <id property="id" column="id"/>
+        <result property="factoryNum" column="factory_num"/>
+        <result property="crowdNum" column="crowd_num"/>
+        <result property="immuneTime" column="immune_t"/>
+        <result property="immuneKind" column="immune_k"/>
+        <result property="immuneWay" column="immune_m"/>
+        <result property="immuneQuality" column="immune_q"/>
+        <result property="immuneDuring" column="immune_d"/>
+        <result property="operator" column="operator"/>
+        <result property="professor" column="professor"/>
+        <result property="supervisor" column="supervisor"/>
+        <result property="remark" column="remark"/>
+        <result property="isPass" column="is_pass"/>
+        <result property="unpassReason" column="upass_reason"/>
+        <result property="isPass1" column="is_pass1"/>
+        <result property="gmtCreate" column="gmt_create"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="gmtProfessor" column="gmt_professor"/>
+        <result property="gmtSupervise" column="gmt_supervised"/>
+    </resultMap>
+
+
+    <select id="getImmunePlanModel" resultMap="ImmunePlan">
+        SELECT
+        *
+        FROM
+        immune_plan
+        WHERE
+        1=1
+        <if test="immunePlanModel.factoryNum != null and immunePlanModel.factoryNum != '' ">
+            AND factory_num = #{immunePlanModel.factoryNum}
+        </if>
+        <if test="immunePlanModel.crowdNum != null and immunePlanModel.crowdNum != '' ">
+            AND crowd_num = #{immunePlanModel.crowdNum}
+        </if>
+        <if test="immunePlanModel.immuneTimeStart != null and immunePlanModel.immuneTimeStart != '' and
+                  immunePlanModel.immuneTimeEnd != null and immunePlanModel.immuneTimeEnd != '' ">
+            AND immune_t BETWEEN #{immunePlanModel.immuneTimeStart} AND #{immunePlanModel.immuneTimeEnd}
+        </if>
+        <if test="immunePlanModel.immuneKind != null and immunePlanModel.immuneKind != '' ">
+            AND immune_k = #{immunePlanModel.immuneKind}
+        </if>
+        <if test="immunePlanModel.immuneWay != null and immunePlanModel.immuneWay != '' ">
+            AND immune_m = #{immunePlanModel.immuneWay}
+        </if>
+        <if test="immunePlanModel.immuneQuality != null and immunePlanModel.immuneQuality != '' ">
+            AND immune_q = #{immunePlanModel.immuneQuality}
+        </if>
+        <if test="immunePlanModel.immuneDuring != null and immunePlanModel.immuneDuring != '' ">
+            AND immune_d = #{immunePlanModel.immuneDuring}
+        </if>
+        <if test="immunePlanModel.operator != null and immunePlanModel.operator != '' ">
+            AND operator = #{immunePlanModel.operator}
+        </if>
+        <if test="immunePlanModel.professor != null and immunePlanModel.professor != '' ">
+            AND professor = #{immunePlanModel.professor}
+        </if>
+        <if test="immunePlanModel.supervisor != null and immunePlanModel.supervisor != '' ">
+            AND supervisor = #{immunePlanModel.supervisor}
+        </if>
+        <if test="immunePlanModel.remark != null and immunePlanModel.remark != '' ">
+            AND remark = #{immunePlanModel.remark}
+        </if>
+        <if test="immunePlanModel.isPass1 != null and immunePlanModel.isPass1 != '' ">
+            AND is_pass = #{immunePlanModel.isPass}
+        </if>
+        <if test="immunePlanModel.unpassReason != null and immunePlanModel.unpassReason != '' ">
+            AND upass_reason = #{immunePlanModel.unpassReason}
+        </if>
+        <if test="immunePlanModel.isPass1 != null and immunePlanModel.isPass1 != '' ">
+            AND is_pass1 = #{immunePlanModel.isPass1}
+        </if>
+
+    </select>
+
+    <select id="getImmunePlanModelByid" resultMap="ImmunePlan">
+        SELECT
+        *
+        FROM
+        immune_plan
+        WHERE
+        id = #{id}
+    </select>
+
+    <select id="getImmunePlanModelByfactoryNumAndimmuneTime" resultMap="ImmunePlan">
+        SELECT
+        *
+        FROM
+        immune_plan
+        WHERE
+        factory_num = #{facctoryNum} AND immune_t BETWEEN #{gmtCreate} AND #{gmtTrans}
+    </select>
+
+
+
+    <select id="getImmunePlanModelByfactoryNumAndcrowdNumAndimmuneTime" resultMap="ImmunePlan">
+        SELECT
+        *
+        FROM
+        immune_plan
+        WHERE
+        factory_num = #{factoryNum} AND crowd_num = #{crowdNum} AND immune_t = #{immuneTime}
+    </select>
+
+    <select id="getImmunePlanModelByProfessor" resultMap="ImmunePlan">
+        SELECT
+        *
+        FROM
+        immune_plan
+        WHERE
+        is_pass = #{isPass}
+    </select>
+
+    <select id="getImmunePlanModelBySupervisor" resultMap="ImmunePlan">
+        SELECT
+        *
+        FROM
+        immune_plan
+        WHERE
+        is_pass1 = #{isPass1}
+    </select>
+
+
+    <update id="updateImmunePlanModelByProfessor" parameterType="com.deep.domain.model.ImmunePlanModel">
+        UPDATE immune_plan
+        SET  professor = #{immunePlanModel.professor},
+        is_pass = #{immunePlanModel.isPass},
+        upass_reason = #{immunePlanModel.unpassReason},
+        gmt_professor = #{immunePlanModel.gmtProfessor}
+        WHERE
+        id = #{immunePlanModel.id}
+    </update>
+
+    <update id="updateImmunePlanModelBySupervisor" parameterType="com.deep.domain.model.ImmunePlanModel">
+        UPDATE immune_plan
+        SET  supervisor = #{immunePlanModel.supervisor},
+        is_pass1 = #{immunePlanModel.isPass1},
+        gmt_supervised = #{immunePlanModel.gmtSupervise}
+        WHERE
+        id = #{immunePlanModel.id}
+    </update>
+
+
+    <update id="updateImmunePlanModelByOperator" parameterType="com.deep.domain.model.ImmunePlanModel">
+        UPDATE immune_plan
+        <set>
+            <if test="immunePlanModel.factoryNum != null and immunePlanModel.factoryNum != ''">
+                factory_num = #{immunePlanModel.factoryNum},
+            </if>
+            <if test="immunePlanModel.crowdNum != null and immunePlanModel.crowdNum != ''">
+                crowd_num = #{immunePlanModel.crowdNum},
+            </if>
+            <if test="immunePlanModel.immuneTime != null and immunePlanModel.immuneTime != ''">
+                immune_t = #{immunePlanModel.immuneTime},
+            </if>
+            <if test="immunePlanModel.immuneKind != null and immunePlanModel.immuneKind != ''">
+                immune_k = #{immunePlanModel.immuneKind},
+            </if>
+            <if test="immunePlanModel.immuneWay != null and immunePlanModel.immuneWay != ''">
+                immune_w = #{immunePlanModel.immuneWay},
+            </if>
+            <if test="immunePlanModel.immuneQuality != null and immunePlanModel.immuneQuality != ''">
+                immune_q = #{immunePlanModel.immuneQuality},
+            </if>
+            <if test="immunePlanModel.immuneDuring != null and immunePlanModel.immuneDuring != ''">
+                immune_d = #{immunePlanModel.immuneDuring},
+            </if>
+            <if test="immunePlanModel.remark != null and immunePlanModel.remark != ''">
+                remark = #{immunePlanModel.remark},
+            </if>
+
+        </set>
+        WHERE
+        id = #{immunePlanModel.id}
+    </update>
+
+
+    <delete id="deleteImmunePlanModelByid" parameterType="Long">
+        DELETE FROM
+        immune_plan
+        WHERE
+        id = #{id}
+    </delete>
+</mapper>

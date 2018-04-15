@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+
+    <appender name="fileInfoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+              <!--文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间-->
+              <FileNamePattern>./log/sheep.%d{yyyy-MM-dd}.log</FileNamePattern>
+              <!--只保留最近90天的日志-->
+              <maxHistory>90</maxHistory>
+             <!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志-->
+              <!--<totalSizeCap>1GB</totalSizeCap>-->
+         </rollingPolicy>
+
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%-5level %d{HH:mm:ss} [%thread] %logger{36} - %msg%n</pattern>
+        </encoder>
+
+    </appender>
+
+    <appender name="consoleLog" class="ch.qos.logback.core.ConsoleAppender">
+        <!--展示格式 layout-->
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>
+                <pattern>%-5level %d{HH:mm:ss} [%thread] %logger{36} -  %msg%n</pattern>
+            </pattern>
+        </layout>
+        <!--
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+             <level>ERROR</level>
+        </filter>
+         -->
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="consoleLog" />
+        <appender-ref ref="fileInfoLog" />
+    </root>
+
+</configuration>
