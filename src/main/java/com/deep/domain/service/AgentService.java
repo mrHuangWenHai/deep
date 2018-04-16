@@ -1,13 +1,11 @@
 package com.deep.domain.service;
 
 import com.deep.domain.model.AgentModel;
-import com.deep.domain.model.UserModel;
 import com.deep.infra.persistence.sql.mapper.AgentMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
