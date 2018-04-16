@@ -5,9 +5,7 @@ import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.AgentModel;
-import com.deep.domain.model.UserModel;
 import com.deep.domain.service.AgentService;
-import com.deep.domain.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import javax.ws.rs.POST;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +31,7 @@ public class AgentResource {
      * 查找所有代理
      * @return
      */
-    @Permit(modules = "dongxiang_factory_administrator", authorities = "select_agent")
+    @Permit(authorities = "query_agent")
     @GetMapping(value = "/")
     public Response agentLists() {
         logger.info("invoke agentLists, url is agent/");
@@ -55,7 +52,7 @@ public class AgentResource {
      * @param id
      * @return
      */
-    @Permit(modules = "dongxiang_factory_administrator", authorities = "select_agent")
+    @Permit(authorities = "query_agent")
     @GetMapping(value = "/{id}")
     public Response findOne(@PathVariable("id") String id) {
         logger.info("invoke findOne{}, url is agent/{id}", id);
@@ -78,7 +75,7 @@ public class AgentResource {
      * 删除一个代理
      * @param id
      */
-    @Permit(modules = "dongxiang_factory_administrator", authorities = "delete_agent")
+    @Permit(authorities = "deleting_an_agent")
     @DeleteMapping(value = "/{id}")
     public Response deleteOne(@PathVariable("id") String id) {
         logger.info("invoke deleteOne{}, url is agent/{id}", id);
@@ -103,7 +100,7 @@ public class AgentResource {
      * @param bindingResult
      * @return
      */
-    @Permit(modules = "dongxiang_factory_administrator", authorities = "create_agent")
+    @Permit(authorities = "add_agent")
     @PostMapping(value = "/add")
     public Response addOne(@Valid @RequestBody AgentModel agentModel, BindingResult bindingResult) {
         logger.info("invoke addOne{}, url is agent/add", agentModel);
@@ -131,7 +128,7 @@ public class AgentResource {
      * @param id 代理主键
      * @return
      */
-    @Permit(modules = "dongxiang_factory_administrator", authorities = "update_agent")
+    @Permit(authorities = "modify_the_proxy")
     @PutMapping("/{id}")
     public Response agentUpdate(@Valid @RequestBody AgentModel agentModel, @PathVariable("id") String id, BindingResult bindingResult) {
         logger.info("invoke agentUpdate{}, url is agent/{id}", agentModel, id);
@@ -163,6 +160,7 @@ public class AgentResource {
      * @param id
      * @return
      */
+    @Permit(authorities = "query_agent")
     @GetMapping(value = "/sons/{id}")
     public Response AgentsSon(@PathVariable("id") String id) {
         logger.info("invoke agentsSon{}, url is agent/sons/{id}", id);
@@ -188,6 +186,7 @@ public class AgentResource {
      * @param id
      * @return
      */
+    @Permit(authorities = "query_agent")
     @GetMapping(value = "/father/{id}")
     public Response AgentFather(@PathVariable("id") String id) {
         logger.info("invoke agentFather {}, url is agent/father/{id}", id);
@@ -212,6 +211,7 @@ public class AgentResource {
      * @param id
      * @return
      */
+    @Permit(authorities = "query_agent")
     @GetMapping(value = "ancestors/{id}")
     public Response getAncestors(@PathVariable("id") String id) {
         logger.info("invoke getAncestors {}", id);
@@ -236,6 +236,7 @@ public class AgentResource {
      * @param id
      * @return
      */
+    @Permit(authorities = "query_agent")
     @GetMapping(value = "ancestors/professor/{id}")
     public Response getAncestorsProfessor(@PathVariable("id") String id) {
         logger.info("invoke getAncestors {}", id);

@@ -65,8 +65,7 @@ public class AgentService {
 
     public Map<String, Object> getAncestorsProfessor(Long id) {
         List<AgentModel> lists = getAncestors(id);
-        Map<String, Object> userRole = userService.getProfessor(lists);
-        return userRole;
+        return userService.getProfessor(lists);
     }
 
     /**
