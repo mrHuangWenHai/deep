@@ -1,27 +1,13 @@
 package com.deep.domain.model;
 
-<<<<<<< HEAD
-import javax.validation.constraints.NotNull;
-=======
 import javax.validation.constraints.*;
->>>>>>> 42977b2f36c78c4ce2c994b3d246f04edb42bb9d
 import java.io.Serializable;
 import java.util.Date;
-import java.util.regex.*;
 import java.util.regex.Pattern;
 
 public class Message implements Serializable {
     private Integer id;
 
-<<<<<<< HEAD
-    @NotNull(message = "用户名不可为空")
-    private String username;
-
-    @NotNull(message = "联系方式不可为空")
-    private String contact;
-
-    @NotNull(message = "留言不可为空")
-=======
     @NotBlank(message = "用户名不可为空")
     private String username;
 
@@ -30,20 +16,10 @@ public class Message implements Serializable {
     private String contact;
 
     @NotBlank(message = "留言不可为空")
->>>>>>> 42977b2f36c78c4ce2c994b3d246f04edb42bb9d
     private String message;
 
     private Date inserttime;
 
-<<<<<<< HEAD
-    @NotNull(message = "标签不可为空")
-    private String tag;
-
-    @NotNull(message = "态度不可为空")
-    private String attitude;
-
-    @NotNull(message = "购买意向不可为空")
-=======
     @NotBlank(message = "标签不可为空")
     private String tag;
 
@@ -51,7 +27,6 @@ public class Message implements Serializable {
     private String attitude;
 
     @NotBlank(message = "购买意向不可为空")
->>>>>>> 42977b2f36c78c4ce2c994b3d246f04edb42bb9d
     private String intention;
 
     public Integer getMessageId() {

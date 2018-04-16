@@ -76,15 +76,15 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
         permitMap.put(42, "deleting_an_agent");
         permitMap.put(43, "modify_the_proxy");
         permitMap.put(44, "query_agent");
-        permitMap.put(45, "increase_customer_");
-        permitMap.put(46, "delete_customer_");
-        permitMap.put(47, "modify_customer_");
-        permitMap.put(48, "customer_inquiry_");
+        permitMap.put(45, "increase_customer");
+        permitMap.put(46, "delete_customer");
+        permitMap.put(47, "modify_customer");
+        permitMap.put(48, "customer_inquiry");
         permitMap.put(49, "increase_expert_evaluation");
         permitMap.put(50, "delete_expert_evaluation");
         permitMap.put(51, "modify_expert_evaluation");
         permitMap.put(52, "query_expert_evaluation");
-        permitMap.put(53, "view_overall_rating_");
+        permitMap.put(53, "view_overall_rating");
         permitMap.put(54, "front_view_organic_environment");
         permitMap.put(55, "rear_view_organic_environment");
         permitMap.put(56, "send_messages");
@@ -124,6 +124,23 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
         permitMap.put(90, "delete_users");
         permitMap.put(91, "modify_user");
         permitMap.put(92, "query_user");
+        permitMap.put(93, "add_expert");
+        permitMap.put(94, "delete_expert");
+        permitMap.put(95, "modify_expert");
+        permitMap.put(96, "query_expert");
+        permitMap.put(97, "add_technician");
+        permitMap.put(98, "remove_technician");
+        permitMap.put(99, "modify_technician");
+        permitMap.put(100, "query_technician");
+        permitMap.put(101, "add_an_administrator");
+        permitMap.put(102, "remove_administrator");
+        permitMap.put(103, "modify_administrator");
+        permitMap.put(104, "query_administrator");
+        permitMap.put(105, "add_role");
+        permitMap.put(106, "remove_role");
+        permitMap.put(107, "modify_role");
+        permitMap.put(108, "query_role");
+        permitMap.put(109, "query_permit");
     }
 
     public boolean preHandle(HttpServletRequest request,
@@ -146,6 +163,9 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
                 request.getRequestURI().equals("/error") || request.getRequestURI().equals("/question")
                 ) {
             logger.info("PermitInterceptor:don't need to interceptor");
+            return true;
+        }
+        if (! (handler instanceof HandlerMethod)) {
             return true;
         }
         // 将handler强制转换为HandlerMethod
@@ -195,9 +215,5 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
         }
         response.setStatus(401);
         return false;
-    }
-
-    public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
-        System.out.println("this is the afterCompletion of PermitInterceptor");
     }
 }

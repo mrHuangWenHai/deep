@@ -7,5 +7,4 @@ import java.lang.annotation.*;
 @Documented
 public @interface Permit {
     String[] authorities() default {};
-    String[] modules() default {};
 }

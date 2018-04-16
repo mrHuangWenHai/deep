@@ -1,92 +1,109 @@
-增加配种产子档案                    increase_breeding_maternity_file
-删除配种产子档案                    delete_breeding_child_files
-查询配种产子档案                    search_for_breeding_child_files
-修改配种产子档案                    modify_breeding_seed_file
-监督审核配种产子档案                 supervise_auditing_breeding_child_files
-专家审核配种产子档案             experts_review_mating_and_childbirth_files
-增加疾病防治档案                increase_disease_prevention_files
-删除疾病防治档案                delete_disease_prevention_files
-查询疾病防治档案                check_disease_prevention_files
-修改疾病防治档案                modify_disease_prevention_files
-监督审核疾病防治档案                  supervise_and_verify_disease_prevention_files
-专家审核疾病防治档案                  experts_review_disease_prevention_files
-增加卫生消毒档案                increase_sanitation_files
-删除卫生消毒档案                delete_sanitation_files
-查看卫生消毒档案                view_sanitation_files
-修改卫生消毒档案                modify_sanitation_files
-监督审核卫生消毒档案                  surveillance_audit_sanitation_files
-专家审核卫生消毒档案                  experts_review_sanitation_files
-增加免疫实施档案                increase_the_immunization_implementation_file
-删除免疫实施档案                delete_the_immunization_implementation_file
-查询免疫实施档案                query_the_immunization_implementation_file
-修改免疫实施档案                modify_the_immunization_implementation_file
-监督审核免疫实施档案                  surveillance_audit_of_immunization_implementation_files
-专家审核免疫实施档案                  experts_review_immune_implementation_files
-增加阶段营养档案                increase_phase_nutritional_profile
-删除阶段营养档案                delete_stage_nutrition_file
-查询阶段营养档案                inquiry_phase_nutrition_file
-修改阶段营养档案                modification_phase_nutrition_file
-监督审核阶段营养答案      supervision_review_phase_nutrition_answer
-专家审核阶段营养档案      expert_review_nutrition_file
-增加卫生与动物福利        increase_health_and_animal_welfare
-删除卫生与动物福利        remove_health_and_animal_welfare
-查询卫生与动物福利        inquiries_on_hygiene_and_animal_welfare
-修改卫生与动物福利        modify_health_and_animal_welfare
-监督审核卫生与动物福利     supervise_and_audit_health_and_animal_welfare
-专家审核卫生与动物福利     experts_review_health_and_animal_welfare
-增加方案                increase_plan
-修改方案                amendment
-删除方案                delete_the_plan
-查询方案                query_plan
-增加代理                add_agent
-删除代理                deleting_an_agent
-修改代理                modify_the_proxy
-查询代理                query_agent
-增加客户(羊场)           increase_customer
-删除客户(羊场)           delete_customer
-修改客户(羊场)           modify_customer
-查询客户(羊场)           customer_inquiry
-增加专家评价             increase_expert_evaluation
-删除专家评价             delete_expert_evaluation
-修改专家评价             modify_expert_evaluation
-查询专家评价             query_expert_evaluation
-查看总评分(专家)         view_overall_rating_
-前端查看有机环境         front_view_organic_environment
-后端查看有机环境         rear_view_organic_environment
-发送短信                send_messages
-添加直播                add_live
-删除直播                delete_live
-查看直播                view_live
-禁止直播                ban_live
-添加社区活动            add_community_activities
-删除社区活动            delete_community_activity
-修改社区活动            modify_community_activities
-查询社区活动            check_community_activities
-添加发布                add_release
-删除发布                delete_release
-修改发布                modify_release
-查询发布                query_publishing
-添加系谱档案            add_pedigree_files
-删除系谱档案            delete_pedigree_files
-修改系谱档案            modify_pedigree_files
-查询系谱档案            query_pedigree_files
-添加视频                add_video
-删除视频                delete_video
-修改视频                edit_video
-查看视频                see_video
-添加图片                add_pictures
-删除图片                delete_picture
-修改图片                edit_picture
-查看图片                view_image
-添加拓展模块             add_expansion_module
-删除拓展模块             delete_extension_module
-修改拓展模块             modify_the_extension_module
-查询拓展模块             query_expansion_module
-添加拓展模块信息         add_extension_module_information
-删除拓展模块信息         delete_extension_module_information
-修改拓展模块信息         modify_the_extension_module_information
-查询拓展模块信息         query_expansion_module_information
-添加用户                add_user
-删除用户                delete_users
-修改用户                modify_user
-查询用户                query_user
+增加配种产子档案____________________increase_breeding_maternity_file
+删除配种产子档案____________________delete_breeding_child_files
+查询配种产子档案____________________search_for_breeding_child_files
+修改配种产子档案____________________modify_breeding_seed_file
+监督审核配种产子档案_________________supervise_auditing_breeding_child_files
+专家审核配种产子档案_____________experts_review_mating_and_childbirth_files
+增加疾病防治档案________________increase_disease_prevention_files
+删除疾病防治档案________________delete_disease_prevention_files
+查询疾病防治档案________________check_disease_prevention_files
+修改疾病防治档案________________modify_disease_prevention_files
+监督审核疾病防治档案__________________supervise_and_verify_disease_prevention_files
+专家审核疾病防治档案__________________experts_review_disease_prevention_files
+增加卫生消毒档案________________increase_sanitation_files
+删除卫生消毒档案________________delete_sanitation_files
+查看卫生消毒档案________________view_sanitation_files
+修改卫生消毒档案________________modify_sanitation_files
+监督审核卫生消毒档案__________________surveillance_audit_sanitation_files
+专家审核卫生消毒档案__________________experts_review_sanitation_files
+增加免疫实施档案________________increase_the_immunization_implementation_file
+删除免疫实施档案________________delete_the_immunization_implementation_file
+查询免疫实施档案________________query_the_immunization_implementation_file
+修改免疫实施档案________________modify_the_immunization_implementation_file
+监督审核免疫实施档案__________________surveillance_audit_of_immunization_implementation_files
+专家审核免疫实施档案__________________experts_review_immune_implementation_files
+增加阶段营养档案________________increase_phase_nutritional_profile
+删除阶段营养档案________________delete_stage_nutrition_file
+查询阶段营养档案________________inquiry_phase_nutrition_file
+修改阶段营养档案________________modification_phase_nutrition_file
+监督审核阶段营养答案______supervision_review_phase_nutrition_answer
+专家审核阶段营养档案______expert_review_nutrition_file
+增加卫生与动物福利________increase_health_and_animal_welfare
+删除卫生与动物福利________remove_health_and_animal_welfare
+查询卫生与动物福利________inquiries_on_hygiene_and_animal_welfare
+修改卫生与动物福利________modify_health_and_animal_welfare
+监督审核卫生与动物福利_____supervise_and_audit_health_and_animal_welfare
+专家审核卫生与动物福利_____experts_review_health_and_animal_welfare
+增加方案________________increase_plan
+修改方案________________amendment
+删除方案________________delete_the_plan
+查询方案________________query_plan
+增加代理________________add_agent
+删除代理________________deleting_an_agent
+修改代理________________modify_the_proxy
+查询代理________________query_agent
+增加客户(羊场)___________increase_customer
+删除客户(羊场)___________delete_customer
+修改客户(羊场)___________modify_customer
+查询客户(羊场)___________customer_inquiry
+增加专家评价_____________increase_expert_evaluation
+删除专家评价_____________delete_expert_evaluation
+修改专家评价_____________modify_expert_evaluation
+查询专家评价_____________query_expert_evaluation
+查看总评分(专家)_________view_overall_rating_
+前端查看有机环境_________front_view_organic_environment
+后端查看有机环境_________rear_view_organic_environment
+发送短信________________send_messages
+添加直播________________add_live
+删除直播________________delete_live
+查看直播________________view_live
+禁止直播________________ban_live
+添加社区活动____________add_community_activities
+删除社区活动____________delete_community_activity
+修改社区活动____________modify_community_activities
+查询社区活动____________check_community_activities
+添加发布________________add_release
+删除发布________________delete_release
+修改发布________________modify_release
+查询发布________________query_publishing
+添加系谱档案____________add_pedigree_files
+删除系谱档案____________delete_pedigree_files
+修改系谱档案____________modify_pedigree_files
+查询系谱档案____________query_pedigree_files
+添加视频________________add_video
+删除视频________________delete_video
+修改视频________________edit_video
+查看视频________________see_video
+添加图片________________add_pictures
+删除图片________________delete_picture
+修改图片________________edit_picture
+查看图片________________view_image
+添加拓展模块_____________add_expansion_module
+删除拓展模块_____________delete_extension_module
+修改拓展模块_____________modify_the_extension_module
+查询拓展模块_____________query_expansion_module
+添加拓展模块信息_________add_extension_module_information
+删除拓展模块信息_________delete_extension_module_information
+修改拓展模块信息_________modify_the_extension_module_information
+查询拓展模块信息_________query_expansion_module_information
+添加用户________________add_user
+删除用户________________delete_users
+修改用户________________modify_user
+查询用户________________query_user
+添加专家________________add_expert
+删除专家________________delete_expert
+修改专家________________modify_expert
+查询专家________________query_expert
+添加技术员_______________add_technician
+删除技术员_______________remove_technician
+修改技术员_______________modify_technician
+查询技术员_______________query_technician
+添加管理员_______________add_an_administrator
+删除管理员_______________remove_administrator
+修改管理员_______________modify_administrator
+查询管理员_______________query_administrator
+添加角色_________________add_role
+删除角色_________________remove_role
+修改角色_________________modify_role
+查询角色_________________query_role
+查看权限_________________query_permit

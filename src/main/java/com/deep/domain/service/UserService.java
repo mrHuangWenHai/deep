@@ -173,8 +173,8 @@ public class UserService {
      * 获取所有的用户信息
      * @return
      */
-    public List<UserModel> getAll() {
-        return userMapper.queryAllUser();
+    public List<UserModel> getAll(long roleID) {
+        return userMapper.queryAllUser(roleID);
     }
 
     /**

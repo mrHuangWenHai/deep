@@ -10,10 +10,7 @@ import com.deep.domain.service.BreedingPlanService;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -28,16 +25,11 @@ import java.util.List;
  * date: 2018/2/2  12:52
  */
 @Controller
+@RequestMapping(value = "/breeding")
 public class BreedingResource {
 
     @Resource
     private BreedingPlanService breedingPlanService;
-
-    @ResponseBody
-    @RequestMapping(value = "/breedingPlan",method = RequestMethod.GET)
-    public String helloBreed() {
-        return "Hello BreedingPlan!";
-    }
 
 //    按主键删除的接口：/breedingInsert
 //    按主键删除的方法名：addPlan()
@@ -47,8 +39,15 @@ public class BreedingResource {
     public String addPlan(){
         return "BreedingInsert";
     }
-    @ResponseBody
-    @RequestMapping(value = "/breedingInsert/show",method = RequestMethod.POST)
+
+    /**
+     * 添加一条记录信息
+     * @param planModel
+     * @param bindingResult
+     * @return
+     * @throws ParseException
+     */
+    @GetMapping(value = "/")
     public Response addPlan(@RequestBody @Valid BreedingPlanModel planModel,
                             BindingResult bindingResult) throws ParseException {
         if (bindingResult.hasErrors()) {
@@ -155,7 +154,13 @@ public class BreedingResource {
     public String dropPlan(){
         return "BreedingDeleteById";
     }
-    @ResponseBody
+
+    /**
+     * 按照主键删除一条记录
+     * @param breedingPlan
+     * @param bindingResult
+     * @return
+     */
     @RequestMapping(value = "/breedingDeleteById/show",method = RequestMethod.DELETE)
     public Response dropPlan(@RequestBody @Valid BreedingPlan breedingPlan,
                              BindingResult bindingResult){
@@ -179,7 +184,14 @@ public class BreedingResource {
     public String changePlanByOperator(){
         return "BreedingUpdateByOperator";
     }
-    @ResponseBody
+
+    /**
+     * 操作员按照主键进行审核
+     * @param planModel
+     * @param bindingResult
+     * @return
+     * @throws ParseException
+     */
     @RequestMapping(value = "/breedingUpdateByOperator/show",method = RequestMethod.POST)
     public Response changePlanByOperator(@RequestBody @Valid BreedingPlanModel planModel,
                                          BindingResult bindingResult) throws ParseException {
@@ -283,7 +295,13 @@ public class BreedingResource {
     public String changePlanByProfessor(){
         return "BreedingUpdateBySupervisor";
     }
-    @ResponseBody
+
+    /**
+     * 专家按照主键进行审核
+     * @param professor
+     * @param bindingResult
+     * @return
+     */
     @RequestMapping(value = "/breedingUpdateByProfessor/show",method = RequestMethod.POST)
     public Response changePlanByProfessor(@RequestBody @Valid BreedingPlan professor,
                                           BindingResult bindingResult) {
@@ -312,7 +330,13 @@ public class BreedingResource {
     public String changePlanBySupervisor(){
         return "BreedingUpdateBySupervisor";
     }
-    @ResponseBody
+
+    /**
+     * 监督员按照主键审核
+     * @param supervisor
+     * @param bindingResult
+     * @return
+     */
     @RequestMapping(value = "/breedingUpdateBySupervisor/show",method = RequestMethod.POST)
     public Response changePlanBySupervisor(@RequestBody @Valid BreedingPlan supervisor,
                                            BindingResult bindingResult) {
@@ -338,7 +362,13 @@ public class BreedingResource {
     public String findPlanById(){
         return "BreedingSelectById";
     }
-    @ResponseBody
+
+    /**
+     * 按照主键查询
+     * @param breedingPlan
+     * @param bindingResult
+     * @return
+     */
     @RequestMapping(value = "/breedingSelectById/show",method = RequestMethod.GET)
     public Response findPlanById(@Valid BreedingPlan breedingPlan,
                                  BindingResult bindingResult){
@@ -362,7 +392,14 @@ public class BreedingResource {
     public String findPlanSelective(){
         return "BreedingSelective";
     }
-    @ResponseBody
+
+    /**
+     * 按照条件查询
+     * @param planModel
+     * @param bindingResult
+     * @return
+     * @throws ParseException
+     */
     @RequestMapping(value = "/breedingSelective/show",method = RequestMethod.POST)
     public Response findPlanSelective(@RequestBody @Valid BreedingPlanModel planModel,
                                       BindingResult bindingResult) throws ParseException {

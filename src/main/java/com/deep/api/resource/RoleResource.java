@@ -30,7 +30,7 @@ public class RoleResource {
      * 查看所有的角色
      * @return json数据返回所有角色
      */
-    @Permit(modules = "role")
+    @Permit(authorities = "query_role")
     @GetMapping(value = "/")
     public Response roleLists() {
         logger.info("invoke roleLists, url is role/");
@@ -52,7 +52,7 @@ public class RoleResource {
      * @param bindingResult
      * @return
      */
-    @Permit(modules = "role")
+    @Permit(authorities = "add_role")
     @PostMapping(value = "/add")
     public Response addRole(@Valid @RequestBody RoleModel roleModel, BindingResult bindingResult) {
         logger.info("invoke addRole{}, url is role/add", roleModel, bindingResult);
@@ -84,7 +84,7 @@ public class RoleResource {
      * @param id 主键
      * @return
      */
-    @Permit(modules = "role")
+    @Permit(authorities = "query_role")
     @GetMapping(value = "/{id}")
     public Response findRole(@PathVariable("id")String id) {
         logger.info("invoke findRole{}", id);
@@ -107,7 +107,7 @@ public class RoleResource {
      * 删除一个角色
      * @param id
      */
-    @Permit(modules = "role")
+    @Permit(authorities = "remove_role")
     @DeleteMapping(value = "/{id}")
     public Response deleteRole(@PathVariable("id")String id) {
         logger.info("invoke deleteRole{}, url is role/{id}", id);
@@ -131,7 +131,7 @@ public class RoleResource {
      * @param roleModel
      * @return
      */
-    @Permit(modules = "role")
+    @Permit(authorities = "modify_role")
     @PutMapping(value = "/{id}")
     public Response roleUpdate(@RequestBody @Valid RoleModel roleModel, @PathVariable("id") String id, BindingResult bindingResult) {
         logger.info("invoke roleUpdate{}, url is role/{id}", roleModel, id, bindingResult);

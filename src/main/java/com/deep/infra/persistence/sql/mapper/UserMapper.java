@@ -12,7 +12,7 @@ public interface UserMapper {
      * 列出用户列表
      * @return
      */
-    @Select("select * from user_manage")
+    @Select("select * from user_manage where user_role >= #{roleID}")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "gmtCreate", column = "gmt_create"),
@@ -42,7 +42,7 @@ public interface UserMapper {
             @Result(property = "officialPhone", column = "official_phone"),
             @Result(property = "familyPhone", column = "family_phone")
     })
-    List<UserModel> queryAllUser();
+    List<UserModel> queryAllUser(long roleID);
 
     /**
      * 根据ID获取单个用户

@@ -235,7 +235,7 @@ public class AgentResource {
      * @param id
      * @return
      */
-    @Permit(authorities = "query_agent")
+    @Permit(authorities = "query_expert")
     @GetMapping(value = "ancestors/professor/{id}")
     public Response getAncestorsProfessor(@PathVariable("id") String id) {
         logger.info("invoke getAncestors {}", id);

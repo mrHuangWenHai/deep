@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -52,6 +53,9 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
                 request.getRequestURI().equals("/error") || request.getRequestURI().equals("/question")
                 ) {
             logger.info("AuthorizationInterceptor:don't need to interceptor");
+            return true;
+        }
+        if (! (handler instanceof HandlerMethod)) {
             return true;
         }
         // 从header中获取token

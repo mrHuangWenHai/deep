@@ -29,7 +29,7 @@ public class FactoryResouce {
      * 查看所有羊场
      * @return
      */
-    @Permit(modules = "factory", authorities = "select_factory")
+    @Permit(authorities = "customer_inquiry")
     @GetMapping(value = "/")
     public Response factoryLists() {
         logger.info("invoke factoryLists, url is factory/");
@@ -48,7 +48,7 @@ public class FactoryResouce {
     /**
      * 根据羊场的主键查询羊场
      */
-    @Permit(modules = "factory", authorities = "select_factory")
+    @Permit(authorities = "customer_inquiry")
     @GetMapping(value = "/{id}")
     public Response getFactoryOne(@PathVariable("id") String id) {
         logger.info("invoke getFactoryOne {}, url is factory/{id}", id);
@@ -71,7 +71,7 @@ public class FactoryResouce {
      * 根据工厂的主键删除一个羊场
      * @param id
      */
-    @Permit(modules = "factory")
+    @Permit(authorities = "delete_customer")
     @DeleteMapping(value = "/{id}")
     public Response deleteFactory(@PathVariable("id") String id) {
         logger.info("invoke deleteFactory{}, url is factory/{id}", id);
@@ -97,7 +97,7 @@ public class FactoryResouce {
      * @param bindingResult
      * @return
      */
-    @Permit(modules = "factory")
+    @Permit(authorities = "modify_customer")
     @PutMapping(value = "/{id}")
     public Response factoryUpdate(@Valid @RequestBody FactoryModel factoryModel, @PathVariable("id") String id , BindingResult bindingResult) {
         logger.info("invoke factoryUpdate{}", factoryModel, id);
@@ -130,7 +130,7 @@ public class FactoryResouce {
      * @param bindingResult
      * @return
      */
-    @Permit(modules = "factory")
+    @Permit(authorities = "increase_customer")
     @PostMapping(value = "/add")
     public Response addFactory(@Valid @RequestBody FactoryModel factoryModel, BindingResult bindingResult) {
         logger.info("invoke addFactory{}, url is factory/add", factoryModel);
