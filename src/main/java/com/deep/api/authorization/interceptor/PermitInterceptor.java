@@ -196,4 +196,8 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
         response.setStatus(401);
         return false;
     }
+
+    public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
+        System.out.println("this is the afterCompletion of PermitInterceptor");
+    }
 }

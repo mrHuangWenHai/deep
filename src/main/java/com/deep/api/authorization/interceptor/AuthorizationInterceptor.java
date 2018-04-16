@@ -6,6 +6,7 @@ import com.deep.api.authorization.token.TokenModel;
 import com.deep.api.authorization.tools.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.annotation.Resource;
@@ -32,9 +33,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
      */
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         logger.info("invoke preHandle of AuthorizationInterceptor {}", request, response, handler);
-
         System.out.println("this is the preHandle of the AuthorizationInterceptor");
-
         // 加相关的回应头
         response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");

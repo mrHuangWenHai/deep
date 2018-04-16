@@ -3,6 +3,7 @@ package com.deep.domain.service;
 import com.deep.domain.model.NoticePlan;
 import com.deep.domain.model.NoticePlanExample;
 import com.deep.infra.persistence.sql.mapper.NoticePlanMapper;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,24 +21,22 @@ public class NoticePlanService {
     private NoticePlanMapper noticePlanMapper;
 
         public int addPlan(NoticePlan noticePlan){
-            int add = this.noticePlanMapper.insert(noticePlan);
-            return add;
+            return this.noticePlanMapper.insert(noticePlan);
         }
         public int dropPlan(Integer id){
-            int drop = this.noticePlanMapper.deleteByPrimaryKey(id);
-            return drop;
+            return this.noticePlanMapper.deleteByPrimaryKey(id);
         }
         public int changePlan(NoticePlan noticePlan){
-            int change = this.noticePlanMapper.updateByPrimaryKeySelective(noticePlan);
-            return change;
+            return this.noticePlanMapper.updateByPrimaryKeySelective(noticePlan);
         }
         public NoticePlan findPlanById(Integer id){
-            NoticePlan find = this.noticePlanMapper.selectByPrimaryKey(id);
-            return find;
+            return this.noticePlanMapper.selectByPrimaryKey(id);
         }
-        public List<NoticePlan> findPlanSelective(NoticePlanExample noticePlanExample){
-            List<NoticePlan> find = this.noticePlanMapper.selectByExampleWithBLOBs(noticePlanExample);
-            return find;
+        public List<NoticePlan> findPlanSelective(NoticePlanExample noticePlanExample, RowBounds rowBounds){
+            return this.noticePlanMapper.selectByExampleWithBLOBsWithRowbounds(noticePlanExample,rowBounds);
+        }
+        public List<NoticePlan> selectInSite(String string){
+            return this.noticePlanMapper.selectInSite(string);
         }
          public static void uploadFile(byte[] file, String filePath, String fileName) throws Exception {
         File targetFile = new File(filePath);

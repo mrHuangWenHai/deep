@@ -35,6 +35,7 @@ public class UserModel {
         private String userRemark;
         private long userFactory;
         private long userRole;
+
         private String userPermit;
 
 //        @Max(1)

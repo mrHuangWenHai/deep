@@ -3,6 +3,7 @@ package com.deep.domain.service;
 import com.deep.domain.model.NutritionPlanExample;
 import com.deep.domain.model.NutritionPlanWithBLOBs;
 import com.deep.infra.persistence.sql.mapper.NutritionPlanMapper;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -18,40 +19,18 @@ public class NutritionPlanService {
     private NutritionPlanMapper nutritionPlanMapper;
 
     public int addPlan(NutritionPlanWithBLOBs nutritionPlanWithBLOBs){
-        int add = this.nutritionPlanMapper.insert(nutritionPlanWithBLOBs);
-        return add;
+        return this.nutritionPlanMapper.insert(nutritionPlanWithBLOBs);
     }
     public int dropPlan(Integer id){
-        int drop = this.nutritionPlanMapper.deleteByPrimaryKey(id);
-        return drop;
+        return this.nutritionPlanMapper.deleteByPrimaryKey(id);
     }
-    public int changePlanByProfessor(NutritionPlanWithBLOBs nutritionPlanWithBLOBs){
-        int change = this.nutritionPlanMapper.updateByPrimaryKeySelective(nutritionPlanWithBLOBs);
-        return change;
-    }
-    public int changePlanBySupervisor(NutritionPlanWithBLOBs nutritionPlanWithBLOBs){
-        int change = this.nutritionPlanMapper.updateByPrimaryKeySelective(nutritionPlanWithBLOBs);
-        return change;
+    public int changePlanSelective(NutritionPlanWithBLOBs nutritionPlanWithBLOBs){
+        return this.nutritionPlanMapper.updateByPrimaryKeySelective(nutritionPlanWithBLOBs);
     }
     public NutritionPlanWithBLOBs findPlanById(Integer id){
-        NutritionPlanWithBLOBs find = this.nutritionPlanMapper.selectByPrimaryKey(id);
-        return find;
+        return this.nutritionPlanMapper.selectByPrimaryKey(id);
     }
-    public List<NutritionPlanWithBLOBs> findPlanSelective(NutritionPlanExample nutritionPlanExample){
-        List<NutritionPlanWithBLOBs> find = this.nutritionPlanMapper.selectByExampleWithBLOBs(nutritionPlanExample);
-        return find;
-    }
-
-    public List<NutritionPlanWithBLOBs> findPlanSelectByDate(NutritionPlanExample nutritionPlanExample){
-        List<NutritionPlanWithBLOBs> find = this.nutritionPlanMapper.selectByExampleWithBLOBs(nutritionPlanExample);
-        return find;
-    }
-    public List<NutritionPlanWithBLOBs> findPlanSelectByProfessor(NutritionPlanExample nutritionPlanExample){
-        List<NutritionPlanWithBLOBs> find = this.nutritionPlanMapper.selectByExampleWithBLOBs(nutritionPlanExample);
-        return find;
-    }
-    public List<NutritionPlanWithBLOBs> findPlanSelectBySupervisor(NutritionPlanExample nutritionPlanExample){
-        List<NutritionPlanWithBLOBs> find = this.nutritionPlanMapper.selectByExampleWithBLOBs(nutritionPlanExample);
-        return find;
+    public List<NutritionPlanWithBLOBs> findPlanSelective(NutritionPlanExample nutritionPlanExample, RowBounds rowBounds){
+        return this.nutritionPlanMapper.selectByExampleWithBLOBsWithRowbounds(nutritionPlanExample,rowBounds);
     }
 }

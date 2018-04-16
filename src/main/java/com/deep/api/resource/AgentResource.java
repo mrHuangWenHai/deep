@@ -180,7 +180,6 @@ public class AgentResource {
             return Responses.errorResponse("error");
         }
     }
-
     /**
      * 获取上级代理操作
      * @param id
