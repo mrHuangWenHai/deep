@@ -10,10 +10,7 @@ import com.deep.domain.service.NutritionPlanService;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -27,7 +24,8 @@ import java.util.List;
  * author: Created  By  Caojiawei
  * date: 2018/2/21  19:34
  */
-@Controller
+@RestController
+@RequestMapping(value = "nutrition/")
 public class NurtritionResource {
 
     @Resource

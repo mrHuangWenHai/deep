@@ -24,7 +24,7 @@ import java.util.List;
  * author: Created  By  Caojiawei
  * date: 2018/2/2  12:52
  */
-@Controller
+@RestController
 @RequestMapping(value = "/breeding")
 public class BreedingResource {
 
