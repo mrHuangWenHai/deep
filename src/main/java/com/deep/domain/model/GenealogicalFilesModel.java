@@ -1,15 +1,6 @@
 package com.deep.domain.model;
 
-import org.apache.ibatis.session.RowBounds;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.util.Date;
+import javax.validation.constraints.*;
 
 
 /**
@@ -20,14 +11,20 @@ public class GenealogicalFilesModel {
     private int id;
     @NotEmpty
     @NotNull
-    private String nativeEartag;  //8位表示原耳牌
+    private String nativeEartag;  //原耳牌
     @NotEmpty
     @NotNull
     private String immuneEartag;  //免疫耳牌
     @NotEmpty
     @NotNull
     @Size(min = 15, max = 15, message = "trademarkEartag need size:15 ")
+    @Pattern(regexp = "^[0-9]+$", message = "商标耳牌由数字组成15位")
     private String tradeMarkEartag;  //商标耳牌
+    @NotEmpty
+    @NotNull
+    private String type;     //品种名
+
+    private String brief;    //对该品种的简介 查询时返回
     @NotEmpty
     @NotNull
     private String breedingSheepBase;  //种羊基地
@@ -179,6 +176,22 @@ public class GenealogicalFilesModel {
 
     public void setTradeMarkEartag(String tradeMarkEartag) {
         this.tradeMarkEartag = tradeMarkEartag;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getBrief() {
+        return brief;
+    }
+
+    public void setBrief(String brief) {
+        this.brief = brief;
     }
 
     public String getBreedingSheepBase() {

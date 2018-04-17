@@ -9,6 +9,7 @@
         <result property="nativeEartag" column="native_eartag"/>
         <result property="immuneEartag" column="immune_eartag"/>
         <result property="tradeMarkEartag" column="trademark_eartag"/>
+        <result property="type" column="type"/>
         <result property="breedingSheepBase" column="breedingsheep_base"/>
         <result property="birthTime" column="birth_time"/>
         <result property="birthWeight" column="birth_weight"/>
@@ -29,10 +30,10 @@
     <insert id="insertGenealogicalFilesModel" parameterType="com.deep.domain.model.GenealogicalFilesModel" useGeneratedKeys="true" keyColumn = "id" keyProperty = "genealogicalFilesModel.id">
 
         INSERT INTO genealogical_files(
-          id,
           native_eartag,
           immune_eartag,
           trademark_eartag,
+          type,
           breedingsheep_base,
           birth_time,
           birth_weight,
@@ -49,10 +50,10 @@
           gmt_modified
         )
         VALUES(
-          #{genealogicalFilesModel.id},
           #{genealogicalFilesModel.nativeEartag},
           #{genealogicalFilesModel.immuneEartag},
           #{genealogicalFilesModel.tradeMarkEartag},
+          #{genealogicalFilesModel.type},
           #{genealogicalFilesModel.breedingSheepBase},
           #{genealogicalFilesModel.birthTime},
           #{genealogicalFilesModel.birthWeight},
