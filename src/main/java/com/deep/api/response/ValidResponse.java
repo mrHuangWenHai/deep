@@ -14,7 +14,7 @@ import java.net.BindException;
 public class ValidResponse {
 
     @ExceptionHandler(BindException.class)
-    public static Response bindExceptionHandler(){
+    public static Response bindExceptionHandler() {
         return Responses.errorResponse("inject failure");
     }
 }

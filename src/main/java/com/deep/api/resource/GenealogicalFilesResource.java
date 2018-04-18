@@ -89,11 +89,9 @@ public class GenealogicalFilesResource {
      */
     @ResponseBody
     @RequestMapping(value = "/findshowbyid",method = RequestMethod.GET)
-
     public Response findShowById(@RequestParam("id") int id ) {
 
         logger.info("invoke findShowById {}", id);
-
 
         GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesService.getGenealogicalFilesModelByid(id);
 
@@ -111,7 +109,7 @@ public class GenealogicalFilesResource {
      */
     @ResponseBody
     @RequestMapping(value = "/update",method = RequestMethod.PATCH)
-    public Response update(@RequestBody GenealogicalFilesModel genealogicalFilesModel){
+    public Response update(@RequestBody GenealogicalFilesModel genealogicalFilesModel) {
 
         logger.info("invoke update {}", genealogicalFilesModel);
 
@@ -120,7 +118,7 @@ public class GenealogicalFilesResource {
             && genealogicalFilesService.getGenealogicalFilesModelBytradeMarkEartag(genealogicalFilesModel.getTradeMarkEartag()) == null) {
             int row = genealogicalFilesService.updateGenealogicalFilesModel(genealogicalFilesModel);
             return JudgeUtil.JudgeUpdate(row);
-        }else {
+        } else {
             return Responses.errorResponse("conflict with existing datas");
         }
 
@@ -134,7 +132,6 @@ public class GenealogicalFilesResource {
      */
     @ResponseBody
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
-
     public Response delete(@RequestParam("id") int id) {
         logger.info("invoke delete {}", id);
         int row = genealogicalFilesService.deleteGenealogicalFilesModel(id);

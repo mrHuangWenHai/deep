@@ -49,14 +49,13 @@ public class DisinfectFilesResource {
      * @return
      */
 
-
     @RequestMapping(value = "/saveshow",method = RequestMethod.POST)
     public Response saveShow(@Valid DisinfectFilesModel disinfectFilesModel,
                              BindingResult bindingResult,
                              @RequestParam(value = "disinfectEartagFile") MultipartFile disinfectEartagFile,
                              HttpServletRequest request
                             ) {
-        if (bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return ValidResponse.bindExceptionHandler();
         }
         logger.info("invoke saveShow {}", disinfectFilesModel, disinfectEartagFile, request);
@@ -133,15 +132,14 @@ public class DisinfectFilesResource {
                             //需完成:userModels.getTelephone()赋值给String
                             // 获得StringBuffer手机号
                             StringBuffer phoneList = new StringBuffer("");
-                            for (int i = 0; i < phone.size(); i++){
+                            for (int i = 0; i < phone.size(); i++) {
                                 phoneList = phoneList.append(phone.get(i)).append(",");
                             }
 
-                            if ("".equals(phoneList.toString())){
+                            if ("".equals(phoneList.toString())) {
 
                               //
-                            }else {
-
+                            } else {
                                 //发送成功 更新redis中字段
                                 if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
                                     JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
@@ -157,19 +155,19 @@ public class DisinfectFilesResource {
 
 
                     if( !("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
-                        if(JedisUtil.redisJudgeTime(supervisorKey)){
+                        if(JedisUtil.redisJudgeTime(supervisorKey)) {
                             List<String> phone = userService.getUserTelephoneByfactoryNum(disinfectFilesModel.getFactoryNum());
 
                             StringBuffer phoneList = new StringBuffer("");
 
-                            for(int i = 0; i < phone.size(); i++){
+                            for (int i = 0; i < phone.size(); i++) {
                                 phoneList = phoneList.append(phone.get(i)).append(",");
                             }
-                            if ("".equals(phoneList.toString())){
+                            if ("".equals(phoneList.toString())) {
 
                                 System.out.println(phoneList);
                                 return Responses.errorResponse("Not found telephone");
-                            }else{
+                            } else {
                                 if( JedisUtil.redisSendMessage(phoneList.toString(),JedisUtil.getCertainKeyValue("Message"))) {
                                     //System.out.println("发送成功！");
 
@@ -210,7 +208,7 @@ public class DisinfectFilesResource {
      * @return
      */
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
-    public Response findShow(@RequestBody DisinfectFilesModel disinfectFilesModel) {
+    public Response findShow( DisinfectFilesModel disinfectFilesModel) {
 
         logger.info("invoke findShow {}",disinfectFilesModel);
         if( disinfectFilesModel.getSize() == 0) {
@@ -236,10 +234,10 @@ public class DisinfectFilesResource {
     @RequestMapping(value = "/pfind",method = RequestMethod.GET)
     public Response professorFind(@RequestParam(value = "isPass",defaultValue = "2") Integer isPass,
                                   @RequestParam(value = "page",defaultValue = "0") int page,
-                                  @RequestParam(value = "size",defaultValue = "10") int size){
+                                  @RequestParam(value = "size",defaultValue = "10") int size) {
 
         logger.info("invoke professorFind {}", isPass, page, size);
-        if ("2".equals(isPass.toString())){
+        if ("2".equals(isPass.toString())) {
             return Responses.errorResponse("Wrong Pass num");
         }
         List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesService.getDisinfectFilesModelByProfessor(isPass,new RowBounds(page,size));

@@ -34,13 +34,13 @@
         <mapper resource="mapper/PicMapper.xml"/>
         <mapper resource="mapper/MessageMapper.xml"/>
         <mapper resource="mapper/RoleMapperxml.xml"/>
-
         <mapper resource="mapper/GenealogicalFilesMapperxml.xml" />
         <mapper resource="mapper/DisinfectFilesMapperxml.xml" />
         <mapper resource="mapper/ImmunePlanMapperxml.xml"/>
         <mapper resource="mapper/RepellentPlanMapperxml.xml"/>
         <mapper resource="mapper/GenealogicalFilesTransMapper.xml"/>
-
+        <mapper resource="mapper/DisinfectionArchivesMapper.xml" />
+        <mapper resource="mapper/OperationFileMapper.xml" />
     </mappers>
 </configuration>
 

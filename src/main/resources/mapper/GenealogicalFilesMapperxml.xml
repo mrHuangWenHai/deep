@@ -109,41 +109,40 @@
                 AND birth_time &gt;= #{genealogicalFilesModel.birthTimeStart}
             </if>
 
+            <if test="genealogicalFilesModel.birthWeightStart != null and genealogicalFilesModel.birthWeightStart != '' and
+                        genealogicalFilesModel.birthWeightEnd != null and genealogicalFilesModel.birthWeightEnd != ''">
+                AND birth_weight BETWEEN #{genealogicalFilesModel.birthWeightStart} AND #{genealogicalFilesModel.birthWeightEnd}
+            </if>
 
-            <!--<if test="genealogicalFilesModel.birthWeightStart != null and genealogicalFilesModel.birthWeightStart != '' and-->
-                        <!--genealogicalFilesModel.birthWeightEnd != null and genealogicalFilesModel.birthWeightEnd != ''">-->
-                <!--AND birth_weight BETWEEN #{genealogicalFilesModel.birthWeightStart} AND #{genealogicalFilesModel.birthWeightEnd}-->
-            <!--</if>-->
+            <if test="genealogicalFilesModel.birthWeightStart != null and genealogicalFilesModel.birthWeightStart != '' and
+                   (genealogicalFilesModel.birthWeightEnd == null or genealogicalFilesModel.birthWeightEnd == '') ">
+                AND birth_weight &gt;= #{genealogicalFilesModel.birthWeightStart}
+            </if>
 
-            <!--<if test="genealogicalFilesModel.birthWeightStart != null and genealogicalFilesModel.birthWeightStart != '' and-->
-                   <!--(genealogicalFilesModel.birthWeightEnd == null or genealogicalFilesModel.birthWeightEnd == '') ">-->
-                <!--AND birth_weight &gt;= #{genealogicalFilesModel.birthWeightStart}-->
-            <!--</if>-->
-
-            <!--<if test="genealogicalFilesModel.color != null and genealogicalFilesModel.color != '' ">-->
-                <!--AND color = #{genealogicalFilesModel.color}-->
-            <!--</if>-->
-            <!--<if test="genealogicalFilesModel.sex != null and genealogicalFilesModel.sex != '' ">-->
-                <!--AND sex = #{genealogicalFilesModel.sex}-->
-            <!--</if>-->
-            <!--<if test="genealogicalFilesModel.eartagOfFather != null and genealogicalFilesModel.eartagOfFather != '' ">-->
-                <!--AND eartag_of_father = #{genealogicalFilesModel.eartagOfFather}-->
-            <!--</if>-->
-            <!--<if test="genealogicalFilesModel.eartagOfMother != null and genealogicalFilesModel.eartagOfMother != '' ">-->
-                <!--AND eartag_of_mother = #{genealogicalFilesModel.eartagOfMother}-->
-            <!--</if>-->
-            <!--<if test="genealogicalFilesModel.eartagOfFathersFather != null and genealogicalFilesModel.eartagOfFathersFather != '' ">-->
-                <!--AND eartag_of_fatherfather = #{genealogicalFilesModel.eartagOfFathersFather}-->
-            <!--</if>-->
-            <!--<if test="genealogicalFilesModel.eartagOfFathersMother != null and genealogicalFilesModel.eartagOfFathersMother != '' ">-->
-                <!--AND eartag_of_fathermother = #{genealogicalFilesModel.eartagOfFathersMother}-->
-            <!--</if>-->
-            <!--<if test="genealogicalFilesModel.eartagOfMothersFather != null and genealogicalFilesModel.eartagOfMothersFather != '' ">-->
-                <!--AND eartag_of_motherfather = #{genealogicalFilesModel.eartagOfMothersFather}-->
-            <!--</if>-->
-            <!--<if test="genealogicalFilesModel.eartagOfMothersMother != null and genealogicalFilesModel.eartagOfMothersMother != '' ">-->
-                <!--AND eartag_of_mothermother = #{genealogicalFilesModel.eartagOfMothersMother}-->
-            <!--</if>-->
+            <if test="genealogicalFilesModel.color != null and genealogicalFilesModel.color != '' ">
+                AND color = #{genealogicalFilesModel.color}
+            </if>
+            <if test="genealogicalFilesModel.sex != null and genealogicalFilesModel.sex != '' ">
+                AND sex = #{genealogicalFilesModel.sex}
+            </if>
+            <if test="genealogicalFilesModel.eartagOfFather != null and genealogicalFilesModel.eartagOfFather != '' ">
+                AND eartag_of_father = #{genealogicalFilesModel.eartagOfFather}
+            </if>
+            <if test="genealogicalFilesModel.eartagOfMother != null and genealogicalFilesModel.eartagOfMother != '' ">
+                AND eartag_of_mother = #{genealogicalFilesModel.eartagOfMother}
+            </if>
+            <if test="genealogicalFilesModel.eartagOfFathersFather != null and genealogicalFilesModel.eartagOfFathersFather != '' ">
+                AND eartag_of_fatherfather = #{genealogicalFilesModel.eartagOfFathersFather}
+            </if>
+            <if test="genealogicalFilesModel.eartagOfFathersMother != null and genealogicalFilesModel.eartagOfFathersMother != '' ">
+                AND eartag_of_fathermother = #{genealogicalFilesModel.eartagOfFathersMother}
+            </if>
+            <if test="genealogicalFilesModel.eartagOfMothersFather != null and genealogicalFilesModel.eartagOfMothersFather != '' ">
+                AND eartag_of_motherfather = #{genealogicalFilesModel.eartagOfMothersFather}
+            </if>
+            <if test="genealogicalFilesModel.eartagOfMothersMother != null and genealogicalFilesModel.eartagOfMothersMother != '' ">
+                AND eartag_of_mothermother = #{genealogicalFilesModel.eartagOfMothersMother}
+            </if>
     </select>
 
 

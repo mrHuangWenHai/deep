@@ -19,8 +19,8 @@ public class DisinfectFilesModel {
     private String disinfectTime;     //消毒时间
     @NotBlank
     private String disinfectName;     //消毒药品名称
-    @NotBlank
-    private String disinfectQuality;    //用药剂量
+    @Min(0)
+    private float disinfectQuality;    //用药剂量
     @NotBlank
     private String disinfectWay;     //消毒方法
     @NotBlank
@@ -49,7 +49,7 @@ public class DisinfectFilesModel {
     public DisinfectFilesModel() {
     }
 
-    public DisinfectFilesModel(BigInteger factoryNum, String disinfectTime, String disinfectName, String disinfectQuality, String disinfectWay, String operator, String remark, String isPass,String isPass1, String gmtCreate, String gmtModified) {
+    public DisinfectFilesModel(BigInteger factoryNum, String disinfectTime, String disinfectName, float disinfectQuality, String disinfectWay, String operator, String remark, String isPass,String isPass1, String gmtCreate, String gmtModified) {
         this.factoryNum = factoryNum;
         this.disinfectTime = disinfectTime;
         this.disinfectName = disinfectName;
@@ -104,11 +104,11 @@ public class DisinfectFilesModel {
         this.disinfectName = disinfectName;
     }
 
-    public String getDisinfectQuality() {
+    public float getDisinfectQuality() {
         return disinfectQuality;
     }
 
-    public void setDisinfectQuality(String disinfectQuality) {
+    public void setDisinfectQuality(float disinfectQuality) {
         this.disinfectQuality = disinfectQuality;
     }
 

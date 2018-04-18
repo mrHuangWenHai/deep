@@ -68,9 +68,15 @@
         <if test="disinfectFilesModel.factoryNum != null and disinfectFilesModel.factoryNum != '' ">
             AND factory_num = #{disinfectFilesModel.factoryNum}
         </if>
+
         <if test="disinfectFilesModel.disinfectTimeStart != null and disinfectFilesModel.disinfectTimeStart != '' and
                   disinfectFilesModel.disinfectTimeEnd != null and disinfectFilesModel.disinfectTimeEnd != '' ">
             AND disinfect_t BETWEEN #{disinfectFilesModel.disinfectTimeStart} AND #{disinfectFilesModel.disinfectTimeEnd}
+        </if>
+
+        <if test="disinfectFilesModel.disinfectTimeStart != null and disinfectFilesModel.disinfectTimeStart != '' and
+         (disinfectFilesModel.disinfectTimeEnd == null or disinfectFilesModel.disinfectTimeEnd == '') ">
+            AND disinfect_t &gt;= #{disinfectFilesModel.disinfectTimeStart}
         </if>
         <if test="disinfectFilesModel.disinfectName != null and disinfectFilesModel.disinfectName != '' ">
             AND disinfect_n = #{disinfectFilesModel.disinfectName}
