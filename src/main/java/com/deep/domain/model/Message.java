@@ -3,7 +3,6 @@ package com.deep.domain.model;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.regex.*;
 import java.util.regex.Pattern;
 
 public class Message implements Serializable {

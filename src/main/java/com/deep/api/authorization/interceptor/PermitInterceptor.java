@@ -1,16 +1,15 @@
 package com.deep.api.authorization.interceptor;
 
+import com.deep.api.Utils.JedisUtil;
 import com.deep.api.authorization.annotation.Permit;
-import com.deep.api.authorization.token.TokenManager;
+import com.deep.api.authorization.token.TokenManagerRealization;
 import com.deep.api.authorization.token.TokenModel;
 import com.deep.api.authorization.tools.Constants;
-import com.deep.api.authorization.tools.RoleAndPermit;
-import com.deep.domain.service.ServiceConfiguration;
-import com.deep.domain.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import redis.clients.jedis.Jedis;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -23,110 +22,151 @@ import java.util.Set;
 
 @Component
 public class PermitInterceptor extends HandlerInterceptorAdapter{
-    @Resource
-    private TokenManager tokenManager;
-    @Resource
-    private UserService userService;
-    // static修饰的代码块在类进行初始化的时候肯定会执行
+    private final Logger logger = LoggerFactory.getLogger(PermitInterceptor.class);
 
-    // 用户角色
-    private static Map<Long, String> map = new HashMap<>();
+    @Resource
+    private TokenManagerRealization tokenManagerRealization;
 
     // 用户权限
-    public static Map<Long, String> permitMap = new HashMap<>();
+    private static Map<Integer, String> permitMap = new HashMap<>();
 
     static {
-        // 将角色的代码和角色名称进行一一对应, 便于设置拦截器
-        map.put(new Long(262144) , "dongxiang_factory_administrator");
-        map.put(new Long(131072) , "dongxiang_factory_expert");
-        map.put(new Long(65536) , "dongxiang_factory_technician");
-        map.put(new Long(32768) , "province_agent_total_administrator");
-        map.put(new Long(524288) , "total_system_administrator");
-        map.put(new Long(16384) , "province_agent_administrator");
-        map.put(new Long(8192) , "province_agent_expert");
-        map.put(new Long(4096) , "province_agent_technician");
-        map.put(new Long(2048) , "city_agent_total_administrator");
-        map.put(new Long(1024) , "city_agent_administrator");
-        map.put(new Long(512) , "city_agent_expert");
-        map.put(new Long(256) , "city_agent_technician");
-        map.put(new Long(128) , "county_agent_total_administrator");
-        map.put(new Long(64) , "county_agent_administrator");
-        map.put(new Long(32) , "county_agent_expert");
-        map.put(new Long(16) , "county_agent_technician");
-        map.put(new Long(8) , "sheep_farm_administrator");
-        map.put(new Long(4) , "sheep_farm_operator");
-        map.put(new Long(2) , "sheep_farm_supervisor");
-        map.put(new Long(1) , "tourist");
-        map.put(new Long(0) , "others");
-
-        // 将权限的代码和拦截器一一对应,便于设置拦截器
-        permitMap.put(new Long(1) , "create_dongxiang_factory_administrator");
-        permitMap.put(new Long(2) , "delete_dongxiang_factory_administrator");
-        permitMap.put(new Long(3) , "update_user_password");
-        permitMap.put(new Long(4) , "select_dongxiang_factory_administrator");
-        permitMap.put(new Long(5) , "create_community_activities");
-        permitMap.put(new Long(6) , "delete_community_activities");
-        permitMap.put(new Long(7) , "update_community_activities");
-        permitMap.put(new Long(8) , "select_community_activities");
-        permitMap.put(new Long(9) , "create_live_information");
-        permitMap.put(new Long(10) , "delete_live_information");
-        permitMap.put(new Long(11) , "update_live_information");
-        permitMap.put(new Long(12) , "select_live_information");
-        permitMap.put(new Long(13) , "create_sanitary_disinfection_scheme");
-        permitMap.put(new Long(14) , "delete_sanitary_disinfection_scheme");
-        permitMap.put(new Long(15) , "update_sanitary_disinfection_scheme");
-        permitMap.put(new Long(16) , "select_sanitary_disinfection_scheme");
-        permitMap.put(new Long(17) , "create_immunization_program");
-        permitMap.put(new Long(18) , "delete_immunization_program");
-        permitMap.put(new Long(19) , "update_immunization_program");
-        permitMap.put(new Long(20) , "select_immunization_program");
-        permitMap.put(new Long(21) , "create_stage_nutrition_scheme");
-        permitMap.put(new Long(22) , "delete_stage_nutrition_scheme");
-        permitMap.put(new Long(23) , "update_stage_nutrition_scheme");
-        permitMap.put(new Long(24) , "select_stage_nutrition_scheme");
-        permitMap.put(new Long(25) , "create_seed_production_scheme");
-        permitMap.put(new Long(26) , "delete_seed_production_scheme");
-        permitMap.put(new Long(27) , "update_seed_production_scheme");
-        permitMap.put(new Long(28) , "select_seed_production_scheme");
-        permitMap.put(new Long(29) , "create_archives_of_disease_prevention_and_control");
-        permitMap.put(new Long(30) , "delete_archives_of_disease_prevention_and_control");
-        permitMap.put(new Long(31) , "update_archives_of_disease_prevention_and_control");
-        permitMap.put(new Long(32) , "select_archives_of_disease_prevention_and_control");
-        permitMap.put(new Long(33) , "create_production_materials");
-        permitMap.put(new Long(34) , "delete_production_materials");
-        permitMap.put(new Long(35) , "update_production_materials");
-        permitMap.put(new Long(36) , "select_production_materials");
-        permitMap.put(new Long(37) , "create_order");
-        permitMap.put(new Long(38) , "delete_order");
-        permitMap.put(new Long(39) , "update_order");
-        permitMap.put(new Long(40) , "select_order");
-        permitMap.put(new Long(41) , "create_agent");
-        permitMap.put(new Long(42) , "delete_agent");
-        permitMap.put(new Long(43) , "update_agent");
-        permitMap.put(new Long(44) , "select_agent");
-        permitMap.put(new Long(45) , "create_professor");
-        permitMap.put(new Long(46) , "delete_professor");
-        permitMap.put(new Long(47) , "update_professor");
-        permitMap.put(new Long(48) , "select_professor");
-        permitMap.put(new Long(49) , "create_technician");
-        permitMap.put(new Long(50) , "delete_technician");
-        permitMap.put(new Long(51) , "update_technician");
-        permitMap.put(new Long(52) , "select_technician");
-        permitMap.put(new Long(53) , "create_operator");
-        permitMap.put(new Long(54) , "delete_operator");
-        permitMap.put(new Long(55) , "update_operator");
-        permitMap.put(new Long(56) , "select_operator");
-        permitMap.put(new Long(57) , "create_factory");
-        permitMap.put(new Long(58) , "delete_factory");
-        permitMap.put(new Long(59) , "update_factory");
-        permitMap.put(new Long(60) , "select_factory");
+        // 将权限的代码和拦截器一一对应
+        permitMap.put(1, "increase_breeding_maternity_file");
+        permitMap.put(2, "delete_breeding_child_files");
+        permitMap.put(3, "search_for_breeding_child_files");
+        permitMap.put(4, "modify_breeding_seed_file");
+        permitMap.put(5, "supervise_auditing_breeding_child_files");
+        permitMap.put(6, "experts_review_mating_and_childbirth_files");
+        permitMap.put(7, "increase_disease_prevention_files");
+        permitMap.put(8, "delete_disease_prevention_files");
+        permitMap.put(9, "check_disease_prevention_files");
+        permitMap.put(10, "modify_disease_prevention_files");
+        permitMap.put(11, "supervise_and_verify_disease_prevention_files");
+        permitMap.put(12, "experts_review_disease_prevention_files");
+        permitMap.put(13, "increase_sanitation_files");
+        permitMap.put(14, "delete_sanitation_files");
+        permitMap.put(15, "view_sanitation_files");
+        permitMap.put(16, "modify_sanitation_files");
+        permitMap.put(17, "surveillance_audit_sanitation_files");
+        permitMap.put(18, "experts_review_sanitation_files");
+        permitMap.put(19, "increase_the_immunization_implementation_file");
+        permitMap.put(20, "delete_the_immunization_implementation_file");
+        permitMap.put(21, "query_the_immunization_implementation_file");
+        permitMap.put(22, "modify_the_immunization_implementation_file");
+        permitMap.put(23, "surveillance_audit_of_immunization_implementation_files");
+        permitMap.put(24, "experts_review_immune_implementation_files");
+        permitMap.put(25, "increase_phase_nutritional_profile");
+        permitMap.put(26, "delete_stage_nutrition_file");
+        permitMap.put(27, "inquiry_phase_nutrition_file");
+        permitMap.put(28, "modification_phase_nutrition_file");
+        permitMap.put(29, "supervision_review_phase_nutrition_answer");
+        permitMap.put(30, "expert_review_nutrition_file");
+        permitMap.put(31, "increase_health_and_animal_welfare");
+        permitMap.put(32, "remove_health_and_animal_welfare");
+        permitMap.put(33, "inquiries_on_hygiene_and_animal_welfare");
+        permitMap.put(34, "modify_health_and_animal_welfare");
+        permitMap.put(35, "supervise_and_audit_health_and_animal_welfare");
+        permitMap.put(36, "experts_review_health_and_animal_welfare");
+        permitMap.put(37, "increase_plan");
+        permitMap.put(38, "amendment");
+        permitMap.put(39, "delete_the_plan");
+        permitMap.put(40, "query_plan");
+        permitMap.put(41, "add_agent");
+        permitMap.put(42, "deleting_an_agent");
+        permitMap.put(43, "modify_the_proxy");
+        permitMap.put(44, "query_agent");
+        permitMap.put(45, "increase_customer");
+        permitMap.put(46, "delete_customer");
+        permitMap.put(47, "modify_customer");
+        permitMap.put(48, "customer_inquiry");
+        permitMap.put(49, "increase_expert_evaluation");
+        permitMap.put(50, "delete_expert_evaluation");
+        permitMap.put(51, "modify_expert_evaluation");
+        permitMap.put(52, "query_expert_evaluation");
+        permitMap.put(53, "view_overall_rating");
+        permitMap.put(54, "front_view_organic_environment");
+        permitMap.put(55, "rear_view_organic_environment");
+        permitMap.put(56, "send_messages");
+        permitMap.put(57, "add_live");
+        permitMap.put(58, "delete_live");
+        permitMap.put(59, "view_live");
+        permitMap.put(60, "ban_live");
+        permitMap.put(61, "add_community_activities");
+        permitMap.put(62, "delete_community_activity");
+        permitMap.put(63, "modify_community_activities");
+        permitMap.put(64, "check_community_activities");
+        permitMap.put(65, "add_release");
+        permitMap.put(66, "delete_release");
+        permitMap.put(67, "modify_release");
+        permitMap.put(68, "query_publishing");
+        permitMap.put(69, "add_pedigree_files");
+        permitMap.put(70, "delete_pedigree_files");
+        permitMap.put(71, "modify_pedigree_files");
+        permitMap.put(72, "query_pedigree_files");
+        permitMap.put(73, "add_video");
+        permitMap.put(74, "delete_video");
+        permitMap.put(75, "edit_video");
+        permitMap.put(76, "see_video");
+        permitMap.put(77, "add_pictures");
+        permitMap.put(78, "delete_picture");
+        permitMap.put(79, "edit_picture");
+        permitMap.put(80, "view_image");
+        permitMap.put(81, "add_expansion_module");
+        permitMap.put(82, "delete_extension_module");
+        permitMap.put(83, "modify_the_extension_module");
+        permitMap.put(84, "query_expansion_module");
+        permitMap.put(85, "add_extension_module_information");
+        permitMap.put(86, "delete_extension_module_information");
+        permitMap.put(87, "modify_the_extension_module_information");
+        permitMap.put(88, "query_expansion_module_information");
+        permitMap.put(89, "add_user");
+        permitMap.put(90, "delete_users");
+        permitMap.put(91, "modify_user");
+        permitMap.put(92, "query_user");
+        permitMap.put(93, "add_expert");
+        permitMap.put(94, "delete_expert");
+        permitMap.put(95, "modify_expert");
+        permitMap.put(96, "query_expert");
+        permitMap.put(97, "add_technician");
+        permitMap.put(98, "remove_technician");
+        permitMap.put(99, "modify_technician");
+        permitMap.put(100, "query_technician");
+        permitMap.put(101, "add_an_administrator");
+        permitMap.put(102, "remove_administrator");
+        permitMap.put(103, "modify_administrator");
+        permitMap.put(104, "query_administrator");
+        permitMap.put(105, "add_role");
+        permitMap.put(106, "remove_role");
+        permitMap.put(107, "modify_role");
+        permitMap.put(108, "query_role");
+        permitMap.put(109, "query_permit");
     }
 
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response, Object handler) throws Exception {
-        // 判断handler是否是HandlerMethod的实例
-        if (!(handler instanceof HandlerMethod)) {
-            return false;
+        logger.info("invoke preHandle of PermitInterceptor", request, response, handler);
+
+        System.out.println("this is the preHandle of PermitInterceptor");
+
+        if (request.getMethod().equals("OPTIONS")) {
+            logger.info("PermitInterceptor:request type is OPTIONS");
+            return true;
+        }
+
+        if (request.getRequestURI().equals("/login") || request.getRequestURI().equals("/register") ||
+                request.getRequestURI().equals("/allfunction") ||request.getRequestURI().equals("/loginresult")||
+                request.getRequestURI().equals("/userAdd") ||request.getRequestURI().equals("/ensurequestion")||
+                request.getRequestURI().equals("/phonefind") ||request.getRequestURI().equals("/questionfind")||
+                request.getRequestURI().equals("/ensureverify") ||request.getRequestURI().equals("/findpassword")||
+                request.getRequestURI().equals("/phonefind")||request.getRequestURI().equals("/ensurequestion") ||
+                request.getRequestURI().equals("/error") || request.getRequestURI().equals("/question")
+                ) {
+            logger.info("PermitInterceptor:don't need to interceptor");
+            return true;
+        }
+        if (! (handler instanceof HandlerMethod)) {
+            return true;
         }
         // 将handler强制转换为HandlerMethod
         HandlerMethod handlerMethod = (HandlerMethod) handler;
@@ -134,43 +174,46 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
         Method method = handlerMethod.getMethod();
         // 从请求头中获取用户的ID
         String authorization = request.getHeader(Constants.AUTHORIZATION);
+        System.out.println("Permit拦截器" + authorization);
         if (authorization == null) {
+            logger.info("authorization == null");
+            response.setStatus(401);
             return false;
         }
-        TokenModel model = tokenManager.getToken(authorization);
+        tokenManagerRealization = new TokenManagerRealization();
+        // 取出authorization中的用户ID
+        TokenModel tokenModel = tokenManagerRealization.getToken(authorization);
         // 取出方法上的Permit注解
         Permit permit = method.getAnnotation(Permit.class);
         if (permit == null) {
-            // 如果注解Permit不为null, 标明不需要拦截, 直接放过
+            logger.info("no permit message");
             return true;
         } else {
+            logger.info("permit authorities length {}", permit.authorities(), permit.authorities().length);
+            // 权限Permit注解的authorization部分
             if (permit.authorities().length > 0) {
-                String[] modules = permit.modules();
-                Set<String> authSet = new HashSet<>();
-                for (String module : modules) {
-                    authSet.add(module);
+                String[] authorities = permit.authorities();
+                Set<String> authorSet = new HashSet<>();
+                for (String authority : authorities) {
+                    authorSet.add(authority);
+                    System.out.println(authority);
                 }
-                // 从参数中获取用户的ID
-                // 从数据库的权限表中查询用户所拥有的权限集合, 与Set集合中的权限进行比对完成权限校验
-                Long userID = model.getUserId();
-                // 从Redis数据库中获取用户的相应权限
-                Jedis jedis = new Jedis(ServiceConfiguration.redisServer);
-                String roleInt = jedis.get(String.valueOf(userID).split("-")[1]);
-                // TODO 需要判断用户是否有拓展权限从而判断是否属于其它的用户从而决定是否进行拦截操作(PASS--用户可以自定义角色, 所以此功能可以舍弃)
-                // 根据roleInt去查询角色的名称, 需要实现roleInt与角色名称的一一对应
-                // 所以通过静态的方法去处理相关的关系
-                // 这是相应的roleString角色
-                String roleString = map.get(roleInt);
-                if (authSet.contains(roleString)) {
-                    // 校验通过返回true, 否则拦截请求
-                    return true;
+                // 获取Redis数据库的用户权限信息
+                String allPermits = JedisUtil.getValue("defaultPermit"+tokenModel.getUserId());
+                System.out.println("allPermits.length() = " + allPermits.length());
+                for (int i = 0; i < allPermits.length(); i++) {
+                    if (allPermits.charAt(i) == '1') {
+                        String authority = permitMap.get(i+1);
+                        System.out.println("authority is " + authority + ", i = " + i);
+                        if (authorSet.contains(authority)) {
+                            logger.info("PermitInterceptor success {}", i, authority);
+                            return true;
+                        }
+                    }
                 }
             }
         }
+        response.setStatus(401);
         return false;
-    }
-
-    public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
-        System.out.println("this is the afterCompletion of PermitInterceptor");
     }
 }

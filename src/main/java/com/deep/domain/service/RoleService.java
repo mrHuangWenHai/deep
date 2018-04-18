@@ -42,7 +42,6 @@ public class RoleService {
      * @return
      */
     public RoleModel getOneRoleByRolePkTypeID(Long id) {
-        System.out.println(id);
         return roleMapper.queryRoleByPkTypeId(id);
     }
 
@@ -74,63 +73,45 @@ public class RoleService {
     }
 
     /**
-     * 获取角色的固定权限, 通过位运算操作
+     * 获取角色的固定权限, 返回本身格式String
+     * @param id
      * @return
      */
-    public Map findRolePermits(long id) {
-        System.out.println(id);
-        long permit = roleMapper.queryRoleByPkTypeId(id).getDefaultPermit();
-        Map map = new HashMap();
-        // 位运算基础
-        long basic = 1;
-        long result = 0;
-        result = basic & permit;
-        if (result == 0) {
-
+    public String findRoleDefaultPermits(long id) {
+        RoleModel roleModel = roleMapper.queryRoleById(id);
+        if (roleModel == null) {
+            return "";
         } else {
-            map.put("1", permitMapper.queryPermitById(1).getPermitName());
+            return roleModel.getDefaultPermit();
         }
-
-        for (int i = 2; i <= 64; i++) {
-            basic <<= 1;
-            result = basic & permit;
-            if (Math.pow(2, i-1) == result) {
-                map.put(i, permitMapper.queryPermitById(i).getPermitName());
-            } else {
-
-            }
+    }
+    /**
+     * 获取某个角色固定的权限
+     * @return
+     */
+    public String findRolePermits(long id) {
+        RoleModel roleModel = roleMapper.queryRoleById(id);
+        if (roleModel == null) {
+            return null;
         }
-
-        return map;
+        return roleModel.getDefaultPermit();
     }
 
     /**
      * 查询用户的拓展权限并返回
-     * @param map
-     * @param permit
-     * @return
+     * @param defaultPermits    默认权限
+     * @param permit            拓展权限
+     * @return                  综合权限
      */
-    public Map findExtendPermit(Map map, long permit) {
-        // 位运算基础
-        long basic = 1;
-        long result = 0;
-        result = basic & permit;
-        if (result == 0) {
-
-        } else {
-            map.put("1", permitMapper.queryPermitById(1).getPermitName());
-        }
-
-        for (int i = 2; i <= 64; i++) {
-            basic <<= 1;
-            result = basic & permit;
-            if (Math.pow(2, i-1) == result) {
-                map.put(i, permitMapper.queryPermitById(i).getPermitName());
-            } else {
-
+    public String findExtendPermit(String defaultPermits, String permit) {
+        char[] allPermits = new char[192];
+        for (int i = 0; i < permit.length(); i++) {
+            if (permit.charAt(i) == '1' || defaultPermits.charAt(i) == '1') {
+                allPermits[i] = '1';
+                continue;
             }
+            allPermits[i] = '0';
         }
-
-        return map;
+        return String.valueOf(allPermits);
     }
 }

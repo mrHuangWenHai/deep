@@ -136,7 +136,8 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.deep.domain.model.DiagnosisPlanWithBLOBs" >
+  <insert id="insert" parameterType="com.deep.domain.model.DiagnosisPlanWithBLOBs"
+          useGeneratedKeys="true" keyProperty="id">
     insert into diagnosis_plan (id, gmt_create, gmt_modified, 
       gmt_supervised, factory_num, diagnosis_t, 
       building, et_b, operator, 

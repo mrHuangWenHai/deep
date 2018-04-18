@@ -15,23 +15,23 @@ import java.util.List;
  */
 @Service
 public class BreedingPlanService {
+    
     @Resource
     private BreedingPlanMapper breedingPlanMapper;
-
         public int addPlan(BreedingPlan breedingPlan){
             return this.breedingPlanMapper.insert(breedingPlan);
     }
-        public int dropPlan(Integer id){
-            return this.breedingPlanMapper.deleteByPrimaryKey(id);
+    public int dropPlan(Integer id){
+        return this.breedingPlanMapper.deleteByPrimaryKey(id);
     }
-        public int changePlanSelective(BreedingPlan breedingPlan){
-            return this.breedingPlanMapper.updateByPrimaryKeySelective(breedingPlan);
+    public int changePlanSelective(BreedingPlan breedingPlan){
+        return this.breedingPlanMapper.updateByPrimaryKeySelective(breedingPlan);
     }
-        public BreedingPlan findPlanById(Integer id){
-            return this.breedingPlanMapper.selectByPrimaryKey(id);
+    public BreedingPlan findPlanById(Integer id){
+        return this.breedingPlanMapper.selectByPrimaryKey(id);
     }
-        public List<BreedingPlan> findPlanSelective(BreedingPlanExample breedingPlanExample, RowBounds rowBounds){
-            return this.breedingPlanMapper.selectByExampleWithRowbounds(breedingPlanExample,rowBounds);
+    public List<BreedingPlan> findPlanSelective(BreedingPlanExample breedingPlanExample, RowBounds rowBounds){
+        return this.breedingPlanMapper.selectByExampleWithRowbounds(breedingPlanExample,rowBounds);
     }
 }
 

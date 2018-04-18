@@ -3,13 +3,19 @@ package com.deep.api.resource;
 import com.deep.api.Utils.JedisUtil;
 import com.deep.api.Utils.MobileAnnouncementUtil;
 import com.deep.api.authorization.token.TokenModel;
-import com.deep.api.authorization.tools.RoleAndPermit;
+import com.deep.api.request.LoginRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
+import com.deep.domain.model.AgentModel;
+import com.deep.domain.model.FactoryModel;
 import com.deep.domain.model.UserModel;
+import com.deep.domain.service.AgentService;
+import com.deep.domain.service.FactoryService;
+import com.deep.domain.service.RoleService;
 import com.deep.domain.service.UserService;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -19,8 +25,20 @@ import java.util.logging.Logger;
 
 @RestController
 public class LoginResource {
+
+    private final org.slf4j.Logger logger = LoggerFactory.getLogger(LoginResource.class);
+
     @Resource
     private UserService userService;
+
+    @Resource
+    private FactoryService factoryService;
+
+    @Resource
+    private AgentService agentService;
+
+    @Resource
+    private RoleService roleService;
 
     @Resource
     private MobileAnnouncementUtil mobileAnnouncementModel;
@@ -30,13 +48,14 @@ public class LoginResource {
 
     /**
      * 用户登录验证并且返回结果
-     * @param userModelTest 用户登录加的模型
+     * @param loginRequest 用户登录加的模型
      * @return0
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public Response LoginResult(@RequestBody UserModel userModelTest, HttpServletResponse httpServletResponse){
-        String username = userModelTest.getPkUserid();
-        String password = userModelTest.getUserPwd();
+    public Response LoginResult(@RequestBody LoginRequest loginRequest, HttpServletResponse httpServletResponse){
+        logger.info("invoke LoginResult{}, url is /login", loginRequest, httpServletResponse);
+        String username = loginRequest.getUsername();
+        String password = loginRequest.getPassword();
         UserModel userModel = userService.getUserByPkuserID(username);
         if(userModel == null) {
             //数据库中未查到用户名
@@ -45,7 +64,6 @@ public class LoginResource {
             data.put("errorMessage", "error");
             response.setData(data);
             return response;
-
         }else {
             // 验证密码信息, 忽略大小写
             if(userModel.getUserPwd().equalsIgnoreCase(password)){
@@ -53,12 +71,29 @@ public class LoginResource {
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("successMessage", "登录成功!");
                 data.put("id", userModel.getId());
+                if (userModel.getIsFactory() == 0) {
+                    FactoryModel factoryModel = factoryService.getOneFactory(userModel.getUserFactory());
+                    data.put("factory_id", userModel.getUserFactory());
+                    data.put("agent_id", factoryModel.getAgent());
+                }else if (userModel.getIsFactory() == 1) {
+                    AgentModel agentModel = agentService.getOneAgent(userModel.getUserFactory());
+                    data.put("id", userModel.getUserFactory());
+                    data.put("agent_id", agentModel.getAgentFather());
+                } else {
+
+                }
                 response.setData(data);
-                RoleAndPermit userRoleAndPermit = userService.findRoleByUserID(userModel.getId());
-                Long roleInt = userRoleAndPermit.getRole();
+                Long roleInt = userModel.getUserRole();
+                String defaultPermit = roleService.findRoleDefaultPermits(userModel.getUserRole());
+                defaultPermit =  roleService.findExtendPermit(defaultPermit, userModel.getUserPermit());
+
                 TokenModel tokenModel = new TokenModel(userModel.getId(), String.valueOf(roleInt));
-                JedisUtil.setValue(String.valueOf(userModel.getId()),tokenModel.getToken());
+                JedisUtil.setValue(String.valueOf(userModel.getId()), tokenModel.getToken());
                 JedisUtil.doExpire(String.valueOf(userModel.getId()));
+
+                JedisUtil.setValue("defaultPermit" + userModel.getId(), defaultPermit);
+                JedisUtil.doExpire("defaultPermit" + userModel.getId());
+
                 httpServletResponse.setHeader("Authorization", userModel.getId() + ":" + tokenModel.getToken());
                 return response;
             }else {
@@ -78,18 +113,12 @@ public class LoginResource {
      */
     @RequestMapping(value = "/phonefind")
     public Response PhoneFind(@RequestParam("usernameP") String usernameP){
+        logger.info("invoke PhoneFind {}, url is /phonefind", usernameP);
         UserModel userModel = userService.getUserByPkuserID(usernameP);
         if (userModel == null) {
             return Responses.errorResponse("用户不存在");
         }
         mobileAnnouncementModel = new MobileAnnouncementUtil(userModel.getUserTelephone());
-        if (mobileAnnouncementModel == null){
-            Response response = Responses.errorResponse("发送失败");
-            HashMap<String, Object> data = new HashMap<>();
-            data.put("successMessage", "验证码发送失败!");
-            response.setData(data);
-            return response;
-        }
         String httpResponse =  mobileAnnouncementModel.testSend();
         try {
             JSONObject jsonObj = new JSONObject( httpResponse );
@@ -106,7 +135,7 @@ public class LoginResource {
                 System.out.println("Send message failed,code is "+error_code+",msg is "+error_msg);
                 Response response = Responses.errorResponse("发送消息失败");
                 HashMap<String, Object> data = new HashMap<>();
-                data.put("successMessage", "Send message failed,code is "+error_code+",msg is "+error_msg);
+                data.put("errorMessage", "Send message failed,code is "+error_code+",msg is "+error_msg);
                 response.setData(data);
                 return response;
 
@@ -124,14 +153,17 @@ public class LoginResource {
                 Response response = Responses.successResponse();
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("successMessage", "验证码发送成功!");
+                data.put("phone", userModel.getUserTelephone());
                 response.setData(data);
+                JedisUtil.setValue(usernameP+userModel.getUserTelephone(),mobileAnnouncementModel.getIdentityCode());
+                JedisUtil.doExpire(usernameP+userModel.getUserTelephone());
                 return response;
             }else{
                 String error_msg = jsonObj.getString("msg");
                 System.out.println("Fetch deposit failed,code is "+error_code+",msg is "+error_msg);
                 Response response = Responses.errorResponse("发送消息失败");
                 HashMap<String, Object> data = new HashMap<>();
-                data.put("successMessage", "Fetch deposit failed,code is "+error_code+",msg is "+error_msg);
+                data.put("errorMessage", "Fetch deposit failed,code is "+error_code+",msg is "+error_msg);
                 response.setData(data);
                 return response;
             }
@@ -147,12 +179,13 @@ public class LoginResource {
      * @return
      */
     @GetMapping(value = "/ensureverify/{verifyCode}")
-    public Response EnsureVerify(@PathVariable("verifyCode") String verifyCode){
-        if (verifyCode == null) {
+    public Response EnsureVerify(@PathVariable("verifyCode") String verifyCode, UserModel userModel){
+        logger.info("invoke EnsureVerify{}, url is /ensureverify/{vefiyCode}", verifyCode);
+        if (verifyCode == null || userModel == null || userModel.getUserTelephone().equals("") || userModel.getPkUserid().equals("")) {
             return Responses.errorResponse("error!");
         }
         Response response;
-        if(verifyCode.equals(mobileAnnouncementModel.getIdentityCode())){
+        if(verifyCode.equals(JedisUtil.getValue(userModel.getPkUserid()+userModel.getUserTelephone()))) {
             response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("errorMessage", "valid success");
@@ -168,7 +201,7 @@ public class LoginResource {
 
     @GetMapping(value = "/question")
     public Response requestQuestion(@RequestParam("name") String name) {
-        System.out.println(name);
+        logger.info("invoke requestQuestion{}, url is requestQuestion", name);
         if (name == null) {
             return Responses.errorResponse("error!");
         }
@@ -191,10 +224,10 @@ public class LoginResource {
      * @return
      */
     @PostMapping(value = "/ensurequestion")
-    public Response EnsureQuestion(@RequestBody UserModel userModel){
+    public Response EnsureQuestion(@RequestBody UserModel userModel) {
+        logger.info("invoke ensureQuestion{}, url is /ensurequestion", userModel);
         if (userModel == null) {
             return Responses.errorResponse("error!");
-
         }
         String username = userModel.getPkUserid();
         UserModel user = userService.getUserByPkuserID(username);
@@ -222,6 +255,7 @@ public class LoginResource {
      */
     @GetMapping(value = "/logout/{id}")
     public Response logout(@PathVariable("id") String id) {
+        logger.info("invoke logout{}, url is /logout/{id}", id);
         if (id == null) {
             return Responses.errorResponse("error!");
         }

@@ -30,6 +30,15 @@ public class FactoryService {
     }
 
     /**
+     * 根据羊场编号查询羊场的代理
+     * @param factoryNumber
+     * @return
+     */
+    public short getAgentIDByFactoryNumber(String factoryNumber) {
+        return factoryMapper.queryOneAgentByFactoryID(factoryNumber);
+    }
+
+    /**
      * 删除一个羊场的信息
      * @param factoryModel
      * @return

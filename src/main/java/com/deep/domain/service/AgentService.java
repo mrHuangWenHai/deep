@@ -5,12 +5,17 @@ import com.deep.infra.persistence.sql.mapper.AgentMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AgentService {
     @Resource
     private AgentMapper agentMapper;
+
+    @Resource
+    private UserService userService;
 
     /**
      * 获取所有的代理信息
@@ -30,12 +35,35 @@ public class AgentService {
     }
 
     /**
-     * 查询父亲代理
+     * 查询一个代理的直属上级
      * @param id
      * @return
      */
-    public AgentModel getFather(int id) {
-        return agentMapper.getFather(id);
+    public AgentModel getFather(Long id) {
+        AgentModel agentModel = agentMapper.queryAgentByID(id);
+        if (agentModel == null) {
+            return null;
+        } else {
+            return agentMapper.queryAgentByID((long)agentModel.getAgentFather());
+        }
+    }
+    /**
+     * 查询一个代理的所有上级
+     * TODO 最好将其优化成数据库的查询, 提高查询的效率, 目前没有找到数据库树型查询的方法
+     */
+    public List<AgentModel> getAncestors(Long id) {
+        List<AgentModel> lists = new ArrayList<>();
+        AgentModel agentModel = agentMapper.queryAgentByID(id);
+        while (agentModel != null && agentModel.getAgentFather() != 0) {
+            agentModel = agentMapper.queryAgentByID((long)agentModel.getAgentFather());
+            lists.add(agentModel);
+        }
+        return lists;
+    }
+
+    public Map<String, Object> getAncestorsProfessor(Long id) {
+        List<AgentModel> lists = getAncestors(id);
+        return userService.getProfessor(lists);
     }
 
     /**

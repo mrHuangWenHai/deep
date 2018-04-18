@@ -3,13 +3,13 @@ package com.deep.api.authorization.tools;
 public class RoleAndPermit {
     Long role;
     byte extended;
-    Long extendedPermit;
+    String extendedPermit;
 
-    public Long getExtendedPermit() {
+    public String getExtendedPermit() {
         return extendedPermit;
     }
 
-    public void setExtendedPermit(Long extendedPermit) {
+    public void setExtendedPermit(String extendedPermit) {
         this.extendedPermit = extendedPermit;
     }
 

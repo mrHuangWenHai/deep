@@ -151,7 +151,8 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.deep.domain.model.NutritionPlanWithBLOBs" >
+  <insert id="insert" parameterType="com.deep.domain.model.NutritionPlanWithBLOBs"
+          useGeneratedKeys="true" keyProperty="id">
     insert into nutrition_plan (id, gmt_create, gmt_modified, 
       gmt_supervised, factory_num, building, 
       nutrition_t, quantity, average, 

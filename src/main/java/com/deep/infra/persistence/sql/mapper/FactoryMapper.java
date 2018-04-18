@@ -1,6 +1,5 @@
 package com.deep.infra.persistence.sql.mapper;
 
-import com.deep.domain.model.AgentModel;
 import com.deep.domain.model.FactoryModel;
 import org.apache.ibatis.annotations.*;
 
@@ -17,9 +16,9 @@ public interface FactoryMapper {
             @Result(property = "id", column = "id"),
             @Result(property = "gmtCreate", column = "gmt_create"),
             @Result(property = "gmtModified", column = "gmt_modified"),
-            @Result(property = "pkNumber", column = "agent_name"),
-            @Result(property = "breadName", column = "agent_area"),
-            @Result(property = "breadLocation", column = "agent_father"),
+            @Result(property = "pkNumber", column = "pk_number"),
+            @Result(property = "breadName", column = "bread_name"),
+            @Result(property = "breadLocation", column = "breed_location"),
             @Result(property = "createTime", column = "create_time"),
             @Result(property = "responsiblePersonid", column = "responsible_personid"),
             @Result(property = "remark", column = "remark"),
@@ -27,6 +26,17 @@ public interface FactoryMapper {
             @Result(property = "agent", column = "agent")
     })
     List<FactoryModel> queryAllFactory();
+
+    /**
+     * 根据羊场的ID发展羊场的代理agent的ID
+     * @param pkNumber
+     * @return
+     */
+    @Select("select agent from factory_manage where pk_number = #{pkNumber}")
+    @Results({
+            @Result(property = "agent", column = "agent")
+    })
+    Short queryOneAgentByFactoryID(String pkNumber);
 
     /**
      * 根据ID获取单个羊场
@@ -38,9 +48,9 @@ public interface FactoryMapper {
             @Result(property = "id", column = "id"),
             @Result(property = "gmtCreate", column = "gmt_create"),
             @Result(property = "gmtModified", column = "gmt_modified"),
-            @Result(property = "pkNumber", column = "agent_name"),
-            @Result(property = "breadName", column = "agent_area"),
-            @Result(property = "breadLocation", column = "agent_father"),
+            @Result(property = "pkNumber", column = "pk_number"),
+            @Result(property = "breadName", column = "bread_name"),
+            @Result(property = "breadLocation", column = "breed_location"),
             @Result(property = "createTime", column = "create_time"),
             @Result(property = "responsiblePersonid", column = "responsible_personid"),
             @Result(property = "remark", column = "remark"),
