@@ -12,7 +12,6 @@ import com.deep.domain.service.NoticePlanService;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -232,18 +231,15 @@ public class NoticeResource {
 //    按主键查询的接口：/noticeSelectById
 //    按主键查询的方法名：findPlanById()
 //    接收参数：整型的主键号（保留接口查询，前端不调用此接口）
-    @RequestMapping(value = "/noticeSelectById",method = RequestMethod.GET)
-    public String findPlanById(){
-        return "NoticeSelectById";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/noticeSelectById/show",method = RequestMethod.GET)
-    public Response findPlanById(@Valid NoticePlan noticePlan,
-                                 BindingResult bindingResult){
+    @GetMapping(value = "/selectById")
+    public Response findPlanById(@Valid NoticePlan noticePlan, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("根据主键查询失败！");
         }else {
             NoticePlan selectById = noticePlanService.findPlanById(noticePlan.getId());
+            if (selectById == null) {
+                return Responses.errorResponse("无此记录");
+            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("notice_plan",selectById);
@@ -255,19 +251,18 @@ public class NoticeResource {
 //    按条件查询接口：/noticeSelective
 //    按条件查询方法名：findPlanSelective()
 //    接收的参数：前端的各参数，以及四个时间字符串（所有参数可以选填）
-    @RequestMapping(value = "/noticeSelective",method = RequestMethod.GET)
-    public String findPlanSelective(){
-        return "NoticeSelective";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/noticeSelective/show",method = RequestMethod.POST)
-    public Response findPlanSelective(@RequestBody @Valid NoticePlanModel planModel,
-                                      BindingResult bindingResult) throws ParseException{
+    @PostMapping(value = "/bySelective")
+    public Response findPlanSelective(@RequestBody @Valid NoticePlanModel planModel, BindingResult bindingResult) throws ParseException{
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("根据条件查询失败！");
         }else {
+            // 设置单页的记录数为10
+            if (planModel.getSize() == 0) {
+                planModel.setSize(10);
+            }
             //将planModel部分变量拆分传递给对象insert
             NoticePlan noticePlan = new NoticePlan();
+
             noticePlan.setId(planModel.getId());
             noticePlan.setGmtCreate(planModel.getGmtCreate());
             noticePlan.setGmtModified(planModel.getGmtModified());
@@ -277,17 +272,14 @@ public class NoticeResource {
             noticePlan.setFilepath(planModel.getFilepath());
             noticePlan.setSuffixname(planModel.getSuffixname());
             noticePlan.setContent(planModel.getContent());
+
             //将planModel部分变量拆分传递给对象otherTime
             OtherTime otherTime = new OtherTime();
             otherTime.setSearch_string(planModel.getSearch_string());
             otherTime.setS_breedingT(planModel.getS_breedingT());
-            System.out.println(otherTime.getS_breedingT());
             otherTime.setS_gestationT(planModel.getS_gestationT());
-            System.out.println(otherTime.getS_gestationT());
             otherTime.setS_prenatalIT(planModel.getS_prenatalIT());
-            System.out.println(otherTime.getS_prenatalIT());
             otherTime.setS_cubT(planModel.getS_cubT());
-            System.out.println(otherTime.getS_cubT());
             otherTime.setS_diagnosisT(planModel.getS_diagnosisT());
             otherTime.setS_nutritionT(planModel.getS_nutritionT());
             otherTime.setS_gmtCreate1(planModel.getS_gmtCreate1());
@@ -315,6 +307,7 @@ public class NoticeResource {
             Date gmtModified1 = null;
             Date gmtModified2 = null;
             SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd HH:mm:SS");
+
             NoticePlanExample noticePlanExample = new NoticePlanExample();
             NoticePlanExample.Criteria criteria = noticePlanExample.createCriteria();
             if (otherTime.getS_gmtCreate1() != null && !otherTime.getS_gmtCreate1().isEmpty() && otherTime.getS_gmtCreate2() != null && !otherTime.getS_gmtCreate2().isEmpty()){
@@ -341,9 +334,13 @@ public class NoticeResource {
                 criteria.andTypeEqualTo(noticePlan.getType());
             }
             List<NoticePlan> selective = noticePlanService.findPlanSelective(noticePlanExample,new RowBounds(otherTime.getPage(),otherTime.getSize()));
+            if (selective == null) {
+                return Responses.errorResponse("查询错误");
+            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("notice_plan",selective);
+            data.put("notice_plan", selective);
+            data.put("size", selective.size());
             response.setData(data);
             return response;
         }
@@ -352,17 +349,12 @@ public class NoticeResource {
 //    站内搜索接口：/searchInSite
 //    站内搜索方法名：searchInSite()
 //    接收的参数：用户在搜索栏输入的信息（字符串）
-    @RequestMapping(value = "/searchInSite",method = RequestMethod.GET)
-    public String searchInSite(){
-        return "SearchInSite";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/searchInSite/show",method = RequestMethod.POST)
-    public Response searchInSite(@RequestBody @Valid OtherTime otherTime,
-                                 BindingResult bindingResult){
+    @PostMapping(value = "/inSite")
+    public Response searchInSite(@RequestBody @Valid OtherTime otherTime, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("输入有误，站内搜索失败！");
         }else {
+            System.out.println(otherTime.getSearch_string());
             List<NoticePlan> selectInSite = noticePlanService.selectInSite(otherTime.getSearch_string());
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();

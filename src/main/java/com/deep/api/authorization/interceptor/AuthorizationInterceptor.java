@@ -86,11 +86,11 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         String oldToken = JedisUtil.getValue(String.valueOf(model.getUserId()));
         String userRoleID = oldToken.split(":")[1];
         logger.info("oldToken", oldToken);
-        TokenModel tokenModel = new TokenModel(model.getUserId(), userRoleID);
-        logger.info("newToken", tokenModel.getToken());
-        JedisUtil.setValue(String.valueOf(model.getUserId()),tokenModel.getToken());
-        JedisUtil.doExpire(String.valueOf(model.getUserId()));
-        response.setHeader("Authorization", model.getUserId() + ":" + tokenModel.getToken());
+//        TokenModel tokenModel = new TokenModel(model.getUserId(), userRoleID);
+//        logger.info("newToken", tokenModel.getToken());
+//        JedisUtil.setValue(String.valueOf(model.getUserId()),tokenModel.getToken());
+//        JedisUtil.doExpire(String.valueOf(model.getUserId()));
+//        response.setHeader("Authorization", model.getUserId() + ":" + tokenModel.getToken());
         logger.info("Authorization pass");
         return true;
     }

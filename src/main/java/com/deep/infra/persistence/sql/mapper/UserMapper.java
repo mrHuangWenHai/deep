@@ -317,7 +317,7 @@ public interface UserMapper {
     List<UserModel> getProfessor(Long agentID);
 
     /**
-     * 查找某一个羊场或者代理下的所有用户
+     * 查找某一个羊场的所有用户
      * @param userFactory
      * @return
      */

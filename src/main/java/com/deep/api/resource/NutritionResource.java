@@ -8,7 +8,6 @@ import com.deep.domain.model.NutritionPlanWithBLOBs;
 import com.deep.domain.model.OtherTime;
 import com.deep.domain.service.NutritionPlanService;
 import org.apache.ibatis.session.RowBounds;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,16 +25,10 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "nutrition/")
-public class NurtritionResource {
+public class NutritionResource {
 
     @Resource
     private NutritionPlanService nutritionPlanService;
-
-    @ResponseBody
-    @RequestMapping(value = "/nutritionPlan",method = RequestMethod.GET)
-    public String helloNutrition() {
-        return "Hello NutritionPlan!";
-    }
 
 //    按主键删除的接口：/nutritionInsert
 //    按主键删除的方法名：addPlan()
@@ -43,11 +36,6 @@ public class NurtritionResource {
 //    参数类型为：
 //    Long factoryNum; String building;Date nutritionT;Long quantity;String average;String period;String water;String operator;String remark;
 //    String materialA;String materialM;String materialO;String materialWM;String materialWO;String roughageP;String roughageD;String roughageWP;String roughageWD;String roughageWO;String pickingM;String pickingR;String pickingO;
-    @RequestMapping(value = "/nutritionInsert",method = RequestMethod.GET)
-    public String addPlan(){
-        return "NutritionInsert";
-    }
-    @ResponseBody
     @RequestMapping(value = "/nutritionInsert/show",method = RequestMethod.POST)
     public Response addPlan(@RequestBody @Valid NutritionPlanModel planModel,
                             BindingResult bindingResult) throws ParseException {
@@ -144,12 +132,7 @@ public class NurtritionResource {
 //    按主键删除的接口：/nutritionDeleteById
 //    按主键删除的方法名：dropPlan()
 //    接收参数：整型id，根据主键号删除
-    @RequestMapping(value = "/nutritionDeleteById",method = RequestMethod.GET)
-    public String dropPlan(){
-        return "NutritionDeleteById";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/nutritionDeleteById/show",method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/nutritionDeleteById/show")
     public Response dropPlan(@RequestBody @Valid NutritionPlanWithBLOBs nutritionPlanWithBLOBs,
                              BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
@@ -168,12 +151,7 @@ public class NurtritionResource {
 //    专家使用按主键修改的接口：/nutritionUpdateByOperator
 //    专家使用按主键修改的方法名：changePlanByOperator()
 //    专家使用接收参数：整个表单类型（整型id必填，各参数选填）
-    @RequestMapping(value = "/nutritionUpdateByOperator",method = RequestMethod.GET)
-    public String changePlanByOperator(){
-        return "NutritionUpdateByOperator";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/nutritionUpdateByOperator/show",method = RequestMethod.POST)
+    @PutMapping(value = "/nutritionUpdateByOperator/show")
     public Response changePlanByOperator(@RequestBody @Valid NutritionPlanModel planModel,
                                          BindingResult bindingResult) throws ParseException {
         if (bindingResult.hasErrors()) {
@@ -266,12 +244,7 @@ public class NurtritionResource {
 //    专家使用按主键修改的接口：/nutritionUpdateByProfessor
 //    专家使用按主键修改的方法名：changePlanByProfessor()
 //    专家使用接收参数：整个表单类型（整型id必填，各参数选填）
-    @RequestMapping(value = "/nutritionUpdateByProfessor",method = RequestMethod.GET)
-    public String changePlanByProfessor(){
-        return "NutritionUpdateByProfessor";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/nutritionUpdateByProfessor/show",method = RequestMethod.POST)
+    @PutMapping(value = "/nutritionUpdateByProfessor/show")
     public Response changePlanByProfessor(@RequestBody @Valid NutritionPlanWithBLOBs professor,
                                           BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
@@ -294,12 +267,7 @@ public class NurtritionResource {
 //    监督者使用按主键修改的接口：/nutritionUpdateBySupervisor
 //    监督者使用按主键修改的方法名：changePlanBySupervisor()
 //    监督者使用接收参数：整个表单信息（整型id必填，各参数选填）
-    @RequestMapping(value = "/nutritionUpdateBySupervisor",method = RequestMethod.GET)
-    public String changePlanBySupervisor(){
-        return "NutritionUpdateBySupervisor";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/nutritionUpdateBySupervisor/show",method = RequestMethod.POST)
+    @PutMapping(value = "/nutritionUpdateBySupervisor/show")
     public Response changePlanBySupervisor(@RequestBody @Valid NutritionPlanWithBLOBs supervisor,
                                            BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
@@ -320,12 +288,7 @@ public class NurtritionResource {
 //    按主键查询的接口：/nutritionSelectById
 //    按主键查询的方法名：findPlanById()
 //    接收参数：整型的主键号（保留接口查询，前端不调用此接口）
-    @RequestMapping(value = "/nutritionSelectById",method = RequestMethod.GET)
-    public String findPlanById(){
-        return "NutritionSelectById";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/nutritionSelectById/show",method = RequestMethod.GET)
+    @GetMapping(value = "/nutritionSelectById/show")
     public Response findPlanById(@Valid NutritionPlanWithBLOBs nutritionPlanWithBLOBs,
                                  BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -344,11 +307,6 @@ public class NurtritionResource {
 //    按条件查询接口：/nutritionSelective
 //    按条件查询方法名：findPlanSelective()
 //    接收的参数：前端的各参数，以及两个("s_nutritionT1")("s_nutritionT2")时间字符串（所有参数可以选填）
-    @RequestMapping(value = "/nutritionSelective",method = RequestMethod.GET)
-    public String findPlanSelective(){
-        return "NutritionSelective";
-    }
-    @ResponseBody
     @RequestMapping(value = "/nutritionSelective/show",method = RequestMethod.POST)
     public Response findPlanSelective(@RequestBody @Valid NutritionPlanModel planModel,
                                       BindingResult bindingResult) throws ParseException {
@@ -486,11 +444,6 @@ public class NurtritionResource {
 //    供技术审核查询信息: /nutritionSelectByProfessor
 //    供技术审核查询方法名：findPlanSelectBySupervisor()
 //    接收的参数：前端的各参数，（所有参数可以选填）
-    @RequestMapping(value = "/nutritionSelectByProfessor",method = RequestMethod.GET)
-    public String findPlanSelectByProfessor(){
-        return "NutritionSelectByProfessor";
-    }
-    @ResponseBody
     @RequestMapping(value = "/nutritionSelectByProfessor/show",method = RequestMethod.POST)
     public Response findPlanSelectByProfessor(@RequestBody @Valid NutritionPlanModel planModel,
                                               BindingResult bindingResult) {
@@ -590,11 +543,6 @@ public class NurtritionResource {
 //    供监督者查询信息:nutritionSelectBySupervisor
 //    供监督者查询方法名：findPlanSelectBySupervisor()
 //    接收的参数：前端的各参数，（所有参数可以选填）
-    @RequestMapping(value = "/nutritionSelectBySupervisor",method = RequestMethod.GET)
-    public String findPlanSelectBySupervisor(){
-        return "NutritionSelectBySupervisor";
-    }
-    @ResponseBody
     @RequestMapping(value = "/nutritionSelectBySupervisor/show",method = RequestMethod.POST)
     public Response findPlanSelectBySupervisor(@RequestBody @Valid NutritionPlanModel planModel,
                                                BindingResult bindingResult) {
