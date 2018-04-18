@@ -1,5 +1,6 @@
 package com.deep.infra.persistence.sql.mapper;
 
+import com.deep.api.request.GenealogicalRequest;
 import com.deep.domain.model.GenealogicalFilesModel;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -17,7 +18,7 @@ public interface GenealogicalFilesMapper {
     int insertGenealogicalFilesModel(@Param("genealogicalFilesModel") GenealogicalFilesModel genealogicalFilesModel);
 
 
-    List<GenealogicalFilesModel> getGenealogicalFilesModel(@Param("genealogicalFilesModel") GenealogicalFilesModel genealogicalFilesModel,
+    List<GenealogicalFilesModel> getGenealogicalFilesModel(@Param("genealogicalFilesModel") GenealogicalRequest genealogicalFilesModel,
                                                            RowBounds rowBounds
                                                            );
     GenealogicalFilesModel getGenealogicalFilesModelByid(@Param("id") int id);

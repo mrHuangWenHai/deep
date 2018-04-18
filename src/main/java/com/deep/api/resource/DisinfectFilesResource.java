@@ -1,5 +1,6 @@
 package com.deep.api.resource;
 
+import com.deep.api.request.DisinfectRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.api.response.ValidResponse;
@@ -207,18 +208,18 @@ public class DisinfectFilesResource {
      * 以json格式返回前端
      * 分页查询
      * METHOD:POST
-     * @param disinfectFilesModel
+     * @param disinfectRequest
      * @return
      */
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
-    public Response findShow(@RequestBody DisinfectFilesModel disinfectFilesModel) {
+    public Response findShow(@RequestBody DisinfectRequest disinfectRequest) {
 
-        logger.info("invoke findShow {}",disinfectFilesModel);
-        if( disinfectFilesModel.getSize() == 0) {
-            disinfectFilesModel.setSize(10);
+        logger.info("invoke findShow {}",disinfectRequest);
+        if( disinfectRequest.getSize() == 0) {
+            disinfectRequest.setSize(10);
         }
-        List<DisinfectFilesModel> disinfectFilesModels = disinfectFilesService.getDisinfectFilesModel(disinfectFilesModel,
-                new RowBounds(disinfectFilesModel.getPage(),disinfectFilesModel.getSize()));
+        List<DisinfectFilesModel> disinfectFilesModels = disinfectFilesService.getDisinfectFilesModel(disinfectRequest,
+                new RowBounds(disinfectRequest.getPage(),disinfectRequest.getSize()));
 
         return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
     }

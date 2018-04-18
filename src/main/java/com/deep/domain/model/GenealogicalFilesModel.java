@@ -65,15 +65,7 @@ public class GenealogicalFilesModel {
 
     private String gmtModified;   //修改时间
 
-    //从前台传递的参数
-    //目标:json格式
 
-    private String birthTimeStart;
-    private String birthTimeEnd;
-    private String birthWeightStart;
-    private String birthWeightEnd;
-    private int page;
-    private int size;
 
     public GenealogicalFilesModel() {
 
@@ -99,12 +91,7 @@ public class GenealogicalFilesModel {
       this.remark = genealogicalFilesModel.getRemark();
       this.gmtCreate = genealogicalFilesModel.getGmtCreate();
       this.gmtModified = genealogicalFilesModel.getGmtModified();
-      this.birthTimeStart = genealogicalFilesModel.getBirthTimeStart();
-      this.birthTimeEnd = genealogicalFilesModel.getBirthTimeEnd();
-      this.birthWeightStart = genealogicalFilesModel.getBirthWeightStart();
-      this.birthWeightEnd = genealogicalFilesModel.getBirthWeightEnd();
-      this.page = genealogicalFilesModel.getPage();
-      this.size = genealogicalFilesModel.getSize();
+
 
     }
 
@@ -306,53 +293,6 @@ public class GenealogicalFilesModel {
         this.gmtModified = gmtModified;
     }
 
-    public String getBirthTimeStart() {
-        return birthTimeStart;
-    }
-
-    public void setBirthTimeStart(String birthTimeStart) {
-        this.birthTimeStart = birthTimeStart;
-    }
-
-    public String getBirthTimeEnd() {
-        return birthTimeEnd;
-    }
-
-    public void setBirthTimeEnd(String birthTimeEnd) {
-        this.birthTimeEnd = birthTimeEnd;
-    }
-
-    public String getBirthWeightStart() {
-        return birthWeightStart;
-    }
-
-    public void setBirthWeightStart(String birthWeightStart) {
-        this.birthWeightStart = birthWeightStart;
-    }
-
-    public String getBirthWeightEnd() {
-        return birthWeightEnd;
-    }
-
-    public void setBirthWeightEnd(String birthWeightEnd) {
-        this.birthWeightEnd = birthWeightEnd;
-    }
-
-    public int getPage() {
-        return page;
-    }
-
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
 
     @Override
     public String toString() {
@@ -375,12 +315,6 @@ public class GenealogicalFilesModel {
             ", remark='" + remark + '\'' +
             ", gmtCreate='" + gmtCreate + '\'' +
             ", gmtModified='" + gmtModified + '\'' +
-            ", birthTimeStart='" + birthTimeStart + '\'' +
-            ", birthTimeEnd='" + birthTimeEnd + '\'' +
-            ", birthWeightStart='" + birthWeightStart + '\'' +
-            ", birthWeightEnd='" + birthWeightEnd + '\'' +
-            ", page=" + page +
-            ", size=" + size +
             '}';
     }
 }

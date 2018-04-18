@@ -1,5 +1,6 @@
 package com.deep.api.resource;
 
+import com.deep.api.request.GenealogicalRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.api.response.ValidResponse;
@@ -134,24 +135,24 @@ public class GenealogicalFilesResource {
      * 用于条件查找
      * RowBounds为必传参数
      * METHOD:POST
-     * @param genealogicalFilesModel
+     * @param genealogicalRequest
      * @return
      */
     //bound为必传参数
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
-    public Response findShow(@RequestBody GenealogicalFilesModel genealogicalFilesModel){
+    public Response findShow(@RequestBody GenealogicalRequest genealogicalRequest){
 
-        logger.info("invoke findShow {}",genealogicalFilesModel);
+        logger.info("invoke findShow {}",genealogicalRequest);
 
-        if ( genealogicalFilesModel.getPage() == 0 ) {
-            genealogicalFilesModel.setPage(0);
+        if ( genealogicalRequest.getPage() == 0 ) {
+            genealogicalRequest.setPage(0);
         }
 
-        if ( genealogicalFilesModel.getSize() == 0 ) {
-            genealogicalFilesModel.setSize(10);
+        if ( genealogicalRequest.getSize() == 0 ) {
+            genealogicalRequest.setSize(10);
         }
 
-        List<GenealogicalFilesModel> genealogicalFilesModels = genealogicalFilesService.getGenealogicalFilesModel(genealogicalFilesModel,new RowBounds(genealogicalFilesModel.getPage(),genealogicalFilesModel.getSize()));
+        List<GenealogicalFilesModel> genealogicalFilesModels = genealogicalFilesService.getGenealogicalFilesModel(genealogicalRequest,new RowBounds(genealogicalRequest.getPage(),genealogicalRequest.getSize()));
         for(int i = 0 ; i < genealogicalFilesModels.size() ; i ++){
             String brief = this.typeBriefService.getTypeBrief(genealogicalFilesModels.get(i).getType()).getBrief();
             genealogicalFilesModels.get(i).setBrief(brief);

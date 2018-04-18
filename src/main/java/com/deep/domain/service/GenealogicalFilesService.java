@@ -1,5 +1,6 @@
 package com.deep.domain.service;
 
+import com.deep.api.request.GenealogicalRequest;
 import com.deep.domain.model.GenealogicalFilesModel;
 import com.deep.infra.persistence.sql.mapper.GenealogicalFilesMapper;
 import org.apache.ibatis.session.RowBounds;
@@ -21,7 +22,7 @@ public class  GenealogicalFilesService {
         return this.genealogicalFilesMapper.insertGenealogicalFilesModel(genealogicalFilesModel);
     }
 
-    public List<GenealogicalFilesModel> getGenealogicalFilesModel(GenealogicalFilesModel genealogicalFilesModel,
+    public List<GenealogicalFilesModel> getGenealogicalFilesModel(GenealogicalRequest genealogicalFilesModel,
                                                                   RowBounds bounds) {
         return this.genealogicalFilesMapper.getGenealogicalFilesModel(genealogicalFilesModel,bounds);
     }

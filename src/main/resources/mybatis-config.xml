@@ -41,6 +41,7 @@
         <mapper resource="mapper/NH3DataMapper.xml"/>
         <mapper resource="mapper/TempDataMapper.xml"/>
         <mapper resource="mapper/TypeBriefMapper.xml"/>
+        <mapper resource="mapper/EnvironmentMapper.xml"/>
     </mappers>
 </configuration>
 

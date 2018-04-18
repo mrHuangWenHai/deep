@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--Mapper名称 对应infra中mapper类名-->
+<mapper namespace="com.deep.infra.persistence.sql.mapper.CO2DataMapper">
+
+    <insert id="setCO2Data">
+        INSERT INTO co2_data(
+        dev_addr,
+        co2,
+        "time"
+        )VALUE (
+        #{co2DataModel.devAddr},
+        #{co2DataModel.co2},
+        #{co2DataModel.time}
+        )
+    </insert>
+
+    <resultMap id="CO2Data" type="com.deep.domain.model.CO2DataModel">
+        <result property="id" column="id"/>
+        <result property="devAddr" column="dev_addr"/>
+        <result property="co2" column="co2"/>
+        <result property="time" column="time"/>
+    </resultMap>
+
+    <select id="getCO2DataLatest" resultMap="CO2Data">
+        SELECT
+        *
+        FROM
+        co2_data
+        ORDER BY id DESC limit 1
+    </select>
+
+    <select id="getCO2DataByid" resultMap="CO2Data">
+        SELECT
+        *
+        FROM
+        co2_data
+        WHERE
+        id = #{id}
+    </select>
+
+    <select id="getCO2DataBytime" resultMap="CO2Data">
+        SELECT
+        *
+        FROM
+        co2_data
+        WHERE
+        "time" BETWEEN #{timeStart} and #{timeEnd}
+    </select>
+
+    <delete id="deleteCO2Data">
+        DELETE
+        FROM co2_data
+    </delete>
+
+
+</mapper>

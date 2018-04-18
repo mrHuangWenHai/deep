@@ -1,5 +1,6 @@
 package com.deep.infra.persistence.sql.mapper;
 
+import com.deep.api.request.DisinfectRequest;
 import com.deep.domain.model.DisinfectFilesModel;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -14,7 +15,7 @@ public interface DisinfectFilesMapper {
     void setDisinfectFilesModel(@Param("disinfectFilesModel") DisinfectFilesModel disinfectFilesModel);
 
 
-    List<DisinfectFilesModel> getDisinfectFilesModel(@Param("disinfectFilesModel") DisinfectFilesModel disinfectFilesModel,
+    List<DisinfectFilesModel> getDisinfectFilesModel(@Param("disinfectFilesModel") DisinfectRequest disinfectFilesModel,
                                                      RowBounds bounds);
 
     List<DisinfectFilesModel> getDisinfectFilesModelByfactoryNum(@Param("factoryNum")BigInteger factoryNum,
