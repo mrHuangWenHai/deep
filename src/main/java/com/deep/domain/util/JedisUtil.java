@@ -1,15 +1,11 @@
 package com.deep.domain.util;
 
-import com.deep.api.response.Response;
-import com.deep.api.response.Responses;
 import com.deep.domain.model.MobileAnnouncementModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
-
-import java.util.logging.Level;
 
 
 

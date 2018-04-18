@@ -1,5 +1,6 @@
 package com.deep.domain.service;
 
+import com.deep.api.request.DisinfectRequest;
 import com.deep.domain.model.DisinfectFilesModel;
 import com.deep.infra.persistence.sql.mapper.DisinfectFilesMapper;
 import org.apache.ibatis.session.RowBounds;
@@ -19,9 +20,9 @@ public class DisinfectFilesService {
         this.disinfectFilesMapper.setDisinfectFilesModel(disinfectFilesModel);
     }
 
-    public List<DisinfectFilesModel> getDisinfectFilesModel(DisinfectFilesModel disinfectFilesModel,
+    public List<DisinfectFilesModel> getDisinfectFilesModel(DisinfectRequest disinfectRequest,
                                                             RowBounds bounds){
-        return this.disinfectFilesMapper.getDisinfectFilesModel(disinfectFilesModel,bounds);
+        return this.disinfectFilesMapper.getDisinfectFilesModel(disinfectRequest,bounds);
     }
     public List<DisinfectFilesModel> getDisinfectFilesModelByfactoryNum(BigInteger factoryNum, RowBounds bounds){
         return this.disinfectFilesMapper.getDisinfectFilesModelByfactoryNum(factoryNum,bounds);

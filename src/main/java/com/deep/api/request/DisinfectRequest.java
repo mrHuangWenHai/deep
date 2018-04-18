@@ -1,33 +1,21 @@
-package com.deep.domain.model;
+package com.deep.api.request;
 
-
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.math.BigInteger;
 
-public class DisinfectFilesModel {
-
+/**
+ * create by zhongrui on 18-4-18.
+ */
+public class DisinfectRequest {
     private Long id;      //id
-
     private String disinfectEartag;
-    @NotNull
-    @Min(0)
     private BigInteger factoryNum;     //工厂号
-    @NotBlank
     private String disinfectTime;     //消毒时间
-    @NotBlank
     private String disinfectName;     //消毒药品名称
-    @Min(0)
-    private float disinfectQuality;    //用药剂量
-    @NotBlank
+    private String disinfectQuality;    //用药剂量
     private String disinfectWay;     //消毒方法
-    @NotBlank
     private String operator;      //操作员(创建表操作人员)
     private String professor;       //技术审核(审核表人员 专家) 可空
     private String supervisor;       //监督员(监督操作员人员) 可空
-    @NotBlank
     private String remark;        //备注
     private String isPass;       //是否通过审核 可空 默认为 0
     private String unpassReason;   //未通过审核原因 可空 默认未 无
@@ -37,25 +25,10 @@ public class DisinfectFilesModel {
     private String gmtProfessor;     //审核时间 可空
     private String gmtSupervise;     //监督确认时间 可空
 
-
-
-    public DisinfectFilesModel() {
-    }
-
-    public DisinfectFilesModel(BigInteger factoryNum, String disinfectTime, String disinfectName, float disinfectQuality, String disinfectWay, String operator, String remark, String isPass,String isPass1, String gmtCreate, String gmtModified) {
-        this.factoryNum = factoryNum;
-        this.disinfectTime = disinfectTime;
-        this.disinfectName = disinfectName;
-        this.disinfectQuality = disinfectQuality;
-        this.disinfectWay = disinfectWay;
-        this.operator = operator;
-        this.remark = remark;
-        this.isPass = isPass;
-        this.isPass1 = isPass1;
-        this.gmtCreate = gmtCreate;
-        this.gmtModified = gmtModified;
-    }
-
+    private String disinfectTimeStart;
+    private String disinfectTimeEnd;
+    private int page;
+    private int size;
 
     public Long getId() {
         return id;
@@ -97,11 +70,11 @@ public class DisinfectFilesModel {
         this.disinfectName = disinfectName;
     }
 
-    public float getDisinfectQuality() {
+    public String getDisinfectQuality() {
         return disinfectQuality;
     }
 
-    public void setDisinfectQuality(float disinfectQuality) {
+    public void setDisinfectQuality(String disinfectQuality) {
         this.disinfectQuality = disinfectQuality;
     }
 
@@ -201,28 +174,35 @@ public class DisinfectFilesModel {
         this.gmtSupervise = gmtSupervise;
     }
 
+    public String getDisinfectTimeStart() {
+        return disinfectTimeStart;
+    }
 
-  @Override
-  public String toString() {
-    return "DisinfectFilesModel{" +
-        "id=" + id +
-        ", disinfectEartag='" + disinfectEartag + '\'' +
-        ", factoryNum=" + factoryNum +
-        ", disinfectTime='" + disinfectTime + '\'' +
-        ", disinfectName='" + disinfectName + '\'' +
-        ", disinfectQuality='" + disinfectQuality + '\'' +
-        ", disinfectWay='" + disinfectWay + '\'' +
-        ", operator='" + operator + '\'' +
-        ", professor='" + professor + '\'' +
-        ", supervisor='" + supervisor + '\'' +
-        ", remark='" + remark + '\'' +
-        ", isPass='" + isPass + '\'' +
-        ", unpassReason='" + unpassReason + '\'' +
-        ", isPass1='" + isPass1 + '\'' +
-        ", gmtCreate='" + gmtCreate + '\'' +
-        ", gmtModified='" + gmtModified + '\'' +
-        ", gmtProfessor='" + gmtProfessor + '\'' +
-        ", gmtSupervise='" + gmtSupervise + '\'' +
-        '}';
-  }
+    public void setDisinfectTimeStart(String disinfectTimeStart) {
+        this.disinfectTimeStart = disinfectTimeStart;
+    }
+
+    public String getDisinfectTimeEnd() {
+        return disinfectTimeEnd;
+    }
+
+    public void setDisinfectTimeEnd(String disinfectTimeEnd) {
+        this.disinfectTimeEnd = disinfectTimeEnd;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
 }
