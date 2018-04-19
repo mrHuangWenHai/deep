@@ -21,10 +21,11 @@ public class TypeBriefService {
     public List<String> getAllType(){
         return this.typeBriefMapper.getAllType();
     }
-
+    public List<TypeBriefModel> getAll(){ return this.typeBriefMapper.getAll();}
     public TypeBriefModel getTypeBrief(String type){
         return this.typeBriefMapper.getTypeBrief(type);
     }
+
     public int updateTypeBrief( TypeBriefModel typeBriefModel){
         return this.typeBriefMapper.updateTypeBrief(typeBriefModel);
     }

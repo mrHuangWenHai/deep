@@ -8,6 +8,7 @@ import com.deep.domain.model.GenealogicalFilesModel;
 import com.deep.domain.model.TypeBriefModel;
 import com.deep.domain.service.GenealogicalFilesService;
 import com.deep.domain.service.TypeBriefService;
+import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.JudgeUtil;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
@@ -32,6 +33,7 @@ public class GenealogicalFilesResource {
 
     @Resource
     private TypeBriefService typeBriefService;
+
 
     /**
      * 用于存放羊品种以及简介
@@ -96,16 +98,18 @@ public class GenealogicalFilesResource {
       }
       logger.info("invoke saveShow {}",genealogicalFilesModel);
       //查看数据库中是否有这种羊的品种信息
-      List<String> list = this.typeBriefService.getAllType();
       int i = 0;
-      for (String tempType : list){
-          //System.out.println("temp:"+tempType);
-          //System.out.println("type:"+genealogicalFilesModel.getType());
-          if (tempType.equals(genealogicalFilesModel.getType())){
+      Integer j ;
+      //System.out.println("running here");
+      for ( j = 0 ; JedisUtil.getCertainKeyValue("type_"+j) != null ; j++){
+          //System.out.println(JedisUtil.getCertainKeyValue("type_"+j));
+          if (genealogicalFilesModel.getType().equals(JedisUtil.getCertainKeyValue("type_"+j))){
+              //若存在 标志位置1
               i = 1;
               break;
           }
       }
+
       if (i == 0){
           return Responses.errorResponse("No this type before");
       }
@@ -113,6 +117,7 @@ public class GenealogicalFilesResource {
       String time = simpleDateFormat.format(new Timestamp(System.currentTimeMillis()));
       genealogicalFilesModel.setGmtCreate(time);
       genealogicalFilesModel.setGmtModified(time);
+      genealogicalFilesModel.setBrief(JedisUtil.getCertainKeyValue("type_"+j));
       try{
           int id = genealogicalFilesService.insertGenealogicalFilesModel(genealogicalFilesModel);
           if (id == 0) {

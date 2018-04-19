@@ -14,7 +14,9 @@ public interface TypeBriefMapper {
 
     void setTypeBrief(@Param("typeBriefModel") TypeBriefModel typeBriefModel);
     List<String> getAllType();
+    List<TypeBriefModel> getAll();
     TypeBriefModel getTypeBrief(@Param("type") String type);
+
     int updateTypeBrief(@Param("typeBriefModel") TypeBriefModel typeBriefModel);
 
 }
