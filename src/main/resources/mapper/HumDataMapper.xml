@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--Mapper名称 对应infra中mapper类名-->
+<mapper namespace="com.deep.infra.persistence.sql.mapper.HumDataMapper">
+
+    <insert id="setHumData">
+        INSERT INTO hum_data(
+        dev_addr,
+        hum,
+        "time"
+        ) VALUE (
+        #{humDataModel.devAddr},
+        #{humDataModel.hum},
+        #{humDataModel.time}
+        )
+
+    </insert>
+
+    <resultMap id="HumData" type="com.deep.domain.model.HumDataModel">
+        <result property="id" column="id"/>
+        <result property="devAddr" column="dev_addr"/>
+        <result property="hum" column="hum"/>
+        <result property="time" column="time"/>
+    </resultMap>
+
+    <select id="getHumDataLatest" resultMap="HumData">
+        SELECT
+        *
+        FROM
+        hum_data
+        ORDER BY id DESC limit 1
+    </select>
+
+
+    <select id="getHumDataByid" resultMap="HumData">
+        SELECT
+        *
+        FROM
+        hum_data
+        WHERE
+        id = #{id}
+    </select>
+
+    <select id="getHumDataBytime" resultMap="HumData">
+        SELECT
+        *
+        FROM
+        hum_data
+        WHERE
+        "time" BETWEEN #{timeStart} and #{timeEnd}
+    </select>
+
+    <delete id="deleteHumData">
+        DELETE
+        FROM hum_data
+
+    </delete>
+
+</mapper>

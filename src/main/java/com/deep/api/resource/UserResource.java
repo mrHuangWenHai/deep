@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -38,6 +37,7 @@ public class UserResource {
      * 查找下级的所有用户列表
      * @return 返回所有的用户信息
      */
+<<<<<<< HEAD
     @Permit(authorities = "query_user")
     @GetMapping(value = "user/subordinate/{roleID}")
     public Response userList(@PathVariable("roleID") long roleID) {
@@ -45,6 +45,21 @@ public class UserResource {
         List<UserModel> userLists = userService.getAll(roleID);
         if (userLists == null) {
             return Responses.errorResponse("系统中暂时没有下级用户");
+=======
+    @Permit(modules = {
+            "dongxiang_factory_administrator", "total_system_administrator", "province_agent_total_administrator",
+            "province_agent_administrator", "city_agent_total_administrator", "city_agent_administrator",
+            "county_agent_total_administrator", "county_agent_administrator", "sheep_farm_administrator",
+    })
+    @GetMapping(value = "user/")
+    public Response userList() {
+
+        logger.info("invoke userList, url is user/");
+
+        List<UserModel> userLists = userService.getAll();
+        if (userLists.size() <= 0) {
+            return Responses.errorResponse("系统中暂时没有用户");
+>>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         }
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
@@ -59,10 +74,27 @@ public class UserResource {
      * @param id 获取用户的信息(简略信息)
      * @return
      */
+<<<<<<< HEAD
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @GetMapping(value = "user/{id}")
     public Response getUserOne(@PathVariable("id")String id) {
         logger.info("invoke getUserOne{}, url is user/{id}", id);
+=======
+
+    @Permit(modules = {
+            "dongxiang_factory_administrator", "total_system_administrator", "province_agent_total_administrator",
+            "province_agent_administrator", "city_agent_total_administrator", "city_agent_administrator",
+            "county_agent_total_administrator", "county_agent_administrator", "sheep_farm_administrator",
+            "dongxiang_factory_expert", "dongxiang_factory_technician", "province_agent_expert",
+            "province_agent_technician", "city_agent_expert", "city_agent_technician",
+            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
+            "sheep_farm_supervisor"
+    })
+    @GetMapping(value = "user/{id}")
+    public Response getUserOne(@PathVariable("id")String id) {
+        logger.info("invoke getUserOne{}, url is user/{id}", id);
+
+>>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -83,10 +115,27 @@ public class UserResource {
      * @param id 获取用户的信息(简略信息)
      * @return
      */
+<<<<<<< HEAD
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @GetMapping(value = "user/detail/{id}")
     public Response getUserOneDetail(@PathVariable("id") String id) {
         logger.info("invoke getUserOneDetail{}, url is user/detail/{id}", id);
+=======
+
+    @Permit(modules = {
+            "dongxiang_factory_administrator", "total_system_administrator", "province_agent_total_administrator",
+            "province_agent_administrator", "city_agent_total_administrator", "city_agent_administrator",
+            "county_agent_total_administrator", "county_agent_administrator", "sheep_farm_administrator",
+            "dongxiang_factory_expert", "dongxiang_factory_technician", "province_agent_expert",
+            "province_agent_technician", "city_agent_expert", "city_agent_technician",
+            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
+            "sheep_farm_supervisor", "others"
+    })
+    @GetMapping(value = "user/detail/{id}")
+    public Response getUserOneDetail(@PathVariable("id") String id) {
+        logger.info("invoke getUserOneDetail{}, url is user/detail/{id}", id);
+
+>>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -110,7 +159,13 @@ public class UserResource {
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @GetMapping(value = "user/name/{realname}")
     public Response getUserByUserRealname(@PathVariable("realname") String realname) {
+<<<<<<< HEAD
         logger.info("invoke getUserByUserRealname{}, url is user/name/{realname}", realname);
+=======
+
+        logger.info("invoke getUserByUserRealname{}, url is user/name/{realname}", realname);
+
+>>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         UserModel userModel = userService.getUserByUserRealnameLike(realname);
         if (realname.equals("")) {
             return Responses.errorResponse("用户名格式错误");
@@ -133,7 +188,13 @@ public class UserResource {
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @GetMapping(value = "user/id/{pkUserid}")
     public Response getUserByUserID(@PathVariable("pkUserid") String pkUserid) {
+<<<<<<< HEAD
         logger.info("invoke getUserByUserID{}, url is user/id/{pkUserid}", pkUserid);
+=======
+
+        logger.info("invoke getUserByUserID{}, url is user/id/{pkUserid}", pkUserid);
+
+>>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         // 检查用户名输入的是否合法
         if (!Pattern.matches("^[0-9a-z]+$", pkUserid)) {
             return Responses.errorResponse("请输入正确的用户名");
@@ -155,9 +216,17 @@ public class UserResource {
      * @param bindingResult
      * @return
      */
+<<<<<<< HEAD
     @PostMapping("/register")
     public Response addUser(@RequestBody @Valid UserModel userModel,  BindingResult bindingResult) {
         logger.info("invoke addUser{}, url is register", userModel, bindingResult);
+=======
+
+    @PostMapping("/register")
+    public Response addUser(@RequestBody @Valid UserModel userModel,  BindingResult bindingResult) {
+        logger.info("invoke addUser{}, url is register", userModel, bindingResult);
+
+>>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("验证失败");
             HashMap<String, Object> data = new HashMap<>();
@@ -202,10 +271,18 @@ public class UserResource {
      * @param bindingResult
      * @return
      */
+<<<<<<< HEAD
     @Permit(authorities = {"modify_user", "modify_expert", "modify_technician", "modify_administrator"})
     @PutMapping(value = "user/{id}")
     public Response modifyUser(@RequestBody @Valid UserModel userModel, @PathVariable("id") String id, BindingResult bindingResult) {
         logger.info("invoke modifyUser{}, url is user/{id}", userModel, id, bindingResult);
+=======
+
+    @PutMapping(value = "user/{id}")
+    public Response modifyUser(@RequestBody @Valid UserModel userModel, @PathVariable("id") String id, BindingResult bindingResult) {
+        logger.info("invoke modifyUser{}, url is user/{id}", userModel, id, bindingResult);
+
+>>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -229,6 +306,10 @@ public class UserResource {
             return Responses.errorResponse("用户信息修改失败,请检查网络后重试");
         }
         response = Responses.successResponse();
+<<<<<<< HEAD
+=======
+
+>>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         HashMap<String, Object> data = new HashMap<>();
         data.put("updateID", updateID);
         response.setData(data);
@@ -255,6 +336,10 @@ public class UserResource {
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
         data.put("deleteID", deleteId);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         response.setData(data);
         return response;
     }
@@ -297,7 +382,11 @@ public class UserResource {
      * @param id
      * @return
      */
+<<<<<<< HEAD
     @Permit(authorities = "query_expert")
+=======
+
+>>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
     @GetMapping(value = "/user/high/{id}")
     public Response getRolesOfProfessor(@PathVariable("id") String id) {
         logger.info("invoke getRolesOfProfessor{}, url is /user/high/{id}", id);
@@ -359,6 +448,7 @@ public class UserResource {
                 return response;
             }
         }
+<<<<<<< HEAD
     }
 
     /**
@@ -401,5 +491,8 @@ public class UserResource {
             }
             return Responses.errorResponse("there is no online father agents");
         }
+=======
+
+>>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
     }
 }

@@ -2,7 +2,6 @@ package com.deep.infra.persistence.sql.mapper;
 
 import com.deep.domain.model.AgentModel;
 import org.apache.ibatis.annotations.*;
-
 import java.util.List;
 
 @Mapper
@@ -39,8 +38,6 @@ public interface AgentMapper {
     List<AgentModel> getSons(int id);
 
     /**
-<<<<<<< HEAD
-=======
      * 获取上级代理
      * @param id
      * @return
@@ -57,7 +54,6 @@ public interface AgentMapper {
     AgentModel getFather(int id);
 
     /**
->>>>>>> 42977b2f36c78c4ce2c994b3d246f04edb42bb9d
      * 根据ID获取单个代理
      * @param id
      * @return

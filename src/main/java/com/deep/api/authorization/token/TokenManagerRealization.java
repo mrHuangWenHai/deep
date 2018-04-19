@@ -21,10 +21,18 @@ public class TokenManagerRealization implements TokenManager{
         }
         String[] param = authentication.split(":");
         if (param.length != 3) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
             return null;
         }
         // 使用userID和源token简单拼接成的token, 可以增加加密措施
         long userId = Long.parseLong(param[0]);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         return new TokenModel(new Long(userId), param[1] + ":" + param[2]);
     }
 
@@ -44,6 +52,10 @@ public class TokenManagerRealization implements TokenManager{
             return -1;
         }
         return Long.parseLong(param[2]);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
     }
 
     @Override

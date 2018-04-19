@@ -4,6 +4,7 @@ import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 
 public class RoleModel {
+
     private long id;
     private Timestamp gmtCreate;
     private Timestamp gmtModified;
@@ -86,5 +87,6 @@ public class RoleModel {
         result = 31 * result + (pkTypeid != null ? pkTypeid.hashCode() : 0);
         result = 31 * result + (defaultPermit != null ? defaultPermit.hashCode() : 0);
         return result;
+
     }
 }

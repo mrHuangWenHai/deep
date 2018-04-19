@@ -4,6 +4,7 @@ import javax.validation.constraints.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 public class Pic implements Serializable {
     private Long id;
@@ -16,6 +17,26 @@ public class Pic implements Serializable {
 
 
     private Date udate;
+
+    public Date getSdate() {
+        return sdate;
+    }
+
+    public void setSdate(Date sdate) {
+        this.sdate = sdate;
+    }
+
+    public Date getEdate() {
+        return edate;
+    }
+
+    public void setEdate(Date edate) {
+        this.edate = edate;
+    }
+
+    private Date sdate;
+
+    private Date edate;
 
     @NotBlank(message = "专家不能为空")
     private String expert;
@@ -36,9 +57,29 @@ public class Pic implements Serializable {
     @Size(min =8, max =8, message = "检疫耳牌长度错误")
     private String vaccine;
 
-     private String filename;
+    private String filename;
 
     private Integer returnId;
+
+    private Integer pageNumb = 1;
+
+    private Integer limit = 10;
+
+    public Integer getPageNumb() {
+        return pageNumb;
+    }
+
+    public void setPageNumb(Integer pageNumb) {
+        this.pageNumb = pageNumb;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
 
     public Integer getReturnId() {
         return returnId;
@@ -138,5 +179,10 @@ public class Pic implements Serializable {
 
     public void setFilename(String filename) {
         this.filename = filename == null ? null : filename.trim();
+    }
+
+    public static boolean isDate(String date) {
+        String regex = "^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$";
+        return Pattern.matches(regex, date);
     }
 }

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>LoginQuestion</title>
+</head>
+<body>
+<form action="/ensurequestion" method="post">
+    <table>
+        <tr th:each="list : ${mylist}">
+            <td><label>找回密码问题1:</label></td>
+            <td th:text="${list.question_1}"></td>
+            <td><input type="text" id="answer_1" name="answer_1"/></td>
+        </tr>
+        <tr th:each="list : ${mylist}">
+            <td><label>找回密码问题2:</label></td>
+            <td th:text="${list.question_2}"></td>
+            <td><input type="text" id="answer_2" name="answer_2"/></td>
+        </tr>
+        <tr th:each="list : ${mylist}">
+            <td><label>找回密码问题3:</label></td>
+            <td th:text="${list.question_3}"></td>
+            <td><input type="text" id="answer_3" name="answer_3"/></td>
+        </tr>
+        <tr>
+            <td><input type="submit" id="submit" value="找回"/></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

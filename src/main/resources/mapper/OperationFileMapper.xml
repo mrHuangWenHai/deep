@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.deep.infra.persistence.sql.mapper.OperationFileMapper">
+    <resultMap id="OperationFile" type="com.deep.domain.model.OperationFile">
+        <id property="id" column="id" />
+        <result property = "gmtCreate" column = "gmt_create"/>
+        <result property = "gmtModified"  column = "gmt_modified" />
+        <result property="checkTime" column="check_time"/>
+        <result property="colonyHouse" column="colony_house"/>
+        <result property="warehouseWorkshop" column="warehouse_workshop" />
+        <result property="killWormDeratization" column="kill_worm_deratization" />
+        <result property="sterilizingRoom" column="sterilizing_room" />
+        <result property="operation" column="operation" />
+        <result property="needleSheep" column="needle_sheep" />
+        <result property="vaccine" column="vaccine" />
+        <result property="safetyProtection" column="safety_protection" />
+        <result property="rubbishWater" column="rubbish_water" />
+        <result property="operationSpecification" column="operation_specification" />
+        <result property="airTemperature" column="air_temperature" />
+        <result property="exerciseDaylighting" column="exercise_daylighting" />
+        <result property="carDisinfect" column="car_disinfect" />
+        <result property="operatorId" column="operator_id" />
+        <result property="techCheck" column="tech_check" />
+        <result property="techSupervision" column="tech_supervision"/>
+    </resultMap>
+
+    <select id="getOperationFile" resultMap="OperationFile" parameterType="com.deep.api.request.OperationCoditionRequest">
+        select *
+        from operation_file
+        where 1 = 1
+        <if test="operationCoditionRequest.id != null">
+            AND id = #{operationCoditionRequest.id}
+        </if>
+        <if test="operationCoditionRequest.operationId != null">
+            AND operator_id = #{operationCoditionRequest.operationId}
+        </if>
+
+        <if test="operationCoditionRequest.checkTime != null">
+            AND check_time &gt;= #{operationCoditionRequest.checkTime}
+        </if>
+
+        <if test="operationCoditionRequest.techCheckStatus != null">
+            AND tech_check = #{operationCoditionRequest.techCheckStatus}
+        </if>
+    </select>
+
+    <insert id="addOperationFile" useGeneratedKeys="true" keyColumn="id" keyProperty="operationFile.id">
+        insert into operation_file(
+        id,
+        check_time,
+        colony_house,
+        warehouse_workshop,
+        kill_worm_deratization,
+        sterilizing_room,
+        operation,
+        needle_sheep,
+        vaccine,
+        safety_protection,
+        rubbish_water,
+        operation_specification,
+        air_temperature,
+        exercise_daylighting,
+        car_disinfect,
+        operator_id,
+        tech_check,
+        tech_supervision,
+        gmt_create,
+        gmt_modified
+        )
+        values (
+        #{operationFile.id},
+        #{operationFile.checkTime},
+        #{operationFile.colonyHouse},
+        #{operationFile.warehouseWorkshop},
+        #{operationFile.killWormDeratization},
+        #{operationFile.sterilizingRoom},
+        #{operationFile.operation},
+        #{operationFile.needleSheep},
+        #{operationFile.vaccine},
+        #{operationFile.safetyProtection},
+        #{operationFile.rubbishWater},
+        #{operationFile.operationSpecification},
+        #{operationFile.airTemperature},
+        #{operationFile.exerciseDaylighting},
+        #{operationFile.carDisinfect},
+        #{operationFile.operatorId},
+        #{operationFile.techCheck},
+        #{operationFile.techSupervision},
+        now(),
+        now()
+        )
+    </insert>
+
+    <update id="updateOperationFile" >
+        update
+        operation_file
+        <set>
+            tech_check = #{checkStatus},
+            gmt_modified = now()
+        </set>
+        where  id = #{id}
+    </update>
+
+</mapper>

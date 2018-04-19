@@ -1,21 +1,50 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE configuration
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-    <typeAliases>
-        <package name="com.deep.domain.model"/>
-    </typeAliases>
+    <settings>
+        <setting name="cacheEnabled" value="false"/>
+        <setting name="localCacheScope" value="STATEMENT"/>
+        <setting name="useGeneratedKeys" value="true"/>
+    </settings>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver" />
+                <property name="url" value="jdbc:mysql://localhost:3306/DXSheep" />
+                <property name="username" value="root" />
+                <property name="password" value="change123" />
+            </dataSource>
+        </environment>
+    </environments>
+
     <mappers>
         <mapper resource="mapper/TestMapper.xml"/>
         <mapper class="com.deep.infra.persistence.sql.mapper.UserMapper"/>
+        <mapper class="com.deep.infra.persistence.sql.mapper.AgentMapper"/>
+        <mapper class="com.deep.infra.persistence.sql.mapper.RoleMapper" />
         <mapper resource="mapper/BreedingPlanMapper.xml"/>
         <mapper resource="mapper/DiagnosisPlanMapper.xml"/>
         <mapper resource="mapper/NutritionPlanMapper.xml"/>
         <mapper resource="mapper/NoticePlanMapper.xml"/>
         <mapper resource="mapper/PicMapper.xml"/>
         <mapper resource="mapper/MessageMapper.xml"/>
+        <mapper resource="mapper/GenealogicalFilesMapperxml.xml" />
+        <mapper resource="mapper/DisinfectFilesMapper.xml" />
+        <mapper resource="mapper/ImmunePlanMapper.xml"/>
+        <mapper resource="mapper/RepellentPlanMapper.xml"/>
+        <mapper resource="mapper/GenealogicalFilesTransMapper.xml"/>
+        <mapper resource="mapper/DisinfectionArchivesMapper.xml" />
+        <mapper resource="mapper/OperationFileMapper.xml" />
+        <mapper resource="mapper/CO2DataMapper.xml"/>
+        <mapper resource="mapper/HumDataMapper.xml"/>
+        <mapper resource="mapper/NH3DataMapper.xml"/>
+        <mapper resource="mapper/TempDataMapper.xml"/>
+        <mapper resource="mapper/TypeBriefMapper.xml"/>
+        <mapper resource="mapper/EnvironmentMapper.xml"/>
 
     </mappers>
 </configuration>
+

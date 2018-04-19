@@ -11,6 +11,7 @@ import java.util.Map;
 
 @Service
 public class AgentService {
+
     @Resource
     private AgentMapper agentMapper;
 

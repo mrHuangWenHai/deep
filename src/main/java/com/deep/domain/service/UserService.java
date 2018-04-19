@@ -340,6 +340,10 @@ public class UserService {
     }
 
     /**
+<<<<<<< HEAD
+=======
+
+>>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
      * 修改用户密码
      * @param userPwd   用户密码
      * @return  影响行数

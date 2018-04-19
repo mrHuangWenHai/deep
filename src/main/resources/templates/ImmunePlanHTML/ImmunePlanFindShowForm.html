@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>
+    <title>FindShow</title>
+</head>
+<body>
+<form action="/allfunction/ip/find" method="post">
+    <table>
+        <tr>
+            <td><label>查询结果如下</label></td>
+        </tr>
+        <tr>
+            <td><label>工厂编号</label></td>
+            <td><label>羊群编号</label></td>
+            <td><label>耳牌附件号</label></td>
+            <td><label>接种日期</label></td>
+            <td><label>免疫种类</label></td>
+            <td><label>免疫方法</label></td>
+            <td><label>接种剂量</label></td>
+            <td><label>免疫期</label></td>
+            <td><label>操作员</label></td>
+            <td><label>技术审核</label></td>
+            <td><label>监督员</label></td>
+            <td><label>备注信息</label></td>
+            <td><label>是否审核通过</label></td>
+            <td><label>未审核通过原因</label></td>
+            <td><label>创建时间</label></td>
+            <td><label>修改时间</label></td>
+            <td><label>审核时间</label></td>
+            <td><label>监督确认时间</label></td>
+        </tr>
+        <tr th:each="list : ${mylist}">
+            <td th:text="${list.factoryNum}"></td>
+            <td th:text="${list.crowdNum}"></td>
+            <td th:text="${list.immuneEartag}"></td>
+            <td th:text="${list.immuneTime}"></td>
+            <td th:text="${list.immuneKind}"></td>
+            <td th:text="${list.immuneWay}"></td>
+            <td th:text="${list.immuneQuality}"></td>
+            <td th:text="${list.immuneDuring}"></td>
+            <td th:text="${list.operator}"></td>
+            <td th:text="${list.professor}"></td>
+            <td th:text="${list.supervisor}"></td>
+            <td th:text="${list.remark}"></td>
+            <td th:text="${list.isPass}"></td>
+            <td th:text="${list.unpassReason}"></td>
+            <td th:text="${list.gmtProfessor}"></td>
+            <td th:text="${list.gmtSupervise}"></td>
+            <td th:text="${list.gmtCreate}"></td>
+            <td th:text="${list.gmtModified}"></td>
+        </tr>
+        <tr>
+            <td><input type="submit" id="submitfind" value="返回查询"/></td>
+        </tr>
+    </table>
+</form>
+
+<form action="/allfunction/ip/function" method="post">
+    <table>
+        <tr>
+            <td><input type="submit" id="submitimmuneplanfunction" value="返回免疫档案主界面"/></td>
+        </tr>
+    </table>
+</form>
+
+<form action="/allfunction" method="post">
+    <table>
+        <tr>
+            <td><input type="submit" id="submitallfunction" value="返回主界面"/></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 @Component
 public class UserModel {
         private long id;
-        private Timestamp gmtCreate;;
+        private Timestamp gmtCreate;
         private Timestamp gmtModified;
 
         @NotBlank(message = "用户名不能为空!")
@@ -77,6 +77,7 @@ public class UserModel {
 
         public String getUserEmail() {
             return userEmail;
+
         }
 
         public void setUserEmail(String userEmail) {
@@ -356,4 +357,5 @@ public class UserModel {
         public interface UserSimpleView {}
 
         public interface UserDetailView extends UserSimpleView {}
+
 }

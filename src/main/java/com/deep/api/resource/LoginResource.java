@@ -1,5 +1,6 @@
 package com.deep.api.resource;
 
+
 import com.deep.api.Utils.JedisUtil;
 import com.deep.api.Utils.MobileAnnouncementUtil;
 import com.deep.api.authorization.token.TokenModel;
@@ -26,12 +27,14 @@ import java.util.logging.Logger;
 @RestController
 public class LoginResource {
 
+
     private final org.slf4j.Logger logger = LoggerFactory.getLogger(LoginResource.class);
 
     @Resource
     private UserService userService;
 
     @Resource
+<<<<<<< HEAD
     private FactoryService factoryService;
 
     @Resource
@@ -41,6 +44,8 @@ public class LoginResource {
     private RoleService roleService;
 
     @Resource
+=======
+>>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
     private MobileAnnouncementUtil mobileAnnouncementModel;
 
     @Resource
@@ -121,6 +126,10 @@ public class LoginResource {
             return Responses.errorResponse("用户不存在");
         }
         mobileAnnouncementModel = new MobileAnnouncementUtil(userModel.getUserTelephone());
+<<<<<<< HEAD
+=======
+
+>>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         String httpResponse =  mobileAnnouncementModel.testSend();
         try {
             JSONObject jsonObj = new JSONObject( httpResponse );
@@ -181,6 +190,10 @@ public class LoginResource {
      * @return
      */
     @GetMapping(value = "/ensureverify/{verifyCode}")
+<<<<<<< HEAD
+=======
+
+>>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
     public Response EnsureVerify(@PathVariable("verifyCode") String verifyCode, UserModel userModel){
         logger.info("invoke EnsureVerify{}, url is /ensureverify/{vefiyCode}", verifyCode);
         if (verifyCode == null || userModel == null || userModel.getUserTelephone().equals("") || userModel.getPkUserid().equals("")) {
@@ -188,6 +201,10 @@ public class LoginResource {
         }
         Response response;
         if(verifyCode.equals(JedisUtil.getValue(userModel.getPkUserid()+userModel.getUserTelephone()))) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
             response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("errorMessage", "valid success");
@@ -203,7 +220,13 @@ public class LoginResource {
 
     @GetMapping(value = "/question")
     public Response requestQuestion(@RequestParam("name") String name) {
+<<<<<<< HEAD
         logger.info("invoke requestQuestion{}, url is requestQuestion", name);
+=======
+
+        logger.info("invoke requestQuestion{}, url is requestQuestion", name);
+
+>>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         if (name == null) {
             return Responses.errorResponse("error!");
         }
@@ -226,8 +249,15 @@ public class LoginResource {
      * @return
      */
     @PostMapping(value = "/ensurequestion")
+<<<<<<< HEAD
     public Response EnsureQuestion(@RequestBody UserModel userModel) {
         logger.info("invoke ensureQuestion{}, url is /ensurequestion", userModel);
+=======
+
+    public Response EnsureQuestion(@RequestBody UserModel userModel) {
+        logger.info("invoke ensureQuestion{}, url is /ensurequestion", userModel);
+
+>>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         if (userModel == null) {
             return Responses.errorResponse("error!");
         }
@@ -257,7 +287,13 @@ public class LoginResource {
      */
     @GetMapping(value = "/logout/{id}")
     public Response logout(@PathVariable("id") String id) {
+<<<<<<< HEAD
         logger.info("invoke logout{}, url is /logout/{id}", id);
+=======
+
+        logger.info("invoke logout{}, url is /logout/{id}", id);
+
+>>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         if (id == null) {
             return Responses.errorResponse("error!");
         }
@@ -270,4 +306,6 @@ public class LoginResource {
         response.setData(data);
         return response;
     }
+
+
 }

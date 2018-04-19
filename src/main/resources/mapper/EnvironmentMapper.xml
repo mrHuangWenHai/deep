@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--Mapper名称 对应infra中mapper类名-->
+<mapper namespace="com.deep.infra.persistence.sql.mapper.EnvironmentMapper">
+
+    <insert id="setEnvironmentModel">
+        INSERT INTO environment(
+        time,
+        factory_num,
+        in_temp,
+        in_hum,
+        pm,
+        water_ph,
+        water_temp,
+        soil_ph,
+        soil_temp,
+        soil_hum,
+        nh3
+        )  VALUE (
+        #{environmentModel.time},
+        #{environmentModel.factoryNum},
+        #{environmentModel.inTemp},
+        #{environmentModel.inHum},
+        #{environmentModel.pm},
+        #{environmentModel.waterPH},
+        #{environmentModel.waterTemp},
+        #{environmentModel.soilPH},
+        #{environmentModel.soilTemp},
+        #{environmentModel.soilHum},
+        #{environmentModel.nh3}
+        )
+    </insert>
+
+
+</mapper>

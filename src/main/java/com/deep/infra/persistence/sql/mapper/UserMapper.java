@@ -3,11 +3,11 @@ package com.deep.infra.persistence.sql.mapper;
 import com.deep.domain.model.UserModel;
 import com.deep.domain.service.UserService;
 import org.apache.ibatis.annotations.*;
-
 import java.util.List;
 
 @Mapper
 public interface UserMapper {
+
     /**
      * 列出用户列表
      * @return

@@ -1,5 +1,6 @@
 package com.deep.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -20,7 +21,8 @@ public class Message implements Serializable {
 
     private Date inserttime;
 
-    @NotBlank(message = "标签不可为空")
+
+//    @NotBlank(message = "标签不可为空")
     private String tag;
 
     @NotBlank(message = "态度不可为空")
@@ -38,6 +40,33 @@ public class Message implements Serializable {
     }
 
     private Integer messageId;
+
+    private Integer pageNumb = 1 ;
+
+    private Integer limit = 10;
+
+    public Date getsTime() {
+        return sTime;
+    }
+
+    public void setsTime(Date sTime) {
+        this.sTime = sTime;
+    }
+
+    public Date geteTime() {
+        return eTime;
+    }
+
+    public void seteTime(Date eTime) {
+        this.eTime = eTime;
+    }
+
+    private Date sTime;
+
+    private Date eTime;
+
+
+
 
     private static final long serialVersionUID = 1L;
 
@@ -103,6 +132,23 @@ public class Message implements Serializable {
 
     public void setIntention(String intention) {
         this.intention = intention == null ? null : intention.trim();
+    }
+
+
+    public Integer getPageNumb() {
+        return pageNumb;
+    }
+
+    public void setPageNumb(Integer pageNumb) {
+        this.pageNumb = pageNumb;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
     }
 
     //匹配手机号

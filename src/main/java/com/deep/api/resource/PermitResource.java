@@ -31,7 +31,13 @@ public class PermitResource {
     @Permit(authorities = "query_permit")
     @GetMapping(value = "/")
     public Response permitLists() {
+<<<<<<< HEAD
         logger.info("invoke permitLists, url is /permit/");
+=======
+
+        logger.info("invoke permitLists, url is /permit/");
+
+>>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         List<PermitModel> permitModels = permitService.getAll();
         if (permitModels.size() <= 0) {
             return Responses.errorResponse("无权限信息");

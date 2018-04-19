@@ -1,9 +1,7 @@
 package com.deep.domain.model;
 
-/**
- * Created by huangwenhai on 2018/2/1.
- */
 public class TestModel {
+
   private int id;
   private String message;
 
@@ -23,4 +21,5 @@ public class TestModel {
   public void setMessage(String message) {
     this.message = message;
   }
+
 }

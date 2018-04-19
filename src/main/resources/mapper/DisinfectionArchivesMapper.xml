@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.deep.infra.persistence.sql.mapper.DisinfectionArchivesMapper">
+
+    <resultMap id = "DisinfectionArchives" type="com.deep.domain.model.DisinfectionArchives">
+        <id property = "id" column = "id" />
+        <result property = "gmtCreate" column = "gmt_create"/>
+        <result property = "gmtModified"  column = "gmt_modified" />
+        <result property = "disinfectionTime" column = "disinfection_time" />
+        <result property = "disinfectionPlace" column= "disinfection_place" />
+        <result property = "medicineName" column = "medicine_name" />
+        <result property = "disinfectionMethod" column = "disinfection_method" />
+        <result property = "operatorId" column = "operator_id" />
+        <result property = "tecReviewerId" column = "tecReviewer_id" />
+        <result property = "supervisionId" column = "supervision_id" />
+    </resultMap>
+
+    <select id = "getAllDisinfectionArchives" resultMap="DisinfectionArchives">
+        select * from disinfection_archives ORDER BY id desc limit 100
+    </select>
+
+    <select id = "getDisinfectionArchivesById" resultMap="DisinfectionArchives">
+        select * from disinfection_archives where id = #{id}
+    </select>
+
+    <select id="getDisinfectionArchivesByDisinfectionTime" resultMap="DisinfectionArchives">
+        select * from disinfection_archives where disinfectionTime = #{disinfectionTime}
+    </select>
+
+    <select id = "getDisinfectionArchivesByBoundsTime" resultMap="DisinfectionArchives">
+        select * from disinfection_archives where disinfectionTime &gt;= #{startTime} ORDER BY id desc limit 100
+    </select>
+
+    <insert id="addDisinfectionArchives" parameterType="java.util.List" useGeneratedKeys="true" keyColumn="id">
+        insert into disinfection_archives
+        (
+          gmt_create,
+          gmt_modified,
+          disinfection_time,
+          disinfection_place,
+          medicine_name,
+          dosage,
+          disinfection_method,
+          operator_id,
+          tec_reviewer_id,
+          supervision_id,
+          remark
+          ) values
+        <foreach collection="list" item="disinfectionArchives" index="index" separator=",">
+            (
+               now(),
+               now(),
+               #{disinfectionArchives.disinfectionTime},
+               #{disinfectionArchives.disinfectionPlace},
+               #{disinfectionArchives.medicineName},
+               #{disinfectionArchives.dosage},
+               #{disinfectionArchives.disinfectionMethod},
+               #{disinfectionArchives.operatorId},
+               #{disinfectionArchives.tecReviewerId},
+               #{disinfectionArchives.supervisionId},
+               #{disinfectionArchives.remark}
+            )
+        </foreach>
+
+    </insert>
+
+</mapper>
