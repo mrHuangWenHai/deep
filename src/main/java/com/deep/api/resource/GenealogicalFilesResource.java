@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -75,7 +76,11 @@ public class GenealogicalFilesResource {
     @RequestMapping(value = "/beforesave",method = RequestMethod.GET)
     public Response beforeSave(){
         logger.info("invoke before {}");
-        return JudgeUtil.JudgeSuccess("type",this.typeBriefService.getAllType());
+        List<String> list = new ArrayList<>();
+        for (Integer i = 0 ; JedisUtil.getCertainKeyValue("type_"+i) != null ; i++){
+            list.add(JedisUtil.getCertainKeyValue("type_"+i));
+        }
+        return JudgeUtil.JudgeSuccess("type",list);
     }
 
 
