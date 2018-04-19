@@ -7,10 +7,8 @@ import com.deep.api.response.ValidResponse;
 import com.deep.domain.model.ImmunePlanModel;
 import com.deep.domain.service.ImmunePlanService;
 import com.deep.domain.service.UserService;
-import com.deep.domain.util.FileUtil;
-import com.deep.domain.util.JedisUtil;
-import com.deep.domain.util.JudgeUtil;
-import com.deep.domain.util.UploadUtil;
+import com.deep.domain.util.*;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -48,9 +47,11 @@ public class ImmunePlanResource {
      * Value:未审核条数
      *
      * METHOD:POST
-
-     * @param request
-     * @return
+     * @param immunePlanModel 免疫类
+     * @param bindingResult  异常抛出类
+     * @param immuneEartagFile  耳牌文件
+     * @param request  HttpServletRequest
+     * @return 插入结果
      */
     @RequestMapping(value = "/saveshow", method = RequestMethod.POST)
     public Response saveShow(@Valid ImmunePlanModel immunePlanModel,
@@ -67,12 +68,12 @@ public class ImmunePlanResource {
         if (immuneEartagFile.isEmpty()){
             return Responses.errorResponse("Lack Item");
         }
-        String Header = FileUtil.getFileHeader(immuneEartagFile);
+        /*String Header = FileUtil.getFileHeader(immuneEartagFile);
 
         if ( !"75736167".equals(Header) && !"7B5C727466".equals(Header) &&
                 !"D0CF11E0".equals(Header) && !"504B0304".equals(Header)) {
             return Responses.errorResponse("Wrong file form");
-        }
+        }*/
 
 
         ImmunePlanModel immunePlanModel1 = immunePlanService.getImmunePlanModelByfactoryNumAndcrowdNumAndimmuneTime(immunePlanModel.getFactoryNum(), immunePlanModel.getCrowdNum(), immunePlanModel.getImmuneTime());
@@ -144,12 +145,12 @@ public class ImmunePlanResource {
                         List<String> phone = this.userService.getUserTelephoneByfactoryNum(immunePlanModel.getFactoryNum());
 
                         StringBuffer phoneList = new StringBuffer("");
-                        for(int i = 0; i < phone.size(); i++){
-                            phoneList = phoneList.append(phone.get(i)).append(",");
+                        for (String aPhone : phone) {
+                            phoneList = phoneList.append(aPhone).append(",");
                         }
 
                         if ("".equals(phoneList.toString())){
-
+                            System.out.println("no professor number");
                             //未查到对应工厂负责人电话
                         }else {
 
@@ -175,8 +176,8 @@ public class ImmunePlanResource {
 
                         StringBuffer phoneList = new StringBuffer("");
 
-                        for (int i = 0; i < phone.size(); i++) {
-                            phoneList = phoneList.append(phone.get(i)).append(",");
+                        for (String aPhone : phone) {
+                            phoneList = phoneList.append(aPhone).append(",");
                         }
 
                         if ("".equals(phoneList.toString())){
@@ -228,8 +229,8 @@ public class ImmunePlanResource {
      * 以json格式返回前端
      * 分页查询
      * METHOD:POST
-     * @param immuneRequest
-     * @return
+     * @param immuneRequest 免疫请求类
+     * @return 查询结果
      */
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
     public Response findShow(@RequestBody ImmuneRequest immuneRequest) {
@@ -246,15 +247,34 @@ public class ImmunePlanResource {
         return JudgeUtil.JudgeFind(immunePlanModels,immunePlanModels.size());
     }
 
+    /**
+     * 下载文件 并保存到自定义路径
+     * @param response HttpServletResponse
+     * @throws Exception 下载文件异常
+     */
+    @RequestMapping(value = "/down",method = RequestMethod.GET)
+    public Response download(HttpServletResponse response,
+                             @Param("file") String file,
+                             @Param("locate") String locate)throws Exception{
+        logger.info("invoke download {}", response, file, locate);
+        String filePath = "../EartagDocument/immuneEartag/";
+        if (DownloadUtil.downloadFile(response , file, filePath, locate)){
+            return JudgeUtil.JudgeSuccess("download","Success");
+        }else {
+            return Responses.errorResponse("download Error");
+        }
+    }
+
 
     /**
-     * 专家入口 展示所有isPass1 = 0或者isPass1 = 1的数据
-     * @param isPass
-     * @param page
-     * @param size
+     * 专家入口 查看isPass = 0或者isPass = 1的数据
      * METHOD:GET
-     * @return
+     * @param isPass 审核标志位
+     * @param page  页号
+     * @param size  条数
+     * @return 查询结果/查询结果条数
      */
+
     @RequestMapping(value = "pfind",method = RequestMethod.GET)
     public Response professorFind(@RequestParam(value = "isPass",defaultValue = "2") Integer isPass,
                                   @RequestParam(value = "page",defaultValue = "0") int page,
@@ -271,10 +291,10 @@ public class ImmunePlanResource {
 
 
     /**
-     * 专家入口 审核isPass1 = 0或者isPass1 = 1的数据
-     * @param immunePlanModel 通过id修改
+     * 审核入口 审核isPass = 0的数据
      * METHOD:PATCH
-     * @return
+     * @param immunePlanModel 免疫类
+     * @return 更新结果
      */
 
     @RequestMapping(value = "pupdate",method = RequestMethod.PATCH)
@@ -350,11 +370,11 @@ public class ImmunePlanResource {
 
     /**
      * 审核入口 展示所有isPass1 = 0或者isPass1 = 1的数据
-     * @param isPass1
-     * @param page
-     * @param size
+     * @param isPass1 审核标志位
+     * @param page   页码
+     * @param size   条数
      * METHOD:GET
-     * @return
+     * @return 查询结果
      */
     @RequestMapping(value = "sfind",method = RequestMethod.GET)
     public Response SupervisorFind(@RequestParam(value = "isPass1",defaultValue = "2") Integer isPass1,
@@ -374,10 +394,10 @@ public class ImmunePlanResource {
 
     /**
      * 监督员入口 审核isPass1 = 0的数据
-     * 审核要求:审核时要求条例写完整 审核后无权限再修改
-     * @param immunePlanModel
+     * 审核要求:审核时要求条例写完整 审核后 isPass = 1时 无权限再修改
+     * @param immunePlanModel 免疫类
      * METHOD:PATCH
-     * @return
+     * @return 审核结果
      */
     @RequestMapping(value = "supdate",method = RequestMethod.PATCH)
     public Response SupervisorUpdate(@RequestBody ImmunePlanModel immunePlanModel){
@@ -461,8 +481,8 @@ public class ImmunePlanResource {
      *
      * 行为1 与redis数据库无关
      * 行为2 redis对应数据字段+1
-     * @param immunePlanModel
-     * @return
+     * @param immunePlanModel 免疫类
+     * @return 更新结果
      */
     @RequestMapping(value = "oupdate",method = RequestMethod.PATCH)
     public Response OperatorUpdate(@RequestBody ImmunePlanModel immunePlanModel) {
@@ -532,8 +552,8 @@ public class ImmunePlanResource {
     /**
      * 删除id = certain 的数据
      * 权限设置
-     * @param id
-     * @return
+     * @param id id
+     * @return 删除结果
      */
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
     public Response Delete(@RequestParam(value = "id",defaultValue = "0") Long id){

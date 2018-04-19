@@ -27,8 +27,8 @@ public class GeditMessageResource {
 
     /**
      * 编辑默认短信内容
-     * @param Message
-     * @return
+     * @param Message 短信类
+     * @return  插入结果
      */
     @ResponseBody
     @RequestMapping(value = "/mgedit",method = RequestMethod.GET)

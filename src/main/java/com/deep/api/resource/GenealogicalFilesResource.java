@@ -8,7 +8,6 @@ import com.deep.domain.model.GenealogicalFilesModel;
 import com.deep.domain.model.TypeBriefModel;
 import com.deep.domain.service.GenealogicalFilesService;
 import com.deep.domain.service.TypeBriefService;
-import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.JudgeUtil;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
@@ -17,7 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
-import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -37,18 +35,18 @@ public class GenealogicalFilesResource {
 
     /**
      * 用于存放羊品种以及简介
-     * @param typeBriefModel
-     * @param bindingResult
-     * @return
+     * @param typeBriefModel  品种简介类
+     * @param bindingResult   异常抛出类
+     * @return  插入/更新结果
      */
     @RequestMapping(value = "/type",method = RequestMethod.POST)
     public Response type(@RequestBody @Validated TypeBriefModel typeBriefModel,
                          BindingResult bindingResult){
 
         if (bindingResult.hasErrors()){
-            System.out.println(bindingResult.getAllErrors());
             return ValidResponse.bindExceptionHandler();
         }else{
+            logger.info("invoke type {}",typeBriefModel);
             //若数据库中已经存在
             TypeBriefModel typeBriefModel1;
             if ((typeBriefModel1 = this.typeBriefService.getTypeBrief(typeBriefModel.getType())) != null){
@@ -70,11 +68,11 @@ public class GenealogicalFilesResource {
     /**
      * 查询之前 需要返回给前端的数据
      * 山羊品种对应的特征
-     * @return
+     * @return 种类
      */
     @RequestMapping(value = "/beforesave",method = RequestMethod.GET)
     public Response beforeSave(){
-
+        logger.info("invoke before {}");
         return JudgeUtil.JudgeSuccess("type",this.typeBriefService.getAllType());
     }
 
@@ -87,8 +85,8 @@ public class GenealogicalFilesResource {
      * color:棕色 0  暗红 1  杂色 2
      * sex:公 0 母 1
      * METHOD:POST
-     * @param genealogicalFilesModel
-     * @return
+     * @param genealogicalFilesModel 系谱类
+     * @return 插入结果
      */
     @RequestMapping(value = "/saveshow",method = RequestMethod.POST)
     public Response saveShow(@RequestBody @Validated GenealogicalFilesModel genealogicalFilesModel,
@@ -135,8 +133,8 @@ public class GenealogicalFilesResource {
      * 用于条件查找
      * RowBounds为必传参数
      * METHOD:POST
-     * @param genealogicalRequest
-     * @return
+     * @param genealogicalRequest 系谱请求类
+     * @return 查询结果/查询结果条数
      */
     //bound为必传参数
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
@@ -153,9 +151,9 @@ public class GenealogicalFilesResource {
         }
 
         List<GenealogicalFilesModel> genealogicalFilesModels = genealogicalFilesService.getGenealogicalFilesModel(genealogicalRequest,new RowBounds(genealogicalRequest.getPage(),genealogicalRequest.getSize()));
-        for(int i = 0 ; i < genealogicalFilesModels.size() ; i ++){
-            String brief = this.typeBriefService.getTypeBrief(genealogicalFilesModels.get(i).getType()).getBrief();
-            genealogicalFilesModels.get(i).setBrief(brief);
+        for (GenealogicalFilesModel genealogicalFilesModel : genealogicalFilesModels) {
+            String brief = this.typeBriefService.getTypeBrief(genealogicalFilesModel.getType()).getBrief();
+            genealogicalFilesModel.setBrief(brief);
         }
         return JudgeUtil.JudgeFind(genealogicalFilesModels,genealogicalFilesModels.size());
     }
@@ -164,8 +162,8 @@ public class GenealogicalFilesResource {
      * 查询出满足若干条件后的结果
      * 可由id进行操作
      * METHOD:GET
-     * @param id
-     * @return
+     * @param id id
+     * @return 查询结果
      */
     @ResponseBody
     @RequestMapping(value = "/findshowbyid",method = RequestMethod.GET)
@@ -173,12 +171,8 @@ public class GenealogicalFilesResource {
     public Response findShowById(@RequestParam("id") int id ) {
 
         logger.info("invoke findShowById {}", id);
-
-
         GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesService.getGenealogicalFilesModelByid(id);
-
         return JudgeUtil.JudgeFind(genealogicalFilesModel);
-
     }
 
     //update
@@ -186,8 +180,8 @@ public class GenealogicalFilesResource {
     /**
      * 更新操作 输入数据替代原数据
      * METHOD:PATCH
-     * @param genealogicalFilesModel
-     * @return
+     * @param genealogicalFilesModel 系谱类
+     * @return  更新结果
      */
     @ResponseBody
     @RequestMapping(value = "/update",method = RequestMethod.PATCH)
@@ -209,8 +203,8 @@ public class GenealogicalFilesResource {
     /**
      * 返回删除内容行号
      * METHOD:DELETE
-     * @param id
-     * @return
+     * @param id id
+     * @return  删除结果
      */
     @ResponseBody
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)

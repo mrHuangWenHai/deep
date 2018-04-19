@@ -42,6 +42,7 @@
         <id property="id" column="id"/>
         <result property="factoryNum" column="factory_num"/>
         <result property="crowdNum" column="crowd_num"/>
+        <result property="immuneEartag" column="immuneEartag"/>
         <result property="immuneTime" column="immune_t"/>
         <result property="immuneKind" column="immune_k"/>
         <result property="immuneWay" column="immune_m"/>

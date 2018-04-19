@@ -37,6 +37,7 @@
     <resultMap id="DisinfectFiles" type="com.deep.domain.model.DisinfectFilesModel">
         <id property="id" column="id"/>
         <result property="factoryNum" column="factory_num"/>
+        <result property="disinfectEartag" column="disinfect_et"/>
         <result property="disinfectTime" column="disinfect_t"/>
         <result property="disinfectName" column="disinfect_n"/>
         <result property="disinfectQuality" column="disinfect_q"/>
