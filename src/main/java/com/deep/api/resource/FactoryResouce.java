@@ -34,7 +34,7 @@ public class FactoryResouce {
     public Response factoryLists() {
         logger.info("invoke factoryLists, url is factory/");
         List<FactoryModel> factoryModelList = factoryService.getAll();
-        if (factoryModelList.size() <= 0) {
+        if (factoryModelList == null) {
             return Responses.errorResponse("暂无羊场信息");
         }
         Response response = Responses.successResponse();

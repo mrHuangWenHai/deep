@@ -36,7 +36,7 @@ public class AgentResource {
     public Response agentLists() {
         logger.info("invoke agentLists, url is agent/");
         List<AgentModel> agents = agentService.getAll();
-        if (agents.size() <= 0) {
+        if (agents == null) {
             return Responses.errorResponse("系统中暂时没有代理");
         }
         Response response = Responses.successResponse();
@@ -169,7 +169,7 @@ public class AgentResource {
             return Responses.errorResponse("error");
         } else {
             List<AgentModel> agentModels = agentService.getSons(agentID);
-            if (agentModels.size() > 0) {
+            if (agentModels != null) {
                 Response response = Responses.successResponse();
                 Map<String, Object> data = new HashMap<>();
                 data.put("sons", agentModels);
@@ -219,7 +219,7 @@ public class AgentResource {
             return Responses.errorResponse("error");
         } else {
             List<AgentModel> agents = agentService.getAncestors(agentID);
-            if (agents.size() > 0) {
+            if (agents != null) {
                 Response response = Responses.successResponse();
                 Map<String, Object> data = new HashMap<>();
                 data.put("ancestors", agents);
@@ -244,7 +244,7 @@ public class AgentResource {
             return Responses.errorResponse("error");
         } else {
             Map<String, Object> agents = agentService.getAncestorsProfessor(agentID);
-            if (agents.size() > 0) {
+            if (agents != null) {
                 Response response = Responses.successResponse();
                 Map<String, Object> data = new HashMap<>();
                 data.put("ancestors", agents);

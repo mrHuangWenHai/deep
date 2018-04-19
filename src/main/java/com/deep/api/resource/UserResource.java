@@ -43,7 +43,7 @@ public class UserResource {
     public Response userList(@PathVariable("roleID") long roleID) {
         logger.info("invoke userList, url is user/");
         List<UserModel> userLists = userService.getAll(roleID);
-        if (userLists.size() <= 0) {
+        if (userLists == null) {
             return Responses.errorResponse("系统中暂时没有下级用户");
         }
         Response response = Responses.successResponse();
@@ -306,7 +306,7 @@ public class UserResource {
             return Responses.errorResponse("error!");
         }
         List<UserModel> userModels = userService.getRoles(uid);
-        if (userModels.size() <= 0) {
+        if (userModels == null) {
             return Responses.errorResponse("error!");
         }
         Response response = Responses.successResponse();
@@ -348,7 +348,7 @@ public class UserResource {
         } else {
             Response response;
             List<UserModel> userLists = userService.getAllUserOfFactoryOrAgent(uid);
-            if (userLists.size() <= 0) {
+            if (userLists == null) {
                 return Responses.errorResponse("error");
             } else {
                 response = Responses.successResponse();

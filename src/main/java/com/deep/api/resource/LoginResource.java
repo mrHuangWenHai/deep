@@ -72,13 +72,15 @@ public class LoginResource {
                 data.put("successMessage", "登录成功!");
                 data.put("id", userModel.getId());
                 if (userModel.getIsFactory() == 0) {
+                    // 如果是羊场
                     FactoryModel factoryModel = factoryService.getOneFactory(userModel.getUserFactory());
                     data.put("factory_id", userModel.getUserFactory());
                     data.put("agent_id", factoryModel.getAgent());
                 }else if (userModel.getIsFactory() == 1) {
+                    // 如果是代理
                     AgentModel agentModel = agentService.getOneAgent(userModel.getUserFactory());
-                    data.put("id", userModel.getUserFactory());
-                    data.put("agent_id", agentModel.getAgentFather());
+                    data.put("agent_id", userModel.getUserFactory());
+                    data.put("agent_father_id", agentModel.getAgentFather());
                 } else {
 
                 }

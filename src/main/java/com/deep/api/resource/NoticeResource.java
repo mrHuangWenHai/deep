@@ -43,19 +43,13 @@ public class NoticeResource {
 
 
     /**
-     * 按主键删除的接口：/noticeInsert
-     * 按主键删除的方法名：addPlan()
-     * 接收参数：整个表单信息（所有参数必填）
-     * 参数类型为：String professor;Byte type;String title;String content;
-     * @param insert
+     * @param insert 整个表单信息（所有参数必填）, 参数类型为：String professor;Byte type;String title;String content;
      * @param request
      * @param bindingResult
      * @return
      */
     @PostMapping(value = "/insert")
-    public Response addPlan(@Valid NoticePlan insert,
-                            HttpServletRequest request,
-                            BindingResult bindingResult){
+    public Response addPlan(@Valid NoticePlan insert, HttpServletRequest request, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("信息发布失败！");
         }else {
@@ -64,13 +58,13 @@ public class NoticeResource {
                 MultipartFile file = files.get(0);
                 String filename = file.getOriginalFilename();
                 String filepath = "../"+"picture/"+insert.getProfessor()+"/";
-                String suffixname = "";
+                String suffixName = "";
                 if (insert.getProfessor().isEmpty()){
                     insert.setProfessor("Unknown");
                     filepath = "../"+"picture/Unknown/";
                 }
                 if (!filename.isEmpty()){
-                    suffixname = filename.substring(filename.lastIndexOf("."));
+                    suffixName = filename.substring(filename.lastIndexOf("."));
                 }
                 try {
                     String Header = FileUtil.getFileHeader(file);
@@ -108,27 +102,29 @@ public class NoticeResource {
                     insert.setFilepath(null);
                 }
                 if (!filename.isEmpty()){
-                    insert.setSuffixname(suffixname);
+                    insert.setSuffixname(suffixName);
                 }else {
                     insert.setSuffixname(null);
                 }
             }
-            insert.setGmtCreate(new Date());
-            noticePlanService.addPlan(insert);
 
+            insert.setGmtCreate(new Date());
+            insert.setGmtModified(new Date());
+            int addID =  noticePlanService.addPlan(insert);
+            if (addID <= 0) {
+                return Responses.errorResponse("添加失败");
+            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("notice_plan",insert);
+            data.put("addID", addID);
             response.setData(data);
             return response;
         }
     }
 
     /**
-     * 按主键删除的接口：/noticeDeleteById
-     * 按主键删除的方法名：dropPlan()
-     * 接收参数：id，根据主键号删除
-     * @param id
+     * @param id 接收参数：id，根据主键号删除
      * @return
      */
     @DeleteMapping(value = "/{id}")
@@ -155,10 +151,8 @@ public class NoticeResource {
 //    按主键修改的方法名：changePlan()
 //    接收参数：整个表单信息（整型id必填，各参数选填）
 
-    @RequestMapping(value = "/noticeUpdate/show",method = RequestMethod.POST)
-    public Response changePlan(@Valid NoticePlan update,
-                               HttpServletRequest request,
-                               BindingResult bindingResult){
+    @PostMapping(value = "/update")
+    public Response changePlan(@Valid NoticePlan update, HttpServletRequest request, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("信息修改失败！");
         }else {
@@ -354,8 +348,10 @@ public class NoticeResource {
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("输入有误，站内搜索失败！");
         }else {
-            System.out.println(otherTime.getSearch_string());
             List<NoticePlan> selectInSite = noticePlanService.selectInSite(otherTime.getSearch_string());
+            if (selectInSite == null) {
+                return Responses.errorResponse("没有查到信息");
+            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("notice_plan",selectInSite);
@@ -367,12 +363,7 @@ public class NoticeResource {
 //    上传接口：/upload
 //    上传方法名：uploadFile()
 //    接收的参数：用户浏览本地文件选择文件上传
-    @RequestMapping(value = "/upload",method = RequestMethod.GET)
-    public String uploadFile(){
-        return "Upload";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/upload/show",method = RequestMethod.POST)
+    @PostMapping(value = "/upload")
     public Response uploadFile(HttpServletRequest request){
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
         String filepath = "../picture/rich_text_format/";
@@ -422,15 +413,8 @@ public class NoticeResource {
 //    下载接口：/download
 //    下载方法名：downloadFile()
 //    接收的参数：文件在服务器的相对路径
-    @RequestMapping(value = "/download",method = RequestMethod.GET)
-    public String downloadFile(){
-        return "Download";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/downloadFile",method = RequestMethod.POST)
-    public String downloadFile(@RequestBody @Valid OtherTime otherTime,
-                               BindingResult bindingResult,
-                               HttpServletResponse response){
+    @PostMapping(value = "/download")
+    public String downloadFile(@RequestBody @Valid OtherTime otherTime, BindingResult bindingResult, HttpServletResponse response){
         if (bindingResult.hasErrors()) {
             System.out.println("下载文件失败，请重试!");
         }else {

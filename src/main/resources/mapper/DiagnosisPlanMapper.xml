@@ -119,7 +119,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
@@ -136,7 +136,8 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.deep.domain.model.DiagnosisPlanWithBLOBs" >
+  <insert id="insert" parameterType="com.deep.domain.model.DiagnosisPlanWithBLOBs"
+          useGeneratedKeys="true" keyProperty="id">
     insert into diagnosis_plan (id, gmt_create, gmt_modified, 
       gmt_supervised, factory_num, diagnosis_t, 
       building, et_b, operator, 
@@ -338,23 +339,23 @@
   <update id="updateByExampleWithBLOBs" parameterType="map" >
     update diagnosis_plan
     set id = #{record.id,jdbcType=INTEGER},
-      gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
-      gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
-      gmt_supervised = #{record.gmtSupervised,jdbcType=TIMESTAMP},
-      factory_num = #{record.factoryNum,jdbcType=BIGINT},
-      diagnosis_t = #{record.diagnosisT,jdbcType=TIMESTAMP},
-      building = #{record.building,jdbcType=VARCHAR},
-      et_b = #{record.etB,jdbcType=VARCHAR},
-      operator = #{record.operator,jdbcType=VARCHAR},
-      professor = #{record.professor,jdbcType=VARCHAR},
-      supervisor = #{record.supervisor,jdbcType=VARCHAR},
-      remark = #{record.remark,jdbcType=VARCHAR},
-      is_pass = #{record.isPass,jdbcType=TINYINT},
-      upass_reason = #{record.upassReason,jdbcType=VARCHAR},
-      is_pass1 = #{record.isPass1,jdbcType=TINYINT},
-      diagnosis_c = #{record.diagnosisC,jdbcType=LONGVARCHAR},
-      diagnosis_m = #{record.diagnosisM,jdbcType=LONGVARCHAR},
-      drug_q = #{record.drugQ,jdbcType=LONGVARCHAR}
+    gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+    gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+    gmt_supervised = #{record.gmtSupervised,jdbcType=TIMESTAMP},
+    factory_num = #{record.factoryNum,jdbcType=BIGINT},
+    diagnosis_t = #{record.diagnosisT,jdbcType=TIMESTAMP},
+    building = #{record.building,jdbcType=VARCHAR},
+    et_b = #{record.etB,jdbcType=VARCHAR},
+    operator = #{record.operator,jdbcType=VARCHAR},
+    professor = #{record.professor,jdbcType=VARCHAR},
+    supervisor = #{record.supervisor,jdbcType=VARCHAR},
+    remark = #{record.remark,jdbcType=VARCHAR},
+    is_pass = #{record.isPass,jdbcType=TINYINT},
+    upass_reason = #{record.upassReason,jdbcType=VARCHAR},
+    is_pass1 = #{record.isPass1,jdbcType=TINYINT},
+    diagnosis_c = #{record.diagnosisC,jdbcType=LONGVARCHAR},
+    diagnosis_m = #{record.diagnosisM,jdbcType=LONGVARCHAR},
+    drug_q = #{record.drugQ,jdbcType=LONGVARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -362,20 +363,20 @@
   <update id="updateByExample" parameterType="map" >
     update diagnosis_plan
     set id = #{record.id,jdbcType=INTEGER},
-      gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
-      gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
-      gmt_supervised = #{record.gmtSupervised,jdbcType=TIMESTAMP},
-      factory_num = #{record.factoryNum,jdbcType=BIGINT},
-      diagnosis_t = #{record.diagnosisT,jdbcType=TIMESTAMP},
-      building = #{record.building,jdbcType=VARCHAR},
-      et_b = #{record.etB,jdbcType=VARCHAR},
-      operator = #{record.operator,jdbcType=VARCHAR},
-      professor = #{record.professor,jdbcType=VARCHAR},
-      supervisor = #{record.supervisor,jdbcType=VARCHAR},
-      remark = #{record.remark,jdbcType=VARCHAR},
-      is_pass = #{record.isPass,jdbcType=TINYINT},
-      upass_reason = #{record.upassReason,jdbcType=VARCHAR},
-      is_pass1 = #{record.isPass1,jdbcType=TINYINT}
+    gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+    gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+    gmt_supervised = #{record.gmtSupervised,jdbcType=TIMESTAMP},
+    factory_num = #{record.factoryNum,jdbcType=BIGINT},
+    diagnosis_t = #{record.diagnosisT,jdbcType=TIMESTAMP},
+    building = #{record.building,jdbcType=VARCHAR},
+    et_b = #{record.etB,jdbcType=VARCHAR},
+    operator = #{record.operator,jdbcType=VARCHAR},
+    professor = #{record.professor,jdbcType=VARCHAR},
+    supervisor = #{record.supervisor,jdbcType=VARCHAR},
+    remark = #{record.remark,jdbcType=VARCHAR},
+    is_pass = #{record.isPass,jdbcType=TINYINT},
+    upass_reason = #{record.upassReason,jdbcType=VARCHAR},
+    is_pass1 = #{record.isPass1,jdbcType=TINYINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
