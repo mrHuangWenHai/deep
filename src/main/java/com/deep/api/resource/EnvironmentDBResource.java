@@ -90,6 +90,7 @@ public class EnvironmentDBResource {
 
     /**
      * 定时任务
+     * 5天备份一次
      * 备份another数据库中co2_data hum_data temp_data nh3_data
      * @throws InterruptedException 冲突异常
      */

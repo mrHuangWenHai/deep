@@ -84,6 +84,7 @@ public class DisinfectFilesResource {
                 try {
 
                     String fileName = disinfectEartagFile.getOriginalFilename();
+                    //目的路径
                     String filePath = request.getSession().getServletContext().getContextPath()+"../EartagDocument/disinfectEartag/";
                     String fileAddress = "";
                     fileAddress = UploadUtil.uploadFile(disinfectEartagFile.getBytes(),filePath,fileName,fileAddress);

@@ -6,10 +6,10 @@ import com.deep.domain.model.RedisDataModel;
 import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.JudgeUtil;
 
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -20,71 +20,37 @@ import org.springframework.web.bind.annotation.*;
  * create by zhongrui on 18-3-25.
  */
 
-@Controller
+@RestController
 public class GeditMessageResource {
 
     private final Logger logger = LoggerFactory.getLogger(GeditMessageResource.class);
 
-    /**
-     * 编辑默认短信内容
-     * @param Message 短信类
-     * @return  插入结果
-     */
-    @ResponseBody
-    @RequestMapping(value = "/mgedit",method = RequestMethod.GET)
-    public Response MessageGredit(
-            @RequestParam(value = "Message" , defaultValue = "") String Message) {
+    @RequestMapping(value = "/gedit",method = RequestMethod.GET)
+    public Response Gedit(@RequestParam(value = "message",defaultValue = "") String message,
+                          @RequestParam(value = "expireTime",defaultValue = "") String expireTime,
+                          @RequestParam(value = "pressureTips",defaultValue = "") String pressureTips){
+        //message未设置
+        if ("".equals(message)){
+            //redis中一定存在Message字段
+            System.out.println(JedisUtil.getCertainKeyValue("Message"));
 
-        logger.info("invoke messageGredit {}", Message);
-
-        if (Message == null){
-            return Responses.errorResponse("Lack Item");
         }else {
-            JedisUtil.setCertainKeyValue("Message", Message);
-
-            return JudgeUtil.JudgeSuccess("Success","Setting");
+            JedisUtil.setCertainKeyValue("Message",message);
         }
+
+        if ("".equals(expireTime)){
+            System.out.println(JedisUtil.getCertainKeyValue("ExpireTime"));
+        }else {
+            JedisUtil.setCertainKeyValue("ExpireTime",expireTime);
+        }
+
+        if ("".equals(pressureTips)){
+            System.out.println(JedisUtil.getCertainKeyValue("PressureTips"));
+        }else {
+            JedisUtil.setCertainKeyValue("PressureTips",pressureTips);
+        }
+        return JudgeUtil.JudgeSuccess("setting","success");
+
     }
 
-    /**
-     * 用于编辑短信通知间隔时间
-     * @param ExpireTime
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping(value = "/egedit",method = RequestMethod.GET)
-    public Response ExpireTimeGredit(
-            @RequestParam(value = "ExpireTime" , defaultValue = "") String ExpireTime) {
-
-        logger.info("invoke expireTimeGredit {}", ExpireTime);
-
-        if (ExpireTime == null){
-            return Responses.errorResponse("Lack Item");
-        }else {
-            JedisUtil.setCertainKeyValue("ExpireTime", ExpireTime);
-
-            return JudgeUtil.JudgeSuccess("Success","Setting");
-        }
-    }
-
-    /**
-     * 用于编辑短信通知界限
-     * @param PressureTips
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping(value = "/pgedit",method = RequestMethod.GET)
-    public Response PressureTipsGredit(
-            @RequestParam(value = "PressureTips" , defaultValue = "") String PressureTips) {
-
-        logger.info("invoke pressureTipsGredit {}", PressureTips);
-
-        if (PressureTips == null){
-            return Responses.errorResponse("Lack Item");
-        }else {
-            JedisUtil.setCertainKeyValue("ExpireTime", PressureTips);
-
-            return JudgeUtil.JudgeSuccess("Success","Setting");
-        }
-    }
 }

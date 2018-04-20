@@ -9,27 +9,33 @@ import java.io.*;
  */
 public class DownloadUtil {
 
-    public static boolean downloadFile(HttpServletResponse response, String fileName , String filePath,String fileLocation) throws Exception{
+    public static boolean downloadFile(HttpServletResponse response, String fileName , String filePath,String fileLocation) {
         //文件原路径 文件下载到的路径 文件名
 
         response.setHeader("content-type", "application/octet-stream");
         response.setContentType("application/octet-stream");
         response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
 
-        InputStream in = new FileInputStream(filePath+fileName);
-        //OutputStream out = response.getOutputStream();
-        OutputStream out = new FileOutputStream(fileLocation+fileName);
-        byte[] buff = new byte[1024];
-        int len ;
-        File targetFile = new File(fileLocation);
-        if (!targetFile.exists()) {
-            targetFile.mkdirs();
-        }
-        while((len = in.read(buff))>0){
-            out.write(buff,0,len);
-        }
+        try {
+            InputStream in = new FileInputStream(filePath + fileName);
 
-        in.close();
+            //OutputStream out = response.getOutputStream();
+            OutputStream out = new FileOutputStream(fileLocation + fileName);
+            byte[] buff = new byte[1024];
+            int len;
+            File targetFile = new File(fileLocation);
+            if (!targetFile.exists()) {
+                targetFile.mkdirs();
+            }
+            while ((len = in.read(buff)) > 0) {
+                out.write(buff, 0, len);
+            }
+            in.close();
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
         return true;
     }
 
