@@ -1,7 +1,6 @@
 package com.deep.api.resource;
 
 import com.deep.api.Utils.FileUtil;
-import com.deep.api.Utils.StringToLongUtil;
 import com.deep.api.request.NoticePlanModel;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
@@ -10,8 +9,6 @@ import com.deep.domain.model.NoticePlanExample;
 import com.deep.domain.model.OtherTime;
 import com.deep.domain.service.NoticePlanService;
 import org.apache.ibatis.session.RowBounds;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -34,26 +31,27 @@ import java.util.List;
  * author: Created  By  Caojiawei
  * date: 2018/3/8  20:14
  */
-@RestController
-@RequestMapping(value = "notice/")
+@Controller
 public class NoticeResource {
     @Resource
     private NoticePlanService noticePlanService;
 
-    private final Logger logger = LoggerFactory.getLogger(AgentResource.class);
+    @ResponseBody
+    @RequestMapping(value = "/noticePlan",method = RequestMethod.GET)
+    public String helloNotice() {
+        return "Hello NoticePlan!";
+    }
 
-
-    /**
-     * 按主键删除的接口：/noticeInsert
-     * 按主键删除的方法名：addPlan()
-     * 接收参数：整个表单信息（所有参数必填）
-     * 参数类型为：String professor;Byte type;String title;String content;
-     * @param insert
-     * @param request
-     * @param bindingResult
-     * @return
-     */
-    @PostMapping(value = "/insert")
+//    按主键删除的接口：/noticeInsert
+//    按主键删除的方法名：addPlan()
+//    接收参数：整个表单信息（所有参数必填）
+//    参数类型为：String professor;Byte type;String title;String content;
+    @RequestMapping(value = "/noticeInsert",method = RequestMethod.GET)
+    public String addPlan(){
+        return "NoticeInsert";
+    }
+    @ResponseBody
+    @RequestMapping(value = "/noticeInsert/show",method = RequestMethod.POST)
     public Response addPlan(@Valid NoticePlan insert,
                             HttpServletRequest request,
                             BindingResult bindingResult){
@@ -125,29 +123,20 @@ public class NoticeResource {
         }
     }
 
-    /**
-     * 按主键删除的接口：/noticeDeleteById
-     * 按主键删除的方法名：dropPlan()
-     * 接收参数：id，根据主键号删除
-     * @param id
-     * @return
-     */
-    @DeleteMapping(value = "/{id}")
-    public Response dropPlan(@PathVariable("id") String id) {
-        logger.info("invoke deleteOne {}, url is agent/{id}", id);
-        int uid = StringToLongUtil.stringToInt(id);
-        System.out.println("uid is " + uid);
-        if (uid == -1) {
-            return Responses.errorResponse("查询错误");
-        }
-        int deleteID = noticePlanService.dropPlan(uid);
-        System.out.println("deleteID is " + deleteID);
-        if (deleteID <= 0) {
-            return Responses.errorResponse("删除通知失败");
-        }
+//    按主键删除的接口：/noticeDeleteById
+//    按主键删除的方法名：dropPlan()
+//    接收参数：整型id，根据主键号删除
+    @RequestMapping(value = "/noticeDeleteById",method = RequestMethod.GET)
+    public String dropPlan(){
+        return "NoticeDeleteById";
+    }
+    @ResponseBody
+        @RequestMapping(value = "/noticeDeleteById/show",method = RequestMethod.DELETE)
+    public Response dropPlan(@RequestBody @Valid NoticePlan delete){
+        noticePlanService.dropPlan(delete.getId());
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
-        data.put("delete_id", deleteID);
+        data.put("notice_plan",delete);
         response.setData(data);
         return response;
     }
@@ -155,7 +144,11 @@ public class NoticeResource {
 //    按主键修改的接口：/noticeUpdate
 //    按主键修改的方法名：changePlan()
 //    接收参数：整个表单信息（整型id必填，各参数选填）
-
+    @RequestMapping(value = "/noticeUpdate",method = RequestMethod.GET)
+    public String changePlan(){
+        return "NoticeUpdate";
+    }
+    @ResponseBody
     @RequestMapping(value = "/noticeUpdate/show",method = RequestMethod.POST)
     public Response changePlan(@Valid NoticePlan update,
                                HttpServletRequest request,
@@ -178,6 +171,7 @@ public class NoticeResource {
                 }
                 try {
                     String Header = FileUtil.getFileHeader(file);
+                    //不同的文件头名需要添加
                     if (!Header.equals("FFD8FF")
                             && !Header.equals("89504E47")
                             && !Header.equals("47494638")
@@ -266,6 +260,10 @@ public class NoticeResource {
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("根据条件查询失败！");
         }else {
+            //
+            if (planModel.getSize() == 0){
+                planModel.setSize(5);
+            }
             //将planModel部分变量拆分传递给对象insert
             NoticePlan noticePlan = new NoticePlan();
             noticePlan.setId(planModel.getId());
@@ -281,15 +279,17 @@ public class NoticeResource {
             OtherTime otherTime = new OtherTime();
             otherTime.setSearch_string(planModel.getSearch_string());
             otherTime.setS_breedingT(planModel.getS_breedingT());
-            System.out.println(otherTime.getS_breedingT());
+            System.out.println("getS_breedingT"+otherTime.getS_breedingT());
             otherTime.setS_gestationT(planModel.getS_gestationT());
-            System.out.println(otherTime.getS_gestationT());
+            System.out.println("getS_gestationT"+otherTime.getS_gestationT());
             otherTime.setS_prenatalIT(planModel.getS_prenatalIT());
-            System.out.println(otherTime.getS_prenatalIT());
+            System.out.println("getS_prenatalIT"+otherTime.getS_prenatalIT());
             otherTime.setS_cubT(planModel.getS_cubT());
-            System.out.println(otherTime.getS_cubT());
+            System.out.println("getS_cubT"+otherTime.getS_cubT());
             otherTime.setS_diagnosisT(planModel.getS_diagnosisT());
+            System.out.println("getS_diagnosisT"+otherTime.getS_diagnosisT());
             otherTime.setS_nutritionT(planModel.getS_nutritionT());
+            System.out.println("getS_nutritionT"+otherTime.getS_nutritionT());
             otherTime.setS_gmtCreate1(planModel.getS_gmtCreate1());
             otherTime.setS_gmtCreate2(planModel.getS_gmtCreate2());
             otherTime.setS_gmtModified1(planModel.getS_gmtModified1());

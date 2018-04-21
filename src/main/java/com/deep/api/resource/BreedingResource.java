@@ -24,12 +24,17 @@ import java.util.List;
  * author: Created  By  Caojiawei
  * date: 2018/2/2  12:52
  */
-@RestController
-@RequestMapping(value = "/breeding")
+@Controller
 public class BreedingResource {
 
     @Resource
     private BreedingPlanService breedingPlanService;
+
+    @ResponseBody
+    @RequestMapping(value = "/breedingPlan",method = RequestMethod.GET)
+    public String helloBreed() {
+        return "Hello BreedingPlan!";
+    }
 
 //    按主键删除的接口：/breedingInsert
 //    按主键删除的方法名：addPlan()
@@ -39,15 +44,8 @@ public class BreedingResource {
     public String addPlan(){
         return "BreedingInsert";
     }
-
-    /**
-     * 添加一条记录信息
-     * @param planModel
-     * @param bindingResult
-     * @return
-     * @throws ParseException
-     */
-    @GetMapping(value = "/")
+    @ResponseBody
+    @RequestMapping(value = "/breedingInsert/show",method = RequestMethod.POST)
     public Response addPlan(@RequestBody @Valid BreedingPlanModel planModel,
                             BindingResult bindingResult) throws ParseException {
         if (bindingResult.hasErrors()) {
@@ -154,13 +152,7 @@ public class BreedingResource {
     public String dropPlan(){
         return "BreedingDeleteById";
     }
-
-    /**
-     * 按照主键删除一条记录
-     * @param breedingPlan
-     * @param bindingResult
-     * @return
-     */
+    @ResponseBody
     @RequestMapping(value = "/breedingDeleteById/show",method = RequestMethod.DELETE)
     public Response dropPlan(@RequestBody @Valid BreedingPlan breedingPlan,
                              BindingResult bindingResult){
@@ -184,14 +176,7 @@ public class BreedingResource {
     public String changePlanByOperator(){
         return "BreedingUpdateByOperator";
     }
-
-    /**
-     * 操作员按照主键进行审核
-     * @param planModel
-     * @param bindingResult
-     * @return
-     * @throws ParseException
-     */
+    @ResponseBody
     @RequestMapping(value = "/breedingUpdateByOperator/show",method = RequestMethod.POST)
     public Response changePlanByOperator(@RequestBody @Valid BreedingPlanModel planModel,
                                          BindingResult bindingResult) throws ParseException {
@@ -295,13 +280,7 @@ public class BreedingResource {
     public String changePlanByProfessor(){
         return "BreedingUpdateBySupervisor";
     }
-
-    /**
-     * 专家按照主键进行审核
-     * @param professor
-     * @param bindingResult
-     * @return
-     */
+    @ResponseBody
     @RequestMapping(value = "/breedingUpdateByProfessor/show",method = RequestMethod.POST)
     public Response changePlanByProfessor(@RequestBody @Valid BreedingPlan professor,
                                           BindingResult bindingResult) {
@@ -330,13 +309,7 @@ public class BreedingResource {
     public String changePlanBySupervisor(){
         return "BreedingUpdateBySupervisor";
     }
-
-    /**
-     * 监督员按照主键审核
-     * @param supervisor
-     * @param bindingResult
-     * @return
-     */
+    @ResponseBody
     @RequestMapping(value = "/breedingUpdateBySupervisor/show",method = RequestMethod.POST)
     public Response changePlanBySupervisor(@RequestBody @Valid BreedingPlan supervisor,
                                            BindingResult bindingResult) {
@@ -362,13 +335,7 @@ public class BreedingResource {
     public String findPlanById(){
         return "BreedingSelectById";
     }
-
-    /**
-     * 按照主键查询
-     * @param breedingPlan
-     * @param bindingResult
-     * @return
-     */
+    @ResponseBody
     @RequestMapping(value = "/breedingSelectById/show",method = RequestMethod.GET)
     public Response findPlanById(@Valid BreedingPlan breedingPlan,
                                  BindingResult bindingResult){
@@ -392,14 +359,7 @@ public class BreedingResource {
     public String findPlanSelective(){
         return "BreedingSelective";
     }
-
-    /**
-     * 按照条件查询
-     * @param planModel
-     * @param bindingResult
-     * @return
-     * @throws ParseException
-     */
+    @ResponseBody
     @RequestMapping(value = "/breedingSelective/show",method = RequestMethod.POST)
     public Response findPlanSelective(@RequestBody @Valid BreedingPlanModel planModel,
                                       BindingResult bindingResult) throws ParseException {
@@ -434,20 +394,26 @@ public class BreedingResource {
             OtherTime otherTime = new OtherTime();
             otherTime.setSearch_string(planModel.getSearch_string());
             otherTime.setS_breedingT(planModel.getS_breedingT());
+            System.out.println("getS_breedingT"+otherTime.getS_breedingT());
             otherTime.setS_gestationT(planModel.getS_gestationT());
+            System.out.println("getS_gestationT"+otherTime.getS_gestationT());
             otherTime.setS_prenatalIT(planModel.getS_prenatalIT());
+            System.out.println("getS_prenatalIT"+otherTime.getS_prenatalIT());
             otherTime.setS_cubT(planModel.getS_cubT());
+            System.out.println("getS_cubT"+otherTime.getS_cubT());
             otherTime.setS_diagnosisT(planModel.getS_diagnosisT());
+            System.out.println("getS_diagnosisT"+otherTime.getS_diagnosisT());
             otherTime.setS_nutritionT(planModel.getS_nutritionT());
+            System.out.println("getS_nutritionT"+otherTime.getS_nutritionT());
             otherTime.setS_gmtCreate1(planModel.getS_gmtCreate1());
             otherTime.setS_gmtCreate2(planModel.getS_gmtCreate2());
             otherTime.setS_gmtModified1(planModel.getS_gmtModified1());
             otherTime.setS_gmtModified2(planModel.getS_gmtModified2());
             otherTime.setS_breedingT1(planModel.getS_breedingT1());
             otherTime.setS_breedingT2(planModel.getS_breedingT2());
-            System.out.println(otherTime.getS_breedingT1()+"---"+otherTime.getS_breedingT2());
             otherTime.setS_prenatalIT1(planModel.getS_prenatalIT1());
             otherTime.setS_prenatalIT2(planModel.getS_prenatalIT2());
+            System.out.println(otherTime.getS_breedingT1()+"---"+otherTime.getS_breedingT2());
             otherTime.setS_gestationT1(planModel.getS_gestationT1());
             otherTime.setS_gestationT2(planModel.getS_gestationT2());
             otherTime.setS_cubT1(planModel.getS_cubT1());
