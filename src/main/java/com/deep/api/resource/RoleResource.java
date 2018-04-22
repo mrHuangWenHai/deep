@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import javax.ws.rs.HEAD;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -33,13 +34,9 @@ public class RoleResource {
     @Permit(authorities = "query_role")
     @GetMapping(value = "/")
     public Response roleLists() {
-<<<<<<< HEAD
-        logger.info("invoke roleLists, url is role/");
-=======
 
         logger.info("invoke roleLists, url is role/");
 
->>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         List<RoleModel> roleModels = roleService.getAll();
         if (roleModels.size() <= 0) {
             return Responses.errorResponse("获取角色信息失败");
@@ -61,13 +58,9 @@ public class RoleResource {
     @Permit(authorities = "add_role")
     @PostMapping(value = "/add")
     public Response addRole(@Valid @RequestBody RoleModel roleModel, BindingResult bindingResult) {
-<<<<<<< HEAD
-        logger.info("invoke addRole{}, url is role/add", roleModel, bindingResult);
-=======
 
         logger.info("invoke addRole{}, url is role/add", roleModel, bindingResult);
 
->>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("添加角色出错,请检查网络后重试");
         } else {
@@ -99,13 +92,9 @@ public class RoleResource {
     @Permit(authorities = "query_role")
     @GetMapping(value = "/{id}")
     public Response findRole(@PathVariable("id")String id) {
-<<<<<<< HEAD
-        logger.info("invoke findRole{}", id);
-=======
 
         logger.info("invoke findRole{}", id);
 
->>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -128,13 +117,9 @@ public class RoleResource {
     @Permit(authorities = "remove_role")
     @DeleteMapping(value = "/{id}")
     public Response deleteRole(@PathVariable("id")String id) {
-<<<<<<< HEAD
-        logger.info("invoke deleteRole{}, url is role/{id}", id);
-=======
 
         logger.info("invoke deleteRole{}, url is role/{id}", id);
 
->>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -157,15 +142,8 @@ public class RoleResource {
      */
     @Permit(authorities = "modify_role")
     @PutMapping(value = "/{id}")
-<<<<<<< HEAD
     public Response roleUpdate(@RequestBody @Valid RoleModel roleModel, @PathVariable("id") String id, BindingResult bindingResult) {
         logger.info("invoke roleUpdate{}, url is role/{id}", roleModel, id, bindingResult);
-=======
-
-    public Response roleUpdate(@RequestBody @Valid RoleModel roleModel, @PathVariable("id") String id, BindingResult bindingResult) {
-        logger.info("invoke roleUpdate{}, url is role/{id}", roleModel, id, bindingResult);
-
->>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");

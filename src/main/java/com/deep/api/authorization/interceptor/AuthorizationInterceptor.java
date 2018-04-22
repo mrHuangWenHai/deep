@@ -72,15 +72,15 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
         // 从Redis数据库中获取用户原来的token, 然后取得其权限, 加入新的token
-        String oldToken = JedisUtil.getValue(String.valueOf(model.getUserId()));
-        String userRoleID = oldToken.split(":")[1];
-        logger.info("oldToken", oldToken);
-        TokenModel tokenModel = new TokenModel(model.getUserId(), userRoleID);
-        logger.info("newToken", tokenModel.getToken());
-        JedisUtil.setValue(String.valueOf(model.getUserId()),tokenModel.getToken());
-        JedisUtil.doExpire(String.valueOf(model.getUserId()));
-        response.setHeader("Authorization", model.getUserId() + ":" + tokenModel.getToken());
-        logger.info("Authorization pass");
+//        String oldToken = JedisUtil.getValue(String.valueOf(model.getUserId()));
+//        String userRoleID = oldToken.split(":")[1];
+//        logger.info("oldToken", oldToken);
+//        TokenModel tokenModel = new TokenModel(model.getUserId(), userRoleID);
+//        logger.info("newToken", tokenModel.getToken());
+//        JedisUtil.setValue(String.valueOf(model.getUserId()),tokenModel.getToken());
+//        JedisUtil.doExpire(String.valueOf(model.getUserId()));
+//        response.setHeader("Authorization", model.getUserId() + ":" + tokenModel.getToken());
+//        logger.info("Authorization pass");
         return true;
     }
 }

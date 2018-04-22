@@ -68,21 +68,31 @@ public class NoticeResource {
                 }
                 try {
                     String Header = FileUtil.getFileHeader(file);
-                    if (!Header.equals("FFD8FF")
-                            && !Header.equals("89504E47")
-                            && !Header.equals("47494638")
-                            && !Header.equals("49492A00")
-                            && !Header.equals("424D")
-                            && !Header.equals("57415645")
-                            && !Header.equals("41564920")
-                            && !Header.equals("2E7261FD")
-                            && !Header.equals("2E524D46")
-                            && !Header.equals("000001BA")
-                            && !Header.equals("6D6F6F76")
-                            && !Header.equals("3026B2758E66CF11")
-                            && !Header.equals("4D546864")
-                            && !Header.equals("00000020")
-                            && !Header.equals("FFD8FFE0")) {
+                    if (
+                        // GIF文件格式
+                        !Header.equals("89504E47")
+                        && !Header.equals("47494638")
+                        // TIF文件格式
+                        && !Header.equals("49492A00")
+                        && !Header.equals("57415645")
+                        // PDF文件格式
+                        && !Header.equals("25504446")
+                        // xls or doc文件格式
+                        && !Header.equals("D0CF11E0")
+                        && !Header.equals("41564920")
+                        && !Header.equals("2E7261FD")
+                        && !Header.equals("2E524D46")
+                        && !Header.equals("000001BA")
+                        && !Header.equals("6D6F6F76")
+                        && !Header.equals("3026B275")
+                        && !Header.equals("4D546864")
+                        && !Header.equals("00000020")
+                        && !Header.equals("8E66CF11")
+                        // JPG文件格式
+                        && !Header.equals("FFD8FFE0")
+                        && !Header.equals("FFD8FFE1")
+                        && !Header.equals("FFD8FFE8")
+                            ) {
                         throw new Exception("上传文件格式错误!");
                     }
                 }catch (Exception e){
@@ -171,21 +181,31 @@ public class NoticeResource {
                 }
                 try {
                     String Header = FileUtil.getFileHeader(file);
-                    if (!Header.equals("FFD8FF")
-                            && !Header.equals("89504E47")
-                            && !Header.equals("47494638")
-                            && !Header.equals("49492A00")
-                            && !Header.equals("424D")
-                            && !Header.equals("57415645")
-                            && !Header.equals("41564920")
-                            && !Header.equals("2E7261FD")
-                            && !Header.equals("2E524D46")
-                            && !Header.equals("000001BA")
-                            && !Header.equals("6D6F6F76")
-                            && !Header.equals("3026B2758E66CF11")
-                            && !Header.equals("4D546864")
-                            && !Header.equals("00000020")
-                            && !Header.equals("FFD8FFE0")) {
+                    if (
+                        // GIF文件格式
+                        !Header.equals("89504E47")
+                        && !Header.equals("47494638")
+                        // TIF文件格式
+                        && !Header.equals("49492A00")
+                        && !Header.equals("57415645")
+                        // PDF文件格式
+                        && !Header.equals("25504446")
+                        // xls or doc文件格式
+                        && !Header.equals("D0CF11E0")
+                        && !Header.equals("41564920")
+                        && !Header.equals("2E7261FD")
+                        && !Header.equals("2E524D46")
+                        && !Header.equals("000001BA")
+                        && !Header.equals("6D6F6F76")
+                        && !Header.equals("3026B275")
+                        && !Header.equals("4D546864")
+                        && !Header.equals("00000020")
+                        && !Header.equals("8E66CF11")
+                        // JPG文件格式
+                        && !Header.equals("FFD8FFE0")
+                        && !Header.equals("FFD8FFE1")
+                        && !Header.equals("FFD8FFE8")
+                            ) {
                         throw new Exception("上传文件格式错误！");
                     }
                 }catch (Exception e){
@@ -373,22 +393,33 @@ public class NoticeResource {
             String filename = file.getOriginalFilename();
             try {
                 String Header = FileUtil.getFileHeader(file);
-                if (!Header.equals("FFD8FF")
-                        && !Header.equals("89504E47")
+                System.out.println(Header);
+                if (
+                        // GIF文件格式
+                        !Header.equals("89504E47")
                         && !Header.equals("47494638")
+                        // TIF文件格式
                         && !Header.equals("49492A00")
-                        && !Header.equals("424D")
                         && !Header.equals("57415645")
+                        // PDF文件格式
+                        && !Header.equals("25504446")
+                        // xls or doc文件格式
+                        && !Header.equals("D0CF11E0")
                         && !Header.equals("41564920")
                         && !Header.equals("2E7261FD")
                         && !Header.equals("2E524D46")
                         && !Header.equals("000001BA")
                         && !Header.equals("6D6F6F76")
-                        && !Header.equals("3026B2758E66CF11")
+                        && !Header.equals("3026B275")
                         && !Header.equals("4D546864")
                         && !Header.equals("00000020")
-                        && !Header.equals("FFD8FFE0")) {
-                    throw new Exception("文件格式错误！");
+                        && !Header.equals("8E66CF11")
+                        // JPG文件格式
+                        && !Header.equals("FFD8FFE0")
+                        && !Header.equals("FFD8FFE1")
+                        && !Header.equals("FFD8FFE8")
+                        ) {
+                    throw new Exception("文件格式错误,只允许上传图片！");
                 }
             }catch (Exception e){
                 System.out.println(e.getMessage());

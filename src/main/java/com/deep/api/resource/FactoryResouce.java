@@ -15,6 +15,7 @@ import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/factory")
@@ -32,13 +33,7 @@ public class FactoryResouce {
     @Permit(authorities = "customer_inquiry")
     @GetMapping(value = "/")
     public Response factoryLists() {
-<<<<<<< HEAD
         logger.info("invoke factoryLists, url is factory/");
-=======
-
-        logger.info("invoke factoryLists, url is factory/");
-
->>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         List<FactoryModel> factoryModelList = factoryService.getAll();
         if (factoryModelList == null) {
             return Responses.errorResponse("暂无羊场信息");
@@ -52,18 +47,36 @@ public class FactoryResouce {
     }
 
     /**
+     * 根据羊场的地理位置查询
+     * @param location
+     * @return
+     */
+    @Permit(authorities = "customer_inquiry")
+    @PostMapping(value = "/location")
+    public Response factoryByBreadLocation(@RequestBody Map<String, String> location, BindingResult bindingResult) {
+        logger.info("invoke getFactory {}, url is factory/location", location);
+        if (bindingResult.hasErrors()) {
+            return Responses.errorResponse("请求错误!");
+        }
+        List<FactoryModel> factoryModels = factoryService.getAgentByBreadLocation(location.get("location"));
+        if (factoryModels == null) {
+            return Responses.errorResponse("无该区域的羊场");
+        }
+        Response response = Responses.successResponse();
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("allFactory", factoryModels);
+        data.put("size", factoryModels.size());
+        response.setData(data);
+        return response;
+    }
+
+    /**
      * 根据羊场的主键查询羊场
      */
     @Permit(authorities = "customer_inquiry")
     @GetMapping(value = "/{id}")
     public Response getFactoryOne(@PathVariable("id") String id) {
-<<<<<<< HEAD
         logger.info("invoke getFactoryOne {}, url is factory/{id}", id);
-=======
-
-        logger.info("invoke getFactoryOne{}, url is factory/{id}", id);
-
->>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         long uid = StringToLongUtil.stringToInt(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -86,18 +99,14 @@ public class FactoryResouce {
     @Permit(authorities = "delete_customer")
     @DeleteMapping(value = "/{id}")
     public Response deleteFactory(@PathVariable("id") String id) {
-<<<<<<< HEAD
-        logger.info("invoke deleteFactory{}, url is factory/{id}", id);
-=======
 
         logger.info("invoke deleteFactory{}, url is factory/{id}", id);
 
->>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         long uid = StringToLongUtil.stringToInt(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
         }
-        Long deleteID = factoryService.deleteFatory(uid);
+        Long deleteID = factoryService.deleteFactory(uid);
         if (deleteID <= 0) {
             return Responses.errorResponse("删除央行信息失败");
         }
@@ -118,13 +127,9 @@ public class FactoryResouce {
     @Permit(authorities = "modify_customer")
     @PutMapping(value = "/{id}")
     public Response factoryUpdate(@Valid @RequestBody FactoryModel factoryModel, @PathVariable("id") String id , BindingResult bindingResult) {
-<<<<<<< HEAD
-        logger.info("invoke factoryUpdate{}", factoryModel, id);
-=======
 
         logger.info("invoke factoryUpdate{}", factoryModel, id);
 
->>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         long uid = StringToLongUtil.stringToInt(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -157,13 +162,9 @@ public class FactoryResouce {
     @Permit(authorities = "increase_customer")
     @PostMapping(value = "/add")
     public Response addFactory(@Valid @RequestBody FactoryModel factoryModel, BindingResult bindingResult) {
-<<<<<<< HEAD
-        logger.info("invoke addFactory{}, url is factory/add", factoryModel);
-=======
 
         logger.info("invoke addFactory{}, url is factory/add", factoryModel);
 
->>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("羊场添加失败");
             return response;

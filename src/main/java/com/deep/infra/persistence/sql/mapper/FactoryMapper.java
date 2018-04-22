@@ -18,7 +18,7 @@ public interface FactoryMapper {
             @Result(property = "gmtModified", column = "gmt_modified"),
             @Result(property = "pkNumber", column = "pk_number"),
             @Result(property = "breadName", column = "bread_name"),
-            @Result(property = "breadLocation", column = "breed_location"),
+            @Result(property = "breadLocation", column = "bread_location"),
             @Result(property = "createTime", column = "create_time"),
             @Result(property = "responsiblePersonid", column = "responsible_personid"),
             @Result(property = "remark", column = "remark"),
@@ -26,6 +26,27 @@ public interface FactoryMapper {
             @Result(property = "agent", column = "agent")
     })
     List<FactoryModel> queryAllFactory();
+
+    /**
+     * 根据地理位置查找factory
+     * @param location
+     * @return
+     */
+    @Select("select * from factory_manage where bread_location = #{location}")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "gmtCreate", column = "gmt_create"),
+            @Result(property = "gmtModified", column = "gmt_modified"),
+            @Result(property = "pkNumber", column = "pk_number"),
+            @Result(property = "breadName", column = "bread_name"),
+            @Result(property = "breadLocation", column = "bread_location"),
+            @Result(property = "createTime", column = "create_time"),
+            @Result(property = "responsiblePersonid", column = "responsible_personid"),
+            @Result(property = "remark", column = "remark"),
+            @Result(property = "disnfectP", column = "disnfect_p"),
+            @Result(property = "agent", column = "agent")
+    })
+    List<FactoryModel> queryFactoryByLocation(String location);
 
     /**
      * 根据羊场的ID发展羊场的代理agent的ID
@@ -50,7 +71,7 @@ public interface FactoryMapper {
             @Result(property = "gmtModified", column = "gmt_modified"),
             @Result(property = "pkNumber", column = "pk_number"),
             @Result(property = "breadName", column = "bread_name"),
-            @Result(property = "breadLocation", column = "breed_location"),
+            @Result(property = "breadLocation", column = "bread_location"),
             @Result(property = "createTime", column = "create_time"),
             @Result(property = "responsiblePersonid", column = "responsible_personid"),
             @Result(property = "remark", column = "remark"),

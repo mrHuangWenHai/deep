@@ -34,13 +34,7 @@ public class AgentResource {
     @Permit(authorities = "query_agent")
     @GetMapping(value = "/")
     public Response agentLists() {
-<<<<<<< HEAD
         logger.info("invoke agentLists, url is agent/");
-=======
-
-        logger.info("invoke agentLists, url is agent/");
-
->>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         List<AgentModel> agents = agentService.getAll();
         if (agents == null) {
             return Responses.errorResponse("系统中暂时没有代理");
@@ -61,13 +55,7 @@ public class AgentResource {
     @Permit(authorities = "query_agent")
     @GetMapping(value = "/{id}")
     public Response findOne(@PathVariable("id") String id) {
-<<<<<<< HEAD
         logger.info("invoke findOne{}, url is agent/{id}", id);
-=======
-
-        logger.info("invoke findOne{}, url is agent/{id}", id);
-
->>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -90,13 +78,7 @@ public class AgentResource {
     @Permit(authorities = "deleting_an_agent")
     @DeleteMapping(value = "/{id}")
     public Response deleteOne(@PathVariable("id") String id) {
-<<<<<<< HEAD
         logger.info("invoke deleteOne{}, url is agent/{id}", id);
-=======
-
-        logger.info("invoke deleteOne{}, url is agent/{id}", id);
-
->>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -122,10 +104,6 @@ public class AgentResource {
     @PostMapping(value = "/add")
     public Response addOne(@Valid @RequestBody AgentModel agentModel, BindingResult bindingResult) {
         logger.info("invoke addOne{}, url is agent/add", agentModel);
-<<<<<<< HEAD
-=======
-
->>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         if (bindingResult.hasErrors())  {
             return Responses.errorResponse("添加代理失败, 验证错误!");
         } else {
@@ -135,10 +113,6 @@ public class AgentResource {
             if (addID <= 0) {
                 return Responses.errorResponse("添加用户信息失败");
             }
-<<<<<<< HEAD
-=======
-
->>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("oneAgent", addID);
@@ -158,10 +132,6 @@ public class AgentResource {
     @PutMapping("/{id}")
     public Response agentUpdate(@Valid @RequestBody AgentModel agentModel, @PathVariable("id") String id, BindingResult bindingResult) {
         logger.info("invoke agentUpdate{}, url is agent/{id}", agentModel, id);
-<<<<<<< HEAD
-=======
-
->>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
         int uid = StringToLongUtil.stringToInt(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -193,17 +163,9 @@ public class AgentResource {
     @Permit(authorities = "query_agent")
     @GetMapping(value = "/sons/{id}")
     public Response AgentsSon(@PathVariable("id") String id) {
-<<<<<<< HEAD
         logger.info("invoke agentsSon{}, url is agent/sons/{id}", id);
         int agentID = StringToLongUtil.stringToInt(id);
         if (agentID == -1) {
-=======
-
-        logger.info("invoke agentsSon{}, url is agent/sons/{id}", id);
-        int agentID = StringToLongUtil.stringToInt(id);
-        if (agentID == -1) {
-
->>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
             return Responses.errorResponse("error");
         } else {
             List<AgentModel> agentModels = agentService.getSons(agentID);
@@ -218,11 +180,7 @@ public class AgentResource {
             return Responses.errorResponse("error");
         }
     }
-<<<<<<< HEAD
-=======
 
-
->>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
     /**
      * 获取上级代理操作
      * @param id
@@ -297,8 +255,4 @@ public class AgentResource {
             return Responses.errorResponse("error");
         }
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
 }

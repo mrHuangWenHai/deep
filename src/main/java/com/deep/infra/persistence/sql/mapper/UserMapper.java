@@ -1,5 +1,6 @@
 package com.deep.infra.persistence.sql.mapper;
 
+import com.deep.api.response.Professor;
 import com.deep.domain.model.UserModel;
 import com.deep.domain.service.UserService;
 import org.apache.ibatis.annotations.*;
@@ -141,7 +142,7 @@ public interface UserMapper {
      * @param userRealname
      * @return
      */
-    @Select("select * from user_manage where user_realname = %#{userRealname}%")
+    @Select("select * from user_manage where user_realname = #{userRealname}")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "gmtCreate", column = "gmt_create"),
@@ -302,9 +303,9 @@ public interface UserMapper {
             @Result(property = "officialPhone", column = "official_phone"),
             @Result(property = "QQ", column = "QQ")
     })
-    List<UserModel> getOneRoles(long roleID);
+    List<Professor> getOneRoles(long roleID);
 
-    @Select("select id, pk_userid, user_telephone, user_role, user_email, official_phone, QQ from user_manage where user_role in (4, 8, 12, 16) and user_factory = #{agentID}")
+    @Select("select id, pk_userid, user_telephone, user_role, user_email, official_phone, QQ from user_manage where user_role in (4, 8, 12, 16) and user_factory = #{agentID} and is_factory = 1")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "pkUserid", column = "pk_userid"),
@@ -314,10 +315,10 @@ public interface UserMapper {
             @Result(property = "officialPhone", column = "official_phone"),
             @Result(property = "QQ", column = "QQ")
     })
-    List<UserModel> getProfessor(Long agentID);
+    List<Professor> getProfessor(Long agentID);
 
     /**
-     * 查找某一个羊场的所有用户
+     * 查找某一个羊场或者一个代理的所有用户
      * @param userFactory
      * @return
      */

@@ -2,6 +2,7 @@ package com.deep.domain.service;
 
 import com.deep.api.Utils.JedisUtil;
 import com.deep.api.authorization.tools.RoleAndPermit;
+import com.deep.api.response.Professor;
 import com.deep.domain.model.AgentModel;
 import com.deep.domain.model.FactoryModel;
 import com.deep.domain.model.UserModel;
@@ -335,15 +336,11 @@ public class UserService {
      * @param roleID    角色ID
      * @return  人员列表
      */
-    public List<UserModel> getRoles(long roleID) {
+    public List<Professor> getRoles(long roleID) {
         return userMapper.getOneRoles(roleID);
     }
 
     /**
-<<<<<<< HEAD
-=======
-
->>>>>>> 804fe5ef13af89336e7730d7988981959bb1c41b
      * 修改用户密码
      * @param userPwd   用户密码
      * @return  影响行数
@@ -361,7 +358,7 @@ public class UserService {
         short agentID = factoryService.getAgentIDByFactoryNumber(factoryNumber.toString());
         System.out.println(agentID);
         List<String> telephones = userMapper.queryTelephoneByAgentAndRole(agentID);
-        if (telephones.size() <= 0) {
+        if (telephones == null) {
             return null;
         } else {
             return telephones;
@@ -396,9 +393,9 @@ public class UserService {
      * @param agentID   代理主键ID
      * @return 数据的类型, 之后要将其改成Request的模板类
      */
-    public UserModel getFatherProfessors(long agentID) {
-        List<UserModel> models = new ArrayList<>();
-        List<UserModel> users = new ArrayList<>();
+    public Professor getFatherProfessors(long agentID) {
+        List<Professor> models = new ArrayList<>();
+        List<Professor> users = new ArrayList<>();
         long fatherID = agentID;
         //　首先查询上级代理有木有在线的专家
         models = userMapper.getProfessor(agentID);

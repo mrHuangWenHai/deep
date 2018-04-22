@@ -38,6 +38,10 @@ public class FactoryService {
         return factoryMapper.queryOneAgentByFactoryID(factoryNumber);
     }
 
+    public List<FactoryModel> getAgentByBreadLocation(String location) {
+        return factoryMapper.queryFactoryByLocation(location);
+    }
+
     /**
      * 删除一个羊场的信息
      * @param factoryModel
@@ -61,7 +65,7 @@ public class FactoryService {
      * @param id
      * @return
      */
-    public Long deleteFatory(Long id) {
+    public Long deleteFactory(Long id) {
         return factoryMapper.deleteFactory(id);
     }
 }
