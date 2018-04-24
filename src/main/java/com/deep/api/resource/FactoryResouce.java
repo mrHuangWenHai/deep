@@ -47,6 +47,30 @@ public class FactoryResouce {
     }
 
     /**
+     * 获取属于某一个代理的所有羊场
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/agent/{id}")
+    public Response factoryByAgent(@PathVariable("id") String id) {
+        logger.info("invoke factoryByAgent {}, url is factory/agent/{id}", id);
+        long uid = StringToLongUtil.stringToInt(id);
+        if (uid == -1) {
+            return Responses.errorResponse("查询错误");
+        }
+        List<FactoryModel> lists = factoryService.getAllFactoryOfOneAgent(uid);
+        if (lists == null) {
+            return Responses.errorResponse("没有相应直属羊场");
+        }
+        Response response = Responses.successResponse();
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("allFactory", lists);
+        data.put("size", lists.size());
+        response.setData(data);
+        return response;
+    }
+
+    /**
      * 根据羊场的地理位置查询
      * @param location
      * @return

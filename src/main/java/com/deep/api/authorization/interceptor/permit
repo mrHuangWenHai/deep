@@ -90,20 +90,102 @@
 删除用户________________delete_users
 修改用户________________modify_user
 查询用户________________query_user
-添加专家________________add_expert
-删除专家________________delete_expert
-修改专家________________modify_expert
-查询专家________________query_expert
-添加技术员_______________add_technician
-删除技术员_______________remove_technician
-修改技术员_______________modify_technician
-查询技术员_______________query_technician
-添加管理员_______________add_an_administrator
-删除管理员_______________remove_administrator
-修改管理员_______________modify_administrator
-查询管理员_______________query_administrator
-添加角色_________________add_role
-删除角色_________________remove_role
-修改角色_________________modify_role
-查询角色_________________query_role
-查看权限_________________query_permit
+  添加专家 ________________add_expert
+  删除专家 ________________delete_expert
+  修改专家 ________________modify_expert
+  查询专家 ________________query_expert
+添加技术员 _______________add_technician
+删除技术员 _______________remove_technician
+修改技术员 _______________modify_technician
+查询技术员 _______________query_technician
+添加管理员 _______________add_an_administrator
+删除管理员 _______________remove_administrator
+修改管理员 _______________modify_administrator
+查询管理员 _______________query_administrator
+  添加角色 _________________add_role
+  删除角色 _________________remove_role
+  修改角色 _________________modify_role
+  查询角色 _________________query_role
+  查看权限 _________________query_permit
+
+
+  "materialA":
+  "materialM": 
+  "materialO": 
+  "materialWM": 
+  "materialWO": 
+  "roughageP": 
+  "roughageD": 
+  "roughageWP": 
+  "roughageWD": 
+  "roughageWO": 
+  "pickingM": 
+  "pickingR": 
+  "pickingO": 
+  "search_string": 
+  "s_breedingT": 
+  "s_gestationT": 
+  "s_prenatalIT": 
+  "s_cubT": 
+  "s_diagnosisT": 
+  "s_nutritionT": 
+  "s_gmtCreate1": 
+  "s_gmtCreate2": 
+  "s_gmtModified1": 
+  "s_gmtModified2": 
+  "s_breedingT1": 
+  "s_breedingT2": 
+  "s_gestationT1": 
+  "s_gestationT2": 
+  "s_prenatalIT1": 
+  "s_prenatalIT2": 
+  "s_cubT1": 
+  "s_cubT2": 
+  "s_diagnosisT1": 
+  "s_diagnosisT2": 
+  "s_nutritionT1": 
+  "s_nutritionT2": 
+  "downloadPath": 
+  "size": 
+  "page":
+
+
+  String "materialA":
+  String "materialM":
+  String "materialO":
+  String "materialWM":
+  String "materialWO":
+  String "roughageP":
+  String "roughageD":
+  String "roughageWP":
+  String "roughageWD":
+  String "roughageWO":
+  String "pickingM":
+  String "pickingR":
+  String "pickingO":
+  String "search_string":
+  String "s_breedingT":
+  String "s_gestationT":
+  String "s_prenatalIT":
+  String "s_cubT":
+  String "s_diagnosisT":
+  String "s_nutritionT":
+  String "s_gmtCreate1":
+  String "s_gmtCreate2":
+  String "s_gmtModified1":
+  String "s_gmtModified2":
+  String "s_breedingT1":
+  String "s_breedingT2":
+  String "s_gestationT1":
+  String "s_gestationT2":
+  String "s_prenatalIT1":
+  String "s_prenatalIT2":
+  String "s_cubT1":
+  String "s_cubT2":
+  String "s_diagnosisT1":
+  String "s_diagnosisT2":
+  String "s_nutritionT1":
+  String "s_nutritionT2":
+  String "downloadPath":
+  int "size":
+  int "page":

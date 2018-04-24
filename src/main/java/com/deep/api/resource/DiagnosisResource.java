@@ -1,5 +1,6 @@
 package com.deep.api.resource;
 
+import com.deep.api.Utils.StringToLongUtil;
 import com.deep.api.request.DiagnosisPlanModel;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
@@ -8,7 +9,8 @@ import com.deep.domain.model.DiagnosisPlanWithBLOBs;
 import com.deep.domain.model.OtherTime;
 import com.deep.domain.service.DiagnosisPlanService;
 import org.apache.ibatis.session.RowBounds;
-import org.springframework.stereotype.Controller;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,96 +29,47 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "diagnosis/")
 public class DiagnosisResource {
+
+    private final Logger logger = LoggerFactory.getLogger(AgentResource.class);
+
     @Resource
     private DiagnosisPlanService diagnosisPlanService;
 
-    @ResponseBody
-    @RequestMapping(value = "/diagnosisPlan",method = RequestMethod.GET)
-    public String helloDiagnosis() {
-        return "Hello DiagnosisPlan!";
-    }
-
-//    按主键删除的接口：/diagnosisInsert
-//    按主键删除的方法名：addPlan()
-//    接收参数：整个表单信息（所有参数必填）
-//    参数类型为：Long factoryNum;Date diagnosisT;String building;String etB;String operator;String remark;String diagnosisC;String diagnosisM;String drugQ;
-    @RequestMapping(value = "/diagnosisInsert",method = RequestMethod.GET)
-    public String addPlan(){
-        return "DiagnosisInsert";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/diagnosisInsert/show",method = RequestMethod.POST)
-    public Response addPlan(@RequestBody @Valid DiagnosisPlanModel planModel,
-                            BindingResult bindingResult) throws ParseException {
+    /**
+     * 添加的接口：/diagnosisInsert
+     * 接收参数：整个表单信息（所有参数必填）
+     * 参数类型为：Long factoryNum;Date diagnosisT;String building;String etB;String operator;String remark;String diagnosisC;String diagnosisM;String drugQ;
+     */
+    @PostMapping(value = "/insert")
+    public Response addPlan(@RequestBody @Valid DiagnosisPlanModel planModel, BindingResult bindingResult) throws ParseException {
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("诊疗实施档案录入失败");
         }else {
             //将planModel部分变量拆分传递给对象insert
             DiagnosisPlanWithBLOBs insert = new DiagnosisPlanWithBLOBs();
-            insert.setId(planModel.getId());
-            insert.setGmtCreate(planModel.getGmtCreate());
-            insert.setGmtModified(planModel.getGmtModified());
-            insert.setSupervisor(planModel.getSupervisor());
             insert.setFactoryNum(planModel.getFactoryNum());
             insert.setBuilding(planModel.getBuilding());
             insert.setEtB(planModel.getEtB());
-            insert.setDiagnosisT(planModel.getDiagnosisT());
             insert.setOperator(planModel.getOperator());
-            insert.setProfessor(planModel.getProfessor());
-            insert.setSupervisor(planModel.getSupervisor());
-            insert.setRemark(planModel.getRemark());
-            insert.setIsPass(planModel.getIsPass());
-            insert.setUpassReason(planModel.getUpassReason());
-            insert.setIsPass1(planModel.getIsPass1());
             insert.setDiagnosisC(planModel.getDiagnosisC());
             insert.setDiagnosisM(planModel.getDiagnosisM());
             insert.setDrugQ(planModel.getDrugQ());
 
             //将planModel部分变量拆分传递给对象otherTime
             OtherTime otherTime = new OtherTime();
-            otherTime.setSearch_string(planModel.getSearch_string());
-            otherTime.setS_breedingT(planModel.getS_breedingT());
-            System.out.println(otherTime.getS_breedingT());
-            otherTime.setS_gestationT(planModel.getS_gestationT());
-            System.out.println(otherTime.getS_gestationT());
-            otherTime.setS_prenatalIT(planModel.getS_prenatalIT());
-            System.out.println(otherTime.getS_prenatalIT());
-            otherTime.setS_cubT(planModel.getS_cubT());
-            System.out.println(otherTime.getS_cubT());
             otherTime.setS_diagnosisT(planModel.getS_diagnosisT());
-            otherTime.setS_nutritionT(planModel.getS_nutritionT());
-            otherTime.setS_gmtCreate1(planModel.getS_gmtCreate1());
-            otherTime.setS_gmtCreate2(planModel.getS_gmtCreate2());
-            otherTime.setS_gmtModified1(planModel.getS_gmtModified1());
-            otherTime.setS_gmtModified2(planModel.getS_gmtModified2());
-            otherTime.setS_breedingT1(planModel.getS_breedingT1());
-            otherTime.setS_breedingT2(planModel.getS_breedingT2());
-            otherTime.setS_prenatalIT1(planModel.getS_prenatalIT1());
-            otherTime.setS_prenatalIT2(planModel.getS_prenatalIT2());
-            otherTime.setS_gestationT1(planModel.getS_gestationT1());
-            otherTime.setS_gestationT2(planModel.getS_gestationT2());
-            otherTime.setS_cubT1(planModel.getS_cubT1());
-            otherTime.setS_cubT2(planModel.getS_cubT2());
-            otherTime.setS_diagnosisT1(planModel.getS_diagnosisT1());
-            otherTime.setS_diagnosisT2(planModel.getS_diagnosisT2());
-            otherTime.setS_nutritionT1(planModel.getS_nutritionT1());
-            otherTime.setS_nutritionT2(planModel.getS_nutritionT2());
-            otherTime.setDownloadPath(planModel.getDownloadPath());
-            otherTime.setPage(planModel.getPage());
-            otherTime.setSize(planModel.getSize());
 
             Byte zero = 0;
-            Date diagnosisT = new Date();
             SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd HH:mm:SS");
-            if (!otherTime.getS_diagnosisT().isEmpty()){
-                diagnosisT =  formatter.parse(otherTime.getS_diagnosisT());
-            }
+            Date diagnosisT = !otherTime.getS_diagnosisT().isEmpty() ? formatter.parse(otherTime.getS_diagnosisT()) : new Date();
             insert.setGmtCreate(new Date());
             insert.setDiagnosisT(diagnosisT);
             insert.setIsPass(zero);
             insert.setIsPass1(zero);
-            diagnosisPlanService.addPlan(insert);
-
+            int addID = diagnosisPlanService.addPlan(insert);
+            if (addID <= 0) {
+                return Responses.errorResponse("插入错误");
+            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("diagnosis_plan",insert);
@@ -125,22 +78,23 @@ public class DiagnosisResource {
         }
     }
 
-//    按主键删除的接口：/diagnosisDeleteById
-//    按主键删除的方法名：dropPlan()
-//    接收参数：整型id，根据主键号删除
-    @RequestMapping(value = "/diagnosisDeleteById",method = RequestMethod.GET)
-    public String dropPlan(){
-        return "DiagnosisDeleteById";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/diagnosisDeleteById/show",method = RequestMethod.DELETE)
-    public Response dropPlan(@RequestBody @Valid DiagnosisPlanWithBLOBs diagnosisPlanWithBLOBs,
-                             BindingResult bindingResult){
-        if (bindingResult.hasErrors()) {
-            return Responses.errorResponse("育种实施档案删除失败");
-        }else {
+    /**
+     * 按照主键删除的接口
+     * @param id
+     * @return
+     */
+    @DeleteMapping(value = "/{id}")
+    public Response dropPlan(@PathVariable("id") String id){
+        logger.info("invoke findOne{}, url is agent/{id}", id);
+        int uid = StringToLongUtil.stringToInt(id);
+        if (uid == -1) {
+            return Responses.errorResponse("删除错误");
+        } else {
             DiagnosisPlanWithBLOBs delete = new DiagnosisPlanWithBLOBs();
-            diagnosisPlanService.dropPlan(diagnosisPlanWithBLOBs.getId());
+            int deleteID =  diagnosisPlanService.dropPlan(uid);
+            if (deleteID <= 0) {
+                return Responses.errorResponse("删除失败");
+            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("diagnosis_plan",delete);
@@ -149,86 +103,46 @@ public class DiagnosisResource {
         }
     }
 
-//    操作员使用按主键修改的接口：/diagnosisUpdateByOperator
-//    操作员使用按主键修改的方法名：changePlanByOperator()
-//    操作员使用接收参数：整个表单信息（整型id必填，各参数选填）
-    @RequestMapping(value = "/diagnosisUpdateByOperator",method = RequestMethod.GET)
-    public String changePlanByOperator(){
-        return "DiagnosisUpdateByOperator";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/diagnosisUpdateByOperator/show",method = RequestMethod.POST)
-    public Response changePlanByOperator(@RequestBody @Valid DiagnosisPlanModel planModel,
-                                         BindingResult bindingResult) throws ParseException {
+    /**
+     * 操作员使用按主键修改的接口：/diagnosisUpdateByOperator
+     * 操作员使用按主键修改的方法名：changePlanByOperator()
+     * 操作员使用接收参数：整个表单信息（整型id必填，各参数选填）
+     * @param planModel
+     * @param bindingResult
+     * @return
+     * @throws ParseException
+     */
+    @PostMapping(value = "/operator")
+    public Response changePlanByOperator(@RequestBody @Valid DiagnosisPlanModel planModel, BindingResult bindingResult) throws ParseException {
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("诊疗实施档案更新(操作员页面)失败");
         }else {
             //将planModel部分变量拆分传递给对象operator
             DiagnosisPlanWithBLOBs operator = new DiagnosisPlanWithBLOBs();
             operator.setId(planModel.getId());
-            operator.setGmtCreate(planModel.getGmtCreate());
-            operator.setGmtModified(planModel.getGmtModified());
-            operator.setSupervisor(planModel.getSupervisor());
             operator.setFactoryNum(planModel.getFactoryNum());
             operator.setBuilding(planModel.getBuilding());
             operator.setEtB(planModel.getEtB());
-            operator.setDiagnosisT(planModel.getDiagnosisT());
             operator.setOperator(planModel.getOperator());
-            operator.setProfessor(planModel.getProfessor());
-            operator.setSupervisor(planModel.getSupervisor());
-            operator.setRemark(planModel.getRemark());
-            operator.setIsPass(planModel.getIsPass());
-            operator.setUpassReason(planModel.getUpassReason());
-            operator.setIsPass1(planModel.getIsPass1());
             operator.setDiagnosisC(planModel.getDiagnosisC());
             operator.setDiagnosisM(planModel.getDiagnosisM());
             operator.setDrugQ(planModel.getDrugQ());
 
             //将planModel部分变量拆分传递给对象otherTime
             OtherTime otherTime = new OtherTime();
-            otherTime.setSearch_string(planModel.getSearch_string());
-            otherTime.setS_breedingT(planModel.getS_breedingT());
-            System.out.println(otherTime.getS_breedingT());
-            otherTime.setS_gestationT(planModel.getS_gestationT());
-            System.out.println(otherTime.getS_gestationT());
-            otherTime.setS_prenatalIT(planModel.getS_prenatalIT());
-            System.out.println(otherTime.getS_prenatalIT());
-            otherTime.setS_cubT(planModel.getS_cubT());
-            System.out.println(otherTime.getS_cubT());
             otherTime.setS_diagnosisT(planModel.getS_diagnosisT());
-            otherTime.setS_nutritionT(planModel.getS_nutritionT());
-            otherTime.setS_gmtCreate1(planModel.getS_gmtCreate1());
-            otherTime.setS_gmtCreate2(planModel.getS_gmtCreate2());
-            otherTime.setS_gmtModified1(planModel.getS_gmtModified1());
-            otherTime.setS_gmtModified2(planModel.getS_gmtModified2());
-            otherTime.setS_breedingT1(planModel.getS_breedingT1());
-            otherTime.setS_breedingT2(planModel.getS_breedingT2());
-            otherTime.setS_prenatalIT1(planModel.getS_prenatalIT1());
-            otherTime.setS_prenatalIT2(planModel.getS_prenatalIT2());
-            otherTime.setS_gestationT1(planModel.getS_gestationT1());
-            otherTime.setS_gestationT2(planModel.getS_gestationT2());
-            otherTime.setS_cubT1(planModel.getS_cubT1());
-            otherTime.setS_cubT2(planModel.getS_cubT2());
-            otherTime.setS_diagnosisT1(planModel.getS_diagnosisT1());
-            otherTime.setS_diagnosisT2(planModel.getS_diagnosisT2());
-            otherTime.setS_nutritionT1(planModel.getS_nutritionT1());
-            otherTime.setS_nutritionT2(planModel.getS_nutritionT2());
-            otherTime.setDownloadPath(planModel.getDownloadPath());
-            otherTime.setPage(planModel.getPage());
-            otherTime.setSize(planModel.getSize());
 
-            Date diagnosisT = null;
             SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd HH:mm:SS");
-            if (!otherTime.getS_diagnosisT().isEmpty()){
-                diagnosisT =  formatter.parse(otherTime.getS_diagnosisT());
-            }
+            Date diagnosisT = !otherTime.getS_diagnosisT().isEmpty() ? formatter.parse(otherTime.getS_diagnosisT()) : new Date();
             operator.setDiagnosisT(diagnosisT);
-            diagnosisPlanService.changePlanSelective(operator);
 
-            DiagnosisPlanWithBLOBs selectById = diagnosisPlanService.findPlanById(operator.getId());
+            int updateID = diagnosisPlanService.changePlanSelective(operator);
+            if (updateID <= 0) {
+                return Responses.errorResponse("修改失败");
+            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("diagnosis_plan",selectById);
+            data.put("diagnosis_plan", updateID);
             response.setData(data);
             return response;
         }
@@ -237,14 +151,8 @@ public class DiagnosisResource {
 //    监督者使用按主键修改的接口：/diagnosisUpdateByProfessor
 //    监督者使用按主键修改的方法名：changePlanByProfessor()
 //    监督者使用接收参数：整个表单信息（整型id必填，各参数选填）
-    @RequestMapping(value = "/diagnosisUpdateByProfessor",method = RequestMethod.GET)
-    public String changePlanByProfessor(){
-        return "DiagnosisUpdateByProfessor";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/diagnosisUpdateByProfessor/show",method = RequestMethod.POST)
-    public Response changePlanByProfessor(@RequestBody @Valid DiagnosisPlanWithBLOBs professor,
-                                          BindingResult bindingResult){
+    @PostMapping(value = "/professor")
+    public Response changePlanByProfessor(@RequestBody @Valid DiagnosisPlanWithBLOBs professor, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("诊疗实施档案更新(专家页面)失败");
         }else {
@@ -266,24 +174,20 @@ public class DiagnosisResource {
 //    监督者使用按主键修改的接口：/diagnosisUpdateBySupervisor
 //    监督者使用按主键修改的方法名：changePlanBySupervisor()
 //    监督者使用接收参数：整个表单信息（整型id必填，各参数选填）
-    @RequestMapping(value = "/diagnosisUpdateBySupervisor",method = RequestMethod.GET)
-    public String changePlanBySupervisor(){
-        return "DiagnosisUpdateBySupervisor";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/diagnosisUpdateBySupervisor/show",method = RequestMethod.POST)
-    public Response changePlanBySupervisor(@RequestBody @Valid DiagnosisPlanWithBLOBs supervisor,
-                                           BindingResult bindingResult){
+    @PostMapping(value = "/supervisor")
+    public Response changePlanBySupervisor(@RequestBody @Valid DiagnosisPlanWithBLOBs supervisor, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("诊疗实施档案更新(监督页面)失败");
         }else {
             supervisor.setGmtSupervised(new Date());
-            diagnosisPlanService.changePlanSelective(supervisor);
-
-            DiagnosisPlanWithBLOBs selectById = diagnosisPlanService.findPlanById(supervisor.getId());
+            int updateID = diagnosisPlanService.changePlanSelective(supervisor);
+            if (updateID <= 0) {
+                return Responses.errorResponse("监督失败");
+            }
+//            DiagnosisPlanWithBLOBs selectById = diagnosisPlanService.findPlanById(supervisor.getId());
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("diagnosis_plan",selectById);
+            data.put("diagnosis_plan",updateID);
             response.setData(data);
             return response;
         }

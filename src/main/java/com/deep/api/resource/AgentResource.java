@@ -156,13 +156,13 @@ public class AgentResource {
     }
 
     /**
-     * 根据代理的主键获取其所有的子代理
+     * 根据代理的主键获取其所有的直属子代理
      * @param id
      * @return
      */
     @Permit(authorities = "query_agent")
     @GetMapping(value = "/sons/{id}")
-    public Response AgentsSon(@PathVariable("id") String id) {
+    public Response agentsSon(@PathVariable("id") String id) {
         logger.info("invoke agentsSon{}, url is agent/sons/{id}", id);
         int agentID = StringToLongUtil.stringToInt(id);
         if (agentID == -1) {
@@ -182,13 +182,35 @@ public class AgentResource {
     }
 
     /**
+     * 根据代理的主键查询所有的子代理
+     * @param id
+     * @return
+     */
+    @Permit(authorities = "query_agent")
+    @GetMapping(value = "/allson/{id}")
+    public Response agentsAllSon(@PathVariable("id") String id) {
+        logger.info("invoke agentsSon{}, url is agent/sons/{id}", id);
+        int agentID = StringToLongUtil.stringToInt(id);
+        if (agentID == -1) {
+            return Responses.errorResponse("error");
+        } else {
+            Map<String, Object> map = agentService.getAllSons(agentID);
+            Response response = Responses.successResponse();
+            Map<String, Object> data = new HashMap<>();
+            data.put("sons", map);
+            response.setData(data);
+            return response;
+        }
+    }
+
+    /**
      * 获取上级代理操作
      * @param id
      * @return
      */
     @Permit(authorities = "query_agent")
     @GetMapping(value = "/father/{id}")
-    public Response AgentFather(@PathVariable("id") String id) {
+    public Response agentFather(@PathVariable("id") String id) {
         logger.info("invoke agentFather {}, url is agent/father/{id}", id);
         long agentID = StringToLongUtil.stringToLong(id);
         if (agentID == -1) {

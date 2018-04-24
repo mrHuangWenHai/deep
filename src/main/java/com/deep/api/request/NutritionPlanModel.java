@@ -10,85 +10,46 @@ import java.io.Serializable;
  */
 public class NutritionPlanModel extends NutritionPlan implements Serializable {
     private String materialA;
-
     private String materialM;
-
     private String materialO;
-
     private String materialWM;
-
     private String materialWO;
-
     private String roughageP;
-
     private String roughageD;
-
     private String roughageWP;
-
     private String roughageWD;
-
     private String roughageWO;
-
     private String pickingM;
-
     private String pickingR;
-
     private String pickingO;
-
     private String search_string;
-
     private String s_breedingT;
-
     private String s_gestationT;
-
     private String s_prenatalIT;
-
     private String s_cubT;
-
     private String s_diagnosisT;
-
     private String s_nutritionT;
-
     private String s_gmtCreate1;
-
     private String s_gmtCreate2;
-
     private String s_gmtModified1;
-
     private String s_gmtModified2;
-
     private String s_breedingT1;
-
     private String s_breedingT2;
-
     private String s_gestationT1;
-
     private String s_gestationT2;
-
     private String s_prenatalIT1;
-
     private String s_prenatalIT2;
-
     private String s_cubT1;
-
     private String s_cubT2;
-
     private String s_diagnosisT1;
-
     private String s_diagnosisT2;
-
     private String s_nutritionT1;
-
     private String s_nutritionT2;
-
     private String downloadPath;
-
     private int size;
-
     private int page;
 
     private static final long serialVersionUID = 1L;
-
     public String getMaterialA() {
         return materialA;
     }

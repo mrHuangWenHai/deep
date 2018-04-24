@@ -47,7 +47,7 @@ public class BreedingResource {
      * @return
      * @throws ParseException
      */
-    @PostMapping(value = "/")
+    @PostMapping(value = "/add")
     public Response addPlan(@RequestBody @Valid BreedingPlanModel planModel, BindingResult bindingResult) throws ParseException {
         logger.info("invoke addPlan {}, url = /breeding/", planModel);
         if (bindingResult.hasErrors()) {

@@ -28,6 +28,27 @@ public interface FactoryMapper {
     List<FactoryModel> queryAllFactory();
 
     /**
+     * 查找某个代理下的所有羊场
+     * @param id
+     * @return
+     */
+    @Select("select * from factory_manage where agent = #{agent}")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "gmtCreate", column = "gmt_create"),
+            @Result(property = "gmtModified", column = "gmt_modified"),
+            @Result(property = "pkNumber", column = "pk_number"),
+            @Result(property = "breadName", column = "bread_name"),
+            @Result(property = "breadLocation", column = "bread_location"),
+            @Result(property = "createTime", column = "create_time"),
+            @Result(property = "responsiblePersonid", column = "responsible_personid"),
+            @Result(property = "remark", column = "remark"),
+            @Result(property = "disnfectP", column = "disnfect_p"),
+            @Result(property = "agent", column = "agent")
+    })
+    List<FactoryModel> queryFactoryByAgentID(Long id);
+
+    /**
      * 根据地理位置查找factory
      * @param location
      * @return

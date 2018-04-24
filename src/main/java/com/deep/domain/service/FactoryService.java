@@ -30,6 +30,15 @@ public class FactoryService {
     }
 
     /**
+     * 根据代理号查询所有的羊场
+     * @param id
+     * @return
+     */
+    public List<FactoryModel> getAllFactoryOfOneAgent(Long id) {
+        return factoryMapper.queryFactoryByAgentID(id);
+    }
+
+    /**
      * 根据羊场编号查询羊场的代理
      * @param factoryNumber
      * @return
@@ -38,6 +47,11 @@ public class FactoryService {
         return factoryMapper.queryOneAgentByFactoryID(factoryNumber);
     }
 
+    /**
+     * 根据羊场的地理位置查询
+     * @param location
+     * @return
+     */
     public List<FactoryModel> getAgentByBreadLocation(String location) {
         return factoryMapper.queryFactoryByLocation(location);
     }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +34,23 @@ public class AgentService {
      */
     public List<AgentModel> getSons(int id) {
         return agentMapper.getSons(id);
+    }
+
+    /**
+     * 获取所有的下级代理, 包括子代理的子代理
+     * @param id
+     * @return
+     */
+    public Map<String, Object> getAllSons(int id) {
+        Map<String, Object> map = new HashMap<>();
+        List<AgentModel> agentModels = getSons(id);
+        if (agentModels != null) {
+            map.put("now", agentModels);
+            for (int i = 0; i < agentModels.size(); i++) {
+                map.put("son", getAllSons(agentModels.get(i).getId()));
+            }
+        }
+        return map;
     }
 
     /**
