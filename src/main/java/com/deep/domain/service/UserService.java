@@ -372,7 +372,6 @@ public class UserService {
     }
 
 
-
     /**
      * 获取羊场上级代理的专家信息(测试, only 测试)
      * @param factoryNumber

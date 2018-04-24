@@ -6,20 +6,21 @@ import java.math.BigInteger;
  * create by zhongrui on 18-4-18.
  */
 public class DisinfectRequest {
+
     private Long id;      //id
     private String disinfectEartag;
     private BigInteger factoryNum;     //工厂号
     private String disinfectTime;     //消毒时间
     private String disinfectName;     //消毒药品名称
-    private String disinfectQuality;    //用药剂量
+    private String dose;    //用药剂量
     private String disinfectWay;     //消毒方法
-    private String operator;      //操作员(创建表操作人员)
+    private String operatorName;      //操作员(创建表操作人员)
     private String professor;       //技术审核(审核表人员 专家) 可空
     private String supervisor;       //监督员(监督操作员人员) 可空
     private String remark;        //备注
-    private String isPass;       //是否通过审核 可空 默认为 0
+    private String ispassCheck;       //是否通过审核 可空 默认为 0
     private String unpassReason;   //未通过审核原因 可空 默认未 无
-    private String isPass1;       //是否通过审核 可空 默认为 0
+    private String ispassSup;       //是否通过审核 可空 默认为 0
     private String gmtCreate;   //创建时间
     private String gmtModified;     //修改时间
     private String gmtProfessor;     //审核时间 可空
@@ -70,12 +71,12 @@ public class DisinfectRequest {
         this.disinfectName = disinfectName;
     }
 
-    public String getDisinfectQuality() {
-        return disinfectQuality;
+    public String getDose() {
+        return dose;
     }
 
-    public void setDisinfectQuality(String disinfectQuality) {
-        this.disinfectQuality = disinfectQuality;
+    public void setDose(String dose) {
+        this.dose = dose;
     }
 
     public String getDisinfectWay() {
@@ -86,12 +87,12 @@ public class DisinfectRequest {
         this.disinfectWay = disinfectWay;
     }
 
-    public String getOperator() {
-        return operator;
+    public String getOperatorName() {
+        return operatorName;
     }
 
-    public void setOperator(String operator) {
-        this.operator = operator;
+    public void setOperatorName(String operatorName) {
+        this.operatorName = operatorName;
     }
 
     public String getProfessor() {
@@ -118,12 +119,12 @@ public class DisinfectRequest {
         this.remark = remark;
     }
 
-    public String getIsPass() {
-        return isPass;
+    public String getIspassCheck() {
+        return ispassCheck;
     }
 
-    public void setIsPass(String isPass) {
-        this.isPass = isPass;
+    public void setIspassCheck(String ispassCheck) {
+        this.ispassCheck = ispassCheck;
     }
 
     public String getUnpassReason() {
@@ -134,12 +135,12 @@ public class DisinfectRequest {
         this.unpassReason = unpassReason;
     }
 
-    public String getIsPass1() {
-        return isPass1;
+    public String getIspassSup() {
+        return ispassSup;
     }
 
-    public void setIsPass1(String isPass1) {
-        this.isPass1 = isPass1;
+    public void setIspassSup(String ispassSup) {
+        this.ispassSup = ispassSup;
     }
 
     public String getGmtCreate() {
@@ -204,5 +205,33 @@ public class DisinfectRequest {
 
     public void setSize(int size) {
         this.size = size;
+    }
+
+    @Override
+    public String toString() {
+        return "DisinfectRequest{" +
+            "id=" + id +
+            ", disinfectEartag='" + disinfectEartag + '\'' +
+            ", factoryNum=" + factoryNum +
+            ", disinfectTime='" + disinfectTime + '\'' +
+            ", disinfectName='" + disinfectName + '\'' +
+            ", dose='" + dose + '\'' +
+            ", disinfectWay='" + disinfectWay + '\'' +
+            ", operatorName='" + operatorName + '\'' +
+            ", professor='" + professor + '\'' +
+            ", supervisor='" + supervisor + '\'' +
+            ", remark='" + remark + '\'' +
+            ", ispassCheck='" + ispassCheck + '\'' +
+            ", unpassReason='" + unpassReason + '\'' +
+            ", ispassSup='" + ispassSup + '\'' +
+            ", gmtCreate='" + gmtCreate + '\'' +
+            ", gmtModified='" + gmtModified + '\'' +
+            ", gmtProfessor='" + gmtProfessor + '\'' +
+            ", gmtSupervise='" + gmtSupervise + '\'' +
+            ", disinfectTimeStart='" + disinfectTimeStart + '\'' +
+            ", disinfectTimeEnd='" + disinfectTimeEnd + '\'' +
+            ", page=" + page +
+            ", size=" + size +
+            '}';
     }
 }

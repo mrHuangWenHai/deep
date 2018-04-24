@@ -3,59 +3,63 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--Mapper名称 对应infra中mapper类名-->
 <mapper namespace="com.deep.infra.persistence.sql.mapper.DisinfectFilesMapper">
+
+    <resultMap id="DisinfectFiles" type="com.deep.domain.model.DisinfectFilesModel">
+        <id property="id" column="id"/>
+        <result property="factoryNum" column="factory_num"/>
+        <result property="place" column="place"/>
+        <result property="disinfectEartag" column="disinfect_eartag"/>
+        <result property="disinfectTime" column="disinfect_time"/>
+        <result property="disinfectName" column="disinfect_name"/>
+        <result property="dose" column="dose"/>
+        <result property="disinfectWay" column="disinfect_m"/>
+        <result property="operatorName" column="operator_name"/>
+        <result property="professor" column="professor"/>
+        <result property="supervisor" column="supervisor"/>
+        <result property="remark" column="remark"/>
+        <result property="ispassCheck" column="ispass_check"/>
+        <result property="unpassReason" column="unpass_reason"/>
+        <result property="ispassSup" column="ispass_sup"/>
+        <result property="gmtCreate" column="gmt_create"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="gmtProfessor" column="gmt_professor"/>
+        <result property="gmtSupervise" column="gmt_supervise"/>
+        <result property="unpassReason" column="upass_reason"/>
+    </resultMap>
+
     <insert id="setDisinfectFilesModel">
         <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="disinfectFilesModel.id">
             SELECT LAST_INSERT_ID()
         </selectKey>
         INSERT INTO disinfect_files(
-        disinfect_et,
-        factory_num,
-        disinfect_t,
-        disinfect_n,
-        disinfect_q,
+        disinfect_eartag,
+        place,
+        disinfect_time,
+        disinfect_name,
+        dose,
         disinfect_m,
-        operator,
+        operator_name,
         remark,
-        is_pass,
-        is_pass1,
+        ispass_check,
+        ispass_sup,
         gmt_create,
         gmt_modified
         )
         VALUES(
         #{disinfectFilesModel.disinfectEartag},
-        #{disinfectFilesModel.factoryNum},
+        #{disinfectFilesModel.place},
         #{disinfectFilesModel.disinfectTime},
         #{disinfectFilesModel.disinfectName},
-        #{disinfectFilesModel.disinfectQuality},
+        #{disinfectFilesModel.dose},
         #{disinfectFilesModel.disinfectWay},
-        #{disinfectFilesModel.operator},
+        #{disinfectFilesModel.operatorName},
         #{disinfectFilesModel.remark},
-        #{disinfectFilesModel.isPass},
-        #{disinfectFilesModel.isPass1},
-        #{disinfectFilesModel.gmtCreate},
+        #{disinfectFilesModel.ispassCheck},
+        #{disinfectFilesModel.ispassSup},
+        now(),
         now()
         )
     </insert>
-    <resultMap id="DisinfectFiles" type="com.deep.domain.model.DisinfectFilesModel">
-        <id property="id" column="id"/>
-        <result property="factoryNum" column="factory_num"/>
-        <result property="disinfectEartag" column="disinfect_et"/>
-        <result property="disinfectTime" column="disinfect_t"/>
-        <result property="disinfectName" column="disinfect_n"/>
-        <result property="disinfectQuality" column="disinfect_q"/>
-        <result property="disinfectWay" column="disinfect_m"/>
-        <result property="operator" column="operator"/>
-        <result property="professor" column="professor"/>
-        <result property="supervisor" column="supervisor"/>
-        <result property="remark" column="remark"/>
-        <result property="isPass" column="is_pass"/>
-        <result property="unpassReason" column="unpass_reason"/>
-        <result property="isPass1" column="is_pass1"/>
-        <result property="gmtCreate" column="gmt_create"/>
-        <result property="gmtModified" column="gmt_modified"/>
-        <result property="gmtProfessor" column="gmt_professor"/>
-        <result property="gmtSupervise" column="gmt_supervise"/>
-    </resultMap>
 
     <select id="getDisinfectFilesModel" resultMap="DisinfectFiles">
         SELECT
@@ -74,24 +78,24 @@
 
         <if test="disinfectFilesModel.disinfectTimeStart != null and disinfectFilesModel.disinfectTimeStart != '' and
                   disinfectFilesModel.disinfectTimeEnd != null and disinfectFilesModel.disinfectTimeEnd != '' ">
-            AND disinfect_t BETWEEN #{disinfectFilesModel.disinfectTimeStart} AND #{disinfectFilesModel.disinfectTimeEnd}
+            AND disinfect_time BETWEEN #{disinfectFilesModel.disinfectTimeStart} AND #{disinfectFilesModel.disinfectTimeEnd}
         </if>
 
         <if test="disinfectFilesModel.disinfectTimeStart != null and disinfectFilesModel.disinfectTimeStart != '' and
          (disinfectFilesModel.disinfectTimeEnd == null or disinfectFilesModel.disinfectTimeEnd == '') ">
-            AND disinfect_t &gt;= #{disinfectFilesModel.disinfectTimeStart}
+            AND disinfect_time &gt;= #{disinfectFilesModel.disinfectTimeStart}
         </if>
         <if test="disinfectFilesModel.disinfectName != null and disinfectFilesModel.disinfectName != '' ">
-            AND disinfect_n = #{disinfectFilesModel.disinfectName}
+            AND disinfect_name = #{disinfectFilesModel.disinfectName}
         </if>
-        <if test="disinfectFilesModel.disinfectQuality != null and disinfectFilesModel.disinfectQuality != '' ">
-            AND disinfect_q = #{disinfectFilesModel.disinfectQuality}
+        <if test="disinfectFilesModel.dose != null and disinfectFilesModel.dose != '' ">
+            AND dose = #{disinfectFilesModel.dose}
         </if>
         <if test="disinfectFilesModel.disinfectWay != null and disinfectFilesModel.disinfectWay != '' ">
             AND disinfect_m = #{disinfectFilesModel.disinfectWay}
         </if>
-        <if test="disinfectFilesModel.operator != null and disinfectFilesModel.operator != '' ">
-            AND operator = #{disinfectFilesModel.operator}
+        <if test="disinfectFilesModel.operatorName != null and disinfectFilesModel.operatorName != '' ">
+            AND operator_name = #{disinfectFilesModel.operatorName}
         </if>
         <if test="disinfectFilesModel.professor != null and disinfectFilesModel.professor != '' ">
             AND professor = #{disinfectFilesModel.professor}
@@ -102,14 +106,14 @@
         <if test="disinfectFilesModel.remark != null and disinfectFilesModel.remark != '' ">
             AND remark = #{disinfectFilesModel.remark}
         </if>
-        <if test="disinfectFilesModel.isPass != null and disinfectFilesModel.isPass != '' ">
-            AND is_pass = #{disinfectFilesModel.isPass}
+        <if test="disinfectFilesModel.ispassCheck != null and disinfectFilesModel.ispassCheck != '' ">
+            AND ispass_check = #{disinfectFilesModel.ispassCheck
         </if>
         <if test="disinfectFilesModel.unpassReason != null and disinfectFilesModel.unpassReason != '' ">
             AND upass_reason = #{disinfectFilesModel.unpassReason}
         </if>
-        <if test="disinfectFilesModel.isPass1 != null and disinfectFilesModel.isPass1 != '' ">
-            AND is_pass1 = #{disinfectFilesModel.isPass1}
+        <if test="disinfectFilesModel.ispassSup != null and disinfectFilesModel.ispassSup != '' ">
+            AND ispass_sup = #{disinfectFilesModel.ispassSup}
         </if>
 
     </select>
@@ -121,7 +125,7 @@
         *
         FROM
         disinfect_files
-        WHERE factory_num = #{factoryNum} AND disinfect_t BETWEEN #{gmtCreate} AND #{gmtTrans}
+        WHERE factory_num = #{factoryNum} AND disinfect_time BETWEEN #{gmtCreate} AND #{gmtTrans}
     </select>
 
     <select id="getDisinfectFilesModelByfactoryNum" resultMap="DisinfectFiles">
@@ -130,15 +134,16 @@
         FROM
         disinfect_files
         WHERE
-        factory_num = #{factoryNum}
+        factoryNum = #{factoryNum}
     </select>
+
     <select id="getDisinfectFilesModelBydisinfectTime" resultMap="DisinfectFiles">
         SELECT
         *
         FROM
         disinfect_files
         WHERE
-        disinfect_t = #{disinfectTime}
+        disinfect_time = #{disinfectTime}
     </select>
 
     <select id="getDisinfectFilesModelByfactoryNumAnddisinfectTimeAnddisinfectName" resultMap="DisinfectFiles">
@@ -147,7 +152,7 @@
         FROM
         disinfect_files
         WHERE
-        factory_num = #{factoryNum} AND disinfect_t = #{disinfectTime} AND disinfect_n = #{disinfectName}
+        factory_num = #{factoryNum} AND disinfect_time = #{disinfectTime} AND disinfect_name = #{disinfectName}
     </select>
 
     <select id="getDisinfectFilesModelByProfessor" resultMap="DisinfectFiles">
@@ -156,7 +161,7 @@
         FROM
         disinfect_files
         WHERE
-        is_pass = #{isPass}
+        ispass_check = #{ispassCheck}
     </select>
 
     <select id="getDisinfectFilesModelBySupervisor" resultMap="DisinfectFiles">
@@ -165,7 +170,7 @@
         FROM
         disinfect_files
         WHERE
-        is_pass1 = #{isPass1}
+        ispass_sup = #{ispassSup}
     </select>
 
     <select id="getDisinfectFilesModelByid" resultMap="DisinfectFiles">
@@ -180,7 +185,7 @@
     <update id="updateDisinfectFilesModelByProfessor">
         UPDATE disinfect_files
         SET  professor = #{disinfectFilesModel.professor},
-        is_pass = #{disinfectFilesModel.isPass},
+        ispass_check = #{disinfectFilesModel.ispassCheck},
         upass_reason = #{disinfectFilesModel.unpassReason},
         gmt_professor = #{disinfectFilesModel.gmtProfessor}
         WHERE
@@ -190,26 +195,26 @@
     <update id="updateDisinfectFilesModelBySupervisor">
         UPDATE disinfect_files
         SET  supervisor = #{disinfectFilesModel.supervisor},
-        is_pass1 = #{disinfectFilesModel.isPass1},
+        ispass_sup = #{disinfectFilesModel.ispassSup},
         gmt_supervised = #{disinfectFilesModel.gmtSupervise}
         WHERE
         id = #{disinfectFilesModel.id}
     </update>
 
-    <update id="updateDisinfectFilesModelByOperator">
+    <update id="updateDisinfectFilesModelByOperatorName">
         UPDATE disinfect_files
         <set>
             <if test="disinfectFilesModel.factoryNum != null and disinfectFilesModel.factoryNum != ''">
                 factory_num = #{disinfectFilesModel.factoryNum},
             </if>
             <if test="disinfectFilesModel.disinfectTime != null and disinfectFilesModel.disinfectTime != ''">
-                disinfect_t = #{disinfectFilesModel.disinfectTime},
+                disinfect_time = #{disinfectFilesModel.disinfectTime},
             </if>
             <if test="disinfectFilesModel.disinfectName != null and disinfectFilesModel.disinfectName != ''">
-                disinfect_n = #{disinfectFilesModel.disinfectName},
+                disinfect_name = #{disinfectFilesModel.disinfectName},
             </if>
-            <if test="disinfectFilesModel.disinfectQuality != null and disinfectFilesModel.disinfectQuality != ''">
-                disinfect_q = #{disinfectFilesModel.disinfectQuality},
+            <if test="disinfectFilesModel.dose != null and disinfectFilesModel.dose != ''">
+                dose = #{disinfectFilesModel.dose},
             </if>
             <if test="disinfectFilesModel.disinfectWay != null and disinfectFilesModel.disinfectWay != ''">
                 disinfect_m = #{disinfectFilesModel.disinfectWay},
