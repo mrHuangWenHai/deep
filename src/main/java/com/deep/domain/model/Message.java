@@ -1,19 +1,17 @@
 package com.deep.domain.model;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.regex.*;
 import java.util.regex.Pattern;
 
 public class Message implements Serializable {
     private Integer id;
 
+    private static final long serialVersionUID = 1L;
+
     @NotBlank(message = "用户名不可为空")
     private String username;
-
 
     @NotBlank(message = "联系方式不可为空")
     private String contact;
@@ -31,6 +29,10 @@ public class Message implements Serializable {
 
     @NotBlank(message = "购买意向不可为空")
     private String intention;
+
+    private Date sTime;
+
+    private Date eTime;
 
     public Integer getMessageId() {
         return messageId;
@@ -61,15 +63,6 @@ public class Message implements Serializable {
     public void seteTime(Date eTime) {
         this.eTime = eTime;
     }
-
-    private Date sTime;
-
-    private Date eTime;
-
-
-
-
-    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
@@ -161,5 +154,24 @@ public class Message implements Serializable {
     public static boolean isEmail(String email){
         String regex = "^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\\.[a-zA-Z0-9]{2,6}$";
         return Pattern.matches(regex, email);
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+            "id=" + id +
+            ", username='" + username + '\'' +
+            ", contact='" + contact + '\'' +
+            ", message='" + message + '\'' +
+            ", inserttime=" + inserttime +
+            ", tag='" + tag + '\'' +
+            ", attitude='" + attitude + '\'' +
+            ", intention='" + intention + '\'' +
+            ", sTime=" + sTime +
+            ", eTime=" + eTime +
+            ", messageId=" + messageId +
+            ", pageNumb=" + pageNumb +
+            ", limit=" + limit +
+            '}';
     }
 }

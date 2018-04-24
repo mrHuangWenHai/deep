@@ -92,7 +92,8 @@ public class EnvironmentDBResource {
      */
 
     @Scheduled(cron = "0/5 * * * * ?")
-    public void backUpMysql() throws InterruptedException{
+    public void backUpMysql() throws InterruptedException {
+
         if (BackupUtil.sqlBackup(savePath+"co2/",hostIP,username,password,database,"co2_data","_co2")
                 && BackupUtil.sqlBackup(savePath+"hum/",hostIP,username,password,database,"hum_data","_hum")
                 && BackupUtil.sqlBackup(savePath+"temp/",hostIP,username,password,database,"temp_data","_temp")

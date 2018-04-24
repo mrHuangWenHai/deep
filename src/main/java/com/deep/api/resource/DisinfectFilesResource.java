@@ -22,6 +22,7 @@ import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -49,21 +50,20 @@ public class DisinfectFilesResource {
      * @param disinfectFilesModel
      * @return
      */
-
-    @RequestMapping(value = "/saveshow",method = RequestMethod.POST)
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
     public Response saveShow(@Valid DisinfectFilesModel disinfectFilesModel,
                              BindingResult bindingResult,
                              @RequestParam(value = "disinfectEartagFile") MultipartFile disinfectEartagFile,
                              HttpServletRequest request
                             ) {
         if (bindingResult.hasErrors()) {
-            return ValidResponse.bindExceptionHandler();
+
+            return Responses.errorResponse(bindingResult.toString());
         }
-        logger.info("invoke saveShow {}", disinfectFilesModel, disinfectEartagFile, request);
+        logger.info("invoke save {}", disinfectFilesModel, disinfectEartagFile, request);
         if( disinfectEartagFile.isEmpty() ) {
             return Responses.errorResponse("Lack Item");
         } else {
-
             //仅允许上传.txt .rtf(日记本格式) .doc .docx
             /*if ( !"75736167".equals(Header) && !"7B5C727466".equals(Header) &&
                     !"D0CF11E0".equals(Header) && !"504B0304".equals(Header)) {
@@ -226,16 +226,27 @@ public class DisinfectFilesResource {
     /**
      * 专家入口 查看isPass1 = 0或者isPass1 = 1的数据
      * METHOD:GET
-     * @param isPass
-     * @param page
-     * @param size
-     * @return
+     * @param json
+     * @return Response
      */
+    @RequestMapping(value = "/pfind",method = RequestMethod.POST)
+    public Response professorFind(@RequestBody Map<String, Integer> json) {
 
-    @RequestMapping(value = "/pfind",method = RequestMethod.GET)
-    public Response professorFind(@RequestParam(value = "isPass",defaultValue = "2") Integer isPass,
-                                  @RequestParam(value = "page",defaultValue = "0") int page,
-                                  @RequestParam(value = "size",defaultValue = "10") int size) {
+        Integer isPass;
+        if (!json.containsKey("isPass")) {
+            return Responses.errorResponse("lack param isPass");
+        }
+        isPass = json.get("isPass");
+
+        int page = 0;
+        if (json.containsKey("page")) {
+            page = json.get("page");
+        }
+
+        int size = 10;
+        if (json.containsKey("size")) {
+            size = json.get("size");
+        }
 
         logger.info("invoke professorFind {}", isPass, page, size);
         if ("2".equals(isPass.toString())) {
@@ -246,14 +257,12 @@ public class DisinfectFilesResource {
         return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
     }
 
-
     /**
      * 审核入口 审核isPass1 = 0的数据
      * METHOD:PATCH
      * @param disinfectFilesModel
      * @return
      */
-
     @RequestMapping(value = "/pupdate",method = RequestMethod.PATCH)
     public Response professorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel) {
 
@@ -261,8 +270,7 @@ public class DisinfectFilesResource {
 
         if (disinfectFilesModel.getId() == null ||
                 disinfectFilesModel.getProfessor() == null ||
-                disinfectFilesModel.getIsPass() == null ||
-                disinfectFilesModel.getUnpassReason() == null) {
+                disinfectFilesModel.getIsPass() == null) {
 
             return Responses.errorResponse("Lack Item");
 
@@ -288,10 +296,12 @@ public class DisinfectFilesResource {
 
                     int row = this.disinfectFilesService.updateDisinfectFilesModelByProfessor(disinfectFilesModel);
 
-                    if (row == 0) {
+                    if (row == 1) {
                         return JudgeUtil.JudgeUpdate(row);
                     } else {
 
+
+                        //??? 这是做什么的啊？？？？？？
                         //删除成功 redis数据库种对应数据-1
                         String professorKey = disinfectFilesModel1.getFactoryNum().toString() + "_disinfectFiles_professor";
 
@@ -316,7 +326,7 @@ public class DisinfectFilesResource {
                                    @RequestParam(value = "size",defaultValue = "10") int size) {
 
         logger.info("invoke supervisorFind {}", isPass1, page, size);
-        if ("2".equals(isPass1.toString())){
+        if ("2".equals(isPass1.toString())) {
             return Responses.errorResponse("Wrong Pass Num");
         }
         List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesService.getDisinfectFilesModelBySupervisor(isPass1,new RowBounds(page,size));
@@ -386,9 +396,6 @@ public class DisinfectFilesResource {
             }
         }
     }
-
-
-
 
     /**
      * 操作员在审核前想修改数据的接口

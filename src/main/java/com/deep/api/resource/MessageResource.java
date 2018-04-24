@@ -40,19 +40,15 @@ public class MessageResource {
             if (!Message.isEmail(contact) && !Message.isMobile(contact)) {
                 throw new Exception("请输入正确手机号或者邮箱地址！");
             }
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             Response response = Responses.errorResponse(e.getMessage());
             return response;
         }
 
-
         Integer id = messageService.insertMessage(message);
 
         Integer messageId = message.getMessageId();
-
-
 
         if (id != 0) {
             Response response = Responses.successResponse();
@@ -60,8 +56,7 @@ public class MessageResource {
             data.put("Message",messageId);
             response.setData(data);
             return response;
-        }
-        else{
+        } else {
             Response response = Responses.errorResponse("数据插入失败");
             return  response;
         }

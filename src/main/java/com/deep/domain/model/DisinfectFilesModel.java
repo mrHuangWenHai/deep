@@ -37,8 +37,6 @@ public class DisinfectFilesModel {
     private String gmtProfessor;     //审核时间 可空
     private String gmtSupervise;     //监督确认时间 可空
 
-
-
     public DisinfectFilesModel() {
     }
 

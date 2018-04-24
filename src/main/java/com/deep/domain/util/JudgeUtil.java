@@ -16,12 +16,12 @@ public class JudgeUtil {
      * @param row
      * @return
      */
-    public static Response JudgeDelete(int row){
-        if (0 == row){
-            return Responses.errorResponse("wrong id");
-        }else{
+    public static Response JudgeDelete(int row) {
+        if (0 == row) {
+            return Responses.errorResponse("delete error");
+        } else {
             HashMap<String,Object> data = new HashMap<>();
-            data.put("delete row",row);
+            data.put("success",row);
             return Responses.successResponse(data);
         }
     }
@@ -31,12 +31,13 @@ public class JudgeUtil {
      * @param row
      * @return
      */
-    public static Response JudgeUpdate(int row){
-        if (0 == row){
-            return Responses.errorResponse("wrong id");
-        }else{
+    public static Response JudgeUpdate(int row) {
+
+        if (0 == row) {
+            return Responses.errorResponse("update error");
+        } else {
             HashMap<String,Object> data = new HashMap<>();
-            data.put("update row",row);
+            data.put("success",row);
             return Responses.successResponse(data);
         }
     }
@@ -47,9 +48,9 @@ public class JudgeUtil {
      * @param object
      * @return
      */
-    public static Response JudgeFind(Object object){
+    public static Response JudgeFind(Object object) {
         HashMap<String,Object> data = new HashMap<>();
-        data.put("object",object);
+        data.put("data",object);
         return Responses.successResponse(data);
     }
 
@@ -59,7 +60,7 @@ public class JudgeUtil {
      * @param object
      * @return
      */
-    public static Response JudgeFind(Object object ,int size){
+    public static Response JudgeFind(Object object ,int size) {
         HashMap<String,Object> data = new HashMap<>();
         data.put("List",object);
         data.put("size",size);
@@ -73,12 +74,11 @@ public class JudgeUtil {
      * @param o
      * @return
      */
-    public static Response JudgeSuccess(String details,Object o){
+    public static Response JudgeSuccess(String details,Object o) {
         HashMap<String,Object> data = new HashMap<>();
         data.put(details,o);
         return Responses.successResponse(data);
     }
-
 
     /**
      * 用于返回成功方法
@@ -94,7 +94,7 @@ public class JudgeUtil {
      */
     public static Response JudgeSuccess(String details1,Object o1,
                                         String details2,Object o2,
-                                        String details3,Object o3){
+                                        String details3,Object o3) {
         HashMap<String,Object> data = new HashMap<>();
         data.put(details1,o1);
         data.put(details2,o2);

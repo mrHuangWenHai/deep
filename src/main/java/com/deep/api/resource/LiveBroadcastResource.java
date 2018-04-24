@@ -48,7 +48,7 @@ public class LiveBroadcastResource {
     return response;
   }
 
-  @RequestMapping(value = "/getGetLiveUrl")
+  @RequestMapping(value = "/getLiveUrl")
   public Response getLiveBroadCastLiveUrl(@RequestParam(value = "userid", required = true) String  userid) {
 
     if (userid.equals("")) {

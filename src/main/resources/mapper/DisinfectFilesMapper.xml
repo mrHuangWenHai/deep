@@ -18,7 +18,8 @@
         remark,
         is_pass,
         is_pass1,
-        gmt_create
+        gmt_create,
+        gmt_modified
         )
         VALUES(
         #{disinfectFilesModel.disinfectEartag},
@@ -31,7 +32,8 @@
         #{disinfectFilesModel.remark},
         #{disinfectFilesModel.isPass},
         #{disinfectFilesModel.isPass1},
-        #{disinfectFilesModel.gmtCreate}
+        #{disinfectFilesModel.gmtCreate},
+        now()
         )
     </insert>
     <resultMap id="DisinfectFiles" type="com.deep.domain.model.DisinfectFilesModel">

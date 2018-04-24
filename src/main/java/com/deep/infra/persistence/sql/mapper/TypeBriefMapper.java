@@ -12,9 +12,12 @@ import java.util.List;
 @Mapper
 public interface TypeBriefMapper {
 
-    void setTypeBrief(@Param("typeBriefModel") TypeBriefModel typeBriefModel);
-    List<String> getAllType();
+    int setTypeBrief(@Param("typeBriefModel") TypeBriefModel typeBriefModel);
+
+    List<TypeBriefModel> getAllType();
+
     TypeBriefModel getTypeBrief(@Param("type") String type);
+
     int updateTypeBrief(@Param("typeBriefModel") TypeBriefModel typeBriefModel);
 
 }

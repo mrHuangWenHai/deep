@@ -15,17 +15,42 @@ public class TypeBriefService {
     @Resource
     private TypeBriefMapper typeBriefMapper;
 
-    public void setTypeBrief(TypeBriefModel typeBriefModel){
-        this.typeBriefMapper.setTypeBrief(typeBriefModel);
-    }
-    public List<String> getAllType(){
-        return this.typeBriefMapper.getAllType();
+    private List<TypeBriefModel>  typeBriefModelList = null;
+
+    public int setTypeBrief(TypeBriefModel typeBriefModel) {
+
+        int success = this.typeBriefMapper.setTypeBrief(typeBriefModel);
+        if (success == 1) {
+            typeBriefModelList.add(typeBriefModel);
+        }
+        return success;
     }
 
-    public TypeBriefModel getTypeBrief(String type){
-        return this.typeBriefMapper.getTypeBrief(type);
+    public List<TypeBriefModel> getAllType() {
+
+        if (this.typeBriefModelList == null) {
+            this.typeBriefModelList = this.typeBriefMapper.getAllType();
+        }
+        return this.typeBriefModelList;
     }
-    public int updateTypeBrief( TypeBriefModel typeBriefModel){
+
+    public TypeBriefModel getTypeBrief(String type) {
+
+        if (this.typeBriefModelList == null) {
+            for (TypeBriefModel typeBriefModel : this.typeBriefModelList) {
+                if (typeBriefModel.getTypename().equals(type)) {
+                    return typeBriefModel;
+                }
+            }
+            return null;
+        } else {
+            return this.typeBriefMapper.getTypeBrief(type);
+        }
+    }
+
+    //下面接口还要改
+    public int updateTypeBrief( TypeBriefModel typeBriefModel) {
+        this.typeBriefModelList = null;
         return this.typeBriefMapper.updateTypeBrief(typeBriefModel);
     }
 }
