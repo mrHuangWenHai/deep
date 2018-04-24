@@ -7,9 +7,11 @@ import com.deep.api.response.ValidResponse;
 import com.deep.domain.model.DisinfectFilesModel;
 import com.deep.domain.service.DisinfectFilesService;
 import com.deep.domain.service.UserService;
+import com.deep.domain.util.DownloadUtil;
 import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.JudgeUtil;
 import com.deep.domain.util.UploadUtil;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -47,8 +50,8 @@ public class DisinfectFilesResource {
      * 3天内未通知对应专家/审核员
      * 则通知 不然返回已发送
      * METHOD:POST
-     * @param disinfectFilesModel
-     * @return
+     * @param disinfectFilesModel 消毒类
+     * @return 插入结果
      */
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     public Response saveShow(@Valid DisinfectFilesModel disinfectFilesModel,
@@ -65,7 +68,8 @@ public class DisinfectFilesResource {
             return Responses.errorResponse("Lack Item");
         } else {
             //仅允许上传.txt .rtf(日记本格式) .doc .docx
-            /*if ( !"75736167".equals(Header) && !"7B5C727466".equals(Header) &&
+            /*String Header = FileUtil.getFileHeader(repellentEartagFile);
+            if ( !"75736167".equals(Header) && !"7B5C727466".equals(Header) &&
                     !"D0CF11E0".equals(Header) && !"504B0304".equals(Header)) {
                 return Responses.errorResponse("Wrong file form");
             }*/
@@ -76,6 +80,7 @@ public class DisinfectFilesResource {
                 try {
 
                     String fileName = disinfectEartagFile.getOriginalFilename();
+                    //目的路径
                     String filePath = request.getSession().getServletContext().getContextPath()+"../EartagDocument/disinfectEartag/";
                     String fileAddress = "";
                     fileAddress = UploadUtil.uploadFile(disinfectEartagFile.getBytes(),filePath,fileName,fileAddress);
@@ -133,11 +138,13 @@ public class DisinfectFilesResource {
                             //需完成:userModels.getTelephone()赋值给String
                             // 获得StringBuffer手机号
                             StringBuffer phoneList = new StringBuffer("");
-                            for (int i = 0; i < phone.size(); i++) {
-                                phoneList = phoneList.append(phone.get(i)).append(",");
+
+                            for (String aPhone : phone) {
+                                phoneList = phoneList.append(aPhone).append(",");
                             }
 
-                            if ("".equals(phoneList.toString())) {
+                            if ("".equals(phoneList.toString())){
+                                System.out.println("here");
 
                               //
                             } else {
@@ -161,8 +168,10 @@ public class DisinfectFilesResource {
 
                             StringBuffer phoneList = new StringBuffer("");
 
-                            for (int i = 0; i < phone.size(); i++) {
-                                phoneList = phoneList.append(phone.get(i)).append(",");
+
+                            for (String aPhone : phone) {
+                                phoneList = phoneList.append(aPhone).append(",");
+
                             }
                             if ("".equals(phoneList.toString())) {
 
@@ -205,8 +214,8 @@ public class DisinfectFilesResource {
      * 以json格式返回前端
      * 分页查询
      * METHOD:POST
-     * @param disinfectRequest
-     * @return
+     * @param disinfectRequest 消毒请求类
+     * @return 查询结果/查询结果条数
      */
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
     public Response findShow(@RequestBody DisinfectRequest disinfectRequest) {
@@ -221,13 +230,37 @@ public class DisinfectFilesResource {
         return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
     }
 
+    /**
+     * 下载文件 并保存到自定义路径
+     * @param response HttpServletResponse
+     * @throws Exception 下载文件异常
+     */
+    @RequestMapping(value = "/down",method = RequestMethod.GET)
+    public Response download(HttpServletResponse response,
+                         @Param("file") String file,
+                         @Param("locate") String locate)throws Exception{
+        logger.info("invoke download {}", response, file, locate);
+        String filePath = "../EartagDocument/disinfectEartag/";
+        if (DownloadUtil.downloadFile(response , file, filePath, locate)){
+            return JudgeUtil.JudgeSuccess("download","Success");
+        }else {
+            return Responses.errorResponse("download Error");
+        }
+    }
+
+
+
+
     //更新接口
     //权限仅为专家和监督员
     /**
-     * 专家入口 查看isPass1 = 0或者isPass1 = 1的数据
+     * 专家入口 查看isPass = 0或者isPass = 1的数据
      * METHOD:GET
-     * @param json
-     * @return Response
+     * @param isPass 审核标志位
+     * @param page  页号
+     * @param size  条数
+     * @return 查询结果/查询结果条数
+
      */
     @RequestMapping(value = "/pfind",method = RequestMethod.POST)
     public Response professorFind(@RequestBody Map<String, Integer> json) {
@@ -258,10 +291,10 @@ public class DisinfectFilesResource {
     }
 
     /**
-     * 审核入口 审核isPass1 = 0的数据
+     * 审核入口 审核isPass = 0的数据
      * METHOD:PATCH
-     * @param disinfectFilesModel
-     * @return
+     * @param disinfectFilesModel 消毒类
+     * @return 更新结果
      */
     @RequestMapping(value = "/pupdate",method = RequestMethod.PATCH)
     public Response professorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel) {
@@ -320,6 +353,14 @@ public class DisinfectFilesResource {
 
     }
 
+    /**
+     * 审核入口 展示所有isPass1 = 0或者isPass1 = 1的数据
+     * @param isPass1 审核标志位
+     * @param page   页码
+     * @param size   条数
+     * METHOD:GET
+     * @return 查询结果
+     */
     @RequestMapping(value = "/sfind",method = RequestMethod.GET)
     public Response supervisorFind(@RequestParam(value = "isPass1",defaultValue = "2") Integer isPass1,
                                    @RequestParam(value = "page",defaultValue = "0") int page,
@@ -334,6 +375,15 @@ public class DisinfectFilesResource {
         return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
     }
 
+
+
+    /**
+     * 监督员入口 审核isPass1 = 0的数据
+     * 审核要求:审核时要求条例写完整 审核后 isPass = 1时 无权限再修改
+     * @param disinfectFilesModel 消毒类
+     * METHOD:PATCH
+     * @return 审核结果
+     */
     @RequestMapping(value = "/supdate",method = RequestMethod.PATCH)
     public Response supervisorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel) {
 
@@ -403,8 +453,8 @@ public class DisinfectFilesResource {
      *
      * 行为1 与redis数据库无关
      * 行为2 redis对应数据字段+1
-     * @param disinfectFilesModel
-     * @return
+     * @param disinfectFilesModel 消毒类
+     * @return 更新结果
      */
     @RequestMapping(value = "/oupdate",method = RequestMethod.PATCH)
     public Response operatorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel) {
@@ -465,10 +515,10 @@ public class DisinfectFilesResource {
     }
 
     /**
-     * 删除id = certain 的数据
-     * 权限设置
-     * @param id
-     * @return
+     * &#x5220;&#x9664;id = certain &#x7684;&#x6570;&#x636e;
+     * &#x6743;&#x9650;&#x8bbe;&#x7f6e;
+     * @param id id
+     * @return &#x5220;&#x9664;&#x7ed3;&#x679c;
      */
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
 

@@ -1,12 +1,16 @@
 package com.deep.domain.model;
 
+import javax.validation.constraints.NotEmpty;
+
 /**
  * 用于主动给客户发送短信
  * 可输入号码或上传文件
  * create by zhongrui on 18-3-29.
  */
 public class PositiveSendModel {
+    @NotEmpty
     private String mobile_list;
+    @NotEmpty
     private String message;
 
     public PositiveSendModel() {

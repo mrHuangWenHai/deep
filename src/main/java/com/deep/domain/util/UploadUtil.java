@@ -10,6 +10,15 @@ import java.util.Calendar;
  * create by zhongrui on 18-4-2.
  */
 public class UploadUtil {
+    /**
+     * 随机生成文件名的文件上传
+     * @param file 文件(二进制)
+     * @param filePath 文件路径
+     * @param fileName 文件名
+     * @param fileAddress 文件路径+文件名
+     * @return 上传结果
+     * @throws Exception 读取文件异常
+     */
     public static String uploadFile(byte[] file, String filePath, String fileName,String fileAddress) throws Exception {
         File targetFile = new File(filePath);
         if (!targetFile.exists()) {
@@ -28,4 +37,6 @@ public class UploadUtil {
         out.close();
         return fileAddress;
     }
+
+
 }

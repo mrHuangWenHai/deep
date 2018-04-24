@@ -8,10 +8,8 @@ import com.deep.api.response.ValidResponse;
 import com.deep.domain.model.RepellentPlanModel;
 import com.deep.domain.service.RepellentPlanService;
 import com.deep.domain.service.UserService;
-import com.deep.domain.util.FileUtil;
-import com.deep.domain.util.JedisUtil;
-import com.deep.domain.util.JudgeUtil;
-import com.deep.domain.util.UploadUtil;
+import com.deep.domain.util.*;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -38,16 +37,16 @@ public class RepellentPlanResource {
     private UserService userService;
 
 
-
-
     /**
      * 返回插入结果
      * 成功：success
      * 失败：返回对应失败错误
      * METHOD:POST
-     * @param repellentPlanModel
-     * @param request
-     * @return
+     * @param repellentPlanModel 驱虫类
+     * @param bindingResult  异常抛出类
+     * @param repellentEartagFile   耳牌文件
+     * @param request   HttpServletRequest
+     * @return  保存结果
      */
 
     @RequestMapping(value = "/saveshow",method = RequestMethod.POST)
@@ -67,9 +66,9 @@ public class RepellentPlanResource {
 
         } else {
 
-            String Header = FileUtil.getFileHeader(repellentEartagFile);
+            /*String Header = FileUtil.getFileHeader(repellentEartagFile);
 
-            /*if ( !"75736167".equals(Header) && !"7B5C727466".equals(Header) &&
+            if ( !"75736167".equals(Header) && !"7B5C727466".equals(Header) &&
                     !"D0CF11E0".equals(Header) && !"504B0304".equals(Header)) {
                 return Responses.errorResponse("Wrong file form");
             }*/
@@ -149,8 +148,10 @@ public class RepellentPlanResource {
                             //需完成:userModels.getTelephone()赋值给String
                             //获得StringBuffer手机号
                             StringBuffer phoneList = new StringBuffer("");
-                            for (int i = 0; i < phone.size(); i++) {
-                                phoneList = phoneList.append(phone.get(i)).append(",");
+
+
+                            for (String aPhone : phone) {
+                                phoneList = phoneList.append(aPhone).append(",");
                             }
                             if ("".equals(phoneList.toString())){
                                 System.out.println("No phoneList");
@@ -181,8 +182,8 @@ public class RepellentPlanResource {
 
                             StringBuffer phoneList = new StringBuffer("");
 
-                            for (int i = 0; i < phone.size(); i++) {
-                                phoneList = phoneList.append(phone.get(i)).append(",");
+                            for (String aPhone : phone) {
+                                phoneList = phoneList.append(aPhone).append(",");
                             }
                             if ("".equals(phoneList.toString())){
 
@@ -226,9 +227,8 @@ public class RepellentPlanResource {
      * 返回查询结果
      * 以json格式返回前端
      * METHOD:POST
-
-     * @param repellentRequest
-     * @return
+     * @param repellentRequest 驱虫请求类
+     * @return  查询结果
      */
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
     public Response FindShow(@RequestBody RepellentRequest repellentRequest){
@@ -249,15 +249,33 @@ public class RepellentPlanResource {
 
     }
 
+    /**
+     * 下载文件 并保存到自定义路径
+     * @param response HttpServletResponse
+     * @throws Exception 下载文件异常
+     */
+    @RequestMapping(value = "/down",method = RequestMethod.GET)
+    public Response download(HttpServletResponse response,
+                             @Param("file") String file,
+                             @Param("locate") String locate)throws Exception{
+        logger.info("invoke download {}", response, file, locate);
+        String filePath = "../EartagDocument/repelentEartag/";
+        if (DownloadUtil.downloadFile(response , file, filePath, locate)){
+            return JudgeUtil.JudgeSuccess("download","Success");
+        }else {
+            return Responses.errorResponse("download Error");
+        }
+    }
+
 
 
     /**
-     * 专家入口 展示所有isPass = 0或者isPass = 1的数据
-     * @param isPass
-     * @param page
-     * @param size
+     * 专家入口 查看isPass = 0或者isPass = 1的数据
      * METHOD:GET
-     * @return
+     * @param isPass 审核标志位
+     * @param page  页号
+     * @param size  条数
+     * @return 查询结果/查询结果条数
      */
 
     @RequestMapping(value = "pfind",method = RequestMethod.GET)
@@ -273,13 +291,11 @@ public class RepellentPlanResource {
 
 
     /**
-     * 专家入口 审核isPass = 0的数据
-     * redis中数据-1
-     * @param repellentPlanModel
+     * 审核入口 审核isPass = 0的数据
      * METHOD:PATCH
-     * @return
+     * @param repellentPlanModel 驱虫类
+     * @return 更新结果
      */
-
     @RequestMapping(value = "pupdate",method = RequestMethod.PATCH)
     public Response ProfessorUpdate(@RequestBody RepellentPlanModel repellentPlanModel) {
 
@@ -343,12 +359,12 @@ public class RepellentPlanResource {
 
 
     /**
-     * 审核入口 展示所有isPass2 = 0或者isPass2 = 1的数据
-     * @param isPass1
-     * @param page
-     * @param size
+     * 审核入口 展示所有isPass1 = 0或者isPass1 = 1的数据
+     * @param isPass1 审核标志位
+     * @param page   页码
+     * @param size   条数
      * METHOD:GET
-     * @return
+     * @return 查询结果
      */
 
     @RequestMapping(value = "sfind",method = RequestMethod.GET)
@@ -363,10 +379,11 @@ public class RepellentPlanResource {
     }
 
     /**
-     * 专家入口 审核isPass2 = 0的数据
-     * @param repellentPlanModel
+     * 监督员入口 审核isPass1 = 0的数据
+     * 审核要求:审核时要求条例写完整 审核后 isPass = 1时 无权限再修改
+     * @param repellentPlanModel 驱虫类
      * METHOD:PATCH
-     * @return
+     * @return 审核结果
      */
 
 
@@ -436,8 +453,8 @@ public class RepellentPlanResource {
      *
      * 行为1 与redis数据库无关
      * 行为2 redis对应数据字段+1
-     * @param repellentPlanModel
-     * @return
+     * @param repellentPlanModel 驱虫类
+     * @return  更新结果
      */
     @RequestMapping(value = "oupdate",method = RequestMethod.PATCH)
     public Response OperatorUpdate(@RequestBody RepellentPlanModel repellentPlanModel) {
@@ -495,8 +512,8 @@ public class RepellentPlanResource {
     /**
      * 删除id = certain 的数据
      * 权限设置
-     * @param id
-     * @return
+     * @param id id
+     * @return  删除结果
      */
 
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)

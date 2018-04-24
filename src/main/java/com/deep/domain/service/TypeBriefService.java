@@ -51,6 +51,7 @@ public class TypeBriefService {
     //下面接口还要改
     public int updateTypeBrief( TypeBriefModel typeBriefModel) {
         this.typeBriefModelList = null;
+
         return this.typeBriefMapper.updateTypeBrief(typeBriefModel);
     }
 }

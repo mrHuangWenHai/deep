@@ -28,6 +28,15 @@
         type_brief
     </select>
 
+
+    <select id="getAll" resultMap="TypeBrief">
+        SELECT
+        *
+        FROM
+        type_brief
+    </select>
+
+
     <select id="getTypeBrief" resultMap="TypeBrief">
         SELECT
         *

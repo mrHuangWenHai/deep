@@ -29,7 +29,7 @@ public class MobileAnnouncementModel {
     /**
      * 单人验证 用于密码找回
      * 功能:发送验证码
-     * @param mobile
+     * @param mobile 手机号
      */
     public MobileAnnouncementModel(String mobile){
         this.identityCode = "";
@@ -40,8 +40,8 @@ public class MobileAnnouncementModel {
     /**
      * 用于多人群发短信
      * 功能:提醒功能
-     * @param mobile_list
-     * @param message
+     * @param mobile_list 多个手机号 以","相隔
+     * @param message 信息
      */
     public MobileAnnouncementModel(String mobile_list, String message){
         this.mobile_list = mobile_list;
@@ -82,7 +82,7 @@ public class MobileAnnouncementModel {
 
     /**
      * 用于6位验证码的生成 发送
-     * @return
+     * @return 发送结果
      */
     public String testSendSingle(){
         // just replace key here
@@ -116,7 +116,7 @@ public class MobileAnnouncementModel {
 
     /**
      * 用于发送批量短信
-     * @return
+     * @return 发送结果
      */
     public String testSendMany(){
         // just replace key here
@@ -141,7 +141,7 @@ public class MobileAnnouncementModel {
 
     /**
      * 用于查看 返回状态
-     * @return
+     * @return 状态
      */
     public String testStatus(){
         Client client = Client.create();

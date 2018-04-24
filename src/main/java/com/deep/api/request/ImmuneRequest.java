@@ -217,4 +217,33 @@ public class ImmuneRequest {
     public void setSize(int size) {
         this.size = size;
     }
+
+    @Override
+    public String toString() {
+        return "ImmuneRequest{" +
+            "factoryNum=" + factoryNum +
+            ", crowdNum='" + crowdNum + '\'' +
+            ", immuneEartag='" + immuneEartag + '\'' +
+            ", immuneTime='" + immuneTime + '\'' +
+            ", immuneKind='" + immuneKind + '\'' +
+            ", immuneWay='" + immuneWay + '\'' +
+            ", immuneQuality='" + immuneQuality + '\'' +
+            ", immuneDuring='" + immuneDuring + '\'' +
+            ", operator='" + operator + '\'' +
+            ", professor='" + professor + '\'' +
+            ", supervisor='" + supervisor + '\'' +
+            ", remark='" + remark + '\'' +
+            ", isPass='" + isPass + '\'' +
+            ", unpassReason='" + unpassReason + '\'' +
+            ", isPass1='" + isPass1 + '\'' +
+            ", gmtCreate='" + gmtCreate + '\'' +
+            ", gmtModified='" + gmtModified + '\'' +
+            ", gmtProfessor='" + gmtProfessor + '\'' +
+            ", gmtSupervise='" + gmtSupervise + '\'' +
+            ", immuneTimeStart='" + immuneTimeStart + '\'' +
+            ", immuneTimeEnd='" + immuneTimeEnd + '\'' +
+            ", page=" + page +
+            ", size=" + size +
+            '}';
+    }
 }
