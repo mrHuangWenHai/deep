@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.deep.infra.persistence.sql.mapper.PicMapper" >
+  <resultMap id="BaseResultMap" type="com.deep.domain.model.Pic" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="brand" property="brand" jdbcType="VARCHAR" />
+    <result column="udate" property="udate" jdbcType="TIMESTAMP" />
+    <result column="expert" property="expert" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="solution" property="solution" jdbcType="VARCHAR" />
+    <result column="symptom" property="symptom" jdbcType="VARCHAR" />
+    <result column="uploader" property="uploader" jdbcType="VARCHAR" />
+    <result column="vaccine" property="vaccine" jdbcType="VARCHAR" />
+    <result column="filename" property="filename" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, address, brand, udate, expert, sex, solution, symptom, uploader, vaccine, filename
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.deep.domain.model.PicExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from pic
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <!--<select id="selectByBrand" resultMap="BaseResultMap" parameterType="java.lang.String">-->
+      <!--select-->
+      <!--*-->
+      <!--from pic-->
+      <!--where brand = #{brand,jdbcType=VARCHAR}-->
+      <!--order by ${id}-->
+
+  <!--</select>-->
+    <!--<select id="selectByUdate" resultMap="BaseResultMap" parameterType="java.util.Date">-->
+        <!--select-->
+        <!--*-->
+        <!--from pic-->
+        <!--where udate= #{udate,jdbcType=TIMESTAMP}-->
+        <!--order by ${id}-->
+
+    <!--</select>-->
+    <!--<select id="selectByExpert" resultMap="BaseResultMap" parameterType="java.lang.String">-->
+        <!--select-->
+        <!--*-->
+        <!--from pic-->
+        <!--where expert= #{expert,jdbcType=VARCHAR}-->
+        <!--order by ${id}-->
+
+    <!--</select>-->
+    <!--<select id="selectBySymptom" resultMap="BaseResultMap" parameterType="java.lang.String">-->
+        <!--select-->
+        <!--*-->
+        <!--from pic-->
+        <!--where symptom= #{symptom,jdbcType=VARCHAR}-->
+        <!--order by ${id}-->
+
+    <!--</select>-->
+    <!--<select id="selectByUploader" resultMap="BaseResultMap" parameterType="java.lang.String">-->
+        <!--select-->
+        <!--*-->
+        <!--from pic-->
+        <!--where uploader= #{uploader,jdbcType=VARCHAR}-->
+        <!--order by ${id}-->
+
+    <!--</select>-->
+    <!--<select id="selectByFilename" resultMap="BaseResultMap" parameterType="java.lang.String">-->
+        <!--select-->
+        <!--*-->
+        <!--from pic-->
+        <!--where filename= #{filename,jdbcType=VARCHAR}-->
+        <!--order by ${id}-->
+
+    <!--</select>-->
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from pic
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from pic
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.deep.domain.model.PicExample" >
+    delete from pic
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.deep.domain.model.Pic" useGeneratedKeys="true" keyProperty="returnId">
+    insert into pic (id, address, brand, 
+      udate, expert, sex, 
+      solution, symptom, uploader, 
+      vaccine, filename)
+    values (#{id,jdbcType=BIGINT}, #{address,jdbcType=VARCHAR}, #{brand,jdbcType=VARCHAR}, 
+      #{udate,jdbcType=TIMESTAMP}, #{expert,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, 
+      #{solution,jdbcType=VARCHAR}, #{symptom,jdbcType=VARCHAR}, #{uploader,jdbcType=VARCHAR}, 
+      #{vaccine,jdbcType=VARCHAR}, #{filename,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.deep.domain.model.Pic" >
+    insert into pic
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="brand != null" >
+        brand,
+      </if>
+      <if test="udate != null" >
+        udate,
+      </if>
+      <if test="expert != null" >
+        expert,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="solution != null" >
+        solution,
+      </if>
+      <if test="symptom != null" >
+        symptom,
+      </if>
+      <if test="uploader != null" >
+        uploader,
+      </if>
+      <if test="vaccine != null" >
+        vaccine,
+      </if>
+      <if test="filename != null" >
+        filename,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null" >
+        #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="udate != null" >
+        #{udate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expert != null" >
+        #{expert,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="solution != null" >
+        #{solution,jdbcType=VARCHAR},
+      </if>
+      <if test="symptom != null" >
+        #{symptom,jdbcType=VARCHAR},
+      </if>
+      <if test="uploader != null" >
+        #{uploader,jdbcType=VARCHAR},
+      </if>
+      <if test="vaccine != null" >
+        #{vaccine,jdbcType=VARCHAR},
+      </if>
+      <if test="filename != null" >
+        #{filename,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.deep.domain.model.PicExample" resultType="java.lang.Integer" >
+    select count(*) from pic
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update pic
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.address != null" >
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.brand != null" >
+        brand = #{record.brand,jdbcType=VARCHAR},
+      </if>
+      <if test="record.udate != null" >
+        udate = #{record.udate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.expert != null" >
+        expert = #{record.expert,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sex != null" >
+        sex = #{record.sex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.solution != null" >
+        solution = #{record.solution,jdbcType=VARCHAR},
+      </if>
+      <if test="record.symptom != null" >
+        symptom = #{record.symptom,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uploader != null" >
+        uploader = #{record.uploader,jdbcType=VARCHAR},
+      </if>
+      <if test="record.vaccine != null" >
+        vaccine = #{record.vaccine,jdbcType=VARCHAR},
+      </if>
+      <if test="record.filename != null" >
+        filename = #{record.filename,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update pic
+    set id = #{record.id,jdbcType=BIGINT},
+      address = #{record.address,jdbcType=VARCHAR},
+      brand = #{record.brand,jdbcType=VARCHAR},
+      udate = #{record.udate,jdbcType=TIMESTAMP},
+      expert = #{record.expert,jdbcType=VARCHAR},
+      sex = #{record.sex,jdbcType=VARCHAR},
+      solution = #{record.solution,jdbcType=VARCHAR},
+      symptom = #{record.symptom,jdbcType=VARCHAR},
+      uploader = #{record.uploader,jdbcType=VARCHAR},
+      vaccine = #{record.vaccine,jdbcType=VARCHAR},
+      filename = #{record.filename,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.deep.domain.model.Pic" >
+    update pic
+    <set >
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null" >
+        brand = #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="udate != null" >
+        udate = #{udate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expert != null" >
+        expert = #{expert,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="solution != null" >
+        solution = #{solution,jdbcType=VARCHAR},
+      </if>
+      <if test="symptom != null" >
+        symptom = #{symptom,jdbcType=VARCHAR},
+      </if>
+      <if test="uploader != null" >
+        uploader = #{uploader,jdbcType=VARCHAR},
+      </if>
+      <if test="vaccine != null" >
+        vaccine = #{vaccine,jdbcType=VARCHAR},
+      </if>
+      <if test="filename != null" >
+        filename = #{filename,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.deep.domain.model.Pic" >
+    update pic
+    set address = #{address,jdbcType=VARCHAR},
+      brand = #{brand,jdbcType=VARCHAR},
+      udate = #{udate,jdbcType=TIMESTAMP},
+      expert = #{expert,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      solution = #{solution,jdbcType=VARCHAR},
+      symptom = #{symptom,jdbcType=VARCHAR},
+      uploader = #{uploader,jdbcType=VARCHAR},
+      vaccine = #{vaccine,jdbcType=VARCHAR},
+      filename = #{filename,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select resultMap="BaseResultMap" parameterType="com.deep.domain.model.PicExample" id="selectByExampleWithRowbounds" >
+    select
+      <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from pic
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>
