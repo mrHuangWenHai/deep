@@ -83,9 +83,8 @@ public class RepellentPlanResource {
                     //System.out.println("saving file");
 
                     String fileName = "";
-                    String filePath = request.getSession().getServletContext().getContextPath() + "../EartagDocument/repellentEartag/";
-                    String fileAddress = "";
-                    fileAddress = UploadUtil.uploadFile(repellentEartagFile.getBytes(), filePath, fileName, fileAddress);
+                    String filePath = "../EartagDocument/repellentEartag/";
+                    fileName = UploadUtil.uploadFile(repellentEartagFile.getBytes(), filePath, fileName);
 
                     //数据插入数据库
                     //System.out.println("mysql执行前");
@@ -97,7 +96,7 @@ public class RepellentPlanResource {
                     //插入时间
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
 
-                    repellentPlanModel.setRepellentEartag(fileAddress);
+                    repellentPlanModel.setRepellentEartag(fileName);
                     repellentPlanModel.setIsPass("0");
                     repellentPlanModel.setIsPass1("0");
                     repellentPlanModel.setGmtCreate(simpleDateFormat.format(new Timestamp(System.currentTimeMillis())));

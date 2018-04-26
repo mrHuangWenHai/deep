@@ -10,10 +10,12 @@ public class DisinfectRequest {
     private Long id;      //id
     private String disinfectEartag;
     private BigInteger factoryNum;     //工厂号
+    private String factoryName;
     private String disinfectTime;     //消毒时间
     private String disinfectName;     //消毒药品名称
     private String dose;    //用药剂量
     private String disinfectWay;     //消毒方法
+    private int operatorId;
     private String operatorName;      //操作员(创建表操作人员)
     private String professor;       //技术审核(审核表人员 专家) 可空
     private String supervisor;       //监督员(监督操作员人员) 可空
@@ -207,16 +209,34 @@ public class DisinfectRequest {
         this.size = size;
     }
 
+    public String getFactoryName() {
+        return factoryName;
+    }
+
+    public void setFactoryName(String factoryName) {
+        this.factoryName = factoryName;
+    }
+
+    public int getOperatorId() {
+        return operatorId;
+    }
+
+    public void setOperatorId(int operatorId) {
+        this.operatorId = operatorId;
+    }
+
     @Override
     public String toString() {
         return "DisinfectRequest{" +
             "id=" + id +
             ", disinfectEartag='" + disinfectEartag + '\'' +
             ", factoryNum=" + factoryNum +
+            ", factoryName='" + factoryName + '\'' +
             ", disinfectTime='" + disinfectTime + '\'' +
             ", disinfectName='" + disinfectName + '\'' +
             ", dose='" + dose + '\'' +
             ", disinfectWay='" + disinfectWay + '\'' +
+            ", operatorId=" + operatorId +
             ", operatorName='" + operatorName + '\'' +
             ", professor='" + professor + '\'' +
             ", supervisor='" + supervisor + '\'' +

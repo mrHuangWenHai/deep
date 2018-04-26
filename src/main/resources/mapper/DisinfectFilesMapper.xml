@@ -7,12 +7,14 @@
     <resultMap id="DisinfectFiles" type="com.deep.domain.model.DisinfectFilesModel">
         <id property="id" column="id"/>
         <result property="factoryNum" column="factory_num"/>
+        <result property="factoryName" column="factory_name"/>
         <result property="place" column="place"/>
         <result property="disinfectEartag" column="disinfect_eartag"/>
         <result property="disinfectTime" column="disinfect_time"/>
         <result property="disinfectName" column="disinfect_name"/>
         <result property="dose" column="dose"/>
         <result property="disinfectWay" column="disinfect_m"/>
+        <result property="operatorId" column="operator_id" />
         <result property="operatorName" column="operator_name"/>
         <result property="professor" column="professor"/>
         <result property="supervisor" column="supervisor"/>
@@ -32,12 +34,15 @@
             SELECT LAST_INSERT_ID()
         </selectKey>
         INSERT INTO disinfect_files(
+        factory_num,
+        factory_name,
         disinfect_eartag,
         place,
         disinfect_time,
         disinfect_name,
         dose,
         disinfect_m,
+        operator_id,
         operator_name,
         remark,
         ispass_check,
@@ -46,16 +51,19 @@
         gmt_modified
         )
         VALUES(
+        #{disinfectFilesModel.factoryNum},
+        #{disinfectFilesModel.factoryName},
         #{disinfectFilesModel.disinfectEartag},
         #{disinfectFilesModel.place},
         #{disinfectFilesModel.disinfectTime},
         #{disinfectFilesModel.disinfectName},
         #{disinfectFilesModel.dose},
         #{disinfectFilesModel.disinfectWay},
+        #{disinfectFilesModel.operatorId},
         #{disinfectFilesModel.operatorName},
         #{disinfectFilesModel.remark},
-        #{disinfectFilesModel.ispassCheck},
-        #{disinfectFilesModel.ispassSup},
+        2,
+        2,
         now(),
         now()
         )
@@ -68,12 +76,15 @@
         disinfect_files
         WHERE
         1=1
-
         <if test="disinfectFilesModel.id != null and disinfectFilesModel.id != ''">
             AND id = #{disinfectFilesModel.id}
         </if>
         <if test="disinfectFilesModel.factoryNum != null and disinfectFilesModel.factoryNum != '' ">
             AND factory_num = #{disinfectFilesModel.factoryNum}
+        </if>
+
+        <if test="disinfectFilesModel.factoryName != null and disinfectFilesModel.factoryName != ''">
+            AND factory_name = #{disinfectFilesModel.factoryName}
         </if>
 
         <if test="disinfectFilesModel.disinfectTimeStart != null and disinfectFilesModel.disinfectTimeStart != '' and
@@ -187,18 +198,18 @@
         SET  professor = #{disinfectFilesModel.professor},
         ispass_check = #{disinfectFilesModel.ispassCheck},
         upass_reason = #{disinfectFilesModel.unpassReason},
-        gmt_professor = #{disinfectFilesModel.gmtProfessor}
+        gmt_professor = now()
         WHERE
-        id = #{disinfectFilesModel.id}
+        id = #{disinfectFilesModel.id} and ispass_check = 0
     </update>
 
     <update id="updateDisinfectFilesModelBySupervisor">
         UPDATE disinfect_files
         SET  supervisor = #{disinfectFilesModel.supervisor},
         ispass_sup = #{disinfectFilesModel.ispassSup},
-        gmt_supervised = #{disinfectFilesModel.gmtSupervise}
+        gmt_supervised = now()
         WHERE
-        id = #{disinfectFilesModel.id}
+        id = #{disinfectFilesModel.id} and ispass_sup = 0
     </update>
 
     <update id="updateDisinfectFilesModelByOperatorName">
@@ -220,12 +231,14 @@
                 disinfect_m = #{disinfectFilesModel.disinfectWay},
             </if>
             <if test="disinfectFilesModel.remark != null and disinfectFilesModel.remark != ''">
-                remark = #{disinfectFilesModel.remark}
+                remark = #{disinfectFilesModel.remark},
             </if>
-
+            <if test="disinfectFilesModel.disinfectEartag != null and disinfectFilesModel.disinfectEartag != ''">
+                disinfect_eartag = #{disinfectFilesModel.disinfectEartag}
+            </if>
         </set>
         WHERE
-        id = #{disinfectFilesModel.id}
+        id = #{disinfectFilesModel.id} and ispass_check = 2 and ispass_sup = 2
     </update>
 
     <delete id="deleteDisinfectFilesModelByid" >

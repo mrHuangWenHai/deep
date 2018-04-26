@@ -44,7 +44,7 @@ public class Message implements Serializable {
 
     private Integer messageId;
 
-    private Integer pageNumb = 1 ;
+    private Integer pageNumb = 0;
 
     private Integer limit = 10;
 

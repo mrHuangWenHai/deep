@@ -16,25 +16,20 @@ public class MessageService {
     @Resource
     private MessageMapper messageMapper;
 
-    public int insertMessage(Message message)
-    {
+    public int insertMessage(Message message) {
         int flag = messageMapper.insert(message);
         return flag;
     }
 
 
-    public List<Message> findMessageSelective(MessageExample messageExample)
-    {
-
-        List<Message>find=this.messageMapper.selectByExample(messageExample);
-
+    public List<Message> findMessageSelective(MessageExample messageExample) {
+        List<Message> find = this.messageMapper.selectByExample(messageExample);
         return find;
-
     }
 
-    public List<Message> findMessageSelectiveWithRowbounds(MessageExample messageExample,int pageNumb,int limit)
-    {
-        int offset=(pageNumb-1)*limit;
+    public List<Message> findMessageSelectiveWithRowbounds(MessageExample messageExample,int pageNumb,int limit) {
+
+        int offset = pageNumb * limit;
 
         RowBounds rowBounds=new RowBounds(offset,limit);
 

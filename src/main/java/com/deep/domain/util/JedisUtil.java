@@ -40,12 +40,10 @@ public class JedisUtil {
 
         if (valuei == null || valuei.equals("")) {
           jedis.set(key,"0");
-          valuei = "0";
         }
 
         if (valuej == null || valuej.equals("")) {
           jedis.set("PressureTips",pressureTips);
-          valuej = pressureTips;
         }
 
         int i = Integer.parseInt(jedis.get(key));
@@ -73,10 +71,10 @@ public class JedisUtil {
 
             jedis.set(key,"1");
         } else {
-            //System.out.println("断点1");
+
             Integer v = Integer.parseInt(temValue);
             v += 1;
-            //System.out.println("before :"+"redis key:"+key+" redis value:"+jedis.get(key));
+
             temValue = v.toString();
             jedis.set(key,temValue);
         }

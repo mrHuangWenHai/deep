@@ -169,7 +169,7 @@ public class GenealogicalFilesResource {
              return Responses.errorResponse("param is invaild");
          }
          logger.info("invoke find/{} {}",factoryNum, page, size);
-         RowBounds rowBounds = new RowBounds(page, size);
+         RowBounds rowBounds = new RowBounds(page * size, size);
          int total = genealogicalFilesService.allGenealogicalFilesCounts();
          List<GenealogicalFilesModel> genealogicalFilesModels = genealogicalFilesService.getGenealogicalFilesModelByFactoryNum(factoryNum, rowBounds);
          Response response = Responses.successResponse();

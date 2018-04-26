@@ -31,19 +31,19 @@ public class ImmunePlanService {
         return this.immunePlanMapper.getImmunePlanModelByfactoryNumAndcrowdNumAndimmuneTime(factoryNum,crowdNum,immuneTime);
     }
 
-    public List<ImmunePlanModel> getImmunePlanModelByProfessor(Integer isPass, RowBounds bounds){
-        return this.immunePlanMapper.getImmunePlanModelByProfessor(isPass,bounds);
+    public List<ImmunePlanModel> getImmunePlanModelByProfessor(String ispassCheck, RowBounds bounds) {
+        return this.immunePlanMapper.getImmunePlanModelByProfessor(ispassCheck, bounds);
     }
 
-    public List<ImmunePlanModel> getImmunePlanModelBySupervisor(Integer isPass1, RowBounds bounds){
-        return this.immunePlanMapper.getImmunePlanModelBySupervisor(isPass1,bounds);
+    public List<ImmunePlanModel> getImmunePlanModelBySupervisor(String ispassSup, RowBounds bounds) {
+        return this.immunePlanMapper.getImmunePlanModelBySupervisor(ispassSup,bounds);
     }
 
-    public ImmunePlanModel getImmunePlanModelByid(Long id){
+    public ImmunePlanModel getImmunePlanModelByid(Long id) {
         return this.immunePlanMapper.getImmunePlanModelByid(id);
     }
 
-    public int updateImmunePlanModelByProfessor(ImmunePlanModel immunePlanModel){
+    public int updateImmunePlanModelByProfessor(ImmunePlanModel immunePlanModel) {
         return this.immunePlanMapper.updateImmunePlanModelByProfessor(immunePlanModel);
     }
 

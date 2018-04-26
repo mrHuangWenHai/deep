@@ -15,11 +15,10 @@ public class UploadUtil {
      * @param file 文件(二进制)
      * @param filePath 文件路径
      * @param fileName 文件名
-     * @param fileAddress 文件路径+文件名
      * @return 上传结果
      * @throws Exception 读取文件异常
      */
-    public static String uploadFile(byte[] file, String filePath, String fileName,String fileAddress) throws Exception {
+    public static String uploadFile(byte[] file, String filePath, String fileName) throws Exception {
         File targetFile = new File(filePath);
         if (!targetFile.exists()) {
             targetFile.mkdirs();
@@ -28,14 +27,13 @@ public class UploadUtil {
         Calendar calendar = Calendar.getInstance();
         fileName = dateFormat.format(calendar.getTime()) + fileName;
         FileOutputStream out = new FileOutputStream(filePath + fileName);
-        fileAddress = filePath + fileName;
 //        System.out.println("filePath:"+filePath);
 //        System.out.println("fileName:"+fileName);
 //        System.out.println("fileAddress:"+fileAddress);
         out.write(file);
         out.flush();
         out.close();
-        return fileAddress;
+        return fileName;
     }
 
 

@@ -30,8 +30,8 @@ public class MessageResource {
     private final Logger logger = LoggerFactory.getLogger(ExampleResource.class);
 
     @RequestMapping(value = "/messageBoard/insert",method = RequestMethod.POST)
-    public @ResponseBody
-    Response addMessage(@RequestBody @Valid Message message) {
+    @ResponseBody
+    public Response addMessage(@RequestBody @Valid Message message) {
         logger.info("invoke/messageBoard/insert {}",message);
 
         message.setInserttime(new Date());
@@ -63,25 +63,27 @@ public class MessageResource {
     }
 
     @RequestMapping(value = "/messageBoard/searchByMessage",method = RequestMethod.POST)
-    public @ResponseBody
-    Response searchByMessage( @RequestBody  Message message)
-    {
+    @ResponseBody
+    public Response searchByMessage( @RequestBody  Message message) {
+
         logger.info("invoke /messageBoard/searchByMessage {}",message.getMessage());
-        if(message.getMessage().isEmpty())
-        {
+        if(message.getMessage().isEmpty()) {
             Response response = Responses.errorResponse("查询条件不能为空！");
             return response;
         }
+
         MessageExample messageExample = new MessageExample();
         MessageExample.Criteria criteria = messageExample.createCriteria();
-        if(message.getMessage()!=null && !message.getMessage().isEmpty())
+        if(message.getMessage() != null && !message.getMessage().isEmpty())
             criteria.andMessageLike("%" + message.getMessage()+"%");
-        if(message.getAttitude()!=null && !message.getAttitude().isEmpty())
+        if(message.getAttitude() != null && !message.getAttitude().isEmpty())
             criteria.andAttitudeLike("%"+message.getAttitude()+"%");
-        if(message.getIntention()!=null && !message.getIntention().isEmpty())
+        if(message.getIntention() != null && !message.getIntention().isEmpty())
             criteria.andIntentionLike("%"+message.getIntention()+"%");
-        if(message.getsTime()!=null && message.geteTime()!=null)
+
+        if(message.getsTime() != null && message.geteTime() != null)
            criteria.andInserttimeBetween(message.getsTime(),message.geteTime());
+
         List<Message>select = messageService.findMessageSelectiveWithRowbounds(messageExample,message.getPageNumb(),message.getLimit());
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
@@ -91,15 +93,10 @@ public class MessageResource {
     }
 
     @RequestMapping(value = "/messageBoard/searchByUsername",method = RequestMethod.POST)
-    public @ResponseBody
-    Response searchByUsername(
-                                @RequestBody  Message message
-
-    ) {
+    @ResponseBody
+    public Response searchByUsername(@RequestBody  Message message) {
         logger.info("invoke /messageBoard/searchByUsername {}",message.getUsername());
-
-        if(message.getUsername().isEmpty())
-        {
+        if(message.getUsername().isEmpty()) {
             Response response = Responses.errorResponse("查询条件不能为空！");
             return response;
         }
@@ -136,10 +133,10 @@ public class MessageResource {
         response.setData(data);
         return response;
     }
+
     @RequestMapping(value = "/messageBoard/searchByAttitude",method = RequestMethod.POST)
     public @ResponseBody
-    Response searchByAttitude(@RequestBody  Message message)
-    {
+    Response searchByAttitude(@RequestBody  Message message) {
         logger.info("invoke /messageBoard/searchByAttitude {}",message.getAttitude());
         if(message.getAttitude().isEmpty())
         {
