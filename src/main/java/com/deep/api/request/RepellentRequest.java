@@ -11,19 +11,21 @@ public class RepellentRequest {
 
     private Long id;
     private BigInteger factoryNum;
+    private String factoryName;
     private String crowdNum;
     private String repellentEartag;
     private String repellentTime;
     private String repellentName;
     private String repellentWay;
     private String repellentQuality;
-    private String operator;
+    private String operatorId;
     private String professor;
+    private String operatorName;
     private String supervisor;
     private String remark;
-    private String isPass;
+    private String ispassCheck;
     private String unpassReason;
-    private String isPass1;
+    private String ispassSup;
     private String gmtCreate;
     private String gmtModified;
     private String gmtProfessor;
@@ -99,22 +101,6 @@ public class RepellentRequest {
         this.repellentQuality = repellentQuality;
     }
 
-    public String getOperator() {
-        return operator;
-    }
-
-    public void setOperator(String operator) {
-        this.operator = operator;
-    }
-
-    public String getProfessor() {
-        return professor;
-    }
-
-    public void setProfessor(String professor) {
-        this.professor = professor;
-    }
-
     public String getSupervisor() {
         return supervisor;
     }
@@ -131,28 +117,12 @@ public class RepellentRequest {
         this.remark = remark;
     }
 
-    public String getIsPass() {
-        return isPass;
-    }
-
-    public void setIsPass(String isPass) {
-        this.isPass = isPass;
-    }
-
     public String getUnpassReason() {
         return unpassReason;
     }
 
     public void setUnpassReason(String unpassReason) {
         this.unpassReason = unpassReason;
-    }
-
-    public String getIsPass1() {
-        return isPass1;
-    }
-
-    public void setIsPass1(String isPass1) {
-        this.isPass1 = isPass1;
     }
 
     public String getGmtCreate() {
@@ -217,5 +187,85 @@ public class RepellentRequest {
 
     public void setSize(int size) {
         this.size = size;
+    }
+
+    public String getFactoryName() {
+        return factoryName;
+    }
+
+    public void setFactoryName(String factoryName) {
+        this.factoryName = factoryName;
+    }
+
+    public String getOperatorName() {
+        return operatorName;
+    }
+
+    public void setOperatorName(String operatorName) {
+        this.operatorName = operatorName;
+    }
+
+    public String getIspassCheck() {
+        return ispassCheck;
+    }
+
+    public void setIspassCheck(String ispassCheck) {
+        this.ispassCheck = ispassCheck;
+    }
+
+    public String getIspassSup() {
+        return ispassSup;
+    }
+
+    public void setIspassSup(String ispassSup) {
+        this.ispassSup = ispassSup;
+    }
+
+    public String getOperatorId() {
+        return operatorId;
+    }
+
+    public void setOperatorId(String operatorId) {
+        this.operatorId = operatorId;
+    }
+
+    public String getProfessor() {
+        return professor;
+    }
+
+    public void setProfessor(String professor) {
+        this.professor = professor;
+    }
+
+    @Override
+    public String toString() {
+        return "RepellentRequest{" +
+            "id=" + id +
+            ", factoryNum=" + factoryNum +
+            ", factoryName='" + factoryName + '\'' +
+            ", crowdNum='" + crowdNum + '\'' +
+            ", repellentEartag='" + repellentEartag + '\'' +
+            ", repellentTime='" + repellentTime + '\'' +
+            ", repellentName='" + repellentName + '\'' +
+            ", repellentWay='" + repellentWay + '\'' +
+            ", repellentQuality='" + repellentQuality + '\'' +
+            ", operatorName='" + operatorName + '\'' +
+            ", operatorId='" + operatorId + '\'' +
+            ", professor='" + professor + '\'' +
+            ", operatorName='" + operatorName + '\'' +
+            ", supervisor='" + supervisor + '\'' +
+            ", remark='" + remark + '\'' +
+            ", ispassCheck='" + ispassCheck + '\'' +
+            ", unpassReason='" + unpassReason + '\'' +
+            ", ispassSup='" + ispassSup + '\'' +
+            ", gmtCreate='" + gmtCreate + '\'' +
+            ", gmtModified='" + gmtModified + '\'' +
+            ", gmtProfessor='" + gmtProfessor + '\'' +
+            ", gmtSupervise='" + gmtSupervise + '\'' +
+            ", repellentTimeStart='" + repellentTimeStart + '\'' +
+            ", repellentTimeEnd='" + repellentTimeEnd + '\'' +
+            ", page=" + page +
+            ", size=" + size +
+            '}';
     }
 }

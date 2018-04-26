@@ -12,7 +12,7 @@ import java.util.List;
 
 @Mapper
 public interface ImmunePlanMapper {
-    void setImmunePlanModel(@Param("immunePlanModel") ImmunePlanModel immunePlanModel);
+    int setImmunePlanModel(@Param("immunePlanModel") ImmunePlanModel immunePlanModel);
 
 
     List<ImmunePlanModel> getImmunePlanModel(@Param("immunePlanModel") ImmuneRequest immunePlanModel,

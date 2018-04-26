@@ -200,16 +200,17 @@
         upass_reason = #{disinfectFilesModel.unpassReason},
         gmt_professor = now()
         WHERE
-        id = #{disinfectFilesModel.id} and ispass_check = 0
+        id = #{disinfectFilesModel.id} and ispass_check = 2
     </update>
 
     <update id="updateDisinfectFilesModelBySupervisor">
         UPDATE disinfect_files
         SET  supervisor = #{disinfectFilesModel.supervisor},
         ispass_sup = #{disinfectFilesModel.ispassSup},
+        upass_reason = #{disinfectFilesModel.unpassReason},
         gmt_supervised = now()
         WHERE
-        id = #{disinfectFilesModel.id} and ispass_sup = 0
+        id = #{disinfectFilesModel.id} and ispass_sup = 2
     </update>
 
     <update id="updateDisinfectFilesModelByOperatorName">
@@ -230,7 +231,7 @@
             <if test="disinfectFilesModel.disinfectWay != null and disinfectFilesModel.disinfectWay != ''">
                 disinfect_m = #{disinfectFilesModel.disinfectWay},
             </if>
-            <if test="disinfectFilesModel.remark != null and disinfectFilesModel.remark != ''">
+            <if test="disinfectFilesModel.remark != null">
                 remark = #{disinfectFilesModel.remark},
             </if>
             <if test="disinfectFilesModel.disinfectEartag != null and disinfectFilesModel.disinfectEartag != ''">

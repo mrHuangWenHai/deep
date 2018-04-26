@@ -25,6 +25,7 @@ public class ExtendTableResource {
      * @param extendModel
      * @return
      */
+
     @Permit(authorities = "add_expansion_module")
     @PostMapping(value = "/add/")
     public Response createTable(@RequestBody ExtendModel extendModel) {

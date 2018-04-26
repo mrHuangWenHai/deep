@@ -16,8 +16,8 @@ public class ImmunePlanService {
     @Resource
     private ImmunePlanMapper immunePlanMapper;
 
-    public void setImmunePlanModel(ImmunePlanModel immunePlanModel){
-        this.immunePlanMapper.setImmunePlanModel(immunePlanModel);
+    public int setImmunePlanModel(ImmunePlanModel immunePlanModel){
+        return this.immunePlanMapper.setImmunePlanModel(immunePlanModel);
     }
 
 

@@ -3,60 +3,73 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--Mapper名称 对应infra中mapper类名-->
 <mapper namespace="com.deep.infra.persistence.sql.mapper.RepellentPlanMapper">
+
+
+    <resultMap id="RepellentPlan" type="com.deep.domain.model.RepellentPlanModel">
+        <id property="id" column="id"/>
+        <result property="factoryNum" column="factory_num"/>
+        <result property="factoryName" column="factory_name"/>
+        <result property="crowdNum" column="crowd_num"/>
+        <result property="repellentEartag" column="repellent_et"/>
+        <result property="repellentTime" column="repellent_t"/>
+        <result property="repellentName" column="repellent_n"/>
+        <result property="repellentWay" column="repellent_m"/>
+        <result property="dose" column="dose"/>
+        <result property="operatorId" column="operator_id"/>
+        <result property="operatorName" column="operator_name"/>
+        <result property="professor" column="professor"/>
+        <result property="supervisor" column="supervisor"/>
+        <result property="remark" column="remark"/>
+        <result property="ispassCheck" column="ispass_check"/>
+        <result property="unpassReason" column="unpass_reason"/>
+        <result property="ispassSup" column="ispass_sup"/>
+        <result property="gmtCreate" column="gmt_create"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="gmtProfessor" column="gmt_professor"/>
+        <result property="gmtSupervise" column="gmt_supervised"/>
+    </resultMap>
+
+
     <insert id="setRepellentPlanModel" parameterType="com.deep.domain.model.RepellentPlanModel">
         <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="repellentPlanModel.id">
             SELECT LAST_INSERT_ID()
         </selectKey>
         INSERT INTO repellent_plan(
         factory_num,
+        factory_name,
         crowd_num,
         repellent_et,
         repellent_t,
         repellent_n,
         repellent_m,
-        repellent_q,
-        operator,
+        dose,
+        operator_id,
+        operator_name,
         remark,
-        is_pass,
-        is_pass1,
-        gmt_create
+        ispass_check,
+        ispass_sup,
+        gmt_create,
+        gmt_modified
         )
         VALUES(
         #{repellentPlanModel.factoryNum},
+        #{repellentPlanModel.factoryName},
         #{repellentPlanModel.crowdNum},
         #{repellentPlanModel.repellentEartag},
         #{repellentPlanModel.repellentTime},
         #{repellentPlanModel.repellentName},
         #{repellentPlanModel.repellentWay},
-        #{repellentPlanModel.repellentQuality},
-        #{repellentPlanModel.operator},
+        #{repellentPlanModel.dose},
+        #{repellentPlanModel.operatorId},
+        #{repellentPlanModel.operatorName},
         #{repellentPlanModel.remark},
-        #{repellentPlanModel.isPass},
-        #{repellentPlanModel.isPass1},
-        #{repellentPlanModel.gmtCreate}
+        2,
+        2,
+        now(),
+        now()
         )
     </insert>
-    <resultMap id="RepellentPlan" type="com.deep.domain.model.RepellentPlanModel">
-        <id property="id" column="id"/>
-        <result property="factoryNum" column="factory_num"/>
-        <result property="crowdNum" column="crowd_num"/>
-        <result property="repellentEartag" column="repellent_et"/>
-        <result property="repellentTime" column="repellent_t"/>
-        <result property="repellentName" column="repellent_n"/>
-        <result property="repellentWay" column="repellent_m"/>
-        <result property="repellentQuality" column="repellent_q"/>
-        <result property="operator" column="operator"/>
-        <result property="professor" column="professor"/>
-        <result property="supervisor" column="supervisor"/>
-        <result property="remark" column="remark"/>
-        <result property="isPass" column="is_pass"/>
-        <result property="unpassReason" column="unpass_reason"/>
-        <result property="isPass1" column="is_pass1"/>
-        <result property="gmtCreate" column="gmt_create"/>
-        <result property="gmtModified" column="gmt_modified"/>
-        <result property="gmtProfessor" column="gmt_professor"/>
-        <result property="gmtSupervise" column="gmt_supervised"/>
-    </resultMap>
+
     <select id="getRepellentPlanModel" resultMap="RepellentPlan">
         SELECT
         *
@@ -64,6 +77,9 @@
         repellent_plan
         WHERE
         1=1
+        <if test="repellentPlanModel.id != null">
+            AND id = #{repellentPlanModel.id}
+        </if>
         <if test="repellentPlanModel.factoryNum != null and repellentPlanModel.factoryNum != '' ">
             AND factory_num = #{repellentPlanModel.factoryNum}
         </if>
@@ -85,8 +101,11 @@
             AND repellent_q = #{repellentPlanModel.repellentQuality}
         </if>
 
-        <if test="repellentPlanModel.operator != null and repellentPlanModel.operator != '' ">
-            AND operator = #{repellentPlanModel.operator}
+        <if test="repellentPlanModel.operatorName != null and repellentPlanModel.operatorName != '' ">
+            AND operator_name = #{repellentPlanModel.operatorName}
+        </if>
+        <if test="repellentPlanModel.operatorId != null and repellentPlanModel.professorId != 0">
+            AND operator_id = #{repellentPlanModel.professorId}
         </if>
         <if test="repellentPlanModel.professor != null and repellentPlanModel.professor != '' ">
             AND professor = #{repellentPlanModel.professor}
@@ -97,14 +116,14 @@
         <if test="repellentPlanModel.remark != null and repellentPlanModel.remark != '' ">
             AND remark = #{repellentPlanModel.remark}
         </if>
-        <if test="repellentPlanModel.isPass != null and repellentPlanModel.isPass != '' ">
-            AND is_pass = #{repellentPlanModel.isPass}
+        <if test="repellentPlanModel.ispassCheck != null and repellentPlanModel.ispassCheck != '' ">
+            AND ispass_check = #{repellentPlanModel.ispassCheck}
         </if>
         <if test="repellentPlanModel.unpassReason != null and repellentPlanModel.unpassReason != '' ">
             AND upass_reason = #{repellentPlanModel.unpassReason}
         </if>
-        <if test="repellentPlanModel.isPass1 != null and repellentPlanModel.isPass1 != '' ">
-            AND is_pass1 = #{repellentPlanModel.isPass1}
+        <if test="repellentPlanModel.ispassSup != null and repellentPlanModel.ispassSup != '' ">
+            AND ispass_sup = #{repellentPlanModel.ispassSup}
         </if>
     </select>
 
@@ -141,7 +160,7 @@
         FROM
         repellent_plan
         WHERE
-        is_pass = #{isPass}
+        ispass_check = #{ispassCheck}
     </select>
 
     <select id="getRepellentPlanModelBySupervisor" resultMap="RepellentPlan">
@@ -150,7 +169,7 @@
         FROM
         repellent_plan
         WHERE
-        is_pass1 = #{isPass1}
+        ispass_sup = #{ispassSup}
     </select>
 
 
@@ -158,20 +177,20 @@
     <update id="updateRepellentPlanModelByProfessor" parameterType="com.deep.domain.model.RepellentPlanModel">
         UPDATE repellent_plan
         SET  professor = #{repellentPlanModel.professor},
-        is_pass = #{repellentPlanModel.isPass},
+        ispass_check = #{repellentPlanModel.ispassCheck},
         upass_reason = #{repellentPlanModel.unpassReason},
-        gmt_professor = #{repellentPlanModel.gmtProfessor}
+        gmt_professor = now()
         WHERE
-        id = #{repellentPlanModel.id}
+        id = #{repellentPlanModel.id} and ispass_check = 2
     </update>
 
     <update id="updateRepellentPlanModelBySupervisor" parameterType="com.deep.domain.model.RepellentPlanModel">
         UPDATE repellent_plan
         SET  supervisor = #{repellentPlanModel.supervisor},
-        is_pass1 = #{repellentPlanModel.isPass1},
-        gmt_supervised = #{repellentPlanModel.gmtSupervise}
+        ispass_sup = #{repellentPlanModel.ispassSup},
+        gmt_supervised = now()
         WHERE
-        id = #{repellentPlanModel.id}
+        id = #{repellentPlanModel.id} and ispass_sup = 2
     </update>
 
     <update id="updateRepellentPlanModelByOperator" parameterType="com.deep.domain.model.RepellentPlanModel">
@@ -192,16 +211,15 @@
             <if test="repellentPlanModel.repellentWay != null and repellentPlanModel.repellentWay != ''">
                 repellent_m = #{repellentPlanModel.repellentWay},
             </if>
-            <if test="repellentPlanModel.repellentQuality != null and repellentPlanModel.repellentQuality != ''">
-                repellent_q = #{repellentPlanModel.repellentQuality},
+            <if test="repellentPlanModel.dose != null and repellentPlanModel.dose != ''">
+                dose = #{repellentPlanModel.dose},
             </if>
-            <if test="repellentPlanModel.remark != null and repellentPlanModel.remark != ''">
+            <if test="repellentPlanModel.remark != null">
                 remark = #{repellentPlanModel.remark}
             </if>
-
         </set>
         WHERE
-        id = #{repellentPlanModel.id}
+        id = #{repellentPlanModel.id} and ispass_check = 2 and ispass_sup = 2
     </update>
 
     <delete id="deleteRepellentPlanModelByid" parameterType="Long">

@@ -340,7 +340,6 @@ public class DisinfectFilesResource {
             response.setData(data);
             return response;
         }
-
         logger.info("invoke operatorUpdate {}", disinfectFilesModel);
 
         if (disinfectFilesModel.getId() == null) {
@@ -352,20 +351,27 @@ public class DisinfectFilesResource {
             String filePath = pathPre + disinfectFilesModel.getFactoryNum().toString() + "/disinfectEartag/";
             String fileName = disinfectEartagFile.getOriginalFilename();
             try {
-                UploadUtil.uploadFile(disinfectEartagFile.getBytes(),filePath,fileName);
+                fileName =  UploadUtil.uploadFile(disinfectEartagFile.getBytes(),filePath,fileName);
             } catch (Exception e) {
                 return Responses.errorResponse("update file error");
             }
 
-            filePath = disinfectFilesModel.getDisinfectEartag();
-            File file = new File(filePath);
-            System.out.println(filePath);
-            file.delete();
+            String oldPath = filePath + disinfectFilesModel.getDisinfectEartag();
             disinfectFilesModel.setDisinfectEartag(fileName);
+            int row = this.disinfectFilesService.updateDisinfectFilesModelByOperatorName(disinfectFilesModel);
+            if (row == 1) {
+                File file = new File(oldPath);
+                file.delete();
+            } else {
+                String newPath = filePath + fileName;
+                File file = new File(newPath);
+                file.delete();
+            }
+            return JudgeUtil.JudgeUpdate(row);
+        } else {
+            int row = this.disinfectFilesService.updateDisinfectFilesModelByOperatorName(disinfectFilesModel);
+            return JudgeUtil.JudgeUpdate(row);
         }
-
-        int row = this.disinfectFilesService.updateDisinfectFilesModelByOperatorName(disinfectFilesModel);
-        return JudgeUtil.JudgeUpdate(row);
     }
 
     /**

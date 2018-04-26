@@ -17,6 +17,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import java.io.File;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -72,7 +74,7 @@ public class ImmunePlanResource {
             return response;
         }
 
-        logger.info("invoke saveShow {}",immuneEartagFile,immunePlanModel);
+        logger.info("invoke saveShow {}",immunePlanModel);
 
             try {
                 String fileName = immuneEartagFile.getOriginalFilename();
@@ -159,7 +161,6 @@ public class ImmunePlanResource {
                 return Responses.errorResponse("Exception");
             }
     }
-
 
     /**
      * 返回查询结果
@@ -313,11 +314,49 @@ public class ImmunePlanResource {
      */
 
 
-    @RequestMapping(value = "update",method = RequestMethod.PATCH)
-    public Response operatorUpdate(@RequestBody ImmunePlanModel immunePlanModel) {
+    @RequestMapping(value = "update",method = RequestMethod.POST)
+    public Response operatorUpdate(@Validated ImmunePlanModel immunePlanModel,
+                                   BindingResult bindingResult,
+                                   @RequestParam(value = "immuneEartagFile", required = false) MultipartFile immuneEartagFile) {
           logger.info("invoke operatorUpdate {}", immunePlanModel);
-          int row = this.immunePlanService.updateImmunePlanModelByOperator(immunePlanModel);
-          return JudgeUtil.JudgeUpdate(row);
+          if (bindingResult.hasErrors()) {
+             Response response = Responses.successResponse();
+             Map<String, Object> data = new HashMap<String, Object>();
+             data.put("error",bindingResult.getAllErrors());
+             response.setData(data);
+             return response;
+           }
+      if (immunePlanModel.getId() == null) {
+        return Responses.errorResponse("Operate wrong");
+      }
+
+      if (immuneEartagFile != null) {
+
+        String filePath = pathPre + immunePlanModel.getFactoryNum().toString() + "/disinfectEartag/";
+        String fileName = immuneEartagFile.getOriginalFilename();
+        try {
+          fileName = UploadUtil.uploadFile(immuneEartagFile.getBytes(),filePath,fileName);
+        } catch (Exception e) {
+          return Responses.errorResponse("update file error");
+        }
+
+        String oldPath = filePath + immunePlanModel.getImmuneEartag();
+        immunePlanModel.setImmuneEartag(fileName);
+        int row = this.immunePlanService.updateImmunePlanModelByOperator(immunePlanModel);
+        if (row == 1) {
+          File file = new File(oldPath);
+          file.delete();
+        } else {
+          String newPath = filePath + fileName;
+          File file = new File(newPath);
+          file.delete();
+        }
+        return JudgeUtil.JudgeUpdate(row);
+      } else {
+        int row = this.immunePlanService.updateImmunePlanModelByOperator(immunePlanModel);
+        return JudgeUtil.JudgeUpdate(row);
+      }
+
     }
 
     /**
@@ -334,7 +373,6 @@ public class ImmunePlanResource {
         if ("0".equals(id.toString())) {
             return Responses.errorResponse("Wrong id");
         }
-
         int row = immunePlanService.deleteImmunePlanModelByid(id);
         return JudgeUtil.JudgeDelete(row);
     }

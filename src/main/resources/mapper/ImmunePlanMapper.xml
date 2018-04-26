@@ -218,15 +218,15 @@
                 immune_k = #{immunePlanModel.immuneKind},
             </if>
             <if test="immunePlanModel.immuneWay != null and immunePlanModel.immuneWay != ''">
-                immune_w = #{immunePlanModel.immuneWay},
+                immune_m = #{immunePlanModel.immuneWay},
             </if>
-            <if test="immunePlanModel.immuneQuality != null and immunePlanModel.immuneQuality != ''">
+            <if test="immunePlanModel.dose != null and immunePlanModel.dose != ''">
                 dose = #{immunePlanModel.dose},
             </if>
             <if test="immunePlanModel.immuneDuring != null and immunePlanModel.immuneDuring != ''">
                 immune_d = #{immunePlanModel.immuneDuring},
             </if>
-            <if test="immunePlanModel.remark != null and immunePlanModel.remark != ''">
+            <if test="immunePlanModel.remark != null">
                 remark = #{immunePlanModel.remark}
             </if>
         </set>
