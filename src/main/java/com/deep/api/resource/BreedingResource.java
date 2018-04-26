@@ -35,19 +35,16 @@ public class BreedingResource {
 
     private final Logger logger = LoggerFactory.getLogger(AgentResource.class);
 
-//    按主键删除的接口：/breedingInsert
-//    按主键删除的方法名：addPlan()
-//    接收参数：整个表单信息（所有参数必填）
-//    参数类型为：Long factoryNum;String building;String mEtI;String mEtB;String fEtI;String fEtB;Date breedingT; Date gestationT;Date prenatalIT;Date cubT;Integer quantity;String operator;String remark；
-
     /**
      * 添加一条记录信息
      * @param planModel
      * @param bindingResult
+     * 接收参数：整个表单信息（所有参数必填）
+     * 参数类型为：Long factoryNum;String building;String mEtI;String mEtB;String fEtI;String fEtB;Date breedingT; Date gestationT;Date prenatalIT;Date cubT;Integer quantity;String operator;String remark；
      * @return
      * @throws ParseException
      */
-    @PostMapping(value = "/add")
+    @PostMapping(value = "/insert")
     public Response addPlan(@RequestBody @Valid BreedingPlanModel planModel, BindingResult bindingResult) throws ParseException {
         logger.info("invoke addPlan {}, url = /breeding/", planModel);
         if (bindingResult.hasErrors()) {
@@ -108,9 +105,6 @@ public class BreedingResource {
         }
     }
 
-//    按主键删除的接口：/breedingDeleteById
-//    按主键删除的方法名：dropPlan()
-//    接收参数：整型id，根据主键号删除
     /**
      * 按照主键删除一条记录
      * @return
@@ -123,31 +117,27 @@ public class BreedingResource {
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
         } else {
-            BreedingPlan delete = new BreedingPlan();
             int deleteID = breedingPlanService.dropPlan(uid);
             if (deleteID <= 0) {
                 return Responses.errorResponse("删除失败");
             }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("breeding_plan",delete);
+            data.put("breeding_plan",deleteID);
             response.setData(data);
             return response;
         }
     }
 
-//    操作员使用按主键修改的接口：/breedingUpdateByOperator
-//    操作员使用按主键修改的方法名：changePlanByOperator()
-//    操作员使用接收参数：整个表单信息（整型id必填，各参数选填）
-
     /**
      * 操作员按照主键进行审核
      * @param planModel
      * @param bindingResult
+     * 操作员使用接收参数：整个表单信息（整型id必填，各参数选填）
      * @return
      * @throws ParseException
      */
-    @PostMapping(value = "/updateByOperator")
+    @PostMapping(value = "/operator")
     public Response changePlanByOperator(@RequestBody @Valid BreedingPlanModel planModel, BindingResult bindingResult) throws ParseException {
         logger.info("invoke changePlanByOperator {}, url is breeding/breedingUpdateByOperator/show", planModel);
         if (bindingResult.hasErrors()) {
@@ -237,7 +227,6 @@ public class BreedingResource {
                 return Responses.errorResponse("修改失败");
             }
 
-//            BreedingPlan selectById = breedingPlanService.findPlanById(operator.getId());
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("breeding_plan", updateID);
@@ -246,16 +235,15 @@ public class BreedingResource {
         }
     }
 
-//    专家使用按主键修改的接口：/breedingUpdateByProfessor
-//    专家使用按主键修改的方法名：changePlanByProfessor()
-//    专家使用接收参数：整个表单信息（整型id必填，各参数选填）
+
     /**
      * 专家按照主键进行审核
+     * 专家使用接收参数：整个表单信息（整型id必填，各参数选填）
      * @param professor
      * @param bindingResult
      * @return
      */
-    @PostMapping(value = "/updateByProfessor")
+    @PostMapping(value = "/professor")
     public Response changePlanByProfessor(@RequestBody @Valid BreedingPlan professor, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案(专家页面)修改失败");
@@ -264,27 +252,26 @@ public class BreedingResource {
             if (professor.getIsPass() == 1){
                 professor.setUpassReason("操作员已经修改档案并通过技术审核");
             }
-            breedingPlanService.changePlanSelective(professor);
-
-            BreedingPlan selectById = breedingPlanService.findPlanById(professor.getId());
+            int updateID = breedingPlanService.changePlanSelective(professor);
+            if (updateID <= 0) {
+                return Responses.errorResponse("错误");
+            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("breeding_plan",selectById);
+            data.put("breeding_plan",updateID);
             response.setData(data);
             return response;
         }
     }
 
-//    监督者使用按主键修改的接口：/breedingUpdateBySupervisor
-//    监督者使用按主键修改的方法名：changePlanBySupervisor()
-//    监督者使用接收参数：整个表单信息（整型id必填，各参数选填）
     /**
      * 监督员按照主键审核
      * @param supervisor
      * @param bindingResult
+     * 监督者使用接收参数：整个表单信息（整型id必填，各参数选填）
      * @return
      */
-    @PostMapping(value = "/updateBySupervisor")
+    @PostMapping(value = "/supervisor")
     public Response changePlanBySupervisor(@RequestBody @Valid BreedingPlan supervisor, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案(监督页面)修改失败");
@@ -294,7 +281,6 @@ public class BreedingResource {
             if (updateID <= 0) {
                 return Responses.errorResponse("审核失败");
             }
-//            BreedingPlan selectById = breedingPlanService.findPlanById(supervisor.getId());
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("breeding_plan",updateID);
@@ -303,11 +289,9 @@ public class BreedingResource {
         }
     }
 
-//    按主键查询的接口：/breedingSelectById
-//    按主键查询的方法名：findPlanById()
-//    接收参数：整型的主键号（保留接口查询，前端不调用此接口）
     /**
      * 按照主键查询
+     * 接收参数：整型的主键号（保留接口查询，前端不调用此接口）
      * @return
      */
     @GetMapping(value = "/{id}")
@@ -331,17 +315,15 @@ public class BreedingResource {
         }
     }
 
-//    按条件查询接口：/breedingSelective
-//    按条件查询方法名：findPlanSelective()
-//    接收的参数：前端的各参数，以及八个("s_breedingT1")("s_breedingT2")("s_gestationT1")("s_gestationT2")("s_prenatalIT1")("s_prenatalIT2")("s_cubT1")("s_cubT2")时间字符串（所有参数可以选填）
     /**
      * 按照条件查询
      * @param planModel
      * @param bindingResult
+     * 接收的参数：前端的各参数，以及八个("s_breedingT1")("s_breedingT2")("s_gestationT1")("s_gestationT2")("s_prenatalIT1")("s_prenatalIT2")("s_cubT1")("s_cubT2")时间字符串（所有参数可以选填）
      * @return
      * @throws ParseException
      */
-    @PostMapping(value = "/breedingSelective/show")
+    @PostMapping(value = "/select")
     public Response findPlanSelective(@RequestBody @Valid BreedingPlanModel planModel, BindingResult bindingResult) throws ParseException {
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案(根据条件)查询失败");
@@ -492,10 +474,15 @@ public class BreedingResource {
         }
     }
 
-//    供技术审核查询信息:/breedingSelectByProfessor
-//    供技术审核查询方法名：findPlanSelectByProfessor()
-//    接收的参数：前端的各参数，（所有参数可以选填）
-    @PostMapping(value = "/breedingSelectByProfessor/show")
+    /**
+     * 供技术审核查询信息:/breedingSelectByProfessor
+     * 供技术审核查询方法名：findPlanSelectByProfessor()
+     * 接收的参数：前端的各参数，（所有参数可以选填）
+     * @param planModel
+     * @param bindingResult
+     * @return
+     */
+    @PostMapping(value = "/professor/select")
     public Response findPlanSelectByProfessor(@RequestBody @Valid BreedingPlanModel planModel, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案(监督页面)修改失败");
@@ -580,12 +567,16 @@ public class BreedingResource {
         }
     }
 
-//    供监督者查询信息
-//    供监督者查询方法名：findPlanSelectBySupervisor()
-//    接收的参数：前端的各参数，（所有参数可以选填）
-    @PostMapping(value = "/breedingSelectBySupervisor/show")
-    public Response findPlanSelectBySupervisor(@RequestBody @Valid BreedingPlanModel planModel,
-                                               BindingResult bindingResult){
+    /**
+     * 供监督者查询信息
+     * 供监督者查询方法名：findPlanSelectBySupervisor()
+     * 接收的参数：前端的各参数，（所有参数可以选填）
+     * @param planModel
+     * @param bindingResult
+     * @return
+     */
+    @PostMapping(value = "/supervisor/select")
+    public Response findPlanSelectBySupervisor(@RequestBody @Valid BreedingPlanModel planModel, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案(监督页面)修改失败");
         }else {

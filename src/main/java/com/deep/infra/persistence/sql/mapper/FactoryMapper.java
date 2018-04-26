@@ -49,6 +49,18 @@ public interface FactoryMapper {
     List<FactoryModel> queryFactoryByAgentID(Long id);
 
     /**
+     * 查找某个代理下的所有羊场的ID
+     * @param id
+     * @return
+     */
+    @Select("select id from factory_manage where agent = #{agent}")
+    @Results({
+            @Result(property = "id", column = "id"),
+    })
+    long[] queryFactoryIDByAgentID(Long id);
+
+
+    /**
      * 根据地理位置查找factory
      * @param location
      * @return

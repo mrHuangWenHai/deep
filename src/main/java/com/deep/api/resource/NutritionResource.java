@@ -30,15 +30,20 @@ public class NutritionResource {
     @Resource
     private NutritionPlanService nutritionPlanService;
 
-//    按主键删除的接口：/nutritionInsert
-//    按主键删除的方法名：addPlan()
-//    接收参数：整个表单信息（所有参数必填）
-//    参数类型为：
-//    Long factoryNum; String building;Date nutritionT;Long quantity;String average;String period;String water;String operator;String remark;
-//    String materialA;String materialM;String materialO;String materialWM;String materialWO;String roughageP;String roughageD;String roughageWP;String roughageWD;String roughageWO;String pickingM;String pickingR;String pickingO;
-    @RequestMapping(value = "/nutritionInsert/show",method = RequestMethod.POST)
-    public Response addPlan(@RequestBody @Valid NutritionPlanModel planModel,
-                            BindingResult bindingResult) throws ParseException {
+    /**
+     * 插入接口：/nutritionInsert
+     * 按主键插入的方法名：addPlan()
+     * 接收参数： json格式类型
+     * 参数类型为：
+     * Long factoryNum; String building;Date nutritionT;Long quantity;String average;String period;String water;String operator;String remark;
+     * String materialA;String materialM;String materialO;String materialWM;String materialWO;String roughageP;String roughageD;String roughageWP;String roughageWD;String roughageWO;String pickingM;String pickingR;String pickingO;
+     * @param planModel
+     * @param bindingResult
+     * @return
+     * @throws ParseException
+     */
+    @PostMapping(value = "/insert")
+    public Response addPlan(@RequestBody @Valid NutritionPlanModel planModel, BindingResult bindingResult) throws ParseException {
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("营养实施档案录入失败");
         }else {
@@ -129,9 +134,14 @@ public class NutritionResource {
         }
     }
 
-//    按主键删除的接口：/nutritionDeleteById
-//    按主键删除的方法名：dropPlan()
-//    接收参数：整型id，根据主键号删除
+    /**
+     * 按主键删除的接口：/nutritionDeleteById
+     * 按主键删除的方法名：dropPlan()
+     * 接收参数：整型id，根据主键号删除
+     * @param nutritionPlanWithBLOBs
+     * @param bindingResult
+     * @return
+     */
     @DeleteMapping(value = "/nutritionDeleteById/show")
     public Response dropPlan(@RequestBody @Valid NutritionPlanWithBLOBs nutritionPlanWithBLOBs,
                              BindingResult bindingResult){
@@ -148,12 +158,17 @@ public class NutritionResource {
         }
     }
 
-//    专家使用按主键修改的接口：/nutritionUpdateByOperator
-//    专家使用按主键修改的方法名：changePlanByOperator()
-//    专家使用接收参数：整个表单类型（整型id必填，各参数选填）
+    /**
+     * 专家使用按主键修改的接口：/nutritionUpdateByOperator
+     * 专家使用按主键修改的方法名：changePlanByOperator()
+     * 专家使用接收参数：整个表单类型（整型id必填，各参数选填）
+     * @param planModel
+     * @param bindingResult
+     * @return
+     * @throws ParseException
+     */
     @PutMapping(value = "/nutritionUpdateByOperator/show")
-    public Response changePlanByOperator(@RequestBody @Valid NutritionPlanModel planModel,
-                                         BindingResult bindingResult) throws ParseException {
+    public Response changePlanByOperator(@RequestBody @Valid NutritionPlanModel planModel, BindingResult bindingResult) throws ParseException {
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("营养实施档案更新(操作员页面)失败");
         }else {
@@ -241,9 +256,14 @@ public class NutritionResource {
         }
     }
 
-//    专家使用按主键修改的接口：/nutritionUpdateByProfessor
-//    专家使用按主键修改的方法名：changePlanByProfessor()
-//    专家使用接收参数：整个表单类型（整型id必填，各参数选填）
+    /**
+     * 专家使用按主键修改的接口：/nutritionUpdateByProfessor
+     * 专家使用按主键修改的方法名：changePlanByProfessor()
+     * 专家使用接收参数：整个表单类型（整型id必填，各参数选填）
+     * @param professor
+     * @param bindingResult
+     * @return
+     */
     @PutMapping(value = "/nutritionUpdateByProfessor/show")
     public Response changePlanByProfessor(@RequestBody @Valid NutritionPlanWithBLOBs professor,
                                           BindingResult bindingResult){
@@ -264,9 +284,15 @@ public class NutritionResource {
             return response;
         }
     }
-//    监督者使用按主键修改的接口：/nutritionUpdateBySupervisor
-//    监督者使用按主键修改的方法名：changePlanBySupervisor()
-//    监督者使用接收参数：整个表单信息（整型id必填，各参数选填）
+
+    /**
+     * 监督者使用按主键修改的接口：/nutritionUpdateBySupervisor
+     * 监督者使用按主键修改的方法名：changePlanBySupervisor()
+     * 监督者使用接收参数：整个表单信息（整型id必填，各参数选填）
+     * @param supervisor
+     * @param bindingResult
+     * @return
+     */
     @PutMapping(value = "/nutritionUpdateBySupervisor/show")
     public Response changePlanBySupervisor(@RequestBody @Valid NutritionPlanWithBLOBs supervisor,
                                            BindingResult bindingResult){
@@ -285,9 +311,14 @@ public class NutritionResource {
         }
     }
 
-//    按主键查询的接口：/nutritionSelectById
-//    按主键查询的方法名：findPlanById()
-//    接收参数：整型的主键号（保留接口查询，前端不调用此接口）
+    /**
+     * 按主键查询的接口：/nutritionSelectById
+     * 按主键查询的方法名：findPlanById()
+     * 接收参数：整型的主键号（保留接口查询，前端不调用此接口）
+     * @param nutritionPlanWithBLOBs
+     * @param bindingResult
+     * @return
+     */
     @GetMapping(value = "/nutritionSelectById/show")
     public Response findPlanById(@Valid NutritionPlanWithBLOBs nutritionPlanWithBLOBs,
                                  BindingResult bindingResult) {
@@ -304,12 +335,17 @@ public class NutritionResource {
         }
     }
 
-//    按条件查询接口：/nutritionSelective
-//    按条件查询方法名：findPlanSelective()
-//    接收的参数：前端的各参数，以及两个("s_nutritionT1")("s_nutritionT2")时间字符串（所有参数可以选填）
-    @RequestMapping(value = "/nutritionSelective/show",method = RequestMethod.POST)
-    public Response findPlanSelective(@RequestBody @Valid NutritionPlanModel planModel,
-                                      BindingResult bindingResult) throws ParseException {
+    /**
+     * 按条件查询接口：/nutritionSelective
+     * 按条件查询方法名：findPlanSelective()
+     * 接收的参数：前端的各参数，以及两个("s_nutritionT1")("s_nutritionT2")时间字符串（所有参数可以选填）
+     * @param planModel
+     * @param bindingResult
+     * @return
+     * @throws ParseException
+     */
+    @PostMapping(value = "/nutritionSelective/show")
+    public Response findPlanSelective(@RequestBody @Valid NutritionPlanModel planModel, BindingResult bindingResult) throws ParseException {
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("营养实施档案(根据条件)查询失败");
         }else {
@@ -441,10 +477,15 @@ public class NutritionResource {
         }
     }
 
-//    供技术审核查询信息: /nutritionSelectByProfessor
-//    供技术审核查询方法名：findPlanSelectBySupervisor()
-//    接收的参数：前端的各参数，（所有参数可以选填）
-    @RequestMapping(value = "/nutritionSelectByProfessor/show",method = RequestMethod.POST)
+    /**
+     * 供技术审核查询信息: /nutritionSelectByProfessor
+     * 供技术审核查询方法名：findPlanSelectBySupervisor()
+     * 接收的参数：前端的各参数，（所有参数可以选填）
+     * @param planModel
+     * @param bindingResult
+     * @return
+     */
+    @PostMapping(value = "/nutritionSelectByProfessor/show")
     public Response findPlanSelectByProfessor(@RequestBody @Valid NutritionPlanModel planModel,
                                               BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -540,10 +581,15 @@ public class NutritionResource {
         }
     }
 
-//    供监督者查询信息:nutritionSelectBySupervisor
-//    供监督者查询方法名：findPlanSelectBySupervisor()
-//    接收的参数：前端的各参数，（所有参数可以选填）
-    @RequestMapping(value = "/nutritionSelectBySupervisor/show",method = RequestMethod.POST)
+    /**
+     * 供监督者查询信息:nutritionSelectBySupervisor
+     * 供监督者查询方法名：findPlanSelectBySupervisor()
+     * 接收的参数：前端的各参数，（所有参数可以选填）
+     * @param planModel
+     * @param bindingResult
+     * @return
+     */
+    @PostMapping(value = "/nutritionSelectBySupervisor/show")
     public Response findPlanSelectBySupervisor(@RequestBody @Valid NutritionPlanModel planModel,
                                                BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

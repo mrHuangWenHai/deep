@@ -157,10 +157,15 @@ public class NoticeResource {
         return response;
     }
 
-//    按主键修改的接口：/noticeUpdate
-//    按主键修改的方法名：changePlan()
-//    接收参数：整个表单信息（整型id必填，各参数选填）
-
+    /**
+     * 按主键修改的接口：/noticeUpdate
+     * 按主键修改的方法名：changePlan()
+     * 接收参数：整个表单信息（整型id必填，各参数选填）
+     * @param update
+     * @param request
+     * @param bindingResult
+     * @return
+     */
     @PostMapping(value = "/update")
     public Response changePlan(@Valid NoticePlan update, HttpServletRequest request, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
@@ -242,9 +247,14 @@ public class NoticeResource {
         }
     }
 
-//    按主键查询的接口：/noticeSelectById
-//    按主键查询的方法名：findPlanById()
-//    接收参数：整型的主键号（保留接口查询，前端不调用此接口）
+    /**
+     * 按主键查询的接口：/noticeSelectById
+     * 按主键查询的方法名：findPlanById()
+     * 接收参数：整型的主键号（保留接口查询，前端不调用此接口）
+     * @param noticePlan
+     * @param bindingResult
+     * @return
+     */
     @GetMapping(value = "/selectById")
     public Response findPlanById(@Valid NoticePlan noticePlan, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
@@ -262,9 +272,15 @@ public class NoticeResource {
         }
     }
 
-//    按条件查询接口：/noticeSelective
-//    按条件查询方法名：findPlanSelective()
-//    接收的参数：前端的各参数，以及四个时间字符串（所有参数可以选填）
+    /**
+     * 按条件查询接口：/noticeSelective
+     * 按条件查询方法名：findPlanSelective()
+     * 接收的参数：前端的各参数，以及四个时间字符串（所有参数可以选填）
+     * @param planModel
+     * @param bindingResult
+     * @return
+     * @throws ParseException
+     */
     @PostMapping(value = "/bySelective")
     public Response findPlanSelective(@RequestBody @Valid NoticePlanModel planModel, BindingResult bindingResult) throws ParseException{
         if (bindingResult.hasErrors()) {
@@ -360,9 +376,14 @@ public class NoticeResource {
         }
     }
 
-//    站内搜索接口：/searchInSite
-//    站内搜索方法名：searchInSite()
-//    接收的参数：用户在搜索栏输入的信息（字符串）
+    /**
+     * 站内搜索接口：/searchInSite
+     * 站内搜索方法名：searchInSite()
+     * 接收的参数：用户在搜索栏输入的信息（字符串）
+     * @param otherTime
+     * @param bindingResult
+     * @return
+     */
     @PostMapping(value = "/inSite")
     public Response searchInSite(@RequestBody @Valid OtherTime otherTime, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
@@ -380,9 +401,13 @@ public class NoticeResource {
         }
     }
 
-//    上传接口：/upload
-//    上传方法名：uploadFile()
-//    接收的参数：用户浏览本地文件选择文件上传
+    /**
+     * 上传接口：/upload
+     * 上传方法名：uploadFile()
+     * 接收的参数：用户浏览本地文件选择文件上传
+     * @param request
+     * @return
+     */
     @PostMapping(value = "/upload")
     public Response uploadFile(HttpServletRequest request){
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
@@ -441,9 +466,15 @@ public class NoticeResource {
         return response;
     }
 
-//    下载接口：/download
-//    下载方法名：downloadFile()
-//    接收的参数：文件在服务器的相对路径
+    /**
+     * 下载接口：/download
+     * 下载方法名：downloadFile()
+     * 接收的参数：文件在服务器的相对路径
+     * @param otherTime
+     * @param bindingResult
+     * @param response
+     * @return
+     */
     @PostMapping(value = "/download")
     public String downloadFile(@RequestBody @Valid OtherTime otherTime, BindingResult bindingResult, HttpServletResponse response){
         if (bindingResult.hasErrors()) {

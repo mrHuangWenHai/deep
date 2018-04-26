@@ -37,7 +37,7 @@ public class AgentService {
     }
 
     /**
-     * 获取所有的下级代理, 包括子代理的子代理
+     * 获取所有的下级代理, 包括子代理的子代理, 采用递归方式
      * @param id
      * @return
      */
@@ -45,9 +45,10 @@ public class AgentService {
         Map<String, Object> map = new HashMap<>();
         List<AgentModel> agentModels = getSons(id);
         if (agentModels != null) {
-            map.put("now", agentModels);
             for (int i = 0; i < agentModels.size(); i++) {
-                map.put("son", getAllSons(agentModels.get(i).getId()));
+                // 0 表示下层数据
+                map.put(String.valueOf(0), getAllSons(agentModels.get(i).getId()));
+                map.put(String.valueOf(i+1), agentModels.get(i));
             }
         }
         return map;

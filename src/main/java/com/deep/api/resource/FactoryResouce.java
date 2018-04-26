@@ -27,7 +27,7 @@ public class FactoryResouce {
     private FactoryService factoryService;
 
     /**
-     * 查看所有羊场
+     * 查看所有羊场(超级管理员可见)
      * @return
      */
     @Permit(authorities = "customer_inquiry")

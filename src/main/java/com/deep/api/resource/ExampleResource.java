@@ -1,6 +1,7 @@
 package com.deep.api.resource;
 
 
+import com.deep.api.Utils.AgentUtil;
 import com.deep.api.response.Greeting;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
@@ -8,9 +9,8 @@ import com.deep.domain.model.TestModel;
 import com.deep.domain.service.TestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import java.util.HashMap;
 
@@ -52,4 +52,39 @@ public class ExampleResource {
     return response;
   }
 
+  @GetMapping("/test/{id}")
+  public Response getTestUtilFactory(@PathVariable("id") String id) {
+    Response response = Responses.successResponse();
+    HashMap<String, Object> data = new HashMap<>();
+    data.put("test", AgentUtil.getFactory(id));
+    response.setData(data);
+    return response;
+  }
+
+  @GetMapping("test/agent/{id}")
+  public Response getTestUtilAgent(@PathVariable("id") String id) {
+    Response response = Responses.successResponse();
+    HashMap<String, Object> data = new HashMap<>();
+    data.put("test", AgentUtil.getSubordinate(id));
+    response.setData(data);
+    return response;
+  }
+
+  @GetMapping("test/agent/factory/{id}")
+  public Response getTestUtilAgentFactory(@PathVariable("id") String id) {
+    Response response = Responses.successResponse();
+    HashMap<String, Object> data = new HashMap<>();
+    data.put("test", AgentUtil.getSubordinateFactory(id));
+    response.setData(data);
+    return response;
+  }
+
+  @GetMapping("test/isagent/{id}")
+  public Response getTestUtilIsAgent(@PathVariable("id") String id) {
+    Response response = Responses.successResponse();
+    HashMap<String, Object> data = new HashMap<>();
+    data.put("test", AgentUtil.isAgent(id));
+    response.setData(data);
+    return response;
+  }
 }
