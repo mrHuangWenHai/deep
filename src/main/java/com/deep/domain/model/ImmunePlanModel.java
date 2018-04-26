@@ -9,6 +9,7 @@ public class ImmunePlanModel {
     @NotNull
     @Min(0)
     private BigInteger factoryNum;  //工厂编号
+    private String factoryName;
     @NotBlank
     private String crowdNum;     //羊群号
     private String immuneEartag;    //耳牌附件名
@@ -51,6 +52,14 @@ public class ImmunePlanModel {
 
     public void setFactoryNum(BigInteger factoryNum) {
         this.factoryNum = factoryNum;
+    }
+
+    public String getFactoryName() {
+        return factoryName;
+    }
+
+    public void setFactoryName(String factoryName) {
+        this.factoryName = factoryName;
     }
 
     public String getCrowdNum() {

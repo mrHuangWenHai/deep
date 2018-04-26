@@ -1,6 +1,7 @@
 package com.deep.api.resource;
 
 import com.deep.api.Utils.ExtendTableUtil;
+import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.ExtendModel;
@@ -20,10 +21,11 @@ import java.util.Map;
 public class ExtendTableResource {
     private final Logger logger = LoggerFactory.getLogger(ExtendTableResource.class);
     /**
-     * 方法功能: 创建数据库
+     * 方法功能: 创建数据表
      * @param extendModel
      * @return
      */
+    @Permit(authorities = "add_expansion_module")
     @PostMapping(value = "/add/")
     public Response createTable(@RequestBody ExtendModel extendModel) {
         logger.info("invoke createTable{}, url is extend/add/", extendModel);
@@ -39,6 +41,7 @@ public class ExtendTableResource {
      * @param tableName
      * @return
      */
+    @Permit(authorities = "delete_extension_module")
     @DeleteMapping(value = "/delete/{tableName}")
     public Response deleteTable(@PathVariable("tableName") String tableName) {
         logger.info("invoke deleteTable{}, url is extend/delete/{tableName}", tableName);
@@ -53,6 +56,7 @@ public class ExtendTableResource {
      * 方法功能:获取用户自定义的表格信息
      * @return
      */
+    @Permit(authorities = "query_expansion_module")
     @GetMapping(value = "/tableLists")
     public Response getAllTable() {
         logger.info("invoke getAllTable");
@@ -71,6 +75,7 @@ public class ExtendTableResource {
     /**
      * 获取用户自定义表的列名称
      */
+    @Permit(authorities = "query_expansion_module")
     @GetMapping(value = "/columnLists/{tableName}")
     public Response getTableColumns(@PathVariable("tableName") String tableName) {
         logger.info("invoke getTableColumns{}, url is extend/columnLists/{tableName}", tableName);

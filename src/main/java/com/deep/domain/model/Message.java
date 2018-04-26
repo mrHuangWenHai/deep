@@ -1,5 +1,6 @@
 package com.deep.domain.model;
 
+
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -20,6 +21,7 @@ public class Message implements Serializable {
     private String message;
 
     private Date inserttime;
+
 
 //    @NotBlank(message = "标签不可为空")
     private String tag;

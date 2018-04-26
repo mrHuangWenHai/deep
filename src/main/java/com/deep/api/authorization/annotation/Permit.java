@@ -6,7 +6,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Permit {
-    String[] value() default {};
     String[] authorities() default {};
-    String[] modules() default {};
 }

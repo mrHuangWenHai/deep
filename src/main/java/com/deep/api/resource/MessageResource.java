@@ -8,8 +8,11 @@ import com.deep.domain.service.MessageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -27,7 +30,7 @@ public class MessageResource {
     @Resource
     private MessageService messageService;
 
-    private final Logger logger = LoggerFactory.getLogger(ExampleResource.class);
+    private Logger logger = LoggerFactory.getLogger(MessageResource.class);
 
     @RequestMapping(value = "/messageBoard/insert",method = RequestMethod.POST)
     @ResponseBody
@@ -46,9 +49,11 @@ public class MessageResource {
             return response;
         }
 
+
         Integer id = messageService.insertMessage(message);
 
         Integer messageId = message.getMessageId();
+
 
         if (id != 0) {
             Response response = Responses.successResponse();
@@ -63,6 +68,7 @@ public class MessageResource {
     }
 
     @RequestMapping(value = "/messageBoard/searchByMessage",method = RequestMethod.POST)
+
     @ResponseBody
     public Response searchByMessage( @RequestBody  Message message) {
 
@@ -85,6 +91,7 @@ public class MessageResource {
            criteria.andInserttimeBetween(message.getsTime(),message.geteTime());
 
         List<Message>select = messageService.findMessageSelectiveWithRowbounds(messageExample,message.getPageNumb(),message.getLimit());
+
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
         data.put("searchByMessage",select);
@@ -100,9 +107,10 @@ public class MessageResource {
             Response response = Responses.errorResponse("查询条件不能为空！");
             return response;
         }
+
         MessageExample messageExample = new MessageExample();
         MessageExample.Criteria criteria = messageExample.createCriteria();
-        criteria.andUsernameLike("%" + message.getUsername()+"%");
+        criteria.andUsernameLike("%" + message.getMessage()+"%");
         List<Message>select=messageService.findMessageSelectiveWithRowbounds(messageExample,message.getPageNumb(),message.getLimit());
 
         Response response = Responses.successResponse();
@@ -114,18 +122,14 @@ public class MessageResource {
 
     @RequestMapping(value = "/messageBoard/searchByTag",method = RequestMethod.POST)
     public @ResponseBody
-    Response searchByTag(@RequestBody  Message message)
+    Response searchByTag(@NotNull(message = "标签不能为空")  @RequestParam(value = "tag",required = false,defaultValue = "")String tag,
+                              @RequestParam(value = "pageNumb",required = true)int pageNumb,
+                              @RequestParam(value = "limit",required = true)int limit)
     {
-        logger.info("invoke /messageBoard/searchByTag {}",message.getTag());
-        if(message.getTag().isEmpty())
-        {
-            Response response = Responses.errorResponse("查询条件不能为空！");
-            return response;
-        }
         MessageExample messageExample=new MessageExample();
         MessageExample.Criteria criteria=messageExample.createCriteria();
-        criteria.andTagLike("%"+message.getTag()+"%");
-        List<Message>select=messageService.findMessageSelectiveWithRowbounds(messageExample,message.getPageNumb(),message.getLimit());
+        criteria.andTagLike("%"+tag+"%");
+        List<Message>select=messageService.findMessageSelectiveWithRowbounds(messageExample,pageNumb,limit);
 
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
@@ -143,6 +147,7 @@ public class MessageResource {
             Response response = Responses.errorResponse("查询条件不能为空！");
             return response;
         }
+
         MessageExample messageExample=new MessageExample();
         MessageExample.Criteria criteria=messageExample.createCriteria();
         criteria.andAttitudeLike("%"+message.getAttitude()+"%");
@@ -154,20 +159,17 @@ public class MessageResource {
         response.setData(data);
         return response;
     }
+
     @RequestMapping(value = "/messageBoard/searchByIntention",method = RequestMethod.POST)
     public @ResponseBody
-    Response searchByIntention(@RequestBody  Message message)
+    Response searchByIntention(@NotNull(message = "购买意向不能为空")  @RequestParam(value = "intention",required = false,defaultValue = "")String intention,
+                              @RequestParam(value = "pageNumb",required = true)int pageNumb,
+                              @RequestParam(value = "limit",required = true)int limit)
     {
-        logger.info("invoke /messageBoard/searchByIntention {}",message.getIntention());
-        if(message.getIntention().isEmpty())
-        {
-            Response response = Responses.errorResponse("查询条件不能为空！");
-            return response;
-        }
         MessageExample messageExample=new MessageExample();
         MessageExample.Criteria criteria=messageExample.createCriteria();
-        criteria.andIntentionLike("%"+message.getIntention()+"%");
-        List<Message>select=messageService.findMessageSelectiveWithRowbounds(messageExample,message.getPageNumb(),message.getLimit());
+        criteria.andIntentionLike("%"+intention+"%");
+        List<Message>select=messageService.findMessageSelectiveWithRowbounds(messageExample,pageNumb,limit);
 
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
@@ -175,27 +177,6 @@ public class MessageResource {
         response.setData(data);
         return response;
     }
-    @RequestMapping(value = "/messageBoard/search",method = RequestMethod.POST)
-    public @ResponseBody
-    Response search( @RequestBody  Message message)
-    {
-        logger.info("invoke /messageBoard/search {}",message);
-        MessageExample messageExample = new MessageExample();
-        MessageExample.Criteria criteria = messageExample.createCriteria();
-        if(message.getMessage()!=null && !message.getMessage().isEmpty())
-            criteria.andMessageLike("%" + message.getMessage()+"%");
-        if(message.getAttitude()!=null && !message.getAttitude().isEmpty())
-            criteria.andAttitudeLike("%"+message.getAttitude()+"%");
-        if(message.getIntention()!=null && !message.getIntention().isEmpty())
-            criteria.andIntentionLike("%"+message.getIntention()+"%");
-        if(message.getsTime()!=null && message.geteTime()!=null)
-            criteria.andInserttimeBetween(message.getsTime(),message.geteTime());
-        List<Message>select = messageService.findMessageSelectiveWithRowbounds(messageExample,message.getPageNumb(),message.getLimit());
-        Response response = Responses.successResponse();
-        HashMap<String,Object>data = new HashMap<>();
-        data.put("searchByMessage",select);
-        response.setData(data);
-        return response;
-    }
+
 
 }

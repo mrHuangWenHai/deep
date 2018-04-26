@@ -2,8 +2,10 @@ package com.deep.api.resource;
 
 import com.deep.api.Utils.ExcelData;
 import com.deep.api.Utils.ExportExcelUtil;
+import com.deep.api.Utils.JedisUtil;
 import com.deep.api.Utils.StringToLongUtil;
 import com.deep.api.authorization.annotation.Permit;
+import com.deep.api.response.Professor;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.UserModel;
@@ -33,22 +35,16 @@ public class UserResource {
     private UserService userService;
 
     /**
-     * 查找所有的用户列表
+     * 查找下级的所有用户列表
      * @return 返回所有的用户信息
      */
-    @Permit(modules = {
-            "dongxiang_factory_administrator", "total_system_administrator", "province_agent_total_administrator",
-            "province_agent_administrator", "city_agent_total_administrator", "city_agent_administrator",
-            "county_agent_total_administrator", "county_agent_administrator", "sheep_farm_administrator",
-    })
-    @GetMapping(value = "user/")
-    public Response userList() {
-
+    @Permit(authorities = "query_user")
+    @GetMapping(value = "user/subordinate/{roleID}")
+    public Response userList(@PathVariable("roleID") long roleID) {
         logger.info("invoke userList, url is user/");
-
-        List<UserModel> userLists = userService.getAll();
-        if (userLists.size() <= 0) {
-            return Responses.errorResponse("系统中暂时没有用户");
+        List<UserModel> userLists = userService.getAll(roleID);
+        if (userLists == null) {
+            return Responses.errorResponse("系统中暂时没有下级用户");
         }
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
@@ -63,16 +59,7 @@ public class UserResource {
      * @param id 获取用户的信息(简略信息)
      * @return
      */
-
-    @Permit(modules = {
-            "dongxiang_factory_administrator", "total_system_administrator", "province_agent_total_administrator",
-            "province_agent_administrator", "city_agent_total_administrator", "city_agent_administrator",
-            "county_agent_total_administrator", "county_agent_administrator", "sheep_farm_administrator",
-            "dongxiang_factory_expert", "dongxiang_factory_technician", "province_agent_expert",
-            "province_agent_technician", "city_agent_expert", "city_agent_technician",
-            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
-            "sheep_farm_supervisor"
-    })
+    @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @GetMapping(value = "user/{id}")
     public Response getUserOne(@PathVariable("id")String id) {
         logger.info("invoke getUserOne{}, url is user/{id}", id);
@@ -97,20 +84,10 @@ public class UserResource {
      * @param id 获取用户的信息(简略信息)
      * @return
      */
-
-    @Permit(modules = {
-            "dongxiang_factory_administrator", "total_system_administrator", "province_agent_total_administrator",
-            "province_agent_administrator", "city_agent_total_administrator", "city_agent_administrator",
-            "county_agent_total_administrator", "county_agent_administrator", "sheep_farm_administrator",
-            "dongxiang_factory_expert", "dongxiang_factory_technician", "province_agent_expert",
-            "province_agent_technician", "city_agent_expert", "city_agent_technician",
-            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
-            "sheep_farm_supervisor", "others"
-    })
+    @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @GetMapping(value = "user/detail/{id}")
     public Response getUserOneDetail(@PathVariable("id") String id) {
         logger.info("invoke getUserOneDetail{}, url is user/detail/{id}", id);
-
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -131,21 +108,12 @@ public class UserResource {
      * @param realname
      * @return
      */
-    @Permit(modules = {
-            "dongxiang_factory_administrator", "total_system_administrator", "province_agent_total_administrator",
-            "province_agent_administrator", "city_agent_total_administrator", "city_agent_administrator",
-            "county_agent_total_administrator", "county_agent_administrator", "sheep_farm_administrator",
-            "dongxiang_factory_expert", "dongxiang_factory_technician", "province_agent_expert",
-            "province_agent_technician", "city_agent_expert", "city_agent_technician",
-            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
-            "sheep_farm_supervisor"
-    })
-    @GetMapping(value = "user/name/{realname}")
-    public Response getUserByUserRealname(@PathVariable("realname") String realname) {
-
-        logger.info("invoke getUserByUserRealname{}, url is user/name/{realname}", realname);
-
-        UserModel userModel = userService.getUserByUserRealnameLike(realname);
+    @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
+    @PostMapping(value = "user/name")
+    public Response getUserByUserRealname(@RequestBody Map<String, String> realname) {
+        logger.info("invoke getUserByUserRealname{}, url is user/name", realname);
+        System.out.println(realname.get("realname"));
+        UserModel userModel = userService.getUserByUserRealnameLike(realname.get("realname"));
         if (realname.equals("")) {
             return Responses.errorResponse("用户名格式错误");
         }
@@ -164,15 +132,7 @@ public class UserResource {
      * @param pkUserid
      * @return
      */
-    @Permit(modules = {
-            "dongxiang_factory_administrator", "total_system_administrator", "province_agent_total_administrator",
-            "province_agent_administrator", "city_agent_total_administrator", "city_agent_administrator",
-            "county_agent_total_administrator", "county_agent_administrator", "sheep_farm_administrator",
-            "dongxiang_factory_expert", "dongxiang_factory_technician", "province_agent_expert",
-            "province_agent_technician", "city_agent_expert", "city_agent_technician",
-            "county_agent_expert", "county_agent_technician", "sheep_farm_operator",
-            "sheep_farm_supervisor", "tourist", "others"
-    })
+    @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @GetMapping(value = "user/id/{pkUserid}")
     public Response getUserByUserID(@PathVariable("pkUserid") String pkUserid) {
 
@@ -199,7 +159,6 @@ public class UserResource {
      * @param bindingResult
      * @return
      */
-
     @PostMapping("/register")
     public Response addUser(@RequestBody @Valid UserModel userModel,  BindingResult bindingResult) {
         logger.info("invoke addUser{}, url is register", userModel, bindingResult);
@@ -223,7 +182,9 @@ public class UserResource {
             userModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
 
             userModel.setIsFactory((byte)0);
-            userModel.setUserPermit((byte)0);
+            if (userModel.getUserPermit().equals("")) {
+                userModel.setUserPermit("000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+            }
             userModel.setIsExtended((byte)0);
             userModel.setUserRole(0);
 
@@ -246,11 +207,10 @@ public class UserResource {
      * @param bindingResult
      * @return
      */
-
+    @Permit(authorities = {"modify_user", "modify_expert", "modify_technician", "modify_administrator"})
     @PutMapping(value = "user/{id}")
     public Response modifyUser(@RequestBody @Valid UserModel userModel, @PathVariable("id") String id, BindingResult bindingResult) {
         logger.info("invoke modifyUser{}, url is user/{id}", userModel, id, bindingResult);
-
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -274,7 +234,6 @@ public class UserResource {
             return Responses.errorResponse("用户信息修改失败,请检查网络后重试");
         }
         response = Responses.successResponse();
-
         HashMap<String, Object> data = new HashMap<>();
         data.put("updateID", updateID);
         response.setData(data);
@@ -286,6 +245,7 @@ public class UserResource {
      * @param id
      * @return
      */
+    @Permit(authorities = {"delete_users", "delete_expert", "remove_technician", "remove_administrator"})
     @DeleteMapping("user/{id}")
     public Response deleteUser(@PathVariable("id") String id) {
         logger.info("invoke deleteUser{}, url is user/{id}", id);
@@ -300,7 +260,6 @@ public class UserResource {
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
         data.put("deleteID", deleteId);
-
         response.setData(data);
         return response;
     }
@@ -311,12 +270,13 @@ public class UserResource {
      * @return
      * @throws Exception
      */
-    @GetMapping(value = "/user/excel")
-    public Response exportExcel(HttpServletResponse httpServletResponse) throws Exception{
+    @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
+    @GetMapping(value = "/user/excel/{roleID}")
+    public Response exportExcel(@PathVariable("roleID") long roleID, HttpServletResponse httpServletResponse) throws Exception{
         logger.info("invoke exportExcel{}, url is /user/excel", httpServletResponse);
         ExcelData data = new ExcelData();
         data.setName("user");
-        List<UserModel> userModels = userService.getAll();
+        List<UserModel> userModels = userService.getAll(roleID);
         UserModel userModel;
         List<List<Object>> rows = new ArrayList();
         List<String> titles = new ArrayList();
@@ -342,7 +302,7 @@ public class UserResource {
      * @param id
      * @return
      */
-
+    @Permit(authorities = "query_expert")
     @GetMapping(value = "/user/high/{id}")
     public Response getRolesOfProfessor(@PathVariable("id") String id) {
         logger.info("invoke getRolesOfProfessor{}, url is /user/high/{id}", id);
@@ -350,8 +310,8 @@ public class UserResource {
         if (uid == -1) {
             return Responses.errorResponse("error!");
         }
-        List<UserService.UserRole> userModels = userService.getRoles(uid);
-        if (userModels.size() <= 0) {
+        List<Professor> userModels = userService.getRoles(uid);
+        if (userModels == null) {
             return Responses.errorResponse("error!");
         }
         Response response = Responses.successResponse();
@@ -362,6 +322,12 @@ public class UserResource {
         return response;
     }
 
+    /**
+     * 测试类, 获取其上级专家的手机号
+     * @param id
+     * @return
+     */
+    @Permit(authorities = "query_expert")
     @GetMapping(value = "/user/test/{id}")
     public Response getTest(@PathVariable("id") String id) {
         logger.info("invoke getRolesOfProfessor {}, url is /user/high/{id}", id);
@@ -372,6 +338,12 @@ public class UserResource {
         return response;
     }
 
+    /**
+     * 获取某个羊场或者某个代理的所有用户
+     * @param id
+     * @return
+     */
+    @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @GetMapping(value = "/user/factory/lists/{factoryAgentID}")
     public Response getFactoryLists(@PathVariable("factoryAgentID") String id) {
         logger.info("invoke getFactoryLists {}, url is /user/factory/lists/{factoryAgentID}", id);
@@ -381,7 +353,7 @@ public class UserResource {
         } else {
             Response response;
             List<UserModel> userLists = userService.getAllUserOfFactoryOrAgent(uid);
-            if (userLists.size() <= 0) {
+            if (userLists == null) {
                 return Responses.errorResponse("error");
             } else {
                 response = Responses.successResponse();
@@ -392,6 +364,47 @@ public class UserResource {
                 return response;
             }
         }
+    }
 
+    /**
+     * 判断专家是否在线
+     * @param id
+     * @return
+     */
+    @Permit(authorities = "query_expert")
+    @GetMapping(value = "/user/online/{id}")
+    public Response getOnline(@PathVariable("id") String id) {
+        logger.info("invoke getOnline {}", id);
+        if(JedisUtil.getValue(id) == null) {
+            return Responses.errorResponse("not on line");
+        } else {
+            return Responses.successResponse();
+        }
+    }
+
+    /**
+     * 获取已发展羊场的直属上级所有在线的专家, 如果没有, 则返回直属上级的上级的专家
+     * @param id
+     * @return
+     */
+    @Permit(authorities = "query_expert")
+    @GetMapping(value = "getExpert/{agent_id}")
+    public Response getOnlineAncestors(@PathVariable("agent_id") String id) {
+        logger.info("invoke getAncestors {}", id);
+        long agentID = StringToLongUtil.stringToLong(id);
+        if (agentID == -1) {
+            return Responses.errorResponse("error");
+        } else {
+            Professor agent = userService.getFatherProfessors(agentID);
+            if (agent != null) {
+                Response response = Responses.successResponse();
+                Map<String, Object> data = new HashMap<>();
+                data.put("expert", agent.getPkUserid());
+                data.put("expert_id", agent.getId());
+                response.setData(data);
+                return response;
+            }
+            return Responses.errorResponse("there is no online father agents");
+        }
     }
 }

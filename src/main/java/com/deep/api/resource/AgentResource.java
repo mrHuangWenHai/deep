@@ -6,7 +6,6 @@ import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.AgentModel;
 import com.deep.domain.service.AgentService;
-import com.deep.domain.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
@@ -32,14 +31,12 @@ public class AgentResource {
      * 查找所有代理
      * @return
      */
-    @Permit(modules = "dongxiang_factory_administrator", authorities = "select_agent")
+    @Permit(authorities = "query_agent")
     @GetMapping(value = "/")
     public Response agentLists() {
-
         logger.info("invoke agentLists, url is agent/");
-
         List<AgentModel> agents = agentService.getAll();
-        if (agents.size() <= 0) {
+        if (agents == null) {
             return Responses.errorResponse("系统中暂时没有代理");
         }
         Response response = Responses.successResponse();
@@ -55,12 +52,10 @@ public class AgentResource {
      * @param id
      * @return
      */
-    @Permit(modules = "dongxiang_factory_administrator", authorities = "select_agent")
+    @Permit(authorities = "query_agent")
     @GetMapping(value = "/{id}")
     public Response findOne(@PathVariable("id") String id) {
-
         logger.info("invoke findOne{}, url is agent/{id}", id);
-
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -80,12 +75,10 @@ public class AgentResource {
      * 删除一个代理
      * @param id
      */
-    @Permit(modules = "dongxiang_factory_administrator", authorities = "delete_agent")
+    @Permit(authorities = "deleting_an_agent")
     @DeleteMapping(value = "/{id}")
     public Response deleteOne(@PathVariable("id") String id) {
-
         logger.info("invoke deleteOne{}, url is agent/{id}", id);
-
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -107,11 +100,10 @@ public class AgentResource {
      * @param bindingResult
      * @return
      */
-    @Permit(modules = "dongxiang_factory_administrator", authorities = "create_agent")
+    @Permit(authorities = "add_agent")
     @PostMapping(value = "/add")
     public Response addOne(@Valid @RequestBody AgentModel agentModel, BindingResult bindingResult) {
         logger.info("invoke addOne{}, url is agent/add", agentModel);
-
         if (bindingResult.hasErrors())  {
             return Responses.errorResponse("添加代理失败, 验证错误!");
         } else {
@@ -121,7 +113,6 @@ public class AgentResource {
             if (addID <= 0) {
                 return Responses.errorResponse("添加用户信息失败");
             }
-
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("oneAgent", addID);
@@ -137,11 +128,10 @@ public class AgentResource {
      * @param id 代理主键
      * @return
      */
-    @Permit(modules = "dongxiang_factory_administrator", authorities = "update_agent")
+    @Permit(authorities = "modify_the_proxy")
     @PutMapping("/{id}")
     public Response agentUpdate(@Valid @RequestBody AgentModel agentModel, @PathVariable("id") String id, BindingResult bindingResult) {
         logger.info("invoke agentUpdate{}, url is agent/{id}", agentModel, id);
-
         int uid = StringToLongUtil.stringToInt(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -166,21 +156,20 @@ public class AgentResource {
     }
 
     /**
-     * 根据代理的主键获取其所有的子代理
+     * 根据代理的主键获取其所有的直属子代理
      * @param id
      * @return
      */
+    @Permit(authorities = "query_agent")
     @GetMapping(value = "/sons/{id}")
-    public Response AgentsSon(@PathVariable("id") String id) {
-
+    public Response agentsSon(@PathVariable("id") String id) {
         logger.info("invoke agentsSon{}, url is agent/sons/{id}", id);
         int agentID = StringToLongUtil.stringToInt(id);
         if (agentID == -1) {
-
             return Responses.errorResponse("error");
         } else {
             List<AgentModel> agentModels = agentService.getSons(agentID);
-            if (agentModels.size() > 0) {
+            if (agentModels != null) {
                 Response response = Responses.successResponse();
                 Map<String, Object> data = new HashMap<>();
                 data.put("sons", agentModels);
@@ -192,14 +181,36 @@ public class AgentResource {
         }
     }
 
+    /**
+     * 根据代理的主键查询所有的子代理
+     * @param id
+     * @return
+     */
+    @Permit(authorities = "query_agent")
+    @GetMapping(value = "/allson/{id}")
+    public Response agentsAllSon(@PathVariable("id") String id) {
+        logger.info("invoke agentsSon{}, url is agent/sons/{id}", id);
+        int agentID = StringToLongUtil.stringToInt(id);
+        if (agentID == -1) {
+            return Responses.errorResponse("error");
+        } else {
+            Map<String, Object> map = agentService.getAllSons(agentID);
+            Response response = Responses.successResponse();
+            Map<String, Object> data = new HashMap<>();
+            data.put("sons", map);
+            response.setData(data);
+            return response;
+        }
+    }
 
     /**
      * 获取上级代理操作
      * @param id
      * @return
      */
+    @Permit(authorities = "query_agent")
     @GetMapping(value = "/father/{id}")
-    public Response AgentFather(@PathVariable("id") String id) {
+    public Response agentFather(@PathVariable("id") String id) {
         logger.info("invoke agentFather {}, url is agent/father/{id}", id);
         long agentID = StringToLongUtil.stringToLong(id);
         if (agentID == -1) {
@@ -222,6 +233,7 @@ public class AgentResource {
      * @param id
      * @return
      */
+    @Permit(authorities = "query_agent")
     @GetMapping(value = "ancestors/{id}")
     public Response getAncestors(@PathVariable("id") String id) {
         logger.info("invoke getAncestors {}", id);
@@ -230,7 +242,7 @@ public class AgentResource {
             return Responses.errorResponse("error");
         } else {
             List<AgentModel> agents = agentService.getAncestors(agentID);
-            if (agents.size() > 0) {
+            if (agents != null) {
                 Response response = Responses.successResponse();
                 Map<String, Object> data = new HashMap<>();
                 data.put("ancestors", agents);
@@ -246,6 +258,7 @@ public class AgentResource {
      * @param id
      * @return
      */
+    @Permit(authorities = "query_expert")
     @GetMapping(value = "ancestors/professor/{id}")
     public Response getAncestorsProfessor(@PathVariable("id") String id) {
         logger.info("invoke getAncestors {}", id);
@@ -253,8 +266,8 @@ public class AgentResource {
         if (agentID == -1) {
             return Responses.errorResponse("error");
         } else {
-            List<UserService.UserRole> agents = agentService.getAncestorsProfessor(agentID);
-            if (agents.size() > 0) {
+            Map<String, Object> agents = agentService.getAncestorsProfessor(agentID);
+            if (agents != null) {
                 Response response = Responses.successResponse();
                 Map<String, Object> data = new HashMap<>();
                 data.put("ancestors", agents);
@@ -264,5 +277,4 @@ public class AgentResource {
             return Responses.errorResponse("error");
         }
     }
-
 }

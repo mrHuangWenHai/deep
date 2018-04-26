@@ -35,7 +35,8 @@ public class UserModel {
         private String userRemark;
         private long userFactory;
         private long userRole;
-        private long userPermit;
+
+        private String userPermit;
 
 //        @Max(1)
 //        @Min(0)
@@ -289,11 +290,11 @@ public class UserModel {
         }
 
         @JsonView(UserSimpleView.class)
-        public long getUserPermit() {
+        public String getUserPermit() {
             return userPermit;
         }
 
-        public void setUserPermit(long userPermit) {
+        public void setUserPermit(String userPermit) {
             this.userPermit = userPermit;
         }
 
@@ -348,7 +349,7 @@ public class UserModel {
             result = 31 * result + (userRemark != null ? userRemark.hashCode() : 0);
             result = 31 * result + (int)(userFactory ^ (userFactory >>> 32));
             result = 31 * result + (int) (userRole ^ (userRole >>> 32));
-            result = 31 * result + (int) (userPermit ^ (userPermit >>> 32));
+            result = 31 * result + (userPermit != null ? userPermit.hashCode() : 0);
             result = 31 * result + (int) isExtended;
             return result;
         }

@@ -5,7 +5,7 @@ import redis.clients.jedis.Jedis;
 
 public class JedisUtil {
     public static Jedis jedis = new Jedis(ServiceConfiguration.redisServer, ServiceConfiguration.port);
-    public static int seconds = 600;
+    public static int seconds = 60000;
     public static String getValue(String key) {
         return jedis.get(String.valueOf(key));
     }

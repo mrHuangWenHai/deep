@@ -1,5 +1,7 @@
 package com.deep.api.resource;
 
+import com.deep.api.Utils.StringToLongUtil;
+import com.deep.api.request.BreedingPlanModel;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.BreedingPlan;
@@ -9,11 +11,8 @@ import com.deep.domain.service.BreedingPlanService;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -27,37 +26,48 @@ import java.util.List;
  * author: Created  By  Caojiawei
  * date: 2018/2/2  12:52
  */
-@Controller
+@RestController
+@RequestMapping(value = "/breeding")
 public class BreedingResource {
 
-    private final Logger logger = LoggerFactory.getLogger(BreedingResource.class);
     @Resource
     private BreedingPlanService breedingPlanService;
 
-    @ResponseBody
-    @RequestMapping(value = "/breedingPlan",method = RequestMethod.GET)
-    public String helloBreed() {
-        return "Hello BreedingPlan!";
-    }
+    private final Logger logger = LoggerFactory.getLogger(AgentResource.class);
 
-//    按主键删除的接口：/breedingInsert
-//    按主键删除的方法名：addPlan()
-//    接收参数：整个表单信息（所有参数必填）
-//    参数类型为：Long factoryNum;String building;String mEtI;String mEtB;String fEtI;String fEtB;Date breedingT; Date gestationT;Date prenatalIT;Date cubT;Integer quantity;String operator;String remark；
-    @RequestMapping(value = "/breedingInsert",method = RequestMethod.GET)
-    public String addPlan(){
-        return "BreedingInsert";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/breedingInsert/show",method = RequestMethod.POST)
-    public Response addPlan(@Valid BreedingPlan insert,
-                            @Valid OtherTime otherTime,
-                            BindingResult bindingResult) throws ParseException {
-        logger.info("invoke breedingInsert/show {}",insert,otherTime,bindingResult);
+    /**
+     * 添加一条记录信息
+     * @param planModel
+     * @param bindingResult
+     * 接收参数：整个表单信息（所有参数必填）
+     * 参数类型为：Long factoryNum;String building;String mEtI;String mEtB;String fEtI;String fEtB;Date breedingT; Date gestationT;Date prenatalIT;Date cubT;Integer quantity;String operator;String remark；
+     * @return
+     * @throws ParseException
+     */
+    @PostMapping(value = "/insert")
+    public Response addPlan(@RequestBody @Valid BreedingPlanModel planModel, BindingResult bindingResult) throws ParseException {
+        logger.info("invoke addPlan {}, url = /breeding/", planModel);
         if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("育种实施档案录入失败");
-            return response;
+            return Responses.errorResponse("育种实施档案录入失败");
         }else {
+            //将planModel部分变量拆分传递给对象insert
+            BreedingPlan insert = new BreedingPlan();
+            insert.setFactoryNum(planModel.getFactoryNum());
+            insert.setBuilding(planModel.getBuilding());
+            insert.setmEtI(planModel.getmEtI());
+            insert.setmEtB(planModel.getmEtB());
+            insert.setfEtI(planModel.getfEtI());
+            insert.setfEtB(planModel.getfEtB());
+            insert.setQuantity(planModel.getQuantity());
+            insert.setOperator(planModel.getOperator());
+
+            //将planModel部分变量拆分传递给对象otherTime
+            OtherTime otherTime = new OtherTime();
+            otherTime.setS_breedingT(planModel.getS_breedingT());
+            otherTime.setS_gestationT(planModel.getS_gestationT());
+            otherTime.setS_prenatalIT(planModel.getS_prenatalIT());
+            otherTime.setS_cubT(planModel.getS_cubT());
+
             Byte zero = 0;
             Date breedingT = new Date();
             Date gestationT = new Date();
@@ -83,59 +93,114 @@ public class BreedingResource {
             insert.setCubT(cubT);
             insert.setIsPass(zero);
             insert.setIsPass1(zero);
-            breedingPlanService.addPlan(insert);
-
+            int addID = breedingPlanService.addPlan(insert);
+            if (addID <= 0) {
+                return Responses.errorResponse("error!");
+            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("breeding_plan",insert);
+            data.put("breeding_plan",addID);
             response.setData(data);
             return response;
         }
     }
 
-//    按主键删除的接口：/breedingDeleteById
-//    按主键删除的方法名：dropPlan()
-//    接收参数：整型id，根据主键号删除
-    @RequestMapping(value = "/breedingDeleteById",method = RequestMethod.GET)
-    public String dropPlan(){
-        return "BreedingDeleteById";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/breedingDeleteById/show",method = RequestMethod.DELETE)
-    public Response dropPlan(@Valid BreedingPlan breedingPlan,
-                             BindingResult bindingResult){
-        logger.info("invoke breedingDeleteById/show {}",breedingPlan,bindingResult);
-        if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("育种实施档案删除失败");
-            return response;
-        }else {
-            BreedingPlan delete = new BreedingPlan();
-            breedingPlanService.dropPlan(breedingPlan.getId());
+    /**
+     * 按照主键删除一条记录
+     * @return
+     */
+    @DeleteMapping(value = "/{id}")
+    public Response dropPlan(@PathVariable("id") String id){
+        logger.info("invoke dropPlan {}, url is breeding/{id}", id);
+        int uid = StringToLongUtil.stringToInt(id);
+        System.out.println("uid is " + uid);
+        if (uid == -1) {
+            return Responses.errorResponse("查询错误");
+        } else {
+            int deleteID = breedingPlanService.dropPlan(uid);
+            if (deleteID <= 0) {
+                return Responses.errorResponse("删除失败");
+            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("breeding_plan",delete);
+            data.put("breeding_plan",deleteID);
             response.setData(data);
             return response;
         }
     }
 
-//    操作员使用按主键修改的接口：/breedingUpdateByOperator
-//    操作员使用按主键修改的方法名：changePlanByOperator()
-//    操作员使用接收参数：整个表单信息（整型id必填，各参数选填）
-    @RequestMapping(value = "/breedingUpdateByOperator",method = RequestMethod.GET)
-    public String changePlanByOperator(){
-        return "BreedingUpdateByOperator";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/breedingUpdateByOperator/show",method = RequestMethod.POST)
-    public Response changePlanByOperator(@Valid BreedingPlan operator,
-                                         @Valid OtherTime otherTime,
-                                         BindingResult bindingResult) throws ParseException {
-        logger.info("invoke breedingUpdateByOperator/show {}",operator,otherTime,bindingResult);
+    /**
+     * 操作员按照主键进行审核
+     * @param planModel
+     * @param bindingResult
+     * 操作员使用接收参数：整个表单信息（整型id必填，各参数选填）
+     * @return
+     * @throws ParseException
+     */
+    @PostMapping(value = "/operator")
+    public Response changePlanByOperator(@RequestBody @Valid BreedingPlanModel planModel, BindingResult bindingResult) throws ParseException {
+        logger.info("invoke changePlanByOperator {}, url is breeding/breedingUpdateByOperator/show", planModel);
         if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("育种实施档案(操作员页面)修改失败");
-            return response;
+            return Responses.errorResponse("育种实施档案(操作员页面)修改失败");
         }else{
+            //将planModel部分变量拆分传递给对象operator
+            BreedingPlan operator = new BreedingPlan();
+            operator.setId(planModel.getId());
+            operator.setGmtCreate(planModel.getGmtCreate());
+            operator.setGmtModified(planModel.getGmtModified());
+            operator.setSupervisor(planModel.getSupervisor());
+            operator.setFactoryNum(planModel.getFactoryNum());
+            operator.setBuilding(planModel.getBuilding());
+            operator.setmEtI(planModel.getmEtI());
+            operator.setmEtB(planModel.getmEtB());
+            operator.setfEtI(planModel.getfEtI());
+            operator.setfEtB(planModel.getfEtB());
+            operator.setBreedingT(planModel.getBreedingT());
+            operator.setGestationT(planModel.getGestationT());
+            operator.setPrenatalIT(planModel.getPrenatalIT());
+            operator.setCubT(planModel.getCubT());
+            operator.setQuantity(planModel.getQuantity());
+            operator.setOperator(planModel.getOperator());
+            operator.setProfessor(planModel.getProfessor());
+            operator.setSupervisor(planModel.getSupervisor());
+            operator.setRemark(planModel.getRemark());
+            operator.setIsPass(planModel.getIsPass());
+            operator.setUpassReason(planModel.getUpassReason());
+            operator.setIsPass1(planModel.getIsPass1());
+
+            //将planModel部分变量拆分传递给对象otherTime
+            OtherTime otherTime = new OtherTime();
+            otherTime.setSearch_string(planModel.getSearch_string());
+            otherTime.setS_breedingT(planModel.getS_breedingT());
+            System.out.println(otherTime.getS_breedingT());
+            otherTime.setS_gestationT(planModel.getS_gestationT());
+            System.out.println(otherTime.getS_gestationT());
+            otherTime.setS_prenatalIT(planModel.getS_prenatalIT());
+            System.out.println(otherTime.getS_prenatalIT());
+            otherTime.setS_cubT(planModel.getS_cubT());
+            System.out.println(otherTime.getS_cubT());
+            otherTime.setS_diagnosisT(planModel.getS_diagnosisT());
+            otherTime.setS_nutritionT(planModel.getS_nutritionT());
+            otherTime.setS_gmtCreate1(planModel.getS_gmtCreate1());
+            otherTime.setS_gmtCreate2(planModel.getS_gmtCreate2());
+            otherTime.setS_gmtModified1(planModel.getS_gmtModified1());
+            otherTime.setS_gmtModified2(planModel.getS_gmtModified2());
+            otherTime.setS_breedingT1(planModel.getS_breedingT1());
+            otherTime.setS_breedingT2(planModel.getS_breedingT2());
+            otherTime.setS_prenatalIT1(planModel.getS_prenatalIT1());
+            otherTime.setS_prenatalIT2(planModel.getS_prenatalIT2());
+            otherTime.setS_gestationT1(planModel.getS_gestationT1());
+            otherTime.setS_gestationT2(planModel.getS_gestationT2());
+            otherTime.setS_cubT1(planModel.getS_cubT1());
+            otherTime.setS_cubT2(planModel.getS_cubT2());
+            otherTime.setS_diagnosisT1(planModel.getS_diagnosisT1());
+            otherTime.setS_diagnosisT2(planModel.getS_diagnosisT2());
+            otherTime.setS_nutritionT1(planModel.getS_nutritionT1());
+            otherTime.setS_nutritionT2(planModel.getS_nutritionT2());
+            otherTime.setDownloadPath(planModel.getDownloadPath());
+            otherTime.setPage(planModel.getPage());
+            otherTime.setSize(planModel.getSize());
+
             Date breedingT = null;
             Date gestationT = null;
             Date prenatalIT = null;
@@ -157,94 +222,91 @@ public class BreedingResource {
             operator.setGestationT(gestationT);
             operator.setPrenatalIT(prenatalIT);
             operator.setCubT(cubT);
-            breedingPlanService.changePlanSelective(operator);
+            int updateID = breedingPlanService.changePlanSelective(operator);
+            if (updateID <= 0) {
+                return Responses.errorResponse("修改失败");
+            }
 
-            BreedingPlan selectById = breedingPlanService.findPlanById(operator.getId());
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("breeding_plan",selectById);
+            data.put("breeding_plan", updateID);
             response.setData(data);
             return response;
         }
     }
 
-//    专家使用按主键修改的接口：/breedingUpdateByProfessor
-//    专家使用按主键修改的方法名：changePlanByProfessor()
-//    专家使用接收参数：整个表单信息（整型id必填，各参数选填）
-    @RequestMapping(value = "/breedingUpdateByProfessor",method = RequestMethod.GET)
-    public String changePlanByProfessor(){
-        return "BreedingUpdateBySupervisor";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/breedingUpdateByProfessor/show",method = RequestMethod.POST)
-    public Response changePlanByProfessor(@Valid BreedingPlan professor,
-                                          BindingResult bindingResult) {
-        logger.info("invoke breedingUpdateByProfessor/show {}",professor,bindingResult);
+
+    /**
+     * 专家按照主键进行审核
+     * 专家使用接收参数：整个表单信息（整型id必填，各参数选填）
+     * @param professor
+     * @param bindingResult
+     * @return
+     */
+    @PostMapping(value = "/professor")
+    public Response changePlanByProfessor(@RequestBody @Valid BreedingPlan professor, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("育种实施档案(专家页面)修改失败");
-            return response;
+            return Responses.errorResponse("育种实施档案(专家页面)修改失败");
         }else{
             professor.setGmtModified(new Date());
             if (professor.getIsPass() == 1){
                 professor.setUpassReason("操作员已经修改档案并通过技术审核");
             }
-            breedingPlanService.changePlanSelective(professor);
-
-            BreedingPlan selectById = breedingPlanService.findPlanById(professor.getId());
+            int updateID = breedingPlanService.changePlanSelective(professor);
+            if (updateID <= 0) {
+                return Responses.errorResponse("错误");
+            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("breeding_plan",selectById);
+            data.put("breeding_plan",updateID);
             response.setData(data);
             return response;
         }
     }
 
-//    监督者使用按主键修改的接口：/breedingUpdateBySupervisor
-//    监督者使用按主键修改的方法名：changePlanBySupervisor()
-//    监督者使用接收参数：整个表单信息（整型id必填，各参数选填）
-    @RequestMapping(value = "/breedingUpdateBySupervisor",method = RequestMethod.GET)
-    public String changePlanBySupervisor(){
-        return "BreedingUpdateBySupervisor";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/breedingUpdateBySupervisor/show",method = RequestMethod.POST)
-    public Response changePlanBySupervisor(@Valid BreedingPlan supervisor,
-                                           BindingResult bindingResult) {
-        logger.info("invoke breedingUpdateBySupervisor/show {}",supervisor,bindingResult);
+    /**
+     * 监督员按照主键审核
+     * @param supervisor
+     * @param bindingResult
+     * 监督者使用接收参数：整个表单信息（整型id必填，各参数选填）
+     * @return
+     */
+    @PostMapping(value = "/supervisor")
+    public Response changePlanBySupervisor(@RequestBody @Valid BreedingPlan supervisor, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("育种实施档案(监督页面)修改失败");
-            return response;
+            return Responses.errorResponse("育种实施档案(监督页面)修改失败");
         }else{
             supervisor.setGmtSupervised(new Date());
-            breedingPlanService.changePlanSelective(supervisor);
-
-            BreedingPlan selectById = breedingPlanService.findPlanById(supervisor.getId());
+            int updateID = breedingPlanService.changePlanSelective(supervisor);
+            if (updateID <= 0) {
+                return Responses.errorResponse("审核失败");
+            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("breeding_plan",selectById);
+            data.put("breeding_plan",updateID);
             response.setData(data);
             return response;
         }
     }
 
-//    按主键查询的接口：/breedingSelectById
-//    按主键查询的方法名：findPlanById()
-//    接收参数：整型的主键号（保留接口查询，前端不调用此接口）
-    @RequestMapping(value = "/breedingSelectById",method = RequestMethod.GET)
-    public String findPlanById(){
-        return "BreedingSelectById";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/breedingSelectById/show",method = RequestMethod.GET)
-    public Response findPlanById(@Valid BreedingPlan breedingPlan,
-                                 BindingResult bindingResult){
-        logger.info("invoke breedingSelectById/show {}",breedingPlan,bindingResult);
-        if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("育种实施档案(根据条件)查询失败");
-            return response;
-        }else {
+    /**
+     * 按照主键查询
+     * 接收参数：整型的主键号（保留接口查询，前端不调用此接口）
+     * @return
+     */
+    @GetMapping(value = "/{id}")
+    public Response findPlanById(@PathVariable("id") String id){
+        logger.info("invoke findPlanById {}, url is breeding/{id}", id);
+        int uid = StringToLongUtil.stringToInt(id);
+        System.out.println("uid is " + uid);
+        if (uid == -1) {
+            return Responses.errorResponse("查询错误");
+        } else {
             //查询语句的写法：一定要在声明对象时把值直接赋进去
-            BreedingPlan selectById = breedingPlanService.findPlanById(breedingPlan.getId());
+            BreedingPlan selectById = breedingPlanService.findPlanById(uid);
+            if (selectById == null) {
+                return Responses.errorResponse("查询错误");
+            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("breeding_plan",selectById);
@@ -253,23 +315,73 @@ public class BreedingResource {
         }
     }
 
-//    按条件查询接口：/breedingSelective
-//    按条件查询方法名：findPlanSelective()
-//    接收的参数：前端的各参数，以及八个("s_breedingT1")("s_breedingT2")("s_gestationT1")("s_gestationT2")("s_prenatalIT1")("s_prenatalIT2")("s_cubT1")("s_cubT2")时间字符串（所有参数可以选填）
-    @RequestMapping(value = "/breedingSelective",method = RequestMethod.GET)
-    public String findPlanSelective(){
-        return "BreedingSelective";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/breedingSelective/show",method = RequestMethod.GET)
-    public Response findPlanSelective(@Valid BreedingPlan breedingPlan,
-                                      @Valid OtherTime otherTime,
-                                      BindingResult bindingResult) throws ParseException {
-        logger.info("invoke breedingSelective/show {}",breedingPlan,otherTime,bindingResult);
+    /**
+     * 按照条件查询
+     * @param planModel
+     * @param bindingResult
+     * 接收的参数：前端的各参数，以及八个("s_breedingT1")("s_breedingT2")("s_gestationT1")("s_gestationT2")("s_prenatalIT1")("s_prenatalIT2")("s_cubT1")("s_cubT2")时间字符串（所有参数可以选填）
+     * @return
+     * @throws ParseException
+     */
+    @PostMapping(value = "/select")
+    public Response findPlanSelective(@RequestBody @Valid BreedingPlanModel planModel, BindingResult bindingResult) throws ParseException {
         if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("育种实施档案(根据条件)查询失败");
-            return response;
+            return Responses.errorResponse("育种实施档案(根据条件)查询失败");
         }else {
+            //将planModel部分变量拆分传递给对象breedingPlan
+            BreedingPlan breedingPlan = new BreedingPlan();
+            breedingPlan.setId(planModel.getId());
+            breedingPlan.setGmtCreate(planModel.getGmtCreate());
+            breedingPlan.setGmtModified(planModel.getGmtModified());
+            breedingPlan.setSupervisor(planModel.getSupervisor());
+            breedingPlan.setFactoryNum(planModel.getFactoryNum());
+            breedingPlan.setBuilding(planModel.getBuilding());
+            breedingPlan.setmEtI(planModel.getmEtI());
+            breedingPlan.setmEtB(planModel.getmEtB());
+            breedingPlan.setfEtI(planModel.getfEtI());
+            breedingPlan.setfEtB(planModel.getfEtB());
+            breedingPlan.setBreedingT(planModel.getBreedingT());
+            breedingPlan.setGestationT(planModel.getGestationT());
+            breedingPlan.setPrenatalIT(planModel.getPrenatalIT());
+            breedingPlan.setCubT(planModel.getCubT());
+            breedingPlan.setQuantity(planModel.getQuantity());
+            breedingPlan.setOperator(planModel.getOperator());
+            breedingPlan.setProfessor(planModel.getProfessor());
+            breedingPlan.setSupervisor(planModel.getSupervisor());
+            breedingPlan.setRemark(planModel.getRemark());
+            breedingPlan.setIsPass(planModel.getIsPass());
+            breedingPlan.setUpassReason(planModel.getUpassReason());
+            breedingPlan.setIsPass1(planModel.getIsPass1());
+            //将planModel部分变量拆分传递给对象otherTime
+            OtherTime otherTime = new OtherTime();
+            otherTime.setSearch_string(planModel.getSearch_string());
+            otherTime.setS_breedingT(planModel.getS_breedingT());
+            otherTime.setS_gestationT(planModel.getS_gestationT());
+            otherTime.setS_prenatalIT(planModel.getS_prenatalIT());
+            otherTime.setS_cubT(planModel.getS_cubT());
+            otherTime.setS_diagnosisT(planModel.getS_diagnosisT());
+            otherTime.setS_nutritionT(planModel.getS_nutritionT());
+            otherTime.setS_gmtCreate1(planModel.getS_gmtCreate1());
+            otherTime.setS_gmtCreate2(planModel.getS_gmtCreate2());
+            otherTime.setS_gmtModified1(planModel.getS_gmtModified1());
+            otherTime.setS_gmtModified2(planModel.getS_gmtModified2());
+            otherTime.setS_breedingT1(planModel.getS_breedingT1());
+            otherTime.setS_breedingT2(planModel.getS_breedingT2());
+            System.out.println(otherTime.getS_breedingT1()+"---"+otherTime.getS_breedingT2());
+            otherTime.setS_prenatalIT1(planModel.getS_prenatalIT1());
+            otherTime.setS_prenatalIT2(planModel.getS_prenatalIT2());
+            otherTime.setS_gestationT1(planModel.getS_gestationT1());
+            otherTime.setS_gestationT2(planModel.getS_gestationT2());
+            otherTime.setS_cubT1(planModel.getS_cubT1());
+            otherTime.setS_cubT2(planModel.getS_cubT2());
+            otherTime.setS_diagnosisT1(planModel.getS_diagnosisT1());
+            otherTime.setS_diagnosisT2(planModel.getS_diagnosisT2());
+            otherTime.setS_nutritionT1(planModel.getS_nutritionT1());
+            otherTime.setS_nutritionT2(planModel.getS_nutritionT2());
+            otherTime.setDownloadPath(planModel.getDownloadPath());
+            otherTime.setPage(planModel.getPage());
+            otherTime.setSize(planModel.getSize());
+
             BreedingPlanExample breedingPlanExample = new BreedingPlanExample();
             BreedingPlanExample.Criteria criteria = breedingPlanExample.createCriteria();
             Date breedingT1 = null;
@@ -309,49 +421,50 @@ public class BreedingResource {
             if(cubT1 != null && cubT2 != null ){
                 criteria.andCubTBetween(cubT1,cubT2);
             }
-            if(breedingPlan.getId() != null && breedingPlan.getId().toString() !=""){
+            if(breedingPlan.getId() != null && !breedingPlan.getId().toString().isEmpty()){
                 criteria.andIdEqualTo(breedingPlan.getId());
             }
-            if(breedingPlan.getFactoryNum() != null && breedingPlan.getFactoryNum().toString() !=""){
+            if(breedingPlan.getFactoryNum() != null && !breedingPlan.getFactoryNum().toString().isEmpty()){
                 criteria.andFactoryNumEqualTo(breedingPlan.getFactoryNum());
             }
-            if(breedingPlan.getBuilding() != null && breedingPlan.getBuilding() !=""){
+            if(breedingPlan.getBuilding() != null && !breedingPlan.getBuilding().isEmpty()){
                 criteria.andBuildingEqualTo(breedingPlan.getBuilding());
             }
-            if(breedingPlan.getmEtI() != null && breedingPlan.getmEtI() !=""){
+            if(breedingPlan.getmEtI() != null && !breedingPlan.getmEtI().isEmpty()){
                 criteria.andMEtIEqualTo(breedingPlan.getmEtI());
             }
-            if(breedingPlan.getmEtB() != null && breedingPlan.getmEtB() !=""){
+            if(breedingPlan.getmEtB() != null && !breedingPlan.getmEtB().isEmpty()){
                 criteria.andMEtBEqualTo(breedingPlan.getmEtB());
             }
-            if(breedingPlan.getfEtI() != null && breedingPlan.getfEtI() !=""){
+            if(breedingPlan.getfEtI() != null && !breedingPlan.getfEtI().isEmpty()){
                 criteria.andFEtIEqualTo(breedingPlan.getfEtI());
             }
-            if(breedingPlan.getfEtB() != null && breedingPlan.getfEtB() !=""){
+            if(breedingPlan.getfEtB() != null && !breedingPlan.getfEtB().isEmpty()){
                 criteria.andFEtBEqualTo(breedingPlan.getfEtB());
             }
-            if(breedingPlan.getQuantity() != null && breedingPlan.getQuantity().toString() !=""){
+            if(breedingPlan.getQuantity() != null && !breedingPlan.getQuantity().toString().isEmpty()){
                 criteria.andQuantityEqualTo(breedingPlan.getQuantity());
             }
-            if(breedingPlan.getOperator() != null && breedingPlan.getOperator() !=""){
+            if(breedingPlan.getOperator() != null && !breedingPlan.getOperator().isEmpty()){
                 criteria.andOperatorEqualTo(breedingPlan.getOperator());
             }
-            if(breedingPlan.getProfessor() != null && breedingPlan.getProfessor() !=""){
+            if(breedingPlan.getProfessor() != null && !breedingPlan.getProfessor().isEmpty()){
                 criteria.andProfessorEqualTo(breedingPlan.getProfessor());
             }
-            if(breedingPlan.getSupervisor() != null && breedingPlan.getSupervisor() !=""){
+            if(breedingPlan.getSupervisor() != null && !breedingPlan.getSupervisor().isEmpty()){
                 criteria.andSupervisorEqualTo(breedingPlan.getSupervisor());
             }
-            if(breedingPlan.getIsPass() != null && breedingPlan.getIsPass().toString() !=""){
+            if(breedingPlan.getIsPass() != null && !breedingPlan.getIsPass().toString().isEmpty()){
                 criteria.andIsPassEqualTo(breedingPlan.getIsPass());
             }
-            if(breedingPlan.getUpassReason() != null && breedingPlan.getUpassReason() !=""){
+            if(breedingPlan.getUpassReason() != null && !breedingPlan.getUpassReason().isEmpty()){
                 criteria.andUpassReasonLike(breedingPlan.getUpassReason());
             }
-            if(breedingPlan.getIsPass1() != null && breedingPlan.getIsPass1().toString() !=""){
+            if(breedingPlan.getIsPass1() != null && !breedingPlan.getIsPass1().toString().isEmpty()){
                 criteria.andIsPassEqualTo(breedingPlan.getIsPass1());
             }
-            System.out.println(otherTime.getPage()+otherTime.getSize());
+            System.out.println(otherTime.getPage());
+            System.out.println(otherTime.getSize());
             List<BreedingPlan> selective = breedingPlanService.findPlanSelective(breedingPlanExample,new RowBounds(otherTime.getPage(),otherTime.getSize()));
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
@@ -361,34 +474,87 @@ public class BreedingResource {
         }
     }
 
-//    供技术审核查询信息:/breedingSelectByProfessor
-//    供技术审核查询方法名：findPlanSelectByProfessor()
-//    接收的参数：前端的各参数，（所有参数可以选填）
-    @RequestMapping(value = "/breedingSelectByProfessor",method = RequestMethod.GET)
-    public String findPlanSelectByProfessor(){
-        return "BreedingSelectByProfessor";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/breedingSelectByProfessor/show",method = RequestMethod.GET)
-    public Response findPlanSelectByProfessor(@Valid BreedingPlan breedingPlan,
-                                              @Valid OtherTime otherTime,
-                                              BindingResult bindingResult){
-        logger.info("invoke breedingSelectByProfessor/show {}",breedingPlan,otherTime,bindingResult);
+    /**
+     * 供技术审核查询信息:/breedingSelectByProfessor
+     * 供技术审核查询方法名：findPlanSelectByProfessor()
+     * 接收的参数：前端的各参数，（所有参数可以选填）
+     * @param planModel
+     * @param bindingResult
+     * @return
+     */
+    @PostMapping(value = "/professor/select")
+    public Response findPlanSelectByProfessor(@RequestBody @Valid BreedingPlanModel planModel, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("育种实施档案(监督页面)修改失败");
-            return response;
+            return Responses.errorResponse("育种实施档案(监督页面)修改失败");
         }else {
+            //将planModel部分变量拆分传递给对象breedingPlan
+            BreedingPlan breedingPlan = new BreedingPlan();
+            breedingPlan.setId(planModel.getId());
+            breedingPlan.setGmtCreate(planModel.getGmtCreate());
+            breedingPlan.setGmtModified(planModel.getGmtModified());
+            breedingPlan.setSupervisor(planModel.getSupervisor());
+            breedingPlan.setFactoryNum(planModel.getFactoryNum());
+            breedingPlan.setBuilding(planModel.getBuilding());
+            breedingPlan.setmEtI(planModel.getmEtI());
+            breedingPlan.setmEtB(planModel.getmEtB());
+            breedingPlan.setfEtI(planModel.getfEtI());
+            breedingPlan.setfEtB(planModel.getfEtB());
+            breedingPlan.setBreedingT(planModel.getBreedingT());
+            breedingPlan.setGestationT(planModel.getGestationT());
+            breedingPlan.setPrenatalIT(planModel.getPrenatalIT());
+            breedingPlan.setCubT(planModel.getCubT());
+            breedingPlan.setQuantity(planModel.getQuantity());
+            breedingPlan.setOperator(planModel.getOperator());
+            breedingPlan.setProfessor(planModel.getProfessor());
+            breedingPlan.setSupervisor(planModel.getSupervisor());
+            breedingPlan.setRemark(planModel.getRemark());
+            breedingPlan.setIsPass(planModel.getIsPass());
+            breedingPlan.setUpassReason(planModel.getUpassReason());
+            breedingPlan.setIsPass1(planModel.getIsPass1());
+
+            //将planModel部分变量拆分传递给对象otherTime
+            OtherTime otherTime = new OtherTime();
+            otherTime.setSearch_string(planModel.getSearch_string());
+            otherTime.setS_breedingT(planModel.getS_breedingT());
+            otherTime.setS_gestationT(planModel.getS_gestationT());
+            otherTime.setS_prenatalIT(planModel.getS_prenatalIT());
+            otherTime.setS_cubT(planModel.getS_cubT());
+            otherTime.setS_diagnosisT(planModel.getS_diagnosisT());
+            otherTime.setS_nutritionT(planModel.getS_nutritionT());
+            otherTime.setS_gmtCreate1(planModel.getS_gmtCreate1());
+            otherTime.setS_gmtCreate2(planModel.getS_gmtCreate2());
+            otherTime.setS_gmtModified1(planModel.getS_gmtModified1());
+            otherTime.setS_gmtModified2(planModel.getS_gmtModified2());
+            otherTime.setS_breedingT1(planModel.getS_breedingT1());
+            otherTime.setS_breedingT2(planModel.getS_breedingT2());
+            otherTime.setS_prenatalIT1(planModel.getS_prenatalIT1());
+            otherTime.setS_prenatalIT2(planModel.getS_prenatalIT2());
+            otherTime.setS_gestationT1(planModel.getS_gestationT1());
+            otherTime.setS_gestationT2(planModel.getS_gestationT2());
+            otherTime.setS_cubT1(planModel.getS_cubT1());
+            otherTime.setS_cubT2(planModel.getS_cubT2());
+            otherTime.setS_diagnosisT1(planModel.getS_diagnosisT1());
+            otherTime.setS_diagnosisT2(planModel.getS_diagnosisT2());
+            otherTime.setS_nutritionT1(planModel.getS_nutritionT1());
+            otherTime.setS_nutritionT2(planModel.getS_nutritionT2());
+            otherTime.setDownloadPath(planModel.getDownloadPath());
+            otherTime.setPage(planModel.getPage());
+            otherTime.setSize(planModel.getSize());
+
             Byte notPassed = 0;
             BreedingPlanExample breedingPlanExample = new BreedingPlanExample();
             BreedingPlanExample.Criteria criteria = breedingPlanExample.createCriteria();
 
-            if(breedingPlan.getId() != null && breedingPlan.getId().toString() !=""){
+            if(breedingPlan.getId() != null && !breedingPlan.getId().toString().isEmpty()){
                 criteria.andIdEqualTo(breedingPlan.getId());
             }
-            if(breedingPlan.getProfessor() != null && breedingPlan.getProfessor() !=""){
+            if(breedingPlan.getProfessor() != null && !breedingPlan.getProfessor().isEmpty()){
                 criteria.andProfessorEqualTo(breedingPlan.getProfessor());
             }
-            if(breedingPlan.getUpassReason() != null && breedingPlan.getUpassReason() !=""){
+            if(breedingPlan.getSupervisor() != null && !breedingPlan.getSupervisor().isEmpty()){
+                criteria.andSupervisorEqualTo(breedingPlan.getSupervisor());
+            }
+            if(breedingPlan.getUpassReason() != null && !breedingPlan.getUpassReason().isEmpty()){
                 criteria.andUpassReasonLike(breedingPlan.getUpassReason());
             }
             criteria.andIsPassEqualTo(notPassed);//显示的为未通过技术审核
@@ -401,32 +567,79 @@ public class BreedingResource {
         }
     }
 
-//    供监督者查询信息
-//    供监督者查询方法名：findPlanSelectBySupervisor()
-//    接收的参数：前端的各参数，（所有参数可以选填）
-    @RequestMapping(value = "/breedingSelectBySupervisor",method = RequestMethod.GET)
-    public String findPlanSelectBySupervisor(){
-        return "BreedingSelectSupervisor";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/breedingSelectBySupervisor/show",method = RequestMethod.GET)
-    public Response findPlanSelectBySupervisor(@Valid BreedingPlan breedingPlan,
-                                               @Valid OtherTime otherTime,
-                                               BindingResult bindingResult){
-        logger.info("invoke breedingSelectBySupervisor/show {}",breedingPlan,otherTime,bindingResult);
+    /**
+     * 供监督者查询信息
+     * 供监督者查询方法名：findPlanSelectBySupervisor()
+     * 接收的参数：前端的各参数，（所有参数可以选填）
+     * @param planModel
+     * @param bindingResult
+     * @return
+     */
+    @PostMapping(value = "/supervisor/select")
+    public Response findPlanSelectBySupervisor(@RequestBody @Valid BreedingPlanModel planModel, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("育种实施档案(监督页面)修改失败");
-            return response;
+            return Responses.errorResponse("育种实施档案(监督页面)修改失败");
         }else {
+            //将planModel部分变量拆分传递给对象breedingPlan
+            BreedingPlan breedingPlan = new BreedingPlan();
+            breedingPlan.setId(planModel.getId());
+            breedingPlan.setGmtCreate(planModel.getGmtCreate());
+            breedingPlan.setGmtModified(planModel.getGmtModified());
+            breedingPlan.setSupervisor(planModel.getSupervisor());
+            breedingPlan.setFactoryNum(planModel.getFactoryNum());
+            breedingPlan.setBuilding(planModel.getBuilding());
+            breedingPlan.setmEtI(planModel.getmEtI());
+            breedingPlan.setmEtB(planModel.getmEtB());
+            breedingPlan.setfEtI(planModel.getfEtI());
+            breedingPlan.setfEtB(planModel.getfEtB());
+            breedingPlan.setBreedingT(planModel.getBreedingT());
+            breedingPlan.setGestationT(planModel.getGestationT());
+            breedingPlan.setPrenatalIT(planModel.getPrenatalIT());
+            breedingPlan.setCubT(planModel.getCubT());
+            breedingPlan.setQuantity(planModel.getQuantity());
+            breedingPlan.setOperator(planModel.getOperator());
+            breedingPlan.setProfessor(planModel.getProfessor());
+            breedingPlan.setSupervisor(planModel.getSupervisor());
+            breedingPlan.setRemark(planModel.getRemark());
+            breedingPlan.setIsPass(planModel.getIsPass());
+            breedingPlan.setUpassReason(planModel.getUpassReason());
+            breedingPlan.setIsPass1(planModel.getIsPass1());
+
+            //将planModel部分变量拆分传递给对象otherTime
+            OtherTime otherTime = new OtherTime();
+            otherTime.setSearch_string(planModel.getSearch_string());
+            otherTime.setS_breedingT(planModel.getS_breedingT());
+            otherTime.setS_gestationT(planModel.getS_gestationT());
+            otherTime.setS_prenatalIT(planModel.getS_prenatalIT());
+            otherTime.setS_cubT(planModel.getS_cubT());
+            otherTime.setS_diagnosisT(planModel.getS_diagnosisT());
+            otherTime.setS_nutritionT(planModel.getS_nutritionT());
+            otherTime.setS_gmtCreate1(planModel.getS_gmtCreate1());
+            otherTime.setS_gmtCreate2(planModel.getS_gmtCreate2());
+            otherTime.setS_gmtModified1(planModel.getS_gmtModified1());
+            otherTime.setS_gmtModified2(planModel.getS_gmtModified2());
+            otherTime.setS_breedingT1(planModel.getS_breedingT1());
+            otherTime.setS_breedingT2(planModel.getS_breedingT2());
+            otherTime.setS_prenatalIT1(planModel.getS_prenatalIT1());
+            otherTime.setS_prenatalIT2(planModel.getS_prenatalIT2());
+            otherTime.setS_gestationT1(planModel.getS_gestationT1());
+            otherTime.setS_gestationT2(planModel.getS_gestationT2());
+            otherTime.setS_cubT1(planModel.getS_cubT1());
+            otherTime.setS_cubT2(planModel.getS_cubT2());
+            otherTime.setS_diagnosisT1(planModel.getS_diagnosisT1());
+            otherTime.setS_diagnosisT2(planModel.getS_diagnosisT2());
+            otherTime.setS_nutritionT1(planModel.getS_nutritionT1());
+            otherTime.setS_nutritionT2(planModel.getS_nutritionT2());
+            otherTime.setDownloadPath(planModel.getDownloadPath());
+            otherTime.setPage(planModel.getPage());
+            otherTime.setSize(planModel.getSize());
+
             Byte notPassed1 = 0;
             BreedingPlanExample breedingPlanExample = new BreedingPlanExample();
             BreedingPlanExample.Criteria criteria = breedingPlanExample.createCriteria();
 
-            if(breedingPlan.getId() != null && breedingPlan.getId().toString() !=""){
+            if(breedingPlan.getId() != null && !breedingPlan.getId().toString().isEmpty()){
                 criteria.andIdEqualTo(breedingPlan.getId());
-            }
-            if(breedingPlan.getSupervisor() != null && breedingPlan.getSupervisor() !=""){
-                criteria.andSupervisorEqualTo(breedingPlan.getSupervisor());
             }
             criteria.andIsPass1EqualTo(notPassed1);
             List<BreedingPlan> select = breedingPlanService.findPlanSelective(breedingPlanExample,new RowBounds(otherTime.getPage(),otherTime.getSize()));

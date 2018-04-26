@@ -10,6 +10,7 @@ import java.math.BigInteger;
 public class ImmuneRequest {
 
     private BigInteger factoryNum;
+    private String factoryName;
     private String crowdNum;
     private String immuneEartag;
     private String immuneTime;
@@ -41,6 +42,14 @@ public class ImmuneRequest {
 
     public void setFactoryNum(BigInteger factoryNum) {
         this.factoryNum = factoryNum;
+    }
+
+    public String getFactoryName() {
+        return factoryName;
+    }
+
+    public void setFactoryName(String factoryName) {
+        this.factoryName = factoryName;
     }
 
     public String getCrowdNum() {

@@ -1,3 +1,4 @@
+
 package com.deep.application;
 
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @version v1.0
  * @date 2018/1/21/
  */
+
+
 //@Configuration
 //@EnableWebMvc
 //public class CorsConfig implements WebMvcConfigurer {
@@ -19,6 +22,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 //  @Override
 //  public void addCorsMappings(CorsRegistry registry) {
 //    //设置允许跨域的路径
+
 ////    registry.addMapping("/**");
 //        //设置允许跨域请求的域名
 //    //    .allowedOrigins("localhost");
@@ -30,4 +34,5 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 // //       .maxAge(3600);
 //  }
 //}
+
 

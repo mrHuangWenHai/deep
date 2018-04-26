@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import javax.ws.rs.HEAD;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +31,7 @@ public class RoleResource {
      * 查看所有的角色
      * @return json数据返回所有角色
      */
-    @Permit(modules = "role")
+    @Permit(authorities = "query_role")
     @GetMapping(value = "/")
     public Response roleLists() {
 
@@ -54,7 +55,7 @@ public class RoleResource {
      * @param bindingResult
      * @return
      */
-    @Permit(modules = "role")
+    @Permit(authorities = "add_role")
     @PostMapping(value = "/add")
     public Response addRole(@Valid @RequestBody RoleModel roleModel, BindingResult bindingResult) {
 
@@ -65,6 +66,12 @@ public class RoleResource {
         } else {
             roleModel.setGmtCreate(new Timestamp(System.currentTimeMillis()));
             roleModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
+            if (roleModel.getDefaultPermit().equals("")) {
+                // 默认权限的位数为64*3 = 192位, in database, it uses 192 Bytes
+                roleModel.setDefaultPermit("0000000000000000000000000000000000000000000000000000000000000000" +
+                                           "0000000000000000000000000000000000000000000000000000000000000000" +
+                                           "0000000000000000000000000000000000000000000000000000000000000000");
+            }
             Long addId = roleService.addRole(roleModel);
             if (addId <= 0) {
                 return Responses.errorResponse("添加失败");
@@ -82,7 +89,7 @@ public class RoleResource {
      * @param id 主键
      * @return
      */
-    @Permit(modules = "role")
+    @Permit(authorities = "query_role")
     @GetMapping(value = "/{id}")
     public Response findRole(@PathVariable("id")String id) {
 
@@ -107,7 +114,7 @@ public class RoleResource {
      * 删除一个角色
      * @param id
      */
-    @Permit(modules = "role")
+    @Permit(authorities = "remove_role")
     @DeleteMapping(value = "/{id}")
     public Response deleteRole(@PathVariable("id")String id) {
 
@@ -133,12 +140,10 @@ public class RoleResource {
      * @param roleModel
      * @return
      */
-    @Permit(modules = "role")
+    @Permit(authorities = "modify_role")
     @PutMapping(value = "/{id}")
-
     public Response roleUpdate(@RequestBody @Valid RoleModel roleModel, @PathVariable("id") String id, BindingResult bindingResult) {
         logger.info("invoke roleUpdate{}, url is role/{id}", roleModel, id, bindingResult);
-
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");

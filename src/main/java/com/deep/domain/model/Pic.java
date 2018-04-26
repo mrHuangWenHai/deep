@@ -18,7 +18,6 @@ public class Pic implements Serializable {
 
     private Date udate;
 
-
     public Date getSdate() {
         return sdate;
     }

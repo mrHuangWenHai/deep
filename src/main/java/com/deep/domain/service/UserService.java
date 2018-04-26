@@ -1,7 +1,8 @@
 package com.deep.domain.service;
 
-
+import com.deep.api.Utils.JedisUtil;
 import com.deep.api.authorization.tools.RoleAndPermit;
+import com.deep.api.response.Professor;
 import com.deep.domain.model.AgentModel;
 import com.deep.domain.model.FactoryModel;
 import com.deep.domain.model.UserModel;
@@ -36,11 +37,13 @@ public class UserService {
     public class UserLogin {
         private long id;;                      // 用户表的主键
         private String pkUserid;               // 用户名
-        private String userPwd;                // 密码
-        private String userPic;                // 用户照片存储路径
         private Map userRole;                  // 用户角色
-        private Map userPermit;                // 用户所具有的权限
+        private String userPermit;                // 用户所具有的权限
         private Map userFactory;               // 用户所属羊场
+        private long agentFather;            // 用户所在的ＡＧＥＮＴ，如果是羊场，则不为空，否则为空
+
+        public UserLogin() {
+        }
 
         public Map getUserFactory() {
             return userFactory;
@@ -66,20 +69,12 @@ public class UserService {
             this.pkUserid = pkUserid;
         }
 
-        public String getUserPwd() {
-            return userPwd;
+        public long getAgentFather() {
+            return agentFather;
         }
 
-        public void setUserPwd(String userPwd) {
-            this.userPwd = userPwd;
-        }
-
-        public String getUserPic() {
-            return userPic;
-        }
-
-        public void setUserPic(String userPic) {
-            this.userPic = userPic;
+        public void setAgentFather(long agentFather) {
+            this.agentFather = agentFather;
         }
 
         public Map getUserRole() {
@@ -90,11 +85,11 @@ public class UserService {
             this.userRole = userRole;
         }
 
-        public Map getUserPermit() {
+        public String getUserPermit() {
             return userPermit;
         }
 
-        public void setUserPermit(Map userPermit) {
+        public void setUserPermit(String userPermit) {
             this.userPermit = userPermit;
         }
     }
@@ -179,8 +174,8 @@ public class UserService {
      * 获取所有的用户信息
      * @return
      */
-    public List<UserModel> getAll() {
-        return userMapper.queryAllUser();
+    public List<UserModel> getAll(long roleID) {
+        return userMapper.queryAllUser(roleID);
     }
 
     /**
@@ -247,7 +242,6 @@ public class UserService {
         roleAndPermit.setRole(userModel.getUserRole());
         roleAndPermit.setExtended(userModel.getIsExtended());
         roleAndPermit.setExtendedPermit(userModel.getUserPermit());
-
         return roleAndPermit;
     }
     /**
@@ -297,48 +291,33 @@ public class UserService {
         UserLogin userLogin = new UserLogin();
         // 用户角色信息
         Map roleMapper = new HashMap();
-        // 用户权限信息
-        Map permitMapper = new HashMap();
         // 用户代理羊场信息
         Map factoryOrAgentMapper = new HashMap();
         userLogin.setId(userModel.getId());
-        userLogin.setPkUserid(userModel.getPkUserid());
-        userLogin.setUserPic(userModel.getUserPic());
-        userLogin.setUserPwd(userModel.getUserPwd());
         // 角色名称
-
         String roleName = roleService.getOneRole(userModel.getUserRole()).getTypeName();
-
         roleMapper.put("roleName", roleName);
         roleMapper.put("roleNum", userModel.getUserRole());
         userLogin.setUserRole(roleMapper);
-
-        permitMapper = roleService.findRolePermits(userModel.getUserRole());
+        String allPermits = roleService.findRolePermits(userModel.getUserRole());
         // 判断是否有拓展权限
-        if (userModel.getIsExtended() == 0) {
-            // 没有拓展权限
-        } else {
-            permitMapper = roleService.findExtendPermit(permitMapper, userModel.getUserPermit());
+        if (userModel.getIsExtended() == 1) {
+            allPermits = roleService.findExtendPermit(allPermits, userModel.getUserPermit());
         }
-        userLogin.setUserPermit(permitMapper);
-
+        userLogin.setUserPermit(allPermits);
         int isFactory = userModel.getIsFactory();
         long factoryId = userModel.getUserFactory();
-
         // 判断客户的类型(代理(总公司)\羊场\游客)
         if (isFactory == 0) {
             // 代表羊场
             FactoryModel factoryModel = factoryService.getOneFactory(factoryId);
-
             Logger logger = LoggerFactory.getLogger(UserService.class);
             logger.info("isFactory", factoryModel);
-            System.out.println(factoryId);
-            System.out.println(factoryModel.getBreadName());
-
             if (factoryModel != null) {
                 factoryOrAgentMapper.put("factoryNum", factoryModel.getId());
                 factoryOrAgentMapper.put("factoryName",factoryModel.getBreadName());
             }
+            userLogin.setAgentFather(userModel.getUserFactory());
         } else if (isFactory == 1){
             // 代表代理
             AgentModel agentModel = agentService.getOneAgent(factoryId);
@@ -354,18 +333,17 @@ public class UserService {
 
     /**
      * 获取同类的角色
-     * @param roleID
-     * @return
+     * @param roleID    角色ID
+     * @return  人员列表
      */
-    public List<UserRole> getRoles(long roleID) {
+    public List<Professor> getRoles(long roleID) {
         return userMapper.getOneRoles(roleID);
     }
 
     /**
-
      * 修改用户密码
-     * @param userPwd
-     * @return
+     * @param userPwd   用户密码
+     * @return  影响行数
      */
     public Long updateUserPwd(String userPwd, String username) {
         return userMapper.updateUserPwd(userPwd, username);
@@ -374,14 +352,14 @@ public class UserService {
 
     /**
      * 获取羊场上级代理的专家信息(测试, only 测试)
-     * @param factoryNumber
-     * @return
+     * @param factoryNumber 羊场编号
+     * @return  羊场对应专家的电话号码集合
      */
     public List<String> getUserTelephoneByfactoryNum(BigInteger factoryNumber) {
         short agentID = factoryService.getAgentIDByFactoryNumber(factoryNumber.toString());
         System.out.println(agentID);
         List<String> telephones = userMapper.queryTelephoneByAgentAndRole(agentID);
-        if (telephones.size() <= 0) {
+        if (telephones == null) {
             return null;
         } else {
             return telephones;
@@ -390,7 +368,7 @@ public class UserService {
 
     /**
      * 查询某个羊场下的所有用户
-     * @param factoryOrAgentID
+     * @param factoryOrAgentID  羊场或者代理的ID
      * @return
      */
     public List<UserModel> getAllUserOfFactoryOrAgent(Long factoryOrAgentID) {
@@ -398,16 +376,60 @@ public class UserService {
     }
 
     /**
-     * 获得该代理下的所有专家
-     * @param agents
+     * 获取所有的专家信息, 包括在线和没有在线的专家
+     * @param agents    代理的集合
      * @return
      */
-    public List<UserRole> getProfessor(List<AgentModel> agents) {
-        List<UserRole> models = new ArrayList<>();
+    public Map<String, Object> getProfessor(List<AgentModel> agents) {
+        Map<String, Object> allProfessor = new HashMap<>();
         for(AgentModel attribute : agents) {
-            models.addAll(userMapper.getProfessor((long)attribute.getId()));
+            System.out.println(attribute.getId());
+            allProfessor.put("上级代理" + attribute.getAgentRank(), userMapper.getProfessor((long)attribute.getId()));
         }
-        return models;
+        return allProfessor;
     }
 
+    /**
+     * 获取上级专家的在线信息
+     * @param agentID   代理主键ID
+     * @return 数据的类型, 之后要将其改成Request的模板类
+     */
+    public Professor getFatherProfessors(long agentID) {
+        List<Professor> models = new ArrayList<>();
+        List<Professor> users = new ArrayList<>();
+        long fatherID = agentID;
+        //　首先查询上级代理有木有在线的专家
+        models = userMapper.getProfessor(agentID);
+        for (int i = 0; i < models.size(); i++) {
+            if (JedisUtil.getValue(String.valueOf(models.get(i).getId())) != null) {
+                users.add(models.get(i));
+            }
+        }
+        while (users.size() <= 0) {
+            // 找到所有在线的上级
+            for (int i = 0; i < models.size(); i++) {
+                if (JedisUtil.getValue(String.valueOf(models.get(i).getId())) != null) {
+                    users.add(models.get(i));
+                }
+            }
+            if (users.size() > 0) {
+                break;
+            } else {
+//                fatherID = agentService.getFather(agentID).getAgentFather();
+                System.out.println(fatherID);
+                if (fatherID == 0) {
+                    return null;
+                }
+                AgentModel temp = agentService.getFather(fatherID);
+                if (temp == null) {
+                    return null;
+                }
+                fatherID = temp.getId();
+                // 如果没有上级, 即最高级, fatherID 为0
+                models = userMapper.getProfessor(fatherID);
+            }
+        }
+        int random = (int) (Math.random()*users.size());
+        return users.get(random);
+    }
 }

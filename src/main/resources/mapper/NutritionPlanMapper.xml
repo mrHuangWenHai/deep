@@ -134,7 +134,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
@@ -151,7 +151,8 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.deep.domain.model.NutritionPlanWithBLOBs" >
+  <insert id="insert" parameterType="com.deep.domain.model.NutritionPlanWithBLOBs"
+          useGeneratedKeys="true" keyProperty="id">
     insert into nutrition_plan (id, gmt_create, gmt_modified, 
       gmt_supervised, factory_num, building, 
       nutrition_t, quantity, average, 
@@ -478,36 +479,36 @@
   <update id="updateByExampleWithBLOBs" parameterType="map" >
     update nutrition_plan
     set id = #{record.id,jdbcType=INTEGER},
-      gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
-      gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
-      gmt_supervised = #{record.gmtSupervised,jdbcType=TIMESTAMP},
-      factory_num = #{record.factoryNum,jdbcType=BIGINT},
-      building = #{record.building,jdbcType=VARCHAR},
-      nutrition_t = #{record.nutritionT,jdbcType=TIMESTAMP},
-      quantity = #{record.quantity,jdbcType=BIGINT},
-      average = #{record.average,jdbcType=VARCHAR},
-      period = #{record.period,jdbcType=VARCHAR},
-      water = #{record.water,jdbcType=VARCHAR},
-      operator = #{record.operator,jdbcType=VARCHAR},
-      professor = #{record.professor,jdbcType=VARCHAR},
-      supervisor = #{record.supervisor,jdbcType=VARCHAR},
-      remark = #{record.remark,jdbcType=VARCHAR},
-      is_pass = #{record.isPass,jdbcType=TINYINT},
-      upass_reason = #{record.upassReason,jdbcType=VARCHAR},
-      is_pass1 = #{record.isPass1,jdbcType=TINYINT},
-      material_a = #{record.materialA,jdbcType=LONGVARCHAR},
-      material_m = #{record.materialM,jdbcType=LONGVARCHAR},
-      material_o = #{record.materialO,jdbcType=LONGVARCHAR},
-      material_w_m = #{record.materialWM,jdbcType=LONGVARCHAR},
-      material_w_o = #{record.materialWO,jdbcType=LONGVARCHAR},
-      roughage_p = #{record.roughageP,jdbcType=LONGVARCHAR},
-      roughage_d = #{record.roughageD,jdbcType=LONGVARCHAR},
-      roughage_w_p = #{record.roughageWP,jdbcType=LONGVARCHAR},
-      roughage_w_d = #{record.roughageWD,jdbcType=LONGVARCHAR},
-      roughage_w_o = #{record.roughageWO,jdbcType=LONGVARCHAR},
-      picking_m = #{record.pickingM,jdbcType=LONGVARCHAR},
-      picking_r = #{record.pickingR,jdbcType=LONGVARCHAR},
-      picking_o = #{record.pickingO,jdbcType=LONGVARCHAR}
+    gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+    gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+    gmt_supervised = #{record.gmtSupervised,jdbcType=TIMESTAMP},
+    factory_num = #{record.factoryNum,jdbcType=BIGINT},
+    building = #{record.building,jdbcType=VARCHAR},
+    nutrition_t = #{record.nutritionT,jdbcType=TIMESTAMP},
+    quantity = #{record.quantity,jdbcType=BIGINT},
+    average = #{record.average,jdbcType=VARCHAR},
+    period = #{record.period,jdbcType=VARCHAR},
+    water = #{record.water,jdbcType=VARCHAR},
+    operator = #{record.operator,jdbcType=VARCHAR},
+    professor = #{record.professor,jdbcType=VARCHAR},
+    supervisor = #{record.supervisor,jdbcType=VARCHAR},
+    remark = #{record.remark,jdbcType=VARCHAR},
+    is_pass = #{record.isPass,jdbcType=TINYINT},
+    upass_reason = #{record.upassReason,jdbcType=VARCHAR},
+    is_pass1 = #{record.isPass1,jdbcType=TINYINT},
+    material_a = #{record.materialA,jdbcType=LONGVARCHAR},
+    material_m = #{record.materialM,jdbcType=LONGVARCHAR},
+    material_o = #{record.materialO,jdbcType=LONGVARCHAR},
+    material_w_m = #{record.materialWM,jdbcType=LONGVARCHAR},
+    material_w_o = #{record.materialWO,jdbcType=LONGVARCHAR},
+    roughage_p = #{record.roughageP,jdbcType=LONGVARCHAR},
+    roughage_d = #{record.roughageD,jdbcType=LONGVARCHAR},
+    roughage_w_p = #{record.roughageWP,jdbcType=LONGVARCHAR},
+    roughage_w_d = #{record.roughageWD,jdbcType=LONGVARCHAR},
+    roughage_w_o = #{record.roughageWO,jdbcType=LONGVARCHAR},
+    picking_m = #{record.pickingM,jdbcType=LONGVARCHAR},
+    picking_r = #{record.pickingR,jdbcType=LONGVARCHAR},
+    picking_o = #{record.pickingO,jdbcType=LONGVARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -515,23 +516,23 @@
   <update id="updateByExample" parameterType="map" >
     update nutrition_plan
     set id = #{record.id,jdbcType=INTEGER},
-      gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
-      gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
-      gmt_supervised = #{record.gmtSupervised,jdbcType=TIMESTAMP},
-      factory_num = #{record.factoryNum,jdbcType=BIGINT},
-      building = #{record.building,jdbcType=VARCHAR},
-      nutrition_t = #{record.nutritionT,jdbcType=TIMESTAMP},
-      quantity = #{record.quantity,jdbcType=BIGINT},
-      average = #{record.average,jdbcType=VARCHAR},
-      period = #{record.period,jdbcType=VARCHAR},
-      water = #{record.water,jdbcType=VARCHAR},
-      operator = #{record.operator,jdbcType=VARCHAR},
-      professor = #{record.professor,jdbcType=VARCHAR},
-      supervisor = #{record.supervisor,jdbcType=VARCHAR},
-      remark = #{record.remark,jdbcType=VARCHAR},
-      is_pass = #{record.isPass,jdbcType=TINYINT},
-      upass_reason = #{record.upassReason,jdbcType=VARCHAR},
-      is_pass1 = #{record.isPass1,jdbcType=TINYINT}
+    gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+    gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+    gmt_supervised = #{record.gmtSupervised,jdbcType=TIMESTAMP},
+    factory_num = #{record.factoryNum,jdbcType=BIGINT},
+    building = #{record.building,jdbcType=VARCHAR},
+    nutrition_t = #{record.nutritionT,jdbcType=TIMESTAMP},
+    quantity = #{record.quantity,jdbcType=BIGINT},
+    average = #{record.average,jdbcType=VARCHAR},
+    period = #{record.period,jdbcType=VARCHAR},
+    water = #{record.water,jdbcType=VARCHAR},
+    operator = #{record.operator,jdbcType=VARCHAR},
+    professor = #{record.professor,jdbcType=VARCHAR},
+    supervisor = #{record.supervisor,jdbcType=VARCHAR},
+    remark = #{record.remark,jdbcType=VARCHAR},
+    is_pass = #{record.isPass,jdbcType=TINYINT},
+    upass_reason = #{record.upassReason,jdbcType=VARCHAR},
+    is_pass1 = #{record.isPass1,jdbcType=TINYINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>

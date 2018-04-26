@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AgentService {
@@ -35,7 +37,24 @@ public class AgentService {
     }
 
     /**
+     * 获取所有的下级代理, 包括子代理的子代理, 采用递归方式
+     * @param id
+     * @return
+     */
+    public Map<String, Object> getAllSons(int id) {
+        Map<String, Object> map = new HashMap<>();
+        List<AgentModel> agentModels = getSons(id);
+        if (agentModels != null) {
+            for (int i = 0; i < agentModels.size(); i++) {
+                // 0 表示下层数据
+                map.put(String.valueOf(0), getAllSons(agentModels.get(i).getId()));
+                map.put(String.valueOf(i+1), agentModels.get(i));
+            }
+        }
+        return map;
+    }
 
+    /**
      * 查询一个代理的直属上级
      * @param id
      * @return
@@ -48,7 +67,6 @@ public class AgentService {
             return agentMapper.queryAgentByID((long)agentModel.getAgentFather());
         }
     }
-
     /**
      * 查询一个代理的所有上级
      * TODO 最好将其优化成数据库的查询, 提高查询的效率, 目前没有找到数据库树型查询的方法
@@ -56,18 +74,16 @@ public class AgentService {
     public List<AgentModel> getAncestors(Long id) {
         List<AgentModel> lists = new ArrayList<>();
         AgentModel agentModel = agentMapper.queryAgentByID(id);
-        while (agentModel != null) {
+        while (agentModel != null && agentModel.getAgentFather() != 0) {
             agentModel = agentMapper.queryAgentByID((long)agentModel.getAgentFather());
             lists.add(agentModel);
         }
         return lists;
     }
 
-    public List<UserService.UserRole> getAncestorsProfessor(Long id) {
+    public Map<String, Object> getAncestorsProfessor(Long id) {
         List<AgentModel> lists = getAncestors(id);
-        List<UserService.UserRole> userRole = userService.getProfessor(lists);
-        return userRole;
-
+        return userService.getProfessor(lists);
     }
 
     /**

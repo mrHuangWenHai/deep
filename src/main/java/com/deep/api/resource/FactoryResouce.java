@@ -15,6 +15,7 @@ import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/factory")
@@ -26,17 +27,15 @@ public class FactoryResouce {
     private FactoryService factoryService;
 
     /**
-     * 查看所有羊场
+     * 查看所有羊场(超级管理员可见)
      * @return
      */
-    @Permit(modules = "factory", authorities = "select_factory")
+    @Permit(authorities = "customer_inquiry")
     @GetMapping(value = "/")
     public Response factoryLists() {
-
         logger.info("invoke factoryLists, url is factory/");
-
         List<FactoryModel> factoryModelList = factoryService.getAll();
-        if (factoryModelList.size() <= 0) {
+        if (factoryModelList == null) {
             return Responses.errorResponse("暂无羊场信息");
         }
         Response response = Responses.successResponse();
@@ -48,14 +47,60 @@ public class FactoryResouce {
     }
 
     /**
+     * 获取属于某一个代理的所有羊场
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/agent/{id}")
+    public Response factoryByAgent(@PathVariable("id") String id) {
+        logger.info("invoke factoryByAgent {}, url is factory/agent/{id}", id);
+        long uid = StringToLongUtil.stringToInt(id);
+        if (uid == -1) {
+            return Responses.errorResponse("查询错误");
+        }
+        List<FactoryModel> lists = factoryService.getAllFactoryOfOneAgent(uid);
+        if (lists == null) {
+            return Responses.errorResponse("没有相应直属羊场");
+        }
+        Response response = Responses.successResponse();
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("allFactory", lists);
+        data.put("size", lists.size());
+        response.setData(data);
+        return response;
+    }
+
+    /**
+     * 根据羊场的地理位置查询
+     * @param location
+     * @return
+     */
+    @Permit(authorities = "customer_inquiry")
+    @PostMapping(value = "/location")
+    public Response factoryByBreadLocation(@RequestBody Map<String, String> location, BindingResult bindingResult) {
+        logger.info("invoke getFactory {}, url is factory/location", location);
+        if (bindingResult.hasErrors()) {
+            return Responses.errorResponse("请求错误!");
+        }
+        List<FactoryModel> factoryModels = factoryService.getAgentByBreadLocation(location.get("location"));
+        if (factoryModels == null) {
+            return Responses.errorResponse("无该区域的羊场");
+        }
+        Response response = Responses.successResponse();
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("allFactory", factoryModels);
+        data.put("size", factoryModels.size());
+        response.setData(data);
+        return response;
+    }
+
+    /**
      * 根据羊场的主键查询羊场
      */
-    @Permit(modules = "factory", authorities = "select_factory")
+    @Permit(authorities = "customer_inquiry")
     @GetMapping(value = "/{id}")
     public Response getFactoryOne(@PathVariable("id") String id) {
-
-        logger.info("invoke getFactoryOne{}, url is factory/{id}", id);
-
+        logger.info("invoke getFactoryOne {}, url is factory/{id}", id);
         long uid = StringToLongUtil.stringToInt(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -75,7 +120,7 @@ public class FactoryResouce {
      * 根据工厂的主键删除一个羊场
      * @param id
      */
-    @Permit(modules = "factory")
+    @Permit(authorities = "delete_customer")
     @DeleteMapping(value = "/{id}")
     public Response deleteFactory(@PathVariable("id") String id) {
 
@@ -85,7 +130,7 @@ public class FactoryResouce {
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
         }
-        Long deleteID = factoryService.deleteFatory(uid);
+        Long deleteID = factoryService.deleteFactory(uid);
         if (deleteID <= 0) {
             return Responses.errorResponse("删除央行信息失败");
         }
@@ -103,7 +148,7 @@ public class FactoryResouce {
      * @param bindingResult
      * @return
      */
-    @Permit(modules = "factory")
+    @Permit(authorities = "modify_customer")
     @PutMapping(value = "/{id}")
     public Response factoryUpdate(@Valid @RequestBody FactoryModel factoryModel, @PathVariable("id") String id , BindingResult bindingResult) {
 
@@ -138,7 +183,7 @@ public class FactoryResouce {
      * @param bindingResult
      * @return
      */
-    @Permit(modules = "factory")
+    @Permit(authorities = "increase_customer")
     @PostMapping(value = "/add")
     public Response addFactory(@Valid @RequestBody FactoryModel factoryModel, BindingResult bindingResult) {
 

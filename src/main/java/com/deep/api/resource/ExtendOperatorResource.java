@@ -1,6 +1,7 @@
 package com.deep.api.resource;
 
 import com.deep.api.Utils.ExtendTableUtil;
+import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ public class ExtendOperatorResource {
      * @param tableName
      * @return
      */
+    @Permit(authorities = "query_expansion_module_information")
     @GetMapping(value = "/lists/{tablename}")
     public Response getAllLists(@PathVariable("tablename") String tableName) {
         logger.info("invoke getAllLists{}, url is extend/operator/lists/{tablename}", tableName);
@@ -49,6 +51,7 @@ public class ExtendOperatorResource {
      * @param id
      * @return
      */
+    @Permit(authorities = "query_expansion_module_information")
     @GetMapping(value = "lists/{tablename}/{id}")
     public Response getOne(@PathVariable("tablename") String tableName, @PathVariable("id") String id) {
         logger.info("invoke getOne{}, extend/operator/{tablename}/{id}", tableName, id);
@@ -73,6 +76,7 @@ public class ExtendOperatorResource {
      * @param tableName
      * @return
      */
+    @Permit(authorities = "add_extension_module_information")
     @PostMapping(value = "add/{tablename}")
     public Response addRow(@RequestBody Map<String, String> map, @PathVariable("tablename") String tableName) {
         logger.info("invoke addRow{}, url is extend/operator/add/{tablename}", map, tableName);
@@ -92,6 +96,7 @@ public class ExtendOperatorResource {
      * @param id
      * @return
      */
+    @Permit(authorities = "delete_extension_module_information")
     @DeleteMapping(value = "delete/{tablename}/{id}")
     public Response deleteRow(@PathVariable("tablename") String tableName, @PathVariable("id") String id) {
         logger.info("invoke deleteRow{}, url is extend/operator/delete/{tablename}/{id}", tableName, id);
@@ -112,6 +117,7 @@ public class ExtendOperatorResource {
      * @param values
      * @return
      */
+    @Permit(authorities = "modify_the_extension_module_information")
     @PutMapping(value = "update/{tablename}/{id}")
     public Response updateRow(@PathVariable("tablename") String tableName, @PathVariable("id") String id, @RequestBody Map<String, String> values) {
         logger.info("invoke updateRow{}, url is extend/operator/update/{tablename}/{id}", tableName, id);

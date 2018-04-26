@@ -7,6 +7,7 @@
     <resultMap id="ImmunePlan" type="com.deep.domain.model.ImmunePlanModel">
         <id property="id" column="id"/>
         <result property="factoryNum" column="factory_num"/>
+        <result property="factoryName" column="factory_name"/>
         <result property="crowdNum" column="crowd_num"/>
         <result property="immuneEartag" column="immuneEartag"/>
         <result property="immuneTime" column="immune_t"/>
@@ -34,6 +35,7 @@
         </selectKey>
         INSERT INTO immune_plan(
         factory_num,
+        factory_name,
         crowd_num,
         immune_et,
         immune_t,
@@ -51,6 +53,7 @@
         )
         VALUES(
         #{immunePlanModel.factoryNum},
+        #{immunePlanModel.factoryName},
         #{immunePlanModel.crowdNum},
         #{immunePlanModel.immuneEartag},
         #{immunePlanModel.immuneTime},
@@ -78,7 +81,9 @@
         <if test="immunePlanModel.factoryNum != null">
             AND factory_num = #{immunePlanModel.factoryNum}
         </if>
-
+        <if test="immunePlanModel.factoryName != null and immunePlanModel.factoryName !=''">
+            AND factory_name = #{immunePlanModel.factoryName}
+        </if>
         <if test="immunePlanModel.crowdNum != null and immunePlanModel.crowdNum != '' ">
             AND crowd_num = #{immunePlanModel.crowdNum}
         </if>
@@ -196,8 +201,12 @@
     <update id="updateImmunePlanModelByOperator" parameterType="com.deep.domain.model.ImmunePlanModel">
         UPDATE immune_plan
         <set>
-            <if test="immunePlanModel.factoryNum != null and immunePlanModel.factoryNum != ''">
+            <if test="immunePlanModel.factoryNum != null">
                 factory_num = #{immunePlanModel.factoryNum},
+            </if>
+
+            <if test="immunePlanModel.factoryName != null and immunePlanModel.factoryName != ''" >
+                factory_name = #{immunePlanModel.factoryName},
             </if>
             <if test="immunePlanModel.crowdNum != null and immunePlanModel.crowdNum != ''">
                 crowd_num = #{immunePlanModel.crowdNum},
@@ -218,9 +227,8 @@
                 immune_d = #{immunePlanModel.immuneDuring},
             </if>
             <if test="immunePlanModel.remark != null and immunePlanModel.remark != ''">
-                remark = #{immunePlanModel.remark},
+                remark = #{immunePlanModel.remark}
             </if>
-
         </set>
         WHERE
         id = #{immunePlanModel.id}

@@ -313,15 +313,12 @@ public class ImmunePlanResource {
      */
 
 
-    @RequestMapping(value = "oupdate",method = RequestMethod.PATCH)
+    @RequestMapping(value = "update",method = RequestMethod.PATCH)
     public Response operatorUpdate(@RequestBody ImmunePlanModel immunePlanModel) {
-
           logger.info("invoke operatorUpdate {}", immunePlanModel);
           int row = this.immunePlanService.updateImmunePlanModelByOperator(immunePlanModel);
           return JudgeUtil.JudgeUpdate(row);
-
     }
-
 
     /**
      * 删除id = certain 的数据

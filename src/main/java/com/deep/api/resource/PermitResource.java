@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/permit", method = RequestMethod.GET)
+@RequestMapping(value = "/permit")
 public class PermitResource {
     private final Logger logger = LoggerFactory.getLogger(PermitResource.class);
 
@@ -28,7 +28,7 @@ public class PermitResource {
      * 展示所有的权限,不更新新的页面
      * @return 展示所有权限的json格式
      */
-//    @Permit(modules = "permit")
+    @Permit(authorities = "query_permit")
     @GetMapping(value = "/")
     public Response permitLists() {
 
@@ -52,8 +52,8 @@ public class PermitResource {
      * @param bindingResult
      * @return
      */
-    @Permit(modules = "permit")
-    @PostMapping(value = "/add")
+    @Permit(authorities = "")
+    @PostMapping(value = "/")
     public Response addRole(@Valid PermitModel permitModel, BindingResult bindingResult) {
         logger.info("invoke addRole{}, url is permit/add", permitModel, bindingResult);
         if (bindingResult.hasErrors()) {
