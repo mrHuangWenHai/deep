@@ -37,7 +37,6 @@ public class OperationFileResource {
 
     logger.info("/of/add {}",operationFile);
     try {
-
       int isSuccess  = operationFileService.addOperationFile(operationFile);
       if (isSuccess == 1) {
         Response response = Responses.successResponse();
@@ -82,7 +81,6 @@ public class OperationFileResource {
       return Responses.errorResponse("param is invalid");
     }
     logger.info("/of/set {}",id,checkStatus);
-
     try {
       int isSuccess = operationFileService.updateOperationFile(id, checkStatus);
       if (isSuccess == 1) {

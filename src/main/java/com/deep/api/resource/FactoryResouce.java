@@ -195,14 +195,13 @@ public class FactoryResouce {
         } else {
             factoryModel.setGmtCreate(new Timestamp(System.currentTimeMillis()));
             factoryModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
-            Long addID = factoryService.updateFactory(factoryModel);
-            if (addID <= 0) {
+            int issuccess = factoryService.addFactory(factoryModel);
+            if (issuccess == 0) {
                 return Responses.errorResponse("添加失败");
             }
-
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("oneUser", addID);
+            data.put("issuccess", issuccess);
             response.setData(data);
             return response;
         }

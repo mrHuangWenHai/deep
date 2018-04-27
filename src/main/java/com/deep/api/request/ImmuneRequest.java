@@ -9,6 +9,7 @@ import java.math.BigInteger;
  */
 public class ImmuneRequest {
 
+    private Long id;
     private BigInteger factoryNum;
     private String factoryName;
     private String crowdNum;
@@ -236,10 +237,20 @@ public class ImmuneRequest {
         this.ispassSup = ispassSup;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "ImmuneRequest{" +
-            "factoryNum=" + factoryNum +
+            "id=" + id +
+            ", factoryNum=" + factoryNum +
+            ", factoryName='" + factoryName + '\'' +
             ", crowdNum='" + crowdNum + '\'' +
             ", immuneEartag='" + immuneEartag + '\'' +
             ", immuneTime='" + immuneTime + '\'' +

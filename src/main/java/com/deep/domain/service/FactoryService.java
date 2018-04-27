@@ -73,7 +73,7 @@ public class FactoryService {
      * @param factoryModel
      * @return
      */
-    public Long addFactory(FactoryModel factoryModel) {
+    public int addFactory(FactoryModel factoryModel) {
         return factoryMapper.insertFactory(factoryModel);
     }
 

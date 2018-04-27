@@ -275,8 +275,6 @@ public class RepellentPlanResource {
      * METHOD:PATCH
      * @return 审核结果
      */
-
-
     @RequestMapping(value = "supdate",method = RequestMethod.PATCH)
     public Response SupervisorUpdate(@RequestBody RepellentPlanModel repellentPlanModel) {
         logger.info("invoke supervisorUpdate {}", repellentPlanModel);

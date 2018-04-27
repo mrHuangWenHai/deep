@@ -78,6 +78,9 @@
         immune_plan
         WHERE
         1=1
+        <if test="immunePlanModel.id != null">
+            AND id = #{immunePlanModel.id}
+        </if>
         <if test="immunePlanModel.factoryNum != null">
             AND factory_num = #{immunePlanModel.factoryNum}
         </if>

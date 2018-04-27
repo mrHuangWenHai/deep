@@ -36,7 +36,7 @@ public class TypeBriefService {
 
     public TypeBriefModel getTypeBrief(String type) {
 
-        if (this.typeBriefModelList == null) {
+        if (this.typeBriefModelList != null) {
             for (TypeBriefModel typeBriefModel : this.typeBriefModelList) {
                 if (typeBriefModel.getTypename().equals(type)) {
                     return typeBriefModel;
@@ -51,7 +51,6 @@ public class TypeBriefService {
     //下面接口还要改
     public int updateTypeBrief( TypeBriefModel typeBriefModel) {
         this.typeBriefModelList = null;
-
         return this.typeBriefMapper.updateTypeBrief(typeBriefModel);
     }
 }

@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -64,15 +65,10 @@ public class MessageResource {
         }
     }
 
-    @RequestMapping(value = "/messageBoard/searchByMessage",method = RequestMethod.POST)
-    public Response searchByMessage( @RequestBody  Message message) {
+    @RequestMapping(value = "/messageBoard/search",method = RequestMethod.POST)
+    public Response searchByMessage(@RequestBody  Message message) {
 
-        logger.info("invoke /messageBoard/searchByMessage {}",message.getMessage());
-        if(message.getMessage().isEmpty()) {
-            Response response = Responses.errorResponse("查询条件不能为空！");
-            return response;
-        }
-
+        logger.info("invoke /messageBoard/searchByMessage {}",message);
         MessageExample messageExample = new MessageExample();
         MessageExample.Criteria criteria = messageExample.createCriteria();
         if(message.getMessage() != null && !message.getMessage().isEmpty())
@@ -85,11 +81,12 @@ public class MessageResource {
         if(message.getsTime() != null && message.geteTime() != null)
            criteria.andInserttimeBetween(message.getsTime(),message.geteTime());
 
-        List<Message>select = messageService.findMessageSelectiveWithRowbounds(messageExample,message.getPageNumb(),message.getLimit());
+        List<Message> select = messageService.findMessageSelectiveWithRowbounds(messageExample,message.getPageNumb(),message.getLimit());
 
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
-        data.put("searchByMessage",select);
+        data.put("data",select);
+        data.put("size",select.size());
         response.setData(data);
         return response;
     }

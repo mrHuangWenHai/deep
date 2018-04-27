@@ -182,7 +182,7 @@ public class UserResource {
             userModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
 
             userModel.setIsFactory((byte)0);
-            if (userModel.getUserPermit().equals("")) {
+            if (userModel.getUserPermit() == null || userModel.getUserPermit().equals("")) {
                 userModel.setUserPermit("000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
             }
             userModel.setIsExtended((byte)0);
@@ -272,7 +272,7 @@ public class UserResource {
      */
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @GetMapping(value = "/user/excel/{roleID}")
-    public Response exportExcel(@PathVariable("roleID") long roleID, HttpServletResponse httpServletResponse) throws Exception{
+    public Response exportExcel(@PathVariable("roleID") long roleID, HttpServletResponse httpServletResponse) throws Exception {
         logger.info("invoke exportExcel{}, url is /user/excel", httpServletResponse);
         ExcelData data = new ExcelData();
         data.setName("user");

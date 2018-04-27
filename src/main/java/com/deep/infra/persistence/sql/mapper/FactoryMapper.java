@@ -131,7 +131,7 @@ public interface FactoryMapper {
             "agent" +
             ") values(" +
             "#{gmtCreate}, " +
-            "#{gmtModofied}, " +
+            "#{gmtModified}, " +
             "#{pkNumber}, " +
             "#{breadName}, " +
             "#{breadLocation}, " +
@@ -140,7 +140,7 @@ public interface FactoryMapper {
             "#{remark}, " +
             "#{disnfectP}, " +
             "#{agent})")
-    Long insertFactory(FactoryModel factoryModel);
+    int insertFactory(FactoryModel factoryModel);
 
     /**
      * 修改一个羊场的信息
@@ -149,7 +149,7 @@ public interface FactoryMapper {
      */
     @Update("update factory_manage set " +
             "gmt_create = #{gmtCreate}, " +
-            "gmt_modified = #{gmtModofied}, " +
+            "gmt_modified = #{gmtModified}, " +
             "pk_number = #{pkNumber}, " +
             "bread_name = #{breadName}, " +
             "bread_location = #{breadLocation}, " +
