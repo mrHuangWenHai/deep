@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--Mapper名称 对应infra中mapper类名-->
+<mapper namespace="com.deep.infra.persistence.sql.mapper.NH3DataMapper">
+
+    <insert id="setNH3Data">
+        INSERT INTO nh3_data(
+        dev_addr,
+        nh3,
+        "time"
+        ) VALUE (
+        #{nh3DataModel.devAddr},
+        #{nh3DataModel.nh3},
+        #{nh3DataModel.time}
+        )
+    </insert>
+
+    <resultMap id="NH3Data" type="com.deep.domain.model.NH3DataModel">
+        <result property="id" column="id"/>
+        <result property="devAddr" column="dev_addr"/>
+        <result property="nh3" column="nh3"/>
+        <result property="time" column="time"/>
+    </resultMap>
+
+    <select id="getNH3DataLatest" resultMap="NH3Data">
+        SELECT
+        *
+        FROM
+        nh3_data
+        ORDER BY id DESC limit 1
+    </select>
+
+    <select id="getNH3DataByid" resultMap="NH3Data">
+        SELECT
+        *
+        FROM
+        nh3_data
+        WHERE
+        id = #{id}
+    </select>
+
+    <select id="getNH3DataBytime" resultMap="NH3Data">
+        SELECT
+        *
+        FROM
+        nh3_data
+        WHERE
+        "time" BETWEEN #{timeStart} and #{timeEnd}
+    </select>
+
+    <delete id="deleteNH3Data">
+        DELETE
+        FROM
+        nh3_data
+    </delete>
+
+</mapper>
