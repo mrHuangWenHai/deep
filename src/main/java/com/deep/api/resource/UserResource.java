@@ -182,7 +182,7 @@ public class UserResource {
             userModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
 
             userModel.setIsFactory((byte)0);
-            if (userModel.getUserPermit().equals("")) {
+            if (userModel.getUserPermit() == null || userModel.getUserPermit().equals("")) {
                 userModel.setUserPermit("000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
             }
             userModel.setIsExtended((byte)0);
@@ -333,7 +333,7 @@ public class UserResource {
         logger.info("invoke getRolesOfProfessor {}, url is /user/high/{id}", id);
         Response response = Responses.successResponse();
         Map data = new HashMap<>();
-        data.put("data", userService.getUserTelephoneByfactoryNum(new BigInteger(id)));
+        data.put("data", userService.getProfessorTelephoneByFactoryNum(new BigInteger(id)));
         response.setData(data);
         return response;
     }

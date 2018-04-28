@@ -142,7 +142,7 @@ public class RepellentPlanResource {
 
 
 
-                            List<String> phone = userService.getUserTelephoneByfactoryNum(repellentPlanModel.getFactoryNum());
+                            List<String> phone = userService.getProfessorTelephoneByFactoryNum(repellentPlanModel.getFactoryNum());
 
 
 
@@ -173,7 +173,7 @@ public class RepellentPlanResource {
 
 
 
-                            List<String> phone = userService.getUserTelephoneByfactoryNum(repellentPlanModel.getFactoryNum());
+                            List<String> phone = userService.getProfessorTelephoneByFactoryNum(repellentPlanModel.getFactoryNum());
 
 
 

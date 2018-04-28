@@ -22,13 +22,18 @@ public class NutritionPlanModel extends NutritionPlan implements Serializable {
     private String pickingM;
     private String pickingR;
     private String pickingO;
+    private String s_nutritionT;
+
+    // 多条件查询
+    private String s_nutritionT1;
+    private String s_nutritionT2;
+
     private String search_string;
     private String s_breedingT;
     private String s_gestationT;
     private String s_prenatalIT;
     private String s_cubT;
     private String s_diagnosisT;
-    private String s_nutritionT;
     private String s_gmtCreate1;
     private String s_gmtCreate2;
     private String s_gmtModified1;
@@ -43,8 +48,7 @@ public class NutritionPlanModel extends NutritionPlan implements Serializable {
     private String s_cubT2;
     private String s_diagnosisT1;
     private String s_diagnosisT2;
-    private String s_nutritionT1;
-    private String s_nutritionT2;
+
     private String downloadPath;
     private int size;
     private int page;

@@ -1,5 +1,6 @@
 package com.deep.api.resource;
 
+import com.deep.api.Utils.StringToLongUtil;
 import com.deep.api.request.NutritionPlanModel;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
@@ -8,6 +9,8 @@ import com.deep.domain.model.NutritionPlanWithBLOBs;
 import com.deep.domain.model.OtherTime;
 import com.deep.domain.service.NutritionPlanService;
 import org.apache.ibatis.session.RowBounds;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +27,10 @@ import java.util.List;
  * date: 2018/2/21  19:34
  */
 @RestController
-@RequestMapping(value = "nutrition/")
+@RequestMapping(value = "nutrition")
 public class NutritionResource {
+
+    private final Logger logger = LoggerFactory.getLogger(NutritionResource.class);
 
     @Resource
     private NutritionPlanService nutritionPlanService;
@@ -44,29 +49,19 @@ public class NutritionResource {
      */
     @PostMapping(value = "/insert")
     public Response addPlan(@RequestBody @Valid NutritionPlanModel planModel, BindingResult bindingResult) throws ParseException {
+        logger.info("invoke addPlan {}, url is nutrition/insert", planModel);
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("营养实施档案录入失败");
         }else {
             //将planModel部分变量拆分传递给对象insert
             NutritionPlanWithBLOBs insert = new NutritionPlanWithBLOBs();
-            insert.setId(planModel.getId());
-            insert.setGmtCreate(planModel.getGmtCreate());
-            insert.setGmtModified(planModel.getGmtModified());
-            insert.setSupervisor(planModel.getSupervisor());
             insert.setFactoryNum(planModel.getFactoryNum());
             insert.setBuilding(planModel.getBuilding());
-            insert.setNutritionT(planModel.getNutritionT());
             insert.setQuantity(planModel.getQuantity());
             insert.setAverage(planModel.getAverage());
             insert.setPeriod(planModel.getPeriod());
             insert.setWater(planModel.getWater());
             insert.setOperator(planModel.getOperator());
-            insert.setProfessor(planModel.getProfessor());
-            insert.setSupervisor(planModel.getSupervisor());
-            insert.setRemark(planModel.getRemark());
-            insert.setIsPass(planModel.getIsPass());
-            insert.setUpassReason(planModel.getUpassReason());
-            insert.setIsPass1(planModel.getIsPass1());
             insert.setMaterialA(planModel.getMaterialA());
             insert.setMaterialM(planModel.getMaterialM());
             insert.setMaterialO(planModel.getMaterialO());
@@ -83,52 +78,21 @@ public class NutritionResource {
 
             //将planModel部分变量拆分传递给对象otherTime
             OtherTime otherTime = new OtherTime();
-            otherTime.setSearch_string(planModel.getSearch_string());
-            otherTime.setS_breedingT(planModel.getS_breedingT());
-            System.out.println(otherTime.getS_breedingT());
-            otherTime.setS_gestationT(planModel.getS_gestationT());
-            System.out.println(otherTime.getS_gestationT());
-            otherTime.setS_prenatalIT(planModel.getS_prenatalIT());
-            System.out.println(otherTime.getS_prenatalIT());
-            otherTime.setS_cubT(planModel.getS_cubT());
-            System.out.println(otherTime.getS_cubT());
-            otherTime.setS_diagnosisT(planModel.getS_diagnosisT());
             otherTime.setS_nutritionT(planModel.getS_nutritionT());
-            otherTime.setS_gmtCreate1(planModel.getS_gmtCreate1());
-            otherTime.setS_gmtCreate2(planModel.getS_gmtCreate2());
-            otherTime.setS_gmtModified1(planModel.getS_gmtModified1());
-            otherTime.setS_gmtModified2(planModel.getS_gmtModified2());
-            otherTime.setS_breedingT1(planModel.getS_breedingT1());
-            otherTime.setS_breedingT2(planModel.getS_breedingT2());
-            otherTime.setS_prenatalIT1(planModel.getS_prenatalIT1());
-            otherTime.setS_prenatalIT2(planModel.getS_prenatalIT2());
-            otherTime.setS_gestationT1(planModel.getS_gestationT1());
-            otherTime.setS_gestationT2(planModel.getS_gestationT2());
-            otherTime.setS_cubT1(planModel.getS_cubT1());
-            otherTime.setS_cubT2(planModel.getS_cubT2());
-            otherTime.setS_diagnosisT1(planModel.getS_diagnosisT1());
-            otherTime.setS_diagnosisT2(planModel.getS_diagnosisT2());
-            otherTime.setS_nutritionT1(planModel.getS_nutritionT1());
-            otherTime.setS_nutritionT2(planModel.getS_nutritionT2());
-            otherTime.setDownloadPath(planModel.getDownloadPath());
-            otherTime.setPage(planModel.getPage());
-            otherTime.setSize(planModel.getSize());
 
             Byte zero = 0;
-            Date nutritionT = new Date();
-            SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd HH:mm:SS");
-            if (!otherTime.getS_nutritionT().isEmpty()) {
-                nutritionT =  formatter.parse(otherTime.getS_nutritionT());
-            }
+            Date nutritionT = (otherTime.getS_nutritionT() == null || otherTime.getS_nutritionT().isEmpty()) ? new Date() : new SimpleDateFormat( "yyyy-MM-dd HH:mm:SS").parse(otherTime.getS_nutritionT());
             insert.setGmtCreate(new Date());
             insert.setNutritionT(nutritionT);
             insert.setIsPass(zero);
             insert.setIsPass1(zero);
-            nutritionPlanService.addPlan(insert);
-
+            int success = nutritionPlanService.addPlan(insert);
+            if (success <= 0) {
+                return Responses.errorResponse("插入失败");
+            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("nutrition_plan",insert);
+            data.put("success", success);
             response.setData(data);
             return response;
         }
@@ -138,46 +102,44 @@ public class NutritionResource {
      * 按主键删除的接口：/nutritionDeleteById
      * 按主键删除的方法名：dropPlan()
      * 接收参数：整型id，根据主键号删除
-     * @param nutritionPlanWithBLOBs
-     * @param bindingResult
      * @return
      */
-    @DeleteMapping(value = "/nutritionDeleteById/show")
-    public Response dropPlan(@RequestBody @Valid NutritionPlanWithBLOBs nutritionPlanWithBLOBs,
-                             BindingResult bindingResult){
-        if (bindingResult.hasErrors()) {
-            return Responses.errorResponse("营养实施档案删除失败");
-        }else {
-            NutritionPlanWithBLOBs delete = new NutritionPlanWithBLOBs();
-            nutritionPlanService.dropPlan(nutritionPlanWithBLOBs.getId());
-            Response response = Responses.successResponse();
-            HashMap<String, Object> data = new HashMap<>();
-            data.put("nutrition_plan",delete);
-            response.setData(data);
-            return response;
+    @DeleteMapping(value = "/delete/{id}")
+    public Response dropPlan(@PathVariable("id") String id){
+        logger.info("invoke dropPlan {}, url is nutrition/delete/{id}", id);
+        int uid = StringToLongUtil.stringToInt(id);
+        if (uid == -1) {
+            return Responses.errorResponse("错误");
         }
+        int success = nutritionPlanService.dropPlan(uid);
+        if (success <= 0) {
+            return Responses.errorResponse("删除失败");
+        }
+        Response response = Responses.successResponse();
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("success", success);
+        response.setData(data);
+        return response;
     }
 
     /**
-     * 专家使用按主键修改的接口：/nutritionUpdateByOperator
-     * 专家使用按主键修改的方法名：changePlanByOperator()
-     * 专家使用接收参数：整个表单类型（整型id必填，各参数选填）
+     * 操作员使用按主键修改的接口：/nutritionUpdateByOperator
+     * 操作员使用按主键修改的方法名：changePlanByOperator()
+     * 操作员使用接收参数：整个表单类型（整型id必填，各参数选填）
      * @param planModel
      * @param bindingResult
      * @return
      * @throws ParseException
      */
-    @PutMapping(value = "/nutritionUpdateByOperator/show")
+    @PostMapping(value = "/operator")
     public Response changePlanByOperator(@RequestBody @Valid NutritionPlanModel planModel, BindingResult bindingResult) throws ParseException {
+        logger.info("invoke changePlanByOperator {}, url is nutrition/operator", planModel);
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("营养实施档案更新(操作员页面)失败");
         }else {
             //将planModel部分变量拆分传递给对象operator
             NutritionPlanWithBLOBs operator = new NutritionPlanWithBLOBs();
             operator.setId(planModel.getId());
-            operator.setGmtCreate(planModel.getGmtCreate());
-            operator.setGmtModified(planModel.getGmtModified());
-            operator.setSupervisor(planModel.getSupervisor());
             operator.setFactoryNum(planModel.getFactoryNum());
             operator.setBuilding(planModel.getBuilding());
             operator.setNutritionT(planModel.getNutritionT());
@@ -186,12 +148,6 @@ public class NutritionResource {
             operator.setPeriod(planModel.getPeriod());
             operator.setWater(planModel.getWater());
             operator.setOperator(planModel.getOperator());
-            operator.setProfessor(planModel.getProfessor());
-            operator.setSupervisor(planModel.getSupervisor());
-            operator.setRemark(planModel.getRemark());
-            operator.setIsPass(planModel.getIsPass());
-            operator.setUpassReason(planModel.getUpassReason());
-            operator.setIsPass1(planModel.getIsPass1());
             operator.setMaterialA(planModel.getMaterialA());
             operator.setMaterialM(planModel.getMaterialM());
             operator.setMaterialO(planModel.getMaterialO());
@@ -208,49 +164,17 @@ public class NutritionResource {
 
             //将planModel部分变量拆分传递给对象otherTime
             OtherTime otherTime = new OtherTime();
-            otherTime.setSearch_string(planModel.getSearch_string());
-            otherTime.setS_breedingT(planModel.getS_breedingT());
-            System.out.println(otherTime.getS_breedingT());
-            otherTime.setS_gestationT(planModel.getS_gestationT());
-            System.out.println(otherTime.getS_gestationT());
-            otherTime.setS_prenatalIT(planModel.getS_prenatalIT());
-            System.out.println(otherTime.getS_prenatalIT());
-            otherTime.setS_cubT(planModel.getS_cubT());
-            System.out.println(otherTime.getS_cubT());
-            otherTime.setS_diagnosisT(planModel.getS_diagnosisT());
             otherTime.setS_nutritionT(planModel.getS_nutritionT());
-            otherTime.setS_gmtCreate1(planModel.getS_gmtCreate1());
-            otherTime.setS_gmtCreate2(planModel.getS_gmtCreate2());
-            otherTime.setS_gmtModified1(planModel.getS_gmtModified1());
-            otherTime.setS_gmtModified2(planModel.getS_gmtModified2());
-            otherTime.setS_breedingT1(planModel.getS_breedingT1());
-            otherTime.setS_breedingT2(planModel.getS_breedingT2());
-            otherTime.setS_prenatalIT1(planModel.getS_prenatalIT1());
-            otherTime.setS_prenatalIT2(planModel.getS_prenatalIT2());
-            otherTime.setS_gestationT1(planModel.getS_gestationT1());
-            otherTime.setS_gestationT2(planModel.getS_gestationT2());
-            otherTime.setS_cubT1(planModel.getS_cubT1());
-            otherTime.setS_cubT2(planModel.getS_cubT2());
-            otherTime.setS_diagnosisT1(planModel.getS_diagnosisT1());
-            otherTime.setS_diagnosisT2(planModel.getS_diagnosisT2());
-            otherTime.setS_nutritionT1(planModel.getS_nutritionT1());
-            otherTime.setS_nutritionT2(planModel.getS_nutritionT2());
-            otherTime.setDownloadPath(planModel.getDownloadPath());
-            otherTime.setPage(planModel.getPage());
-            otherTime.setSize(planModel.getSize());
 
-            Date nutritionT = null;
-            SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd HH:mm:SS");
-            if (!otherTime.getS_nutritionT().isEmpty()){
-                nutritionT =  formatter.parse(otherTime.getS_nutritionT());
-            }
+            Date nutritionT = (otherTime.getS_nutritionT() == null || otherTime.getS_nutritionT().isEmpty()) ? new Date() : new SimpleDateFormat( "yyyy-MM-dd HH:mm:SS").parse(otherTime.getS_nutritionT());
             operator.setNutritionT(nutritionT);
-            nutritionPlanService.changePlanSelective(operator);
-
-            NutritionPlanWithBLOBs selectById = nutritionPlanService.findPlanById(operator.getId());
+            int success = nutritionPlanService.changePlanSelective(operator);
+            if (success <= 0) {
+                return Responses.errorResponse("操作员审核失败");
+            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("nutrition_plan",selectById);
+            data.put("success",success);
             response.setData(data);
             return response;
         }
@@ -264,9 +188,9 @@ public class NutritionResource {
      * @param bindingResult
      * @return
      */
-    @PutMapping(value = "/nutritionUpdateByProfessor/show")
-    public Response changePlanByProfessor(@RequestBody @Valid NutritionPlanWithBLOBs professor,
-                                          BindingResult bindingResult){
+    @PostMapping(value = "/professor")
+    public Response changePlanByProfessor(@RequestBody @Valid NutritionPlanWithBLOBs professor, BindingResult bindingResult) {
+        logger.info("invoke changePlanByProfessor {}, url is nutrition/professor", professor);
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("营养实施档案更新(专家页面)失败");
         }else {
@@ -274,12 +198,13 @@ public class NutritionResource {
             if (professor.getIsPass() == 1){
                 professor.setUpassReason("操作员已经修改档案并通过技术审核");
             }
-            nutritionPlanService.changePlanSelective(professor);
-
-            NutritionPlanWithBLOBs selectById = nutritionPlanService.findPlanById(professor.getId());
+            int changeID = nutritionPlanService.changePlanSelective(professor);
+            if (changeID <= 0) {
+                return Responses.errorResponse("错误");
+            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("nutrition_plan",selectById);
+            data.put("nutrition_plan",changeID);
             response.setData(data);
             return response;
         }
@@ -293,19 +218,20 @@ public class NutritionResource {
      * @param bindingResult
      * @return
      */
-    @PutMapping(value = "/nutritionUpdateBySupervisor/show")
-    public Response changePlanBySupervisor(@RequestBody @Valid NutritionPlanWithBLOBs supervisor,
-                                           BindingResult bindingResult){
+    @PostMapping(value = "/supervisor")
+    public Response changePlanBySupervisor(@RequestBody @Valid NutritionPlanWithBLOBs supervisor, BindingResult bindingResult){
+        logger.info("invoke changePlanBySupervisor {}, url is nutrition/supervisor", supervisor);
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("营养实施档案更新(监督页面)失败");
         }else {
             supervisor.setGmtSupervised(new Date());
-            nutritionPlanService.changePlanSelective(supervisor);
-
-            NutritionPlanWithBLOBs selectById = nutritionPlanService.findPlanById(supervisor.getId());
+            int changeID = nutritionPlanService.changePlanSelective(supervisor);
+            if (changeID <= 0) {
+                return Responses.errorResponse("失败");
+            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("nutrition_plan",selectById);
+            data.put("nutrition_plan",changeID);
             response.setData(data);
             return response;
         }
@@ -315,24 +241,22 @@ public class NutritionResource {
      * 按主键查询的接口：/nutritionSelectById
      * 按主键查询的方法名：findPlanById()
      * 接收参数：整型的主键号（保留接口查询，前端不调用此接口）
-     * @param nutritionPlanWithBLOBs
-     * @param bindingResult
      * @return
      */
-    @GetMapping(value = "/nutritionSelectById/show")
-    public Response findPlanById(@Valid NutritionPlanWithBLOBs nutritionPlanWithBLOBs,
-                                 BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return Responses.errorResponse("营养实施档案(根据条件)查询失败");
-        } else {
-            //查询语句的写法：一定要在声明对象时把值直接赋进去
-            NutritionPlanWithBLOBs selectById = nutritionPlanService.findPlanById(nutritionPlanWithBLOBs.getId());
-            Response response = Responses.successResponse();
-            HashMap<String, Object> data = new HashMap<>();
-            data.put("nutrition_plan",selectById);
-            response.setData(data);
-            return response;
+    @GetMapping(value = "/{id}")
+    public Response findPlanById(@PathVariable("id") String id) {
+        logger.info("invoke findPlanById {}, url is nutrition/{id}", id);
+        int uid = StringToLongUtil.stringToInt(id);
+        if (uid == -1) {
+            return Responses.errorResponse("查询错误");
         }
+        //查询语句的写法：一定要在声明对象时把值直接赋进去
+        NutritionPlanWithBLOBs selectById = nutritionPlanService.findPlanById(uid);
+        Response response = Responses.successResponse();
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("List", selectById);
+        response.setData(data);
+        return response;
     }
 
     /**
@@ -344,8 +268,9 @@ public class NutritionResource {
      * @return
      * @throws ParseException
      */
-    @PostMapping(value = "/nutritionSelective/show")
+    @PostMapping(value = "/selective")
     public Response findPlanSelective(@RequestBody @Valid NutritionPlanModel planModel, BindingResult bindingResult) throws ParseException {
+        logger.info("invoke findPlanSelective {}, url is nutrition/selective", planModel);
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("营养实施档案(根据条件)查询失败");
         }else {
@@ -469,9 +394,13 @@ public class NutritionResource {
                 criteria.andIsPass1EqualTo(nutritionPlanWithBLOBs.getIsPass1());
             }
             List<NutritionPlanWithBLOBs> select = nutritionPlanService.findPlanSelective(nutritionPlanExample,new RowBounds(otherTime.getPage(),otherTime.getSize()));
+            if (select == null) {
+                return Responses.errorResponse("错误");
+            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("nutrition_plan",select);
+            data.put("List", select);
+            data.put("size", select.size());
             response.setData(data);
             return response;
         }
@@ -485,9 +414,9 @@ public class NutritionResource {
      * @param bindingResult
      * @return
      */
-    @PostMapping(value = "/nutritionSelectByProfessor/show")
-    public Response findPlanSelectByProfessor(@RequestBody @Valid NutritionPlanModel planModel,
-                                              BindingResult bindingResult) {
+    @PostMapping(value = "/professor/selective")
+    public Response findPlanSelectByProfessor(@RequestBody @Valid NutritionPlanModel planModel, BindingResult bindingResult) {
+        logger.info("invoke findPlanSelectByProfessor {}, url is nutrition/professor/selective", planModel);
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("营养实施档案(根据条件)查询失败");
         }else {
@@ -573,9 +502,13 @@ public class NutritionResource {
             }
             criteria.andIsPassEqualTo(notPassed);
             List<NutritionPlanWithBLOBs> select = nutritionPlanService.findPlanSelective(nutritionPlanExample,new RowBounds(otherTime.getPage(),otherTime.getSize()));
+            if (select == null) {
+                return Responses.errorResponse("错误");
+            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("nutrition_plan",select);
+            data.put("List", select);
+            data.put("size", select.size());
             response.setData(data);
             return response;
         }
@@ -589,9 +522,9 @@ public class NutritionResource {
      * @param bindingResult
      * @return
      */
-    @PostMapping(value = "/nutritionSelectBySupervisor/show")
-    public Response findPlanSelectBySupervisor(@RequestBody @Valid NutritionPlanModel planModel,
-                                               BindingResult bindingResult) {
+    @PostMapping(value = "/supervisor/selective")
+    public Response findPlanSelectBySupervisor(@RequestBody @Valid NutritionPlanModel planModel, BindingResult bindingResult) {
+        logger.info("invoke findPlanSelectBySupervisor {}, url is nutrition/supervisor/selective", planModel);
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("营养实施档案(根据条件)查询失败");
         }else {
