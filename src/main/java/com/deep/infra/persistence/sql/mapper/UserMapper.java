@@ -116,7 +116,7 @@ public interface UserMapper {
      * @param agentID
      * @return
      */
-    @Select("select user_telephone from user_manage where is_factory = 1 and user_factory = #{agentID} and user_role = 20")
+    @Select("select user_telephone from user_manage where is_factory = 0 and user_factory = #{agentID} and user_role = 20")
     @Results({
             @Result(property = "userTelephone", column = "user_telephone"),
     })
