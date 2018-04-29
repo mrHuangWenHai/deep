@@ -140,7 +140,7 @@ public interface FactoryMapper {
             "#{remark}, " +
             "#{disinfectP}, " +
             "#{agent})")
-    Long insertFactory(FactoryModel factoryModel);
+    int insertFactory(FactoryModel factoryModel);
 
     /**
      * 修改一个羊场的信息

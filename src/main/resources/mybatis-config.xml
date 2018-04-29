@@ -13,9 +13,9 @@
             <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.jdbc.Driver" />
-                <property name="url" value="jdbc:mysql://localhost:3306/DXSheep" />
+                <property name="url" value="jdbc:mysql://80.76.180.95" />
                 <property name="username" value="root" />
-                <property name="password" value="change123" />
+                <property name="password" value="Password_12#$" />
             </dataSource>
         </environment>
     </environments>

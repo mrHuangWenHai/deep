@@ -37,27 +37,27 @@ public class DisinfectFilesService {
         return this.disinfectFilesMapper.getDisinfectFilesModelByfactoryNumAnddisinfectTimeAnddisinfectName(factoryNum,disinfectTime,disinfectName);
     }
 
-    public List<DisinfectFilesModel> getDisinfectFilesModelByProfessor(Integer isPass,RowBounds bounds){
+    public List<DisinfectFilesModel> getDisinfectFilesModelByProfessor(Integer isPass,RowBounds bounds) {
         return this.disinfectFilesMapper.getDisinfectFilesModelByProfessor(isPass,bounds);
     }
 
-    public List<DisinfectFilesModel> getDisinfectFilesModelBySupervisor(Integer isPass1,RowBounds bounds){
-        return this.disinfectFilesMapper.getDisinfectFilesModelBySupervisor(isPass1,bounds);
+    public List<DisinfectFilesModel> getDisinfectFilesModelBySupervisor(Integer ispassSup,RowBounds bounds) {
+        return this.disinfectFilesMapper.getDisinfectFilesModelBySupervisor(ispassSup,bounds);
     }
 
-    public DisinfectFilesModel getDisinfectFilesModelByid(Long id){
+    public DisinfectFilesModel getDisinfectFilesModelByid(Long id) {
         return this.disinfectFilesMapper.getDisinfectFilesModelByid(id);
     }
 
-    public int updateDisinfectFilesModelByProfessor(DisinfectFilesModel disinfectFilesModel){
+    public int updateDisinfectFilesModelByProfessor(DisinfectFilesModel disinfectFilesModel) {
         return this.disinfectFilesMapper.updateDisinfectFilesModelByProfessor(disinfectFilesModel);
     }
     public int updateDisinfectFilesModelBySupervisor(DisinfectFilesModel disinfectFilesModel){
         return this.disinfectFilesMapper.updateDisinfectFilesModelBySupervisor(disinfectFilesModel);
     }
 
-    public int updateDisinfectFilesModelByOperator(DisinfectFilesModel disinfectFilesModel){
-        return this.disinfectFilesMapper.updateDisinfectFilesModelByOperator(disinfectFilesModel);
+    public int updateDisinfectFilesModelByOperatorName(DisinfectFilesModel disinfectFilesModel){
+        return this.disinfectFilesMapper.updateDisinfectFilesModelByOperatorName(disinfectFilesModel);
     }
 
 

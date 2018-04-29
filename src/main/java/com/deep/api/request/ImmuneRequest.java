@@ -9,21 +9,24 @@ import java.math.BigInteger;
  */
 public class ImmuneRequest {
 
+    private Long id;
     private BigInteger factoryNum;
+    private String factoryName;
     private String crowdNum;
     private String immuneEartag;
     private String immuneTime;
     private String immuneKind;
     private String immuneWay;
-    private String immuneQuality;
+    private String dose;
     private String immuneDuring;
-    private String operator;
+    private int operatorId;
+    private String operatorName;
     private String professor;
     private String supervisor;
     private String remark;
-    private String isPass;
+    private String ispassCheck;
     private String unpassReason;
-    private String isPass1;
+    private String ispassSup;
     private String gmtCreate;
     private String gmtModified;
     private String gmtProfessor;
@@ -40,6 +43,14 @@ public class ImmuneRequest {
 
     public void setFactoryNum(BigInteger factoryNum) {
         this.factoryNum = factoryNum;
+    }
+
+    public String getFactoryName() {
+        return factoryName;
+    }
+
+    public void setFactoryName(String factoryName) {
+        this.factoryName = factoryName;
     }
 
     public String getCrowdNum() {
@@ -82,28 +93,12 @@ public class ImmuneRequest {
         this.immuneWay = immuneWay;
     }
 
-    public String getImmuneQuality() {
-        return immuneQuality;
-    }
-
-    public void setImmuneQuality(String immuneQuality) {
-        this.immuneQuality = immuneQuality;
-    }
-
     public String getImmuneDuring() {
         return immuneDuring;
     }
 
     public void setImmuneDuring(String immuneDuring) {
         this.immuneDuring = immuneDuring;
-    }
-
-    public String getOperator() {
-        return operator;
-    }
-
-    public void setOperator(String operator) {
-        this.operator = operator;
     }
 
     public String getProfessor() {
@@ -130,28 +125,12 @@ public class ImmuneRequest {
         this.remark = remark;
     }
 
-    public String getIsPass() {
-        return isPass;
-    }
-
-    public void setIsPass(String isPass) {
-        this.isPass = isPass;
-    }
-
     public String getUnpassReason() {
         return unpassReason;
     }
 
     public void setUnpassReason(String unpassReason) {
         this.unpassReason = unpassReason;
-    }
-
-    public String getIsPass1() {
-        return isPass1;
-    }
-
-    public void setIsPass1(String isPass1) {
-        this.isPass1 = isPass1;
     }
 
     public String getGmtCreate() {
@@ -216,5 +195,85 @@ public class ImmuneRequest {
 
     public void setSize(int size) {
         this.size = size;
+    }
+
+    public String getDose() {
+        return dose;
+    }
+
+    public void setDose(String dose) {
+        this.dose = dose;
+    }
+
+    public int getOperatorId() {
+        return operatorId;
+    }
+
+    public void setOperatorId(int operatorId) {
+        this.operatorId = operatorId;
+    }
+
+    public String getOperatorName() {
+        return operatorName;
+    }
+
+    public void setOperatorName(String operatorName) {
+        this.operatorName = operatorName;
+    }
+
+    public String getIspassCheck() {
+        return ispassCheck;
+    }
+
+    public void setIspassCheck(String ispassCheck) {
+        this.ispassCheck = ispassCheck;
+    }
+
+    public String getIspassSup() {
+        return ispassSup;
+    }
+
+    public void setIspassSup(String ispassSup) {
+        this.ispassSup = ispassSup;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "ImmuneRequest{" +
+            "id=" + id +
+            ", factoryNum=" + factoryNum +
+            ", factoryName='" + factoryName + '\'' +
+            ", crowdNum='" + crowdNum + '\'' +
+            ", immuneEartag='" + immuneEartag + '\'' +
+            ", immuneTime='" + immuneTime + '\'' +
+            ", immuneKind='" + immuneKind + '\'' +
+            ", immuneWay='" + immuneWay + '\'' +
+            ", dose='" + dose + '\'' +
+            ", immuneDuring='" + immuneDuring + '\'' +
+            ", operatorId=" + operatorId +
+            ", operatorName='" + operatorName + '\'' +
+            ", professor='" + professor + '\'' +
+            ", supervisor='" + supervisor + '\'' +
+            ", remark='" + remark + '\'' +
+            ", ispassCheck='" + ispassCheck + '\'' +
+            ", unpassReason='" + unpassReason + '\'' +
+            ", ispassSup='" + ispassSup + '\'' +
+            ", gmtCreate='" + gmtCreate + '\'' +
+            ", gmtModified='" + gmtModified + '\'' +
+            ", gmtProfessor='" + gmtProfessor + '\'' +
+            ", gmtSupervise='" + gmtSupervise + '\'' +
+            ", immuneTimeStart='" + immuneTimeStart + '\'' +
+            ", immuneTimeEnd='" + immuneTimeEnd + '\'' +
+            ", page=" + page +
+            ", size=" + size +
+            '}';
     }
 }

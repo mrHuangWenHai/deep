@@ -31,7 +31,7 @@ public class JedisUtil {
      * 获取"factory_num+模块名+专家/监督员"对应value
      * 用于比对专家/监督员未完成任务
      * 超过50次(自定义)未操作时返回true
-     * @param key
+     * @param key key
      */
     public static boolean redisJudgeTime(String key){
 
@@ -40,12 +40,10 @@ public class JedisUtil {
 
         if (valuei == null || valuei.equals("")) {
           jedis.set(key,"0");
-          valuei = "0";
         }
 
         if (valuej == null || valuej.equals("")) {
           jedis.set("PressureTips",pressureTips);
-          valuej = pressureTips;
         }
 
         int i = Integer.parseInt(jedis.get(key));
@@ -63,7 +61,7 @@ public class JedisUtil {
      * value:未审核条数
      *
      * 功能：在操作员添加了一条数据后,redis中对应数据+1
-     * @param key
+     * @param key key
      */
     public static void redisSaveProfessorSupervisorWorks(String key) {
 
@@ -73,10 +71,10 @@ public class JedisUtil {
 
             jedis.set(key,"1");
         } else {
-            //System.out.println("断点1");
+
             Integer v = Integer.parseInt(temValue);
             v += 1;
-            //System.out.println("before :"+"redis key:"+key+" redis value:"+jedis.get(key));
+
             temValue = v.toString();
             jedis.set(key,temValue);
         }
@@ -87,7 +85,7 @@ public class JedisUtil {
     /**
      * key value同上
      * 功能：在专家/审核员 处理了一条数据后,redis中对应数据-1
-     * @param key
+     * @param key key
      */
     public static boolean redisCancelProfessorSupervisorWorks(String key) {
         String temValue = jedis.get(key);
@@ -107,26 +105,22 @@ public class JedisUtil {
 
     /**
      *
-     * @param mobile_list
-     * @param message
+     * @param mobile_list 电话字符串
+     * @param message 短信内容
      */
     public static boolean redisSendMessage(String mobile_list, String message){
         MobileAnnouncementModel mobileAnnouncementModel = new MobileAnnouncementModel(mobile_list,message);
 
         //发送成功 返回true
-        if(manyMessageSendResult(mobileAnnouncementModel)){
-            return true;
-        }else {
-            return false;
-        }
+        return manyMessageSendResult(mobileAnnouncementModel);
     }
 
     /**
      * 验证过程
      * 用于查看单条短信发送后状态
      * 发送返回 成功:true 失败:false
-     * @param mobileAnnouncementModel
-     * @return
+     * @param mobileAnnouncementModel 短信类
+     * @return 发送结果
      */
     public static boolean oneMessageSendResult(MobileAnnouncementModel mobileAnnouncementModel){
         String httpResponse =  mobileAnnouncementModel.testSendSingle();
@@ -165,8 +159,8 @@ public class JedisUtil {
     /**
      * 用于查看批量短信发送后状态
      * 发送返回 成功:true 失败:false
-     * @param mobileAnnouncementModel
-     * @return
+     * @param mobileAnnouncementModel 短信类
+     * @return 发送结果
      */
     public static boolean manyMessageSendResult(MobileAnnouncementModel mobileAnnouncementModel){
         String httpResponse =  mobileAnnouncementModel.testSendMany();
@@ -201,22 +195,11 @@ public class JedisUtil {
         return false;
     }
 
-    /**
-     * 用于延长登录有效时间
-     * key:userId
-     * value:token
-     * @param key
-     * @param expireTime
-     */
-    public static void expireCertainKey(String key, int expireTime) {
-
-        jedis.expire(key, expireTime);
-    }
 
     /**
      * 获取redis中某一key的value
-     * @param key
-     * @return
+     * @param key key
+     * @return redis中对应key的value
      */
     public static String getCertainKeyValue(String key) {
         String message = jedis.get(key);
@@ -232,9 +215,8 @@ public class JedisUtil {
 
     /**
      * 存储某一key的value至redis
-     * @param key
-     * @param value
-     * @return
+     * @param key key
+     * @param value value
      */
     public static void setCertainKeyValue(String key, String value){
         jedis.set(key, value);
@@ -244,10 +226,9 @@ public class JedisUtil {
     /**
      * 存储某一key的value至redis
      * 存在过期时间
-     * @param key
-     * @param value
-     * @param expireTime
-     * @return
+     * @param key key
+     * @param value value
+     * @param expireTime 有效时间
      */
     public static void setCertainKeyValueWithExpireTime(String key, String value,int expireTime){
         jedis.set(key, value);

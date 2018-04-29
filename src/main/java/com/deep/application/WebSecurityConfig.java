@@ -9,8 +9,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class WebSecurityConfig implements WebMvcConfigurer{
-
+public class WebSecurityConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new testInterceptor()).addPathPatterns("/**");
 //        registry.addInterceptor(new AuthorizationInterceptor()).addPathPatterns("/**");

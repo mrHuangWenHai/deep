@@ -8,6 +8,8 @@ import javax.validation.constraints.*;
 public class GenealogicalFilesModel {
 
     private int id;
+    @Min(0)
+    private long factoryNum;
     @NotEmpty
     @NotNull
     private String nativeEartag;  //原耳牌
@@ -21,7 +23,7 @@ public class GenealogicalFilesModel {
     private String tradeMarkEartag;  //商标耳牌
     @NotEmpty
     @NotNull
-    private String type;     //品种名
+    private String typeName;     //品种名
 
     private String brief;    //对该品种的简介 查询时返回
     @NotEmpty
@@ -30,14 +32,13 @@ public class GenealogicalFilesModel {
     @NotEmpty
     @NotNull
     private String birthTime;  //出登时间or出生时间
-    @Min(1)
+    @DecimalMin(value = "0.0")
     private float birthWeight;  //初登体重
     @NotEmpty
     @NotNull
     private String color;  //颜色
-    @NotEmpty
     @NotNull
-    private String sex;   //性别
+    private int sex;   //性别
     @NotEmpty
     @NotNull
     private String eartagOfFather;  //父耳牌
@@ -56,8 +57,12 @@ public class GenealogicalFilesModel {
     @NotEmpty
     @NotNull
     private String eartagOfMothersMother;  //母母耳牌
+    @Min(0)
+    private int operatorId;
     @NotEmpty
     @NotNull
+    private String operatorName;
+
     private String remark;   //备注
 
     private String gmtCreate;     //建立时间
@@ -94,50 +99,20 @@ public class GenealogicalFilesModel {
 
     }
 
-    public GenealogicalFilesModel(String nativeEartag, String immuneEartag, String tradeMarkEartag, String breedingSheepBase, String birthTime, float birthWeight, String color, String sex, String eartagOfFather, String eartagOfMother, String eartagOfFathersFather, String eartagOfFathersMother, String eartagOfMothersFather, String eartagOfMothersMother, String remark) {
-
-        this.nativeEartag = nativeEartag;
-        this.immuneEartag = immuneEartag;
-        this.tradeMarkEartag = tradeMarkEartag;
-        this.breedingSheepBase = breedingSheepBase;
-        this.birthTime = birthTime;
-        this.birthWeight = birthWeight;
-        this.color = color;
-        this.sex = sex;
-        this.eartagOfFather = eartagOfFather;
-        this.eartagOfMother = eartagOfMother;
-        this.eartagOfFathersFather = eartagOfFathersFather;
-        this.eartagOfFathersMother = eartagOfFathersMother;
-        this.eartagOfMothersFather = eartagOfMothersFather;
-        this.eartagOfMothersMother = eartagOfMothersMother;
-        this.remark = remark;
-    }
-    public GenealogicalFilesModel( String nativeEartag, String immuneEartag, String tradeMarkEartag, String breedingSheepBase, String birthTime, float birthWeight, String color, String sex, String eartagOfFather, String eartagOfMother, String eartagOfFathersFather, String eartagOfFathersMother, String eartagOfMothersFather, String eartagOfMothersMother, String remark,String gmtCreate) {
-
-        this.nativeEartag = nativeEartag;
-        this.immuneEartag = immuneEartag;
-        this.tradeMarkEartag = tradeMarkEartag;
-        this.breedingSheepBase = breedingSheepBase;
-        this.birthTime = birthTime;
-        this.birthWeight = birthWeight;
-        this.color = color;
-        this.sex = sex;
-        this.eartagOfFather = eartagOfFather;
-        this.eartagOfMother = eartagOfMother;
-        this.eartagOfFathersFather = eartagOfFathersFather;
-        this.eartagOfFathersMother = eartagOfFathersMother;
-        this.eartagOfMothersFather = eartagOfMothersFather;
-        this.eartagOfMothersMother = eartagOfMothersMother;
-        this.remark = remark;
-        this.gmtCreate = gmtCreate;
-    }
-
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public long getFactoryNum() {
+        return factoryNum;
+    }
+
+    public void setFactoryNum(long factoryNum) {
+        this.factoryNum = factoryNum;
     }
 
     public String getNativeEartag() {
@@ -164,12 +139,12 @@ public class GenealogicalFilesModel {
         this.tradeMarkEartag = tradeMarkEartag;
     }
 
-    public String getType() {
-        return type;
+    public String getTypeName() {
+        return typeName;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 
     public String getBrief() {
@@ -212,11 +187,11 @@ public class GenealogicalFilesModel {
         this.color = color;
     }
 
-    public String getSex() {
+    public int getSex() {
         return sex;
     }
 
-    public void setSex(String sex) {
+    public void setSex(int sex) {
         this.sex = sex;
     }
 
@@ -290,6 +265,22 @@ public class GenealogicalFilesModel {
 
     public void setGmtModified(String gmtModified) {
         this.gmtModified = gmtModified;
+    }
+
+    public int getOperatorId() {
+        return operatorId;
+    }
+
+    public void setOperatorId(int operatorId) {
+        this.operatorId = operatorId;
+    }
+
+    public String getOperatorName() {
+        return operatorName;
+    }
+
+    public void setOperatorName(String operatorName) {
+        this.operatorName = operatorName;
     }
 
 

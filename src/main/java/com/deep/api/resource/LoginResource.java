@@ -60,16 +60,16 @@ public class LoginResource {
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
         UserModel userModel = userService.getUserByPkuserID(username);
-        if(userModel == null) {
+        if( userModel == null) {
             //数据库中未查到用户名
             Response response = Responses.errorResponse("用户名或者密码错误");
             HashMap<String, Object> data = new HashMap<>();
             data.put("errorMessage", "error");
             response.setData(data);
             return response;
-        }else {
+        } else {
             // 验证密码信息, 忽略大小写
-            if(userModel.getUserPwd().equalsIgnoreCase(password)){
+            if( userModel.getUserPwd().equalsIgnoreCase(password)) {
                 Response response = Responses.successResponse();
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("successMessage", "登录成功!");
@@ -80,13 +80,11 @@ public class LoginResource {
                     FactoryModel factoryModel = factoryService.getOneFactory(userModel.getUserFactory());
                     data.put("factory_id", userModel.getUserFactory());
                     data.put("agent_id", factoryModel.getAgent());
-                }else if (userModel.getIsFactory() == 1) {
+                } else if (userModel.getIsFactory() == 1) {
                     // 如果是代理
                     AgentModel agentModel = agentService.getOneAgent(userModel.getUserFactory());
                     data.put("agent_id", userModel.getUserFactory());
                     data.put("agent_father_id", agentModel.getAgentFather());
-                } else {
-
                 }
                 response.setData(data);
                 Long roleInt = userModel.getUserRole();
@@ -102,7 +100,7 @@ public class LoginResource {
 
                 httpServletResponse.setHeader("Authorization", userModel.getId() + ":" + tokenModel.getToken());
                 return response;
-            }else {
+            } else {
                 Response response = Responses.errorResponse("用户名或者密码错误");
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("errorMessage", "error");
@@ -130,21 +128,20 @@ public class LoginResource {
             JSONObject jsonObj = new JSONObject( httpResponse );
             int error_code = jsonObj.getInt("error");
             String error_msg = jsonObj.getString("msg");
-            if(error_code==0){
+            if (error_code == 0) {
                 System.out.println("Send message success.");
                 Response response = Responses.successResponse();
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("fail", "未查找到用户名");
                 response.setData(data);
                 return response;
-            }else{
+            } else {
                 System.out.println("Send message failed,code is "+error_code+",msg is "+error_msg);
                 Response response = Responses.errorResponse("发送消息失败");
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("errorMessage", "Send message failed,code is "+error_code+",msg is "+error_msg);
                 response.setData(data);
                 return response;
-
             }
         } catch (JSONException ex) {
             Logger.getLogger(MobileAnnouncementUtil.class.getName()).log(Level.SEVERE, null, ex);

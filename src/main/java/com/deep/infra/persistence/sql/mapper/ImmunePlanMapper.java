@@ -12,7 +12,7 @@ import java.util.List;
 
 @Mapper
 public interface ImmunePlanMapper {
-    void setImmunePlanModel(@Param("immunePlanModel") ImmunePlanModel immunePlanModel);
+    int setImmunePlanModel(@Param("immunePlanModel") ImmunePlanModel immunePlanModel);
 
 
     List<ImmunePlanModel> getImmunePlanModel(@Param("immunePlanModel") ImmuneRequest immunePlanModel,
@@ -23,10 +23,12 @@ public interface ImmunePlanMapper {
                                                                            @Param("crowdNum") String crowdNum,
                                                                            @Param("immuneTime") String immuneTime);
 
-    List<ImmunePlanModel> getImmunePlanModelByProfessor(@Param("isPass") Integer isPass ,
+    List<ImmunePlanModel> getImmunePlanModelByProfessor(@Param("ispassCheck") String ispassCheck ,
                                                         RowBounds bounds);
-    List<ImmunePlanModel> getImmunePlanModelBySupervisor(@Param("isPass1") Integer isPass1,
+
+    List<ImmunePlanModel> getImmunePlanModelBySupervisor(@Param("ispassSup") String ispassSup,
                                                          RowBounds bounds);
+
     ImmunePlanModel getImmunePlanModelByid(@Param("id") Long id);
 
     int deleteImmunePlanModelByid(@Param("id") Long id);

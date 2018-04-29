@@ -8,28 +8,34 @@
 
     <resultMap id="TypeBrief" type="com.deep.domain.model.TypeBriefModel">
         <id property="id" column="id"/>
-        <result property="type" column="type"/>
+        <result property="typeName" column="type_name"/>
         <result property="brief" column="brief"/>
     </resultMap>
     <insert id="setTypeBrief">
-        <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="typeBriefModel.id">
-            SELECT LAST_INSERT_ID()
-        </selectKey>
         INSERT INTO type_brief(
-        type,
+        type_name,
         brief
         ) VALUE (
-        #{typeBriefModel.type},
+        #{typeBriefModel.typeName},
         #{typeBriefModel.brief}
         )
     </insert>
 
-    <select id="getAllType" resultType="String">
+    <select id="getAllType" resultMap="TypeBrief">
         SELECT
-        type
+        *
         FROM
         type_brief
     </select>
+
+
+    <select id="getAll" resultMap="TypeBrief">
+        SELECT
+        *
+        FROM
+        type_brief
+    </select>
+
 
     <select id="getTypeBrief" resultMap="TypeBrief">
         SELECT
@@ -37,17 +43,16 @@
         FROM
         type_brief
         WHERE
-        type = #{type}
+        type_name = #{type}
     </select>
 
     <update id="updateTypeBrief" >
         UPDATE type_brief
-        SET  type = #{typeBriefModel.type},
+        SET
+        type_name = #{typeBriefModel.typeName},
         brief = #{typeBriefModel.brief}
         WHERE
-        id = #{typeBriefModel.id}
+        type_name = #{typeBriefModel.typeName}
     </update>
-
-
 
 </mapper>

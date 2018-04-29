@@ -6,26 +6,18 @@ import javax.validation.constraints.NotEmpty;
  * create by zhongrui on 18-4-16.
  */
 public class TypeBriefModel {
-    private long id;
+
     @NotEmpty
-    private String type;
+    private String typeName;
     @NotEmpty
     private String brief;
 
-    public long getId() {
-        return id;
+    public String getTypename() {
+        return typeName;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 
     public String getBrief() {

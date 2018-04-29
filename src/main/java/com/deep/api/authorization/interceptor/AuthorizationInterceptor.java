@@ -32,6 +32,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
      * @throws Exception
      */
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
         logger.info("invoke preHandle of AuthorizationInterceptor {}", request, response, handler);
         if (request.getRequestURI().equals("/login") || request.getRequestURI().equals("/register") ||
                 request.getRequestURI().equals("/allfunction") ||request.getRequestURI().equals("/loginresult")||
@@ -44,6 +45,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             logger.info("AuthorizationInterceptor:don't need to interceptor");
             return true;
         }
+
         if (! (handler instanceof HandlerMethod)) {
             return true;
         }
@@ -71,7 +73,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             response.setStatus(401);
             return false;
         }
-        // 从Redis数据库中获取用户原来的token, 然后取得其权限, 加入新的token
+      // 从Redis数据库中获取用户原来的token, 然后取得其权限, 加入新的token
 //        String oldToken = JedisUtil.getValue(String.valueOf(model.getUserId()));
 //        String userRoleID = oldToken.split(":")[1];
 //        logger.info("oldToken", oldToken);

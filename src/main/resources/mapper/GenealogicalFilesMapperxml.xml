@@ -6,10 +6,11 @@
 
     <resultMap id="GenealogicalFiles" type="com.deep.domain.model.GenealogicalFilesModel">
         <id property="id" column="id"/>
+        <result property="factoryNum" column="factory_num"/>
         <result property="nativeEartag" column="native_eartag"/>
         <result property="immuneEartag" column="immune_eartag"/>
         <result property="tradeMarkEartag" column="trademark_eartag"/>
-        <result property="type" column="type"/>
+        <result property="typeName" column="type_name"/>
         <result property="breedingSheepBase" column="breedingsheep_base"/>
         <result property="birthTime" column="birth_time"/>
         <result property="birthWeight" column="birth_weight"/>
@@ -17,23 +18,26 @@
         <result property="sex" column="sex"/>
         <result property="eartagOfFather" column="eartag_of_father"/>
         <result property="eartagOfMother" column="eartag_of_mother"/>
-        <result property="eartagOfFathersFather" column="eartag_of_fathersfather"/>
-        <result property="eartagOfFathersMother" column="eartag_of_fathersmother"/>
-        <result property="eartagOfMothersFather" column="eartag_of_mothersfather"/>
-        <result property="eartagOfMothersMother" column="eartag_of_mothersmother"/>
+        <result property="eartagOfFathersFather" column="eartag_of_fatherfather"/>
+        <result property="eartagOfFathersMother" column="eartag_of_fathermother"/>
+        <result property="eartagOfMothersFather" column="eartag_of_motherfather"/>
+        <result property="eartagOfMothersMother" column="eartag_of_mothermother"/>
         <result property="remark" column="remark"/>
         <result property="gmtCreate" column="gmt_create"/>
         <result property="gmtModified" column="gmt_modified"/>
+        <result property="operatorId" column="operator_id"/>
+        <result property="operatorName" column="operator_name"/>
     </resultMap>
 
 
     <insert id="insertGenealogicalFilesModel" parameterType="com.deep.domain.model.GenealogicalFilesModel" useGeneratedKeys="true" keyColumn = "id" keyProperty = "genealogicalFilesModel.id">
 
         INSERT INTO genealogical_files(
+          factory_num,
           native_eartag,
           immune_eartag,
           trademark_eartag,
-          type,
+          type_name,
           breedingsheep_base,
           birth_time,
           birth_weight,
@@ -47,13 +51,17 @@
           eartag_of_mothermother,
           remark,
           gmt_create,
-          gmt_modified
+          gmt_modified,
+          operator_id,
+        operator_name
+
         )
         VALUES(
+          #{genealogicalFilesModel.factoryNum},
           #{genealogicalFilesModel.nativeEartag},
           #{genealogicalFilesModel.immuneEartag},
           #{genealogicalFilesModel.tradeMarkEartag},
-          #{genealogicalFilesModel.type},
+          #{genealogicalFilesModel.typeName},
           #{genealogicalFilesModel.breedingSheepBase},
           #{genealogicalFilesModel.birthTime},
           #{genealogicalFilesModel.birthWeight},
@@ -67,7 +75,9 @@
           #{genealogicalFilesModel.eartagOfMothersMother},
           #{genealogicalFilesModel.remark},
           #{genealogicalFilesModel.gmtCreate},
-          #{genealogicalFilesModel.gmtModified}
+          #{genealogicalFilesModel.gmtModified},
+          #{genealogicalFilesModel.operatorId},
+          #{genealogicalFilesModel.operatorName}
         )
     </insert>
 
@@ -81,6 +91,14 @@
         id = #{id}
     </select>
 
+    <select id="getGenealogicalFilesModelByFactoryNum" resultMap="GenealogicalFiles">
+        SELECT
+        *
+        FROM
+        genealogical_files
+        WHERE
+        factory_num = #{factoryNum}
+    </select>
 
     <select id="getGenealogicalFilesModel" resultMap="GenealogicalFiles">
         SELECT
@@ -88,6 +106,12 @@
         FROM
         genealogical_files
         WHERE 1 = 1
+            <if test="genealogicalFilesModel.factoryNum != null">
+                AND factory_num = #{genealogicalFilesModel.factoryNum}
+            </if>
+            <if test="genealogicalFilesModel.operatorName != null and genealogicalFilesModel.operatorName != ''">
+                AND operator_name = #{genealogicalFilesModel.operatorName}
+            </if>
             <if test="genealogicalFilesModel.nativeEartag != null and genealogicalFilesModel.nativeEartag !='' ">
                 AND native_eartag = #{genealogicalFilesModel.nativeEartag}
             </if>
@@ -174,6 +198,13 @@
         trademark_eartag = #{tradeMarkEartag}
     </select>
 
+    <select id="allGenealogicalFilesCounts" resultType="int">
+        select
+        count(*)
+        from
+        genealogical_files
+    </select>
+
 
     <update id="updateGenealogicalFilesModel" parameterType="com.deep.domain.model.GenealogicalFilesModel">
         UPDATE
@@ -210,25 +241,32 @@
                 eartag_of_mother = #{genealogicalFilesModel.eartagOfMother},
             </if>
             <if test="genealogicalFilesModel.eartagOfFathersFather != null and genealogicalFilesModel.eartagOfFathersFather != '' ">
-                eartag_of_fathersfather = #{genealogicalFilesModel.eartagOfFathersFather},
+                eartag_of_fatherfather = #{genealogicalFilesModel.eartagOfFathersFather},
             </if>
             <if test="genealogicalFilesModel.eartagOfFathersMother != null and genealogicalFilesModel.eartagOfFathersMother != '' ">
-                eartag_of_fathersmother = #{genealogicalFilesModel.eartagOfFathersMother},
+                eartag_of_fathermother = #{genealogicalFilesModel.eartagOfFathersMother},
             </if>
             <if test="genealogicalFilesModel.eartagOfMothersFather != null and genealogicalFilesModel.eartagOfMothersFather != '' ">
-                eartag_of_mothersfather = #{genealogicalFilesModel.eartagOfMothersFather},
+                eartag_of_motherfather = #{genealogicalFilesModel.eartagOfMothersFather},
             </if>
             <if test="genealogicalFilesModel.eartagOfMothersMother != null and genealogicalFilesModel.eartagOfMothersMother != '' ">
-                eartag_of_mothersmother = #{genealogicalFilesModel.eartagOfMothersMother}
+                eartag_of_mothermother = #{genealogicalFilesModel.eartagOfMothersMother},
             </if>
+            <if test="genealogicalFilesModel.remark != null">
+                remark = #{genealogicalFilesModel.remark,jdbcType=VARCHAR},
+            </if>
+                gmt_modified = now()
+
+            <!--<if test="genealogicalFilesModel.operatorName != null and genealogicalFilesModel.operatorId != ''">-->
+                <!---->
+            <!--</if>-->
         </set>
         WHERE
         id = #{genealogicalFilesModel.id}
 
     </update>
 
-
-    <delete id="deleteGenealogicalFilesModel" parameterType="Long">
+    <delete id="deleteGenealogicalFilesModel" parameterType="int">
         DELETE FROM
         genealogical_files
         WHERE

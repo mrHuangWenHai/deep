@@ -11,50 +11,35 @@ public class DisinfectFilesModel {
 
     private Long id;      //id
 
-    private String disinfectEartag;
-    @NotNull
     @Min(0)
-    private BigInteger factoryNum;     //工厂号
+    private BigInteger factoryNum;
+    @NotBlank
+    private String factoryName;
+    private String disinfectEartag;
+    @NotBlank
+    private String place;
     @NotBlank
     private String disinfectTime;     //消毒时间
     @NotBlank
     private String disinfectName;     //消毒药品名称
-    @Min(0)
-    private float disinfectQuality;    //用药剂量
+    @NotBlank
+    private String  dose;    //用药剂量
     @NotBlank
     private String disinfectWay;     //消毒方法
+    @Min(0)
+    private int operatorId;
     @NotBlank
-    private String operator;      //操作员(创建表操作人员)
+    private String operatorName;      //操作员(创建表操作人员)
     private String professor;       //技术审核(审核表人员 专家) 可空
     private String supervisor;       //监督员(监督操作员人员) 可空
-    @NotBlank
     private String remark;        //备注
-    private String isPass;       //是否通过审核 可空 默认为 0
+    private String ispassCheck;       //是否通过审核 可空 默认为 0
     private String unpassReason;   //未通过审核原因 可空 默认未 无
-    private String isPass1;       //是否通过审核 可空 默认为 0
+    private String ispassSup;       //是否通过审核 可空 默认为 0
     private String gmtCreate;   //创建时间
     private String gmtModified;     //修改时间
     private String gmtProfessor;     //审核时间 可空
     private String gmtSupervise;     //监督确认时间 可空
-
-
-
-    public DisinfectFilesModel() {
-    }
-
-    public DisinfectFilesModel(BigInteger factoryNum, String disinfectTime, String disinfectName, float disinfectQuality, String disinfectWay, String operator, String remark, String isPass,String isPass1, String gmtCreate, String gmtModified) {
-        this.factoryNum = factoryNum;
-        this.disinfectTime = disinfectTime;
-        this.disinfectName = disinfectName;
-        this.disinfectQuality = disinfectQuality;
-        this.disinfectWay = disinfectWay;
-        this.operator = operator;
-        this.remark = remark;
-        this.isPass = isPass;
-        this.isPass1 = isPass1;
-        this.gmtCreate = gmtCreate;
-        this.gmtModified = gmtModified;
-    }
 
 
     public Long getId() {
@@ -73,14 +58,6 @@ public class DisinfectFilesModel {
         this.disinfectEartag = disinfectEartag;
     }
 
-    public BigInteger getFactoryNum() {
-        return factoryNum;
-    }
-
-    public void setFactoryNum(BigInteger factoryNum) {
-        this.factoryNum = factoryNum;
-    }
-
     public String getDisinfectTime() {
         return disinfectTime;
     }
@@ -97,28 +74,12 @@ public class DisinfectFilesModel {
         this.disinfectName = disinfectName;
     }
 
-    public float getDisinfectQuality() {
-        return disinfectQuality;
-    }
-
-    public void setDisinfectQuality(float disinfectQuality) {
-        this.disinfectQuality = disinfectQuality;
-    }
-
     public String getDisinfectWay() {
         return disinfectWay;
     }
 
     public void setDisinfectWay(String disinfectWay) {
         this.disinfectWay = disinfectWay;
-    }
-
-    public String getOperator() {
-        return operator;
-    }
-
-    public void setOperator(String operator) {
-        this.operator = operator;
     }
 
     public String getProfessor() {
@@ -145,28 +106,12 @@ public class DisinfectFilesModel {
         this.remark = remark;
     }
 
-    public String getIsPass() {
-        return isPass;
-    }
-
-    public void setIsPass(String isPass) {
-        this.isPass = isPass;
-    }
-
     public String getUnpassReason() {
         return unpassReason;
     }
 
     public void setUnpassReason(String unpassReason) {
         this.unpassReason = unpassReason;
-    }
-
-    public String getIsPass1() {
-        return isPass1;
-    }
-
-    public void setIsPass1(String isPass1) {
-        this.isPass1 = isPass1;
     }
 
     public String getGmtCreate() {
@@ -201,28 +146,94 @@ public class DisinfectFilesModel {
         this.gmtSupervise = gmtSupervise;
     }
 
+    public String getPlace() {
+        return place;
+    }
 
-  @Override
-  public String toString() {
-    return "DisinfectFilesModel{" +
-        "id=" + id +
-        ", disinfectEartag='" + disinfectEartag + '\'' +
-        ", factoryNum=" + factoryNum +
-        ", disinfectTime='" + disinfectTime + '\'' +
-        ", disinfectName='" + disinfectName + '\'' +
-        ", disinfectQuality='" + disinfectQuality + '\'' +
-        ", disinfectWay='" + disinfectWay + '\'' +
-        ", operator='" + operator + '\'' +
-        ", professor='" + professor + '\'' +
-        ", supervisor='" + supervisor + '\'' +
-        ", remark='" + remark + '\'' +
-        ", isPass='" + isPass + '\'' +
-        ", unpassReason='" + unpassReason + '\'' +
-        ", isPass1='" + isPass1 + '\'' +
-        ", gmtCreate='" + gmtCreate + '\'' +
-        ", gmtModified='" + gmtModified + '\'' +
-        ", gmtProfessor='" + gmtProfessor + '\'' +
-        ", gmtSupervise='" + gmtSupervise + '\'' +
-        '}';
-  }
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
+    public String getIspassCheck() {
+        return ispassCheck;
+    }
+
+    public void setIspassCheck(String ispassCheck) {
+        this.ispassCheck = ispassCheck;
+    }
+
+    public String getIspassSup() {
+        return ispassSup;
+    }
+
+    public void setIspassSup(String ispassSup) {
+        this.ispassSup = ispassSup;
+    }
+
+    public BigInteger getFactoryNum() {
+        return factoryNum;
+    }
+
+    public void setFactoryNum(BigInteger factoryNum) {
+        this.factoryNum = factoryNum;
+    }
+
+    public String getDose() {
+        return dose;
+    }
+
+    public void setDose(String dose) {
+        this.dose = dose;
+    }
+
+    public String getOperatorName() {
+        return operatorName;
+    }
+
+    public void setOperatorName(String operatorName) {
+        this.operatorName = operatorName;
+    }
+
+    public String getFactoryName() {
+        return factoryName;
+    }
+
+    public void setFactoryName(String factoryName) {
+        this.factoryName = factoryName;
+    }
+
+    public int getOperatorId() {
+        return operatorId;
+    }
+
+    public void setOperatorId(int operatorId) {
+        this.operatorId = operatorId;
+    }
+
+    @Override
+    public String toString() {
+        return "DisinfectFilesModel{" +
+            "id=" + id +
+            ", factoryNum=" + factoryNum +
+            ", factoryName='" + factoryName + '\'' +
+            ", disinfectEartag='" + disinfectEartag + '\'' +
+            ", place='" + place + '\'' +
+            ", disinfectTime='" + disinfectTime + '\'' +
+            ", disinfectName='" + disinfectName + '\'' +
+            ", dose='" + dose + '\'' +
+            ", disinfectWay='" + disinfectWay + '\'' +
+            ", operatorId=" + operatorId +
+            ", operatorName='" + operatorName + '\'' +
+            ", professor='" + professor + '\'' +
+            ", supervisor='" + supervisor + '\'' +
+            ", remark='" + remark + '\'' +
+            ", ispassCheck='" + ispassCheck + '\'' +
+            ", unpassReason='" + unpassReason + '\'' +
+            ", ispassSup='" + ispassSup + '\'' +
+            ", gmtCreate='" + gmtCreate + '\'' +
+            ", gmtModified='" + gmtModified + '\'' +
+            ", gmtProfessor='" + gmtProfessor + '\'' +
+            ", gmtSupervise='" + gmtSupervise + '\'' +
+            '}';
+    }
 }

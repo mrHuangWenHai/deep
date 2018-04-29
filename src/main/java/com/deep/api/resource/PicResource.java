@@ -123,6 +123,7 @@ public class PicResource {
         response.setData(data);
         return response;
     }
+
     @RequestMapping(value = "/searchfile/searchByDate",method = RequestMethod.POST)
     public @ResponseBody Response getByDate(@RequestBody Pic pic){
         logger.info("invoke /searchfile/searchByDate [{},{}]",pic.getSdate(),pic.getEdate());

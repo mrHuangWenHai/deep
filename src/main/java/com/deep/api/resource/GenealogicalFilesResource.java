@@ -8,7 +8,6 @@ import com.deep.domain.model.GenealogicalFilesModel;
 import com.deep.domain.model.TypeBriefModel;
 import com.deep.domain.service.GenealogicalFilesService;
 import com.deep.domain.service.TypeBriefService;
-import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.JudgeUtil;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
@@ -17,9 +16,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
-import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -28,6 +28,7 @@ import java.util.List;
 public class GenealogicalFilesResource {
 
     private Logger logger = LoggerFactory.getLogger(GenealogicalFilesResource.class);
+
     //替代注册bean
     @Resource
     private GenealogicalFilesService genealogicalFilesService;
@@ -35,49 +36,42 @@ public class GenealogicalFilesResource {
     @Resource
     private TypeBriefService typeBriefService;
 
+
     /**
      * 用于存放羊品种以及简介
-     * @param typeBriefModel
-     * @param bindingResult
-     * @return
+     * @param typeBriefModel  品种简介类
+     * @param bindingResult   异常抛出类
+     * @return  插入/更新结果
      */
-    @RequestMapping(value = "/type",method = RequestMethod.POST)
+    @RequestMapping(value = "/add/type",method = RequestMethod.POST)
     public Response type(@RequestBody @Validated TypeBriefModel typeBriefModel,
-                         BindingResult bindingResult){
 
-        if (bindingResult.hasErrors()){
+                         BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             System.out.println(bindingResult.getAllErrors());
             return ValidResponse.bindExceptionHandler();
-        }else{
-            //若数据库中已经存在
-            TypeBriefModel typeBriefModel1;
-            if ((typeBriefModel1 = this.typeBriefService.getTypeBrief(typeBriefModel.getType())) != null){
-                //System.out.println(this.typeBriefService.getTypeBrief(typeBriefModel) != null);
-                //通过id更新
-                typeBriefModel.setId(typeBriefModel1.getId());
-                int row = this.typeBriefService.updateTypeBrief(typeBriefModel);
-                //System.out.println("row"+row);
-                return JudgeUtil.JudgeUpdate(row);
-            }else{
-                this.typeBriefService.setTypeBrief(typeBriefModel);
+        } else {
+            int success = this.typeBriefService.setTypeBrief(typeBriefModel);
+            if (success == 1) {
+                return Responses.successResponse();
+            } else {
+                return Responses.errorResponse("add error");
             }
-
         }
 
-        return Responses.successResponse();
     }
 
     /**
      * 查询之前 需要返回给前端的数据
      * 山羊品种对应的特征
-     * @return
+     * @return 种类
      */
-    @RequestMapping(value = "/beforesave",method = RequestMethod.GET)
-    public Response beforeSave(){
 
+    @RequestMapping(value = "/types",method = RequestMethod.GET)
+    public Response beforeSave() {
+        logger.info("/gf/types");
         return JudgeUtil.JudgeSuccess("type",this.typeBriefService.getAllType());
     }
-
 
     /**
      * 返回插入结果
@@ -87,35 +81,35 @@ public class GenealogicalFilesResource {
      * color:棕色 0  暗红 1  杂色 2
      * sex:公 0 母 1
      * METHOD:POST
-     * @param genealogicalFilesModel
-     * @return
+     * @param genealogicalFilesModel 系谱类
+     * @return 插入结果
      */
-    @RequestMapping(value = "/saveshow",method = RequestMethod.POST)
-    public Response saveShow(@RequestBody @Validated GenealogicalFilesModel genealogicalFilesModel,
-                             BindingResult bindingResult) {
-      if (bindingResult.hasErrors()) {
-          return ValidResponse.bindExceptionHandler();
-      }
-      logger.info("invoke saveShow {}",genealogicalFilesModel);
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    public Response saveShow(@RequestBody @Validated GenealogicalFilesModel genealogicalFilesModel) {
+
+      logger.info("invoke save {}",genealogicalFilesModel);
       //查看数据库中是否有这种羊的品种信息
-      List<String> list = this.typeBriefService.getAllType();
+
+      List<TypeBriefModel> list = this.typeBriefService.getAllType();
       int i = 0;
-      for (String tempType : list){
-          //System.out.println("temp:"+tempType);
-          //System.out.println("type:"+genealogicalFilesModel.getType());
-          if (tempType.equals(genealogicalFilesModel.getType())){
+      for (TypeBriefModel tempType : list) {
+          if (tempType.getTypename().equals(genealogicalFilesModel.getTypeName())) {
+
               i = 1;
               break;
           }
       }
-      if (i == 0){
+
+      if (i == 0) {
           return Responses.errorResponse("No this type before");
       }
+
       SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
       String time = simpleDateFormat.format(new Timestamp(System.currentTimeMillis()));
       genealogicalFilesModel.setGmtCreate(time);
       genealogicalFilesModel.setGmtModified(time);
-      try{
+
+      try {
           int id = genealogicalFilesService.insertGenealogicalFilesModel(genealogicalFilesModel);
           if (id == 0) {
               return Responses.errorResponse("add data error");
@@ -124,7 +118,7 @@ public class GenealogicalFilesResource {
               data.put("id",genealogicalFilesModel.getId());
               return Responses.successResponse(data);
           }
-      }catch (Exception e){
+      } catch (Exception e) {
           e.printStackTrace();
           return Responses.errorResponse("data already exist");
       }
@@ -133,14 +127,13 @@ public class GenealogicalFilesResource {
 
     /**
      * 用于条件查找
-     * RowBounds为必传参数
      * METHOD:POST
-     * @param genealogicalRequest
-     * @return
+     * @param genealogicalRequest 系谱请求类
+     * @return 查询结果/查询结果条数
      */
     //bound为必传参数
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
-    public Response findShow(@RequestBody GenealogicalRequest genealogicalRequest){
+    public Response findShow(@RequestBody GenealogicalRequest genealogicalRequest) {
 
         logger.info("invoke findShow {}",genealogicalRequest);
 
@@ -153,30 +146,57 @@ public class GenealogicalFilesResource {
         }
 
         List<GenealogicalFilesModel> genealogicalFilesModels = genealogicalFilesService.getGenealogicalFilesModel(genealogicalRequest,new RowBounds(genealogicalRequest.getPage(),genealogicalRequest.getSize()));
-        for(int i = 0 ; i < genealogicalFilesModels.size() ; i ++){
-            String brief = this.typeBriefService.getTypeBrief(genealogicalFilesModels.get(i).getType()).getBrief();
+
+        for(int i = 0 ; i < genealogicalFilesModels.size() ; i ++) {
+            String brief = this.typeBriefService.getTypeBrief(genealogicalFilesModels.get(i).getTypeName()).getBrief();
             genealogicalFilesModels.get(i).setBrief(brief);
+
         }
         return JudgeUtil.JudgeFind(genealogicalFilesModels,genealogicalFilesModels.size());
     }
 
     /**
+     * 用于条件查找
+     * RowBounds为必传参数
+     * @param
+     * @return
+     */
+     @RequestMapping(value = "find/{id}")
+     public Response findGenealogicalFiles(@NotNull @PathVariable(value = "id") long factoryNum,
+                                           @RequestParam(value = "page", defaultValue = "0") int page,
+                                           @RequestParam(value = "size", defaultValue = "10") int size) {
+         if (page < 0 || size < 0) {
+             return Responses.errorResponse("param is invaild");
+         }
+         logger.info("invoke find/{} {}",factoryNum, page, size);
+         RowBounds rowBounds = new RowBounds(page * size, size);
+         int total = genealogicalFilesService.allGenealogicalFilesCounts();
+         List<GenealogicalFilesModel> genealogicalFilesModels = genealogicalFilesService.getGenealogicalFilesModelByFactoryNum(factoryNum, rowBounds);
+         Response response = Responses.successResponse();
+         HashMap<String,Object> data = new HashMap<>();
+         data.put("List",genealogicalFilesModels);
+         data.put("size",size);
+         data.put("total",total);
+         response.setData(data);
+         return response;
+     }
+
+    /**
      * 查询出满足若干条件后的结果
      * 可由id进行操作
      * METHOD:GET
-     * @param id
-     * @return
+     * @param id id
+     * @return 查询结果
      */
     @ResponseBody
-    @RequestMapping(value = "/findshowbyid",method = RequestMethod.GET)
-    public Response findShowById(@RequestParam("id") int id ) {
 
-        logger.info("invoke findShowById {}", id);
+    @RequestMapping(value = "/show/{id}",method = RequestMethod.GET)
+    public Response findShowById(@NotNull @PathVariable("id") int id ) {
+
+        logger.info("invoke showById {}", id);
 
         GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesService.getGenealogicalFilesModelByid(id);
-
         return JudgeUtil.JudgeFind(genealogicalFilesModel);
-
     }
 
     //update
@@ -184,35 +204,32 @@ public class GenealogicalFilesResource {
     /**
      * 更新操作 输入数据替代原数据
      * METHOD:PATCH
-     * @param genealogicalFilesModel
-     * @return
+     * @param genealogicalFilesModel 系谱类
+     * @return  更新结果
      */
     @ResponseBody
-    @RequestMapping(value = "/update",method = RequestMethod.PATCH)
-    public Response update(@RequestBody GenealogicalFilesModel genealogicalFilesModel) {
+    @RequestMapping(value = "/update/{id}",method = RequestMethod.PATCH)
+    public Response update(@Validated @RequestBody GenealogicalFilesModel genealogicalFilesModel,
+                           @NotNull @PathVariable(value = "id") int id) {
 
-        logger.info("invoke update {}", genealogicalFilesModel);
-
-        if (genealogicalFilesService.getGenealogicalFilesModelByNativeEartag(genealogicalFilesModel.getNativeEartag()) == null
-            && genealogicalFilesService.getGenealogicalFilesModelByimmuneEartag(genealogicalFilesModel.getImmuneEartag()) == null
-            && genealogicalFilesService.getGenealogicalFilesModelBytradeMarkEartag(genealogicalFilesModel.getTradeMarkEartag()) == null) {
-            int row = genealogicalFilesService.updateGenealogicalFilesModel(genealogicalFilesModel);
-            return JudgeUtil.JudgeUpdate(row);
-        } else {
-            return Responses.errorResponse("conflict with existing datas");
+        logger.info("invoke update/ {}", genealogicalFilesModel);
+        if (id < 0) {
+            return Responses.errorResponse("path is invalid");
         }
+        genealogicalFilesModel.setId(id);
+        int row = genealogicalFilesService.updateGenealogicalFilesModel(genealogicalFilesModel);
+        return JudgeUtil.JudgeUpdate(row);
 
     }
 
     /**
      * 返回删除内容行号
      * METHOD:DELETE
-     * @param id
-     * @return
+     * @param id id
+     * @return  删除结果
      */
-    @ResponseBody
-    @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
-    public Response delete(@RequestParam("id") int id) {
+    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+    public Response delete(@NotNull @PathVariable(value = "id") int id) {
         logger.info("invoke delete {}", id);
         int row = genealogicalFilesService.deleteGenealogicalFilesModel(id);
         return JudgeUtil.JudgeDelete(row);

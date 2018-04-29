@@ -15,8 +15,8 @@ import java.util.List;
 public class RepellentPlanService {
     @Resource
     private RepellentPlanMapper repellentPlanMapper;
-    public void setRepellentPlanModel(RepellentPlanModel repellentPlanModel){
-        this.repellentPlanMapper.setRepellentPlanModel(repellentPlanModel);
+    public int setRepellentPlanModel(RepellentPlanModel repellentPlanModel) {
+        return this.repellentPlanMapper.setRepellentPlanModel(repellentPlanModel);
     }
 
 
@@ -29,12 +29,12 @@ public class RepellentPlanService {
         return this.repellentPlanMapper.getRepellentPlanModelByfactoryNumAndcrowdNumAndrepellentTimeAndrepellentName(factoryNum, crowdNum, repellentTime, repellentName);
     }
 
-    public List<RepellentPlanModel> getRepellentPlanModelByProfessor(Integer isPass, RowBounds bounds){
-        return this.repellentPlanMapper.getRepellentPlanModelByProfessor(isPass,bounds);
+    public List<RepellentPlanModel> getRepellentPlanModelByProfessor(Integer ispassCheck, RowBounds bounds){
+        return this.repellentPlanMapper.getRepellentPlanModelByProfessor(ispassCheck,bounds);
     }
 
-    public List<RepellentPlanModel> getRepellentPlanModelBySupervisor(Integer isPass1, RowBounds bounds){
-        return this.repellentPlanMapper.getRepellentPlanModelBySupervisor(isPass1,bounds);
+    public List<RepellentPlanModel> getRepellentPlanModelBySupervisor(Integer ispassSup, RowBounds bounds){
+        return this.repellentPlanMapper.getRepellentPlanModelBySupervisor(ispassSup,bounds);
     }
 
     public RepellentPlanModel getRepellentPlanModelByid(Long id){

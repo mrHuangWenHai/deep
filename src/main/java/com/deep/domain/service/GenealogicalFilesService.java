@@ -18,8 +18,14 @@ public class  GenealogicalFilesService {
     @Resource
     private GenealogicalFilesMapper genealogicalFilesMapper;
 
+    private int total = -1;
+
     public int insertGenealogicalFilesModel(GenealogicalFilesModel genealogicalFilesModel) {
-        return this.genealogicalFilesMapper.insertGenealogicalFilesModel(genealogicalFilesModel);
+        int success = this.genealogicalFilesMapper.insertGenealogicalFilesModel(genealogicalFilesModel);
+        if (success == 1) {
+          total = (total == -1) ? 1:(total+1);
+        }
+        return success;
     }
 
     public List<GenealogicalFilesModel> getGenealogicalFilesModel(GenealogicalRequest genealogicalFilesModel,
@@ -27,7 +33,20 @@ public class  GenealogicalFilesService {
         return this.genealogicalFilesMapper.getGenealogicalFilesModel(genealogicalFilesModel,bounds);
     }
 
+    public List<GenealogicalFilesModel> getGenealogicalFilesModelByFactoryNum(long factoryNum,
+                                                                              RowBounds bounds) {
+        return this.genealogicalFilesMapper.getGenealogicalFilesModelByFactoryNum(factoryNum, bounds);
+    }
 
+    public int allGenealogicalFilesCounts() {
+
+      if (total == -1) {
+        total = this.genealogicalFilesMapper.allGenealogicalFilesCounts();
+        return total;
+      }
+
+      return total;
+    }
 
     public GenealogicalFilesModel getGenealogicalFilesModelByid(int id) {
         return this.genealogicalFilesMapper.getGenealogicalFilesModelByid(id);
@@ -47,7 +66,13 @@ public class  GenealogicalFilesService {
 
 
     public int deleteGenealogicalFilesModel(int id) {
-        return this.genealogicalFilesMapper.deleteGenealogicalFilesModel(id);
+        int success = this.genealogicalFilesMapper.deleteGenealogicalFilesModel(id);
+        if (success == 1) {
+          if (total != -1 && total > 0) {
+            total --;
+          }
+        }
+        return success;
     }
 
     public int updateGenealogicalFilesModel(GenealogicalFilesModel genealogicalFilesModel) {

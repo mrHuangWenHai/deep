@@ -41,7 +41,7 @@ public interface DisinfectFilesMapper {
     List<DisinfectFilesModel> getDisinfectFilesModelByProfessor(@Param("isPass") Integer isPass,
                                                                 RowBounds bounds);
 
-    List<DisinfectFilesModel> getDisinfectFilesModelBySupervisor(@Param("isPass1") Integer isPass1,
+    List<DisinfectFilesModel> getDisinfectFilesModelBySupervisor(@Param("ispassSup") Integer ispassSup,
                                                                  RowBounds bounds);
 
 
@@ -49,7 +49,7 @@ public interface DisinfectFilesMapper {
 
     int updateDisinfectFilesModelBySupervisor(@Param("disinfectFilesModel") DisinfectFilesModel disinfectFilesModel);
 
-    int updateDisinfectFilesModelByOperator(@Param("disinfectFilesModel") DisinfectFilesModel disinfectFilesModel);
+    int updateDisinfectFilesModelByOperatorName(@Param("disinfectFilesModel") DisinfectFilesModel disinfectFilesModel);
 
 
 

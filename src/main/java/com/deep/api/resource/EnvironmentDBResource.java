@@ -8,6 +8,8 @@ import com.deep.domain.util.BackupUtil;
 import com.deep.domain.util.JudgeUtil;
 import com.deep.infra.persistence.sql.mapper.*;
 import org.apache.ibatis.session.SqlSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -30,35 +32,33 @@ import java.text.SimpleDateFormat;
 @RequestMapping(value = "/envir")
 public class EnvironmentDBResource {
 
-    private static String hostIP = "193.112.112.149";
-    private static String username = "root";
-    private static String password = "hzau2018";
-    private static String database = "demo1";
-    private static String savePath = "../DatabaseStatics/";
-    //获取最新数据 包装
+    private final Logger logger = LoggerFactory.getLogger(EnvironmentDBResource.class);
+
+    private static SqlSession session = SqlSessionFactoryUtils.openSqlSession();
+    private static CO2DataMapper co2DataMapper = session.getMapper(CO2DataMapper.class);
+    private static HumDataMapper humDataMapper = session.getMapper(HumDataMapper.class);
+    private static NH3DataMapper nh3DataMapper = session.getMapper(NH3DataMapper.class);
+    private static TempDataMapper tempDataMapper = session.getMapper(TempDataMapper.class);
+
+    /* 获取最新数据 包装 */
     @Resource
     private EnvironmentService environmentService;
-
     /**
-     *
-     * @return
+     * 从another数据库中采集最新数据 包装
+     * 按需求 主动/被动 提交给前端
+     * 未完成:多个厂的数据 怎么实现最新数据的筛选(多表/单表)
+     * @return JudgeUtil.JudgeSuccess("data",environmentModel);
      */
     @RequestMapping(value = "/get",method = RequestMethod.GET)
     public Response getLatest(){
-        System.out.println("in this interface");
-        SqlSession session = null;
-
+        //System.out.println("in this interface");
+        logger.info("invoke getLatest {}");
         EnvironmentModel environmentModel = new EnvironmentModel();
         CO2DataModel co2DataModel;
         HumDataModel humDataModel;
         NH3DataModel nh3DataModel;
         TempDataModel tempDataModel;
         try {
-            session = SqlSessionFactoryUtils.openSqlSession();
-            CO2DataMapper co2DataMapper = session.getMapper(CO2DataMapper.class);
-            HumDataMapper humDataMapper = session.getMapper(HumDataMapper.class);
-            NH3DataMapper nh3DataMapper = session.getMapper(NH3DataMapper.class);
-            TempDataMapper tempDataMapper = session.getMapper(TempDataMapper.class);
             co2DataModel = co2DataMapper.getCO2DataLatest();
             humDataModel = humDataMapper.getHumDataLatest();
             nh3DataModel = nh3DataMapper.getNH3DataLatest();
@@ -86,20 +86,31 @@ public class EnvironmentDBResource {
         return JudgeUtil.JudgeSuccess("data",environmentModel);
     }
 
+
+
     /**
+     * 定时任务
+     * 5天备份一次
      * 备份another数据库中co2_data hum_data temp_data nh3_data
-     * @throws InterruptedException
+     * @throws InterruptedException 冲突异常
      */
 
-    @Scheduled(cron = "0/5 * * * * ?")
+    @Scheduled(cron = "0 0 0 0/5 * ?")
     public void backUpMysql() throws InterruptedException{
+        String hostIP = "193.112.112.149";
+        String username = "root";
+        String password = "hzau2018";
+        String database = "demo1";
+        String savePath = "../DatabaseStatics/";
         if (BackupUtil.sqlBackup(savePath+"co2/",hostIP,username,password,database,"co2_data","_co2")
                 && BackupUtil.sqlBackup(savePath+"hum/",hostIP,username,password,database,"hum_data","_hum")
                 && BackupUtil.sqlBackup(savePath+"temp/",hostIP,username,password,database,"temp_data","_temp")
                 && BackupUtil.sqlBackup(savePath+"nh3/",hostIP,username,password,database,"nh3_data","_nh3")){
             //删除数据
-//            if (this.humDataService.deleteHumData() == 1
-//                    ){
+//            if (co2DataMapper.deleteCO2Data() == 1
+//                    && humDataMapper.deleteHumData() == 1
+//                    && tempDataMapper.deleteTempData() == 1
+//                    && nh3DataMapper.deleteNH3Data() == 1){
 //                System.out.println("Success");
 //            }
             System.out.println("Success");

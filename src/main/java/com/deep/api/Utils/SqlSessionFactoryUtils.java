@@ -20,17 +20,19 @@ public class SqlSessionFactoryUtils {
      * 实现连接another数据库
      * @return
      */
-    public static SqlSessionFactory getSqlSessionFactory(){
-        synchronized (LOCK){
+    public static SqlSessionFactory getSqlSessionFactory() {
+
+        synchronized (LOCK) {
+
             if (sqlSessionFactory != null){
                 return sqlSessionFactory;
             }
+
             String resource = "mybatis-config-outer.xml";
             InputStream inputStream;
             try{
                 inputStream = Resources.getResourceAsStream(resource);
                 sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
-
             }catch (IOException e){
                 e.printStackTrace();
                 return null;
@@ -40,15 +42,12 @@ public class SqlSessionFactoryUtils {
 
     }
 
-    public static SqlSession openSqlSession(){
-        if (sqlSessionFactory == null){
+    public static SqlSession openSqlSession() {
+        if (sqlSessionFactory == null) {
             getSqlSessionFactory();
         }
         return  sqlSessionFactory.openSession();
     }
-
-
-
 
 }
 

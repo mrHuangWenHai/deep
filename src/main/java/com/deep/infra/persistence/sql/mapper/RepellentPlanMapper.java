@@ -12,7 +12,8 @@ import java.util.List;
 
 @Mapper
 public interface RepellentPlanMapper {
-    void setRepellentPlanModel(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel);
+
+    int setRepellentPlanModel(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel);
 
 
     List<RepellentPlanModel> getRepellentPlanModel(@Param("repellentPlanModel") RepellentRequest repellentPlanModel,
@@ -25,9 +26,9 @@ public interface RepellentPlanMapper {
                                                                                                     @Param("repellentName")String repellentName);
 
 
-    List<RepellentPlanModel> getRepellentPlanModelByProfessor(@Param("isPass") Integer isPass,
+    List<RepellentPlanModel> getRepellentPlanModelByProfessor(@Param("ispassCheck") Integer ispassCheck,
                                                               RowBounds bounds);
-    List<RepellentPlanModel> getRepellentPlanModelBySupervisor(@Param("isPass1") Integer isPass1,
+    List<RepellentPlanModel> getRepellentPlanModelBySupervisor(@Param("ispassSup") Integer ispassSup,
                                                                RowBounds bounds);
 
     RepellentPlanModel getRepellentPlanModelByid(@Param("id") Long id);

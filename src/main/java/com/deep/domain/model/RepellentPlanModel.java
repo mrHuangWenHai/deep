@@ -10,6 +10,8 @@ public class RepellentPlanModel {
     @Min(0)
     private BigInteger factoryNum;   //工厂编号
     @NotBlank
+    private String factoryName;
+    @NotBlank
     private String crowdNum;       //羊群号
     private String repellentEartag;    //耳牌附件名
     @NotBlank
@@ -19,44 +21,21 @@ public class RepellentPlanModel {
     @NotBlank
     private String repellentWay;     //给药方式
     @NotBlank
-    private String repellentQuality;    //给药剂量
+    private String dose;    //给药剂量
+    @Min(1)
+    private int operatorId;
     @NotBlank
-    private String operator;
+    private String operatorName;
     private String professor;
     private String supervisor;
-    @NotBlank
     private String remark;
-    private String isPass;
+    private String ispassCheck;
     private String unpassReason;
-    private String isPass1;
+    private String ispassSup;
     private String gmtCreate;
     private String gmtModified;
     private String gmtProfessor;
     private String gmtSupervise;
-
-
-
-
-
-    public RepellentPlanModel() {
-    }
-
-    public RepellentPlanModel(BigInteger factoryNum, String crowdNum, String repellentEartag, String repellentTime, String repellentName, String repellentWay, String repellentQuality, String operator, String remark, String isPass, String isPass1, String gmtCreate) {
-        this.factoryNum = factoryNum;
-        this.crowdNum = crowdNum;
-        this.repellentEartag = repellentEartag;
-        this.repellentTime = repellentTime;
-        this.repellentName = repellentName;
-        this.repellentWay = repellentWay;
-        this.repellentQuality = repellentQuality;
-        this.operator = operator;
-        this.remark = remark;
-        this.isPass = isPass;
-        this.isPass1 = isPass1;
-        this.gmtCreate = gmtCreate;
-    }
-
-
 
     public Long getId() {
         return id;
@@ -116,22 +95,6 @@ public class RepellentPlanModel {
         this.repellentWay = repellentWay;
     }
 
-    public String getRepellentQuality() {
-        return repellentQuality;
-    }
-
-    public void setRepellentQuality(String repellentQuality) {
-        this.repellentQuality = repellentQuality;
-    }
-
-    public String getOperator() {
-        return operator;
-    }
-
-    public void setOperator(String operator) {
-        this.operator = operator;
-    }
-
     public String getProfessor() {
         return professor;
     }
@@ -156,28 +119,12 @@ public class RepellentPlanModel {
         this.remark = remark;
     }
 
-    public String getIsPass() {
-        return isPass;
-    }
-
-    public void setIsPass(String isPass) {
-        this.isPass = isPass;
-    }
-
     public String getUnpassReason() {
         return unpassReason;
     }
 
     public void setUnpassReason(String unpassReason) {
         this.unpassReason = unpassReason;
-    }
-
-    public String getIsPass1() {
-        return isPass1;
-    }
-
-    public void setIsPass1(String isPass1) {
-        this.isPass1 = isPass1;
     }
 
     public String getGmtCreate() {
@@ -212,4 +159,78 @@ public class RepellentPlanModel {
         this.gmtSupervise = gmtSupervise;
     }
 
+    public String getFactoryName() {
+        return factoryName;
+    }
+
+    public void setFactoryName(String factoryName) {
+        this.factoryName = factoryName;
+    }
+
+    public String getDose() {
+        return dose;
+    }
+
+    public void setDose(String dose) {
+        this.dose = dose;
+    }
+
+    public int getOperatorId() {
+        return operatorId;
+    }
+
+    public void setOperatorId(int operatorId) {
+        this.operatorId = operatorId;
+    }
+
+    public String getOperatorName() {
+        return operatorName;
+    }
+
+    public void setOperatorName(String operatorName) {
+        this.operatorName = operatorName;
+    }
+
+    public String getIspassCheck() {
+        return ispassCheck;
+    }
+
+    public void setIspassCheck(String ispassCheck) {
+        this.ispassCheck = ispassCheck;
+    }
+
+    public String getIspassSup() {
+        return ispassSup;
+    }
+
+    public void setIspassSup(String ispassSup) {
+        this.ispassSup = ispassSup;
+    }
+
+    @Override
+    public String toString() {
+        return "RepellentPlanModel{" +
+            "id=" + id +
+            ", factoryNum=" + factoryNum +
+            ", factoryName='" + factoryName + '\'' +
+            ", crowdNum='" + crowdNum + '\'' +
+            ", repellentEartag='" + repellentEartag + '\'' +
+            ", repellentTime='" + repellentTime + '\'' +
+            ", repellentName='" + repellentName + '\'' +
+            ", repellentWay='" + repellentWay + '\'' +
+            ", dose='" + dose + '\'' +
+            ", operatorId=" + operatorId +
+            ", operatorName='" + operatorName + '\'' +
+            ", professor='" + professor + '\'' +
+            ", supervisor='" + supervisor + '\'' +
+            ", remark='" + remark + '\'' +
+            ", ispassCheck='" + ispassCheck + '\'' +
+            ", unpassReason='" + unpassReason + '\'' +
+            ", ispassSup='" + ispassSup + '\'' +
+            ", gmtCreate='" + gmtCreate + '\'' +
+            ", gmtModified='" + gmtModified + '\'' +
+            ", gmtProfessor='" + gmtProfessor + '\'' +
+            ", gmtSupervise='" + gmtSupervise + '\'' +
+            '}';
+    }
 }
