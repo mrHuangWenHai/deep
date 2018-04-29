@@ -114,7 +114,7 @@ public class DisinfectFilesResource {
 
                             System.out.println("in redis:");
 
-                            List<String> phone = userService.getUserTelephoneByfactoryNum(disinfectFilesModel.getFactoryNum());
+                            List<String> phone = userService.getProfessorTelephoneByFactoryNum(disinfectFilesModel.getFactoryNum());
 
                             //需完成:userModels.getTelephone()赋值给String
                             // 获得StringBuffer手机号
@@ -136,7 +136,7 @@ public class DisinfectFilesResource {
 
                     if( !("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
                         if(JedisUtil.redisJudgeTime(supervisorKey)) {
-                            List<String> phone = userService.getUserTelephoneByfactoryNum(disinfectFilesModel.getFactoryNum());
+                            List<String> phone = userService.getProfessorTelephoneByFactoryNum(disinfectFilesModel.getFactoryNum());
 
                             StringBuffer phoneList = new StringBuffer("");
 

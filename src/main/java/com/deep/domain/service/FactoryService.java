@@ -1,14 +1,11 @@
 package com.deep.domain.service;
 
-import com.deep.domain.model.AgentModel;
 import com.deep.domain.model.FactoryModel;
 import com.deep.infra.persistence.sql.mapper.FactoryMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class FactoryService {
@@ -34,7 +31,7 @@ public class FactoryService {
 
     /**
      * 根据代理号查询所有的羊场
-     * @param id
+     * @param id 代理号
      * @return
      */
     public List<FactoryModel> getAllFactoryOfOneAgent(Long id) {
@@ -43,16 +40,16 @@ public class FactoryService {
 
     /**
      * 根据羊场编号查询羊场的代理
-     * @param factoryNumber
+     * @param factoryNumber 羊场编号
      * @return
      */
-    public short getAgentIDByFactoryNumber(String factoryNumber) {
+    public Short getAgentIDByFactoryNumber(String factoryNumber) {
         return factoryMapper.queryOneAgentByFactoryID(factoryNumber);
     }
 
     /**
      * 根据代理ID查找所有羊场的ID
-     * @param id
+     * @param id 代理号
      * @return
      */
     public long[] queryFactoryIDByAgentID(Long id) {

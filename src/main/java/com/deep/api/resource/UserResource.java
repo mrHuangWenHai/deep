@@ -333,7 +333,7 @@ public class UserResource {
         logger.info("invoke getRolesOfProfessor {}, url is /user/high/{id}", id);
         Response response = Responses.successResponse();
         Map data = new HashMap<>();
-        data.put("data", userService.getUserTelephoneByfactoryNum(new BigInteger(id)));
+        data.put("data", userService.getProfessorTelephoneByFactoryNum(new BigInteger(id)));
         response.setData(data);
         return response;
     }

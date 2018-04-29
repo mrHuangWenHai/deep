@@ -315,7 +315,7 @@ public class UserService {
             logger.info("isFactory", factoryModel);
             if (factoryModel != null) {
                 factoryOrAgentMapper.put("factoryNum", factoryModel.getId());
-                factoryOrAgentMapper.put("factoryName",factoryModel.getBreadName());
+                factoryOrAgentMapper.put("factoryName",factoryModel.getBreedName());
             }
             userLogin.setAgentFather(userModel.getUserFactory());
         } else if (isFactory == 1){
@@ -355,21 +355,25 @@ public class UserService {
      * @param factoryNumber 羊场编号
      * @return  羊场对应专家的电话号码集合
      */
-    public List<String> getUserTelephoneByfactoryNum(BigInteger factoryNumber) {
-        short agentID = factoryService.getAgentIDByFactoryNumber(factoryNumber.toString());
-        System.out.println(agentID);
-        List<String> telephones = userMapper.queryTelephoneByAgentAndRole(agentID);
-        if (telephones == null) {
-            return null;
-        } else {
-            return telephones;
-        }
+    public List<String> getProfessorTelephoneByFactoryNum(BigInteger factoryNumber) {
+        Short agentID = factoryService.getAgentIDByFactoryNumber(factoryNumber.toString());
+        return agentID == null ? null : userMapper.queryTelephoneByAgentAndRole(agentID);
+    }
+
+    /**
+     * 根据羊场获取监督者的信息
+     * @param factoryNum 羊场号码
+     * @return 手机号字符串
+     */
+    public List<String> getSuperiorTelephoneByFactoryNum(BigInteger factoryNum) {
+        Short agentID = factoryService.getAgentIDByFactoryNumber(factoryNum.toString());
+        return agentID == null ? null : userMapper.querySuperiorTelephoneByAgentAndRole(agentID);
     }
 
     /**
      * 查询某个羊场下的所有用户
      * @param factoryOrAgentID  羊场或者代理的ID
-     * @return
+     * @return 手机号
      */
     public List<UserModel> getAllUserOfFactoryOrAgent(Long factoryOrAgentID) {
         return userMapper.getAllUsersOfOneFactoryOrOneAgent(factoryOrAgentID);

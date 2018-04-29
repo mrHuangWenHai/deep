@@ -100,7 +100,7 @@ public class RepellentPlanResource {
 
 
 
-                            List<String> phone = userService.getUserTelephoneByfactoryNum(repellentPlanModel.getFactoryNum());
+                            List<String> phone = userService.getProfessorTelephoneByFactoryNum(repellentPlanModel.getFactoryNum());
 
 
 
@@ -126,7 +126,16 @@ public class RepellentPlanResource {
                     if (!("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
                         if (JedisUtil.redisJudgeTime(supervisorKey)) {
 
-                            List<String> phone = userService.getUserTelephoneByfactoryNum(repellentPlanModel.getFactoryNum());
+
+
+
+                            List<String> phone = userService.getProfessorTelephoneByFactoryNum(repellentPlanModel.getFactoryNum());
+
+
+
+                            System.out.println(JedisUtil.redisJudgeTime(supervisorKey));
+
+
                             StringBuffer phoneList = new StringBuffer("");
 
                             for (String aPhone : phone) {

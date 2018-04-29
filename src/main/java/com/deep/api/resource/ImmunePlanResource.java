@@ -113,7 +113,7 @@ public class ImmunePlanResource {
                         System.out.println("running here");
                         System.out.println("factoryNum"+immunePlanModel.getFactoryNum());
 
-                        List<String> phone = this.userService.getUserTelephoneByfactoryNum(immunePlanModel.getFactoryNum());
+                        List<String> phone = this.userService.getProfessorTelephoneByFactoryNum(immunePlanModel.getFactoryNum());
 
                         StringBuffer phoneList = new StringBuffer("");
                         for (String aPhone : phone) {
@@ -134,7 +134,7 @@ public class ImmunePlanResource {
                 if (!("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
                     if (JedisUtil.redisJudgeTime(supervisorKey)) {
 
-                        List<String> phone = userService.getUserTelephoneByfactoryNum(immunePlanModel.getFactoryNum());
+                        List<String> phone = userService.getProfessorTelephoneByFactoryNum(immunePlanModel.getFactoryNum());
 
                         StringBuffer phoneList = new StringBuffer("");
 
@@ -376,5 +376,4 @@ public class ImmunePlanResource {
         int row = immunePlanService.deleteImmunePlanModelByid(id);
         return JudgeUtil.JudgeDelete(row);
     }
-
 }

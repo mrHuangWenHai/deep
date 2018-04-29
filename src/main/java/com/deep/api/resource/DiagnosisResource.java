@@ -30,7 +30,7 @@ import java.util.List;
 @RequestMapping(value = "diagnosis/")
 public class DiagnosisResource {
 
-    private final Logger logger = LoggerFactory.getLogger(AgentResource.class);
+    private final Logger logger = LoggerFactory.getLogger(DiagnosisResource.class);
 
     @Resource
     private DiagnosisPlanService diagnosisPlanService;
@@ -42,6 +42,7 @@ public class DiagnosisResource {
      */
     @PostMapping(value = "/insert")
     public Response addPlan(@RequestBody @Valid DiagnosisPlanModel planModel, BindingResult bindingResult) throws ParseException {
+        logger.info("invoke addPlan {}, urls is diagnosis/insert", planModel);
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("诊疗实施档案录入失败");
         }else {
@@ -85,12 +86,12 @@ public class DiagnosisResource {
      */
     @DeleteMapping(value = "/{id}")
     public Response dropPlan(@PathVariable("id") String id){
-        logger.info("invoke findOne{}, url is agent/{id}", id);
+        logger.info("invoke dropPlan{}, url is diagnosis/{id}", id);
         int uid = StringToLongUtil.stringToInt(id);
         if (uid == -1) {
             return Responses.errorResponse("删除错误");
         } else {
-            DiagnosisPlanWithBLOBs delete = new DiagnosisPlanWithBLOBs();
+//            DiagnosisPlanWithBLOBs delete = new DiagnosisPlanWithBLOBs();
             int deleteID =  diagnosisPlanService.dropPlan(uid);
             if (deleteID <= 0) {
                 return Responses.errorResponse("删除失败");
@@ -114,6 +115,7 @@ public class DiagnosisResource {
      */
     @PostMapping(value = "/operator")
     public Response changePlanByOperator(@RequestBody @Valid DiagnosisPlanModel planModel, BindingResult bindingResult) throws ParseException {
+        logger.info("invoke changePlanByOperator {}, url is diagnosis/operator", planModel);
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("诊疗实施档案更新(操作员页面)失败");
         }else {
@@ -159,6 +161,7 @@ public class DiagnosisResource {
      */
     @PostMapping(value = "/professor")
     public Response changePlanByProfessor(@RequestBody @Valid DiagnosisPlanWithBLOBs professor, BindingResult bindingResult){
+        logger.info("invoke changePlanProfessor {}, url is diagnosis", professor);
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("诊疗实施档案更新(专家页面)失败");
         }else {
@@ -188,6 +191,7 @@ public class DiagnosisResource {
      */
     @PostMapping(value = "/supervisor")
     public Response changePlanBySupervisor(@RequestBody @Valid DiagnosisPlanWithBLOBs supervisor, BindingResult bindingResult){
+        logger.info("invoke changePlanBySupervisor {}, url is diagnosis/supervisor", supervisor);
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("诊疗实施档案更新(监督页面)失败");
         }else {
@@ -212,6 +216,7 @@ public class DiagnosisResource {
      */
     @GetMapping(value = "/id/{id}")
     public Response findPlanById(@PathVariable("id") String id){
+        logger.info("invoke findPlanById {}, invoke diagnosis/id/{id}", id);
         int selectID = StringToLongUtil.stringToInt(id);
         if (selectID == -1) {
             return Responses.errorResponse("error");
@@ -239,6 +244,7 @@ public class DiagnosisResource {
      */
     @PostMapping(value = "/select")
     public Response findPlanSelective(@RequestBody @Valid DiagnosisPlanModel planModel, BindingResult bindingResult) throws ParseException {
+        logger.info("invoke findPlanSelective, url is diagnosis/select", planModel);
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("诊疗实施档案(根据条件)查询失败");
         }else {
@@ -333,6 +339,7 @@ public class DiagnosisResource {
      */
     @PostMapping(value = "/professor/select")
     public Response findPlanByProfessor(@RequestBody @Valid DiagnosisPlanModel planModel, BindingResult bindingResult){
+        logger.info("invoke findPlanByProfessor, url is diagnosis/professor/select", planModel);
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案(根据条件)查询失败");
         }else {
@@ -423,6 +430,7 @@ public class DiagnosisResource {
      */
     @PostMapping(value = "/supervisor/select")
     public Response findPlanSelectBySupervisor(@RequestBody @Valid DiagnosisPlanModel planModel, BindingResult bindingResult){
+        logger.info("invoke findPlanSelectBySupervisor, url is diagnosis/supervisor/select", planModel);
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案(根据条件)查询失败");
         }else {
