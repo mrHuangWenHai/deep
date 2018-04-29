@@ -26,6 +26,10 @@ public class ImmunePlanService {
         return this.immunePlanMapper.getImmunePlanModel(immunePlanModel,bounds);
     }
 
+    public ImmunePlanModel getImmunePlanModelById(long id){
+        return this.immunePlanMapper.getImmunePlanModelById(id);
+    }
+
     public int updateImmunePlanModelByProfessor(ImmunePlanModel immunePlanModel) {
         return this.immunePlanMapper.updateImmunePlanModelByProfessor(immunePlanModel);
     }
@@ -39,8 +43,8 @@ public class ImmunePlanService {
     }
 
 
-    public int deleteImmunePlanModelByid(Long id){
-        return this.immunePlanMapper.deleteImmunePlanModelByid(id);
+    public int deleteImmunePlanModelById(Long id){
+        return this.immunePlanMapper.deleteImmunePlanModelById(id);
     }
 
 

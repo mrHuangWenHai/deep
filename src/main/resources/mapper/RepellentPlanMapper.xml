@@ -127,8 +127,16 @@
         </if>
     </select>
 
+    <select id="getRepellentPlanModelById" resultMap="RepellentPlan">
+        SELECT
+        *
+        FROM
+        repellent_plan
+        WHERE
+        id = #{id}
+    </select>
 
-    <update id="updateRepellentPlanModelByProfessor" parameterType="com.deep.domain.model.RepellentPlanModel">
+    <update id="updateRepellentPlanModelByProfessor" >
         UPDATE repellent_plan
         SET  professor = #{repellentPlanModel.professor},
         ispass_check = #{repellentPlanModel.ispassCheck},
@@ -138,7 +146,7 @@
         id = #{repellentPlanModel.id} and ispass_check = 2
     </update>
 
-    <update id="updateRepellentPlanModelBySupervisor" parameterType="com.deep.domain.model.RepellentPlanModel">
+    <update id="updateRepellentPlanModelBySupervisor" >
         UPDATE repellent_plan
         SET  supervisor = #{repellentPlanModel.supervisor},
         ispass_sup = #{repellentPlanModel.ispassSup},
@@ -183,7 +191,7 @@
         id = #{repellentPlanModel.id} and ispass_check = 2 and ispass_sup = 2
     </update>
 
-    <delete id="deleteRepellentPlanModelByid" parameterType="Long">
+    <delete id="deleteRepellentPlanModelByid" >
         DELETE FROM
         repellent_plan
         WHERE

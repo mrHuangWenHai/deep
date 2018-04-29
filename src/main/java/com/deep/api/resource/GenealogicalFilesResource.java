@@ -44,7 +44,6 @@ public class GenealogicalFilesResource {
      */
     @RequestMapping(value = "/add/type",method = RequestMethod.POST)
     public Response type(@RequestBody @Validated TypeBriefModel typeBriefModel,
-
                          BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             System.out.println(bindingResult.getAllErrors());
@@ -181,20 +180,19 @@ public class GenealogicalFilesResource {
      }
 
     /**
-     * 查询出满足若干条件后的结果
-     * 可由id进行操作
+     * 根据查询id进行操作
      * METHOD:GET
      * @param id id
      * @return 查询结果
      */
     @ResponseBody
 
-    @RequestMapping(value = "/show/{id}",method = RequestMethod.GET)
-    public Response findShowById(@NotNull @PathVariable("id") int id ) {
+    @RequestMapping(value = "/find/{id}",method = RequestMethod.GET)
+    public Response find(@NotNull @PathVariable("id") long id ) {
 
-        logger.info("invoke showById {}", id);
+        logger.info("invoke find{id} {}", id);
 
-        GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesService.getGenealogicalFilesModelByid(id);
+        GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesService.getGenealogicalFilesModelById(id);
         return JudgeUtil.JudgeFind(genealogicalFilesModel);
     }
 
@@ -228,9 +226,9 @@ public class GenealogicalFilesResource {
      * @return  删除结果
      */
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
-    public Response delete(@NotNull @PathVariable(value = "id") int id) {
+    public Response delete(@NotNull @PathVariable(value = "id") long id) {
         logger.info("invoke delete {}", id);
-        int row = genealogicalFilesService.deleteGenealogicalFilesModel(id);
+        int row = genealogicalFilesService.deleteGenealogicalFilesModelById(id);
         return JudgeUtil.JudgeDelete(row);
     }
 

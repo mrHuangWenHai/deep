@@ -25,13 +25,8 @@ public class DisinfectFilesService {
         return this.disinfectFilesMapper.getDisinfectFilesModel(disinfectRequest,bounds);
     }
 
-
-    public List<DisinfectFilesModel> getDisinfectFilesModelByProfessor(Integer isPass,RowBounds bounds) {
-        return this.disinfectFilesMapper.getDisinfectFilesModelByProfessor(isPass,bounds);
-    }
-
-    public List<DisinfectFilesModel> getDisinfectFilesModelBySupervisor(Integer ispassSup,RowBounds bounds) {
-        return this.disinfectFilesMapper.getDisinfectFilesModelBySupervisor(ispassSup,bounds);
+    public DisinfectFilesModel getDisinfectFilesModelById(long id){
+        return this.disinfectFilesMapper.getDisinfectFilesModelById(id);
     }
 
     public int updateDisinfectFilesModelByProfessor(DisinfectFilesModel disinfectFilesModel) {
@@ -46,8 +41,8 @@ public class DisinfectFilesService {
     }
 
 
-    public int deleteDisinfectFilesModelByid(Long id){
-        return this.disinfectFilesMapper.deleteDisinfectFilesModelByid(id);
+    public int deleteDisinfectFilesModelById(Long id){
+        return this.disinfectFilesMapper.deleteDisinfectFilesModelById(id);
     }
 
 }

@@ -192,6 +192,18 @@ public class DisinfectFilesResource {
     }
 
     /**
+     * 用于id查询
+     * @param id id
+     * @return 查询结果
+     */
+    @RequestMapping(value = "/find/{id}",method = RequestMethod.GET)
+    public Response find(@PathVariable("id") long id){
+
+        logger.info(" invoke find{id} {}" , id);
+        DisinfectFilesModel disinfectFilesModel = this.disinfectFilesService.getDisinfectFilesModelById(id);
+        return JudgeUtil.JudgeFind(disinfectFilesModel);
+    }
+    /**
      * 下载文件 并保存到自定义路径
      * @param response  HttpServletResponse
      * @param factoryNum  下载文件所属工厂号
@@ -213,42 +225,7 @@ public class DisinfectFilesResource {
         }
     }
 
-//    //更新接口
-//    //权限仅为专家和监督员
-//    /**
-//     * 专家入口 查看isPass = 0或者isPass = 1的数据
-//     * METHOD:GET
-//     * @param  json
-//     * @return 查询结果/查询结果条数
-//
-//     */
-//    @RequestMapping(value = "/pfind",method = RequestMethod.POST)
-//    public Response professorFind(@RequestBody Map<String, Integer> json) {
-//
-//        Integer isPass;
-//        if (!json.containsKey("isPass")) {
-//            return Responses.errorResponse("lack param isPass");
-//        }
-//        isPass = json.get("isPass");
-//
-//        int page = 0;
-//        if (json.containsKey("page")) {
-//            page = json.get("page");
-//        }
-//
-//        int size = 10;
-//        if (json.containsKey("size")) {
-//            size = json.get("size");
-//        }
-//
-//        logger.info("invoke professorFind {}", isPass, page, size);
-//        if ("2".equals(isPass.toString())) {
-//            return Responses.errorResponse("Wrong Pass num");
-//        }
-//        List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesService.getDisinfectFilesModelByProfessor(isPass,new RowBounds(page * size,size));
-//
-//        return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
-//    }
+
 
     /**
      * 审核入口 审核isPass = 0的数据
@@ -281,30 +258,6 @@ public class DisinfectFilesResource {
         }
 
     }
-
-//    /**
-//     * 审核入口 展示所有isPass1 = 0或者isPass1 = 1的数据
-//     * @param ispassSup 审核标志位
-//     * @param page   页码
-//     * @param size   条数
-//     * METHOD:GET
-//     * @return 查询结果
-//     */
-//    @RequestMapping(value = "/sfind",method = RequestMethod.GET)
-//    public Response supervisorFind(@RequestParam(value = "ispassSup",defaultValue = "2") Integer ispassSup,
-//                                   @RequestParam(value = "page",defaultValue = "0") int page,
-//                                   @RequestParam(value = "size",defaultValue = "10") int size) {
-//
-//        logger.info("invoke supervisorFind {}", ispassSup, page, size);
-//        if ("2".equals(ispassSup.toString())) {
-//            return Responses.errorResponse("Wrong Pass Num");
-//        }
-//        List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesService.getDisinfectFilesModelBySupervisor(ispassSup,new RowBounds(page * size,size));
-//
-//        return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
-//    }
-
-
 
     /**
      * 监督员入口 审核isPass1 = 0的数据
@@ -405,7 +358,7 @@ public class DisinfectFilesResource {
         if ("0".equals(id.toString())) {
             return Responses.errorResponse("Wrong id");
         }
-        int row = this.disinfectFilesService.deleteDisinfectFilesModelByid(id);
+        int row = this.disinfectFilesService.deleteDisinfectFilesModelById(id);
         return JudgeUtil.JudgeDelete(row);
     }
 

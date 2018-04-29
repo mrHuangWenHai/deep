@@ -50,7 +50,7 @@ public class JudgeUtil {
      */
     public static Response JudgeFind(Object object) {
         HashMap<String,Object> data = new HashMap<>();
-        data.put("data",object);
+        data.put("model",object);
         return Responses.successResponse(data);
     }
 

@@ -187,6 +187,18 @@ public class RepellentPlanResource {
     }
 
     /**
+     * 用于id查询
+     * @param id id
+     * @return 查询结果
+     */
+    @RequestMapping(value = "/find/{id}", method = RequestMethod.GET)
+    public Response find(@PathVariable("id") long id){
+        logger.info("invoke find{id} {}" , id);
+        RepellentPlanModel repellentPlanModel = this.repellentPlanService.getRepellentPlanModelById(id);
+        return JudgeUtil.JudgeFind(repellentPlanModel);
+    }
+
+    /**
      * 下载文件 并保存到自定义路径
      * @param response  HttpServletResponse
      * @param factoryNum  下载文件所属工厂号
@@ -208,27 +220,6 @@ public class RepellentPlanResource {
         }
     }
 
-
-
-//    /**
-//     * 专家入口 查看isPass = 0或者isPass = 1的数据
-//     * METHOD:GET
-//     * @param isPass 审核标志位
-//     * @param page  页号
-//     * @param size  条数
-//     * @return 查询结果/查询结果条数
-//     */
-//
-//    @RequestMapping(value = "pfind",method = RequestMethod.GET)
-//    public Response ProfessorFind(@RequestParam(value = "isPass",defaultValue = "2") Integer isPass,
-//                                  @RequestParam(value = "page",defaultValue = "0") int page,
-//                                  @RequestParam(value = "size",defaultValue = "10") int size){
-//
-//        logger.info("invoke professorFind {}", isPass, page, size);
-//        List<RepellentPlanModel> repellentPlanModels = repellentPlanService.getRepellentPlanModelByProfessor(isPass,new RowBounds(page,size));
-//
-//        return JudgeUtil.JudgeFind(repellentPlanModels,repellentPlanModels.size());
-//    }
 
     /**
      * 审核入口 审核isPass = 0的数据
@@ -258,26 +249,6 @@ public class RepellentPlanResource {
     }
 
 
-
-//    /**
-//     * 审核入口 展示所有isPass1 = 0或者isPass1 = 1的数据
-//     * @param isPass1 审核标志位
-//     * @param page   页码
-//     * @param size   条数
-//     * METHOD:GET
-//     * @return 查询结果
-//     */
-//
-//    @RequestMapping(value = "sfind",method = RequestMethod.GET)
-//    public Response SupervisorFind(@RequestParam(value = "isPass1",defaultValue = "2") Integer isPass1,
-//                                   @RequestParam(value = "page",defaultValue = "0") int page,
-//                                   @RequestParam(value = "size",defaultValue = "10") int size){
-//        logger.info("invoke supervisorFind {}", isPass1, page, size);
-//
-//        List<RepellentPlanModel> repellentPlanModels = repellentPlanService.getRepellentPlanModelBySupervisor(isPass1,new RowBounds(page,size));
-//
-//        return JudgeUtil.JudgeFind(repellentPlanModels,repellentPlanModels.size());
-//    }
 
     /**
      * 监督员入口 审核isPass1 = 0的数据

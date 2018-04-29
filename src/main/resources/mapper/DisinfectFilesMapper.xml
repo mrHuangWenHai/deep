@@ -127,34 +127,15 @@
 
     </select>
 
-
-    <!--用于追溯时查询-->
-    <select id="getDisinfectFilesModelByfactoryNumAnddisinfectTime" resultMap="DisinfectFiles">
-        SELECT
-        *
-        FROM
-        disinfect_files
-        WHERE factory_num = #{factoryNum} AND disinfect_time BETWEEN #{gmtCreate} AND #{gmtTrans}
-    </select>
-
-
-    <select id="getDisinfectFilesModelByProfessor" resultMap="DisinfectFiles">
+    <select id="getDisinfectFilesModelById" resultMap="DisinfectFiles">
         SELECT
         *
         FROM
         disinfect_files
         WHERE
-        ispass_check = #{ispassCheck}
+        id = #{id}
     </select>
 
-    <select id="getDisinfectFilesModelBySupervisor" resultMap="DisinfectFiles">
-        SELECT
-        *
-        FROM
-        disinfect_files
-        WHERE
-        ispass_sup = #{ispassSup}
-    </select>
 
     <update id="updateDisinfectFilesModelByProfessor">
         UPDATE disinfect_files
@@ -211,7 +192,7 @@
         id = #{disinfectFilesModel.id} and ispass_check = 2 and ispass_sup = 2
     </update>
 
-    <delete id="deleteDisinfectFilesModelByid" >
+    <delete id="deleteDisinfectFilesModelById" >
         DELETE FROM
         disinfect_files
         WHERE

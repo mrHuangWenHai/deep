@@ -16,11 +16,11 @@ public interface ImmunePlanMapper {
 
 
     List<ImmunePlanModel> getImmunePlanModel(@Param("immunePlanModel") ImmuneRequest immunePlanModel,
-
                                              RowBounds bounds);
 
+    ImmunePlanModel getImmunePlanModelById(@Param("id") long id);
 
-    int deleteImmunePlanModelByid(@Param("id") Long id);
+    int deleteImmunePlanModelById(@Param("id") Long id);
 
 
     int updateImmunePlanModelByProfessor(@Param("immunePlanModel") ImmunePlanModel immunePlanModel);

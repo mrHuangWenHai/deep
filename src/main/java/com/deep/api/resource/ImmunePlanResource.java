@@ -192,6 +192,18 @@ public class ImmunePlanResource {
     }
 
     /**
+     * 用于id查询
+     * @param id id
+     * @return 查询结果
+     */
+    @RequestMapping(value = "/find/{id}",method = RequestMethod.GET)
+    public Response find(@PathVariable("id") long id){
+
+        logger.info(" invoke find{id} {}" , id);
+        ImmunePlanModel immunePlanModel = this.immunePlanService.getImmunePlanModelById(id);
+        return JudgeUtil.JudgeFind(immunePlanModel);
+    }
+    /**
      * 下载文件 并保存到自定义路径
      * @param response  HttpServletResponse
      * @param factoryNum  下载文件所属工厂号
@@ -213,29 +225,6 @@ public class ImmunePlanResource {
         }
     }
 
-
-//    /**
-//     * 专家入口 查看isPass = 0或者isPass = 1的数据
-//     * METHOD:GET
-//     * @param ispassCheck 审核标志位
-//     * @param page  页号
-//     * @param size  条数
-//     * @return 查询结果/查询结果条数
-//     */
-//
-//    @RequestMapping(value = "pfind",method = RequestMethod.GET)
-//    public Response professorFind(@RequestParam(value = "ispassCheck",defaultValue = "2") String ispassCheck,
-//                                  @RequestParam(value = "page",defaultValue = "0") int page,
-//                                  @RequestParam(value = "size",defaultValue = "10") int size) {
-//        logger.info("invoke professorFind {}", ispassCheck, page, size);
-//
-//        if ("2".equals(ispassCheck)) {
-//            return Responses.errorResponse("Wrong Pass num");
-//        }
-//        List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModelByProfessor(ispassCheck,new RowBounds(page,size));
-//
-//        return JudgeUtil.JudgeFind(immunePlanModels,immunePlanModels.size());
-//    }
 
 
     /**
@@ -267,31 +256,6 @@ public class ImmunePlanResource {
 
     }
 
-
-//    /**
-//     * 审核入口 展示所有isPass1 = 0或者isPass1 = 1的数据
-//     * @param ispassSup 审核标志位
-//     * @param page   页码
-//     * @param size   条数
-//     * METHOD:GET
-//     * @return 查询结果
-//     */
-//    @RequestMapping(value = "sfind",method = RequestMethod.GET)
-//    public Response supervisorFind(@RequestParam(value = "ispassSup",defaultValue = "2") String ispassSup,
-//                                   @RequestParam(value = "page",defaultValue = "0") int page,
-//                                   @RequestParam(value = "size",defaultValue = "10") int size) {
-//
-//        logger.info("invoke supervisorFind {}", ispassSup, page, size);
-//        if ("2".equals(ispassSup)) {
-//            return Responses.errorResponse("Wrong Pass num");
-//        }
-//
-//        List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModelBySupervisor(ispassSup,new RowBounds(page,size));
-//
-//
-//        return JudgeUtil.JudgeFind(immunePlanModels,immunePlanModels.size());
-//
-//    }
 
     /**
      * 监督员入口 审核isPass1 = 0的数据
@@ -390,7 +354,7 @@ public class ImmunePlanResource {
         if ("0".equals(id.toString())) {
             return Responses.errorResponse("Wrong id");
         }
-        int row = immunePlanService.deleteImmunePlanModelByid(id);
+        int row = immunePlanService.deleteImmunePlanModelById(id);
         return JudgeUtil.JudgeDelete(row);
     }
 

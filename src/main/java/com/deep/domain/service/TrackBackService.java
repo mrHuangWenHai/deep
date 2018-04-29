@@ -15,24 +15,21 @@ import javax.annotation.Resource;
 public class TrackBackService {
 
   @Resource
-  GenealogicalFilesMapper genealogicalFilesMapper;
+  private GenealogicalFilesMapper genealogicalFilesMapper;
 
   @Resource
-  GenealogicalFilesTransMapper genealogicalFilesTransMapper;
+  private GenealogicalFilesTransMapper genealogicalFilesTransMapper;
 
-  public GenealogicalFilesModel getGenealogicalFilesModelByimmuneEartag(String immuneEarTag) {
-    GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesMapper.getGenealogicalFilesModelByimmuneEartag(immuneEarTag);
-    return genealogicalFilesModel;
+  public GenealogicalFilesModel getGenealogicalFilesModelByImmuneEartag(String immuneEarTag) {
+    return genealogicalFilesMapper.getGenealogicalFilesModelByImmuneEartag(immuneEarTag);
   }
 
-  public GenealogicalFilesModel getGenealogicalFilesModelBytradeMarkEartag(String tradeMarkEartag) {
-    GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesMapper.getGenealogicalFilesModelBytradeMarkEartag(tradeMarkEartag);
-    return genealogicalFilesModel;
+  public GenealogicalFilesModel getGenealogicalFilesModelByTradeMarkEartag(String tradeMarkEartag) {
+    return genealogicalFilesMapper.getGenealogicalFilesModelByTradeMarkEartag(tradeMarkEartag);
   }
 
   public GenealogicalFilesModel getGenealogicalFilesModelByNativeEartag(String nativeEartag) {
-    GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesMapper.getGenealogicalFilesModelByNativeEartag(nativeEartag);
-    return genealogicalFilesModel;
+    return genealogicalFilesMapper.getGenealogicalFilesModelByNativeEartag(nativeEartag);
   }
 
 

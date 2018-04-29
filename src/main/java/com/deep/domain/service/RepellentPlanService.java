@@ -25,6 +25,10 @@ public class RepellentPlanService {
         return this.repellentPlanMapper.getRepellentPlanModel(repellentPlanModel,bounds);
     }
 
+    public RepellentPlanModel getRepellentPlanModelById(long id){
+        return this.repellentPlanMapper.getRepellentPlanModelById(id);
+    }
+
     public int updateRepellentPlanModelByProfessor(RepellentPlanModel repellentPlanModel){
         return this.repellentPlanMapper.updateRepellentPlanModelByProfessor(repellentPlanModel);
     }

@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
-import java.math.BigInteger;
 import java.util.List;
 
 @Mapper
@@ -17,10 +16,11 @@ public interface RepellentPlanMapper {
 
 
     List<RepellentPlanModel> getRepellentPlanModel(@Param("repellentPlanModel") RepellentRequest repellentPlanModel,
-
                                                    RowBounds bounds);
 
-    int deleteRepellentPlanModelByid(@Param("id") Long id);
+    RepellentPlanModel getRepellentPlanModelById(@Param("id") long id);
+
+    int deleteRepellentPlanModelByid(@Param("id") long id);
 
     int updateRepellentPlanModelByProfessor(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel);
 

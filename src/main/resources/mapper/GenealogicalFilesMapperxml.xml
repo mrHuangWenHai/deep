@@ -81,7 +81,7 @@
     </insert>
 
 
-    <select id="getGenealogicalFilesModelByid" resultMap="GenealogicalFiles">
+    <select id="getGenealogicalFilesModelById" resultMap="GenealogicalFiles">
         SELECT
         *
         FROM
@@ -169,17 +169,7 @@
             </if>
     </select>
 
-
-    <select id="getGenealogicalFilesModelByNativeEartag" resultType="com.deep.domain.model.GenealogicalFilesModel">
-        SELECT
-        *
-        FROM
-        genealogical_files
-        WHERE
-        native_eartag = #{nativeEartag}
-    </select>
-
-    <select id="getGenealogicalFilesModelByimmuneEartag" resultType="com.deep.domain.model.GenealogicalFilesModel">
+    <select id="getGenealogicalFilesModelByImmuneEartag">
         SELECT
         *
         FROM
@@ -188,7 +178,8 @@
         immune_eartag = #{immuneEartag}
     </select>
 
-    <select id="getGenealogicalFilesModelBytradeMarkEartag" resultType="com.deep.domain.model.GenealogicalFilesModel">
+
+    <select id="getGenealogicalFilesModelByTradeMarkEartag">
         SELECT
         *
         FROM
@@ -196,6 +187,16 @@
         WHERE
         trademark_eartag = #{tradeMarkEartag}
     </select>
+
+    <select id="getGenealogicalFilesModelByNativeEartag">
+        SELECT
+        *
+        FROM
+        genealogical_files
+        WHERE
+        native_eartag = #{nativeEartag}
+    </select>
+
 
     <select id="allGenealogicalFilesCounts" resultType="int">
         select
@@ -265,7 +266,7 @@
 
     </update>
 
-    <delete id="deleteGenealogicalFilesModel" parameterType="int">
+    <delete id="deleteGenealogicalFilesModelById">
         DELETE FROM
         genealogical_files
         WHERE
