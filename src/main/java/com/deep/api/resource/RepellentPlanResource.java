@@ -42,7 +42,6 @@ public class RepellentPlanResource {
     @Resource
     private UserService userService;
 
-
     /**
      * 返回插入结果
      * 成功：success
@@ -53,7 +52,6 @@ public class RepellentPlanResource {
      * @param repellentEartagFile   耳牌文件
      * @return  保存结果
      */
-
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     public Response save(@Valid RepellentPlanModel repellentPlanModel,
                          BindingResult bindingResult,

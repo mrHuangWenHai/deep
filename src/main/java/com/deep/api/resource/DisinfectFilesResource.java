@@ -179,7 +179,6 @@ public class DisinfectFilesResource {
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
     public Response findShow(@RequestBody DisinfectRequest disinfectRequest) {
 
-
         logger.info("invoke findShow {}",disinfectRequest);
 
         if( disinfectRequest.getSize() == 0) {

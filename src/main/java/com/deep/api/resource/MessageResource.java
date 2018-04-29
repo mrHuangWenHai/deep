@@ -156,7 +156,6 @@ public class MessageResource {
     public Response searchByIntention(@NotNull(message = "购买意向不能为空")  @RequestParam(value = "intention",required = false,defaultValue = "")String intention,
                               @RequestParam(value = "pageNumb",required = false, defaultValue = "0")int pageNumb,
                               @RequestParam(value = "limit",required = false, defaultValue = "10")int limit) {
-
         logger.info("/messageBoard/searchByIntention {} {} {}",intention,pageNumb,limit);
         MessageExample messageExample = new MessageExample();
         MessageExample.Criteria criteria = messageExample.createCriteria();

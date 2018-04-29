@@ -184,6 +184,8 @@ public class ImmunePlanResource {
         return JudgeUtil.JudgeFind(immunePlanModels,immunePlanModels.size());
     }
 
+
+
     /**
      * 下载文件 并保存到自定义路径
      * @param response HttpServletResponse
@@ -304,7 +306,6 @@ public class ImmunePlanResource {
         }
     }
 
-
     /**
      * 操作员在审核前想修改数据的接口
      * 或处理被退回操作的接口
@@ -365,7 +366,6 @@ public class ImmunePlanResource {
      * @param id id
      * @return 删除结果
      */
-
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
     public Response delete(@Min(0) @PathVariable(value = "id") Long id) {
 
