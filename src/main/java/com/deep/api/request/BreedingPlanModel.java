@@ -1,5 +1,7 @@
 package com.deep.api.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -28,29 +30,39 @@ public class BreedingPlanModel implements Serializable {
 
     private String fEtB;
 
+    @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
     private Date breedingT;
 
+    @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
     private Date gestationT;
 
+    @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
     private Date prenatalIT;
 
+    @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
     private Date cubT;
 
     private Integer quantity;
 
-    private String operator;
+    private String operatorName;
 
-    private String professor;
+    private String professorName;
 
-    private String supervisor;
+    private String supervisorName;
+
+    private Integer operatorId;
+
+    private Integer professorId;
+
+    private Integer supervisorId;
 
     private String remark;
 
-    private Byte isPass;
+    private Byte ispassCheck;
 
     private String upassReason;
 
-    private Byte isPass1;
+    private Byte ispassSup;
 
     private String search_string;
 
@@ -226,28 +238,52 @@ public class BreedingPlanModel implements Serializable {
         this.quantity = quantity;
     }
 
-    public String getOperator() {
-        return operator;
+    public String getOperatorName() {
+        return operatorName;
     }
 
-    public void setOperator(String operator) {
-        this.operator = operator;
+    public void setOperatorName(String operatorName) {
+        this.operatorName = operatorName;
     }
 
-    public String getProfessor() {
-        return professor;
+    public String getProfessorName() {
+        return professorName;
     }
 
-    public void setProfessor(String professor) {
-        this.professor = professor;
+    public void setProfessorName(String professorName) {
+        this.professorName = professorName;
     }
 
-    public String getSupervisor() {
-        return supervisor;
+    public String getSupervisorName() {
+        return supervisorName;
     }
 
-    public void setSupervisor(String supervisor) {
-        this.supervisor = supervisor;
+    public void setSupervisorName(String supervisorName) {
+        this.supervisorName = supervisorName;
+    }
+
+    public Integer getOperatorId() {
+        return operatorId;
+    }
+
+    public void setOperatorId(Integer operatorId) {
+        this.operatorId = operatorId;
+    }
+
+    public Integer getProfessorId() {
+        return professorId;
+    }
+
+    public void setProfessorId(Integer professorId) {
+        this.professorId = professorId;
+    }
+
+    public Integer getSupervisorId() {
+        return supervisorId;
+    }
+
+    public void setSupervisorId(Integer supervisorId) {
+        this.supervisorId = supervisorId;
     }
 
     public String getRemark() {
@@ -258,14 +294,6 @@ public class BreedingPlanModel implements Serializable {
         this.remark = remark;
     }
 
-    public Byte getIsPass() {
-        return isPass;
-    }
-
-    public void setIsPass(Byte isPass) {
-        this.isPass = isPass;
-    }
-
     public String getUpassReason() {
         return upassReason;
     }
@@ -274,12 +302,20 @@ public class BreedingPlanModel implements Serializable {
         this.upassReason = upassReason;
     }
 
-    public Byte getIsPass1() {
-        return isPass1;
+    public Byte getIsPassCheck() {
+        return ispassCheck;
     }
 
-    public void setIsPass1(Byte isPass1) {
-        this.isPass1 = isPass1;
+    public void setIsPassCheck(Byte ispassCheck) {
+        this.ispassCheck = ispassCheck;
+    }
+
+    public Byte getIsPassSup() {
+        return ispassSup;
+    }
+
+    public void setIsPassSup(Byte ispassSup) {
+        this.ispassSup = ispassSup;
     }
 
     public String getSearch_string() {

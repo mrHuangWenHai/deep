@@ -2,10 +2,9 @@ package com.deep.infra.persistence.sql.mapper;
 
 import com.deep.domain.model.BreedingPlan;
 import com.deep.domain.model.BreedingPlanExample;
+import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
-
-import java.util.List;
 
 public interface BreedingPlanMapper {
     int countByExample(BreedingPlanExample example);
