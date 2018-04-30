@@ -49,7 +49,7 @@ public class RegisterResource {
             // 进行对应的赋值操作
             userModel.setPkUserid(registerRequest.getUsername());
             userModel.setUserPwd(registerRequest.getPassword());
-            userModel.setQQ(registerRequest.getQq());
+            userModel.setQq(registerRequest.getQq());
             userModel.setUserEmail(registerRequest.getUserEmail());
             userModel.setUserTelephone(registerRequest.getUserTelephone());
             userModel.setQuestion_1(registerRequest.getQuestion_1());

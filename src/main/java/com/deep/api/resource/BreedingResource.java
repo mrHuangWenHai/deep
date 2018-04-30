@@ -470,8 +470,8 @@ public class BreedingResource {
      * @param bindingResult
      * @return
      */
-    @PostMapping(value = "/professor/select")
-    public Response findPlanSelectByProfessor(@RequestBody @Valid BreedingPlanModel planModel, BindingResult bindingResult){
+    @GetMapping(value = "/professor/select")
+    public Response findPlanSelectByProfessor(BreedingPlanModel planModel, BindingResult bindingResult){
         logger.info("invoke findPlanSelectByProfessor {}, url is breeding/professor/select", planModel);
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案(监督页面)修改失败");

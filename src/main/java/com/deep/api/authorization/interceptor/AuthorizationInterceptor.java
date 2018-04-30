@@ -73,6 +73,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             response.setStatus(401);
             return false;
         }
+        JedisUtil.doExpire(String.valueOf(model.getUserId()));
       // 从Redis数据库中获取用户原来的token, 然后取得其权限, 加入新的token
 //        String oldToken = JedisUtil.getValue(String.valueOf(model.getUserId()));
 //        String userRoleID = oldToken.split(":")[1];

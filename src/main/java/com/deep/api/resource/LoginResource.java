@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.HEAD;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -74,6 +73,7 @@ public class LoginResource {
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("successMessage", "登录成功!");
                 data.put("id", userModel.getId());
+                data.put("usernmae", userModel.getPkUserid());
                 data.put("role_id", userModel.getUserRole());
                 if (userModel.getIsFactory() == 0) {
                     // 如果是羊场
@@ -267,6 +267,7 @@ public class LoginResource {
         if (id == null) {
             return Responses.errorResponse("error!");
         }
+        System.out.println("this is id = " + id);
         if (!JedisUtil.doDelete(id)) {
             return Responses.errorResponse("退出登录失败, 请检查网络之后重试");
         }

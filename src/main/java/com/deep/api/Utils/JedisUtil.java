@@ -18,7 +18,9 @@ public class JedisUtil {
     public static boolean doDelete(String key) {
         try {
             jedis.del(key);
+            System.out.println("Yes, it is");
         } catch (Exception e) {
+            System.out.println("Something must be wrong!");
             return false;
         }
         return true;

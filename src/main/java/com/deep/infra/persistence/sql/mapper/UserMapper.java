@@ -38,12 +38,44 @@ public interface UserMapper {
             @Result(property = "answer_2", column = "answer_2"),
             @Result(property = "answer_3", column = "answer_3"),
             @Result(property = "userEmail", column = "user_email"),
-            @Result(property = "MSN", column = "MSN"),
-            @Result(property = "QQ", column = "QQ"),
+            @Result(property = "msn", column = "msn"),
+            @Result(property = "qq", column = "qq"),
             @Result(property = "officialPhone", column = "official_phone"),
             @Result(property = "familyPhone", column = "family_phone")
     })
     List<UserModel> queryAllUser(long roleID);
+
+    @Select("select * from user_manage")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "gmtCreate", column = "gmt_create"),
+            @Result(property = "gmtModified", column = "gmt_modified"),
+            @Result(property = "pkUserid", column = "pk_userid"),
+            @Result(property = "userPwd", column = "user_pwd"),
+            @Result(property = "userNum", column = "user_num"),
+            @Result(property = "userPic", column = "user_pic"),
+            @Result(property = "userRealname", column = "user_realname"),
+            @Result(property = "userLocation", column = "user_location"),
+            @Result(property = "userTelephone", column = "user_telephone"),
+            @Result(property = "userRemark", column = "user_remark"),
+            @Result(property = "userFactory", column = "user_factory"),
+            @Result(property = "userRole", column = "user_role"),
+            @Result(property = "userPermit", column = "user_permit"),
+            @Result(property = "isExtended", column = "is_extended"),
+            @Result(property = "isFactory", column = "is_factory"),
+            @Result(property = "question_1", column = "question_1"),
+            @Result(property = "question_2", column = "question_2"),
+            @Result(property = "question_3", column = "question_3"),
+            @Result(property = "answer_1", column = "answer_1"),
+            @Result(property = "answer_2", column = "answer_2"),
+            @Result(property = "answer_3", column = "answer_3"),
+            @Result(property = "userEmail", column = "user_email"),
+            @Result(property = "msn", column = "msn"),
+            @Result(property = "qq", column = "qq"),
+            @Result(property = "officialPhone", column = "official_phone"),
+            @Result(property = "familyPhone", column = "family_phone")
+    })
+    List<UserModel> queryAllUserNoCondition();
 
     /**
      * 根据ID获取单个用户
@@ -75,8 +107,8 @@ public interface UserMapper {
             @Result(property = "answer_2", column = "answer_2"),
             @Result(property = "answer_3", column = "answer_3"),
             @Result(property = "userEmail", column = "user_email"),
-            @Result(property = "MSN", column = "MSN"),
-            @Result(property = "QQ", column = "QQ"),
+            @Result(property = "msn", column = "msn"),
+            @Result(property = "qq", column = "qq"),
             @Result(property = "officialPhone", column = "official_phone"),
             @Result(property = "familyPhone", column = "family_phone")
     })
@@ -88,14 +120,14 @@ public interface UserMapper {
      * @param roleID
      * @return
      */
-    @Select("select id, pk_userid, user_telephone, user_role, user_email, QQ, official_phone from user_manage where is_factory = 1 and user_factory = #{agentID} and user_role = #{roleID}")
+    @Select("select id, pk_userid, user_telephone, user_role, user_email, qq, official_phone from user_manage where is_factory = 1 and user_factory = #{agentID} and user_role = #{roleID}")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "pkUserid", column = "pk_userid"),
             @Result(property = "userTelephone", column = "user_telephone"),
             @Result(property = "userRole", column = "user_role"),
             @Result(property = "userEmail", column = "user_email"),
-            @Result(property = "QQ", column = "QQ"),
+            @Result(property = "qq", column = "qq"),
             @Result(property = "officialPhone", column = "official_phone")
     })
     UserService.UserRole queryByAgentAndRole(short agentID, short roleID);
@@ -152,8 +184,8 @@ public interface UserMapper {
             @Result(property = "answer_2", column = "answer_2"),
             @Result(property = "answer_3", column = "answer_3"),
             @Result(property = "userEmail", column = "user_email"),
-            @Result(property = "MSN", column = "MSN"),
-            @Result(property = "QQ", column = "QQ"),
+            @Result(property = "msn", column = "msn"),
+            @Result(property = "qq", column = "qq"),
             @Result(property = "officialPhone", column = "official_phone"),
             @Result(property = "familyPhone", column = "family_phone")
     })
@@ -189,8 +221,8 @@ public interface UserMapper {
             @Result(property = "answer_2", column = "answer_2"),
             @Result(property = "answer_3", column = "answer_3"),
             @Result(property = "userEmail", column = "user_email"),
-            @Result(property = "MSN", column = "MSN"),
-            @Result(property = "QQ", column = "QQ"),
+            @Result(property = "msn", column = "msn"),
+            @Result(property = "qq", column = "qq"),
             @Result(property = "officialPhone", column = "official_phone"),
             @Result(property = "familyPhone", column = "family_phone")
     })
@@ -224,8 +256,8 @@ public interface UserMapper {
             "answer_2," +
             "answer_3," +
             "user_email," +
-            "MSN," +
-            "QQ," +
+            "msn," +
+            "qq," +
             "official_phone," +
             "family_phone)" +
             "values(" +
@@ -251,8 +283,8 @@ public interface UserMapper {
             "#{answer_2}," +
             "#{answer_3}," +
             "#{userEmail}," +
-            "#{MSN}," +
-            "#{QQ}," +
+            "#{msn}," +
+            "#{qq}," +
             "#{officialPhone}," +
             "#{familyPhone}" +
             ")")
@@ -286,8 +318,8 @@ public interface UserMapper {
             "answer_2 = #{answer_2}, " +
             "answer_3 = #{answer_3}," +
             "user_email = #{userEmail}," +
-            "MSN = #{MSN}," +
-            "QQ = #{QQ}," +
+            "msn = #{msn}," +
+            "qq = #{qq}," +
             "official_phone = #{officialPhone}," +
             "family_phone = #{familyPhone}" +
             " where id=#{id}")
@@ -315,7 +347,7 @@ public interface UserMapper {
      * @param roleID
      * @return
      */
-    @Select("select id, pk_userid, user_telephone, user_role, user_email, official_phone, QQ from user_manage where user_role = #{roleID}")
+    @Select("select id, pk_userid, user_telephone, user_role, user_email, official_phone, qq from user_manage where user_role = #{roleID}")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "pkUserid", column = "pk_userid"),
@@ -323,11 +355,11 @@ public interface UserMapper {
             @Result(property = "userRole", column = "user_role"),
             @Result(property = "userEmail", column = "user_email"),
             @Result(property = "officialPhone", column = "official_phone"),
-            @Result(property = "QQ", column = "QQ")
+            @Result(property = "qq", column = "qq")
     })
     List<Professor> getOneRoles(long roleID);
 
-    @Select("select id, pk_userid, user_telephone, user_role, user_email, official_phone, QQ from user_manage where user_role in (4, 8, 12, 16) and user_factory = #{agentID} and is_factory = 1")
+    @Select("select id, pk_userid, user_telephone, user_role, user_email, official_phone, qq from user_manage where user_role in (4, 8, 12, 16) and user_factory = #{agentID} and is_factory = 1")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "pkUserid", column = "pk_userid"),
@@ -335,7 +367,7 @@ public interface UserMapper {
             @Result(property = "userTelephone", column = "user_telephone"),
             @Result(property = "userEmail", column = "user_email"),
             @Result(property = "officialPhone", column = "official_phone"),
-            @Result(property = "QQ", column = "QQ")
+            @Result(property = "qq", column = "qq")
     })
     List<Professor> getProfessor(Long agentID);
 
@@ -369,8 +401,8 @@ public interface UserMapper {
             @Result(property = "answer_2", column = "answer_2"),
             @Result(property = "answer_3", column = "answer_3"),
             @Result(property = "userEmail", column = "user_email"),
-            @Result(property = "MSN", column = "MSN"),
-            @Result(property = "QQ", column = "QQ"),
+            @Result(property = "msn", column = "msn"),
+            @Result(property = "qq", column = "qq"),
             @Result(property = "officialPhone", column = "official_phone"),
             @Result(property = "familyPhone", column = "family_phone")
     })
