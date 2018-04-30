@@ -253,63 +253,63 @@ public class DisinfectFilesResource {
 
 
 
-//    /**
-//     * 审核入口 审核isPass = 0的数据
-//     * METHOD:PATCH
-//     * @param disinfectFilesModel 消毒类
-//     * @return 更新结果
-//     */
-//    @RequestMapping(value = "pupdate",method = RequestMethod.PATCH)
-//    public Response professorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel) {
-//
-//        logger.info("invoke professorUpdate {}", disinfectFilesModel);
-//        if(disinfectFilesModel.getId() == null ||
-//                disinfectFilesModel.getFactoryNum() == null ||
-//                disinfectFilesModel.getProfessor() == null ||
-//                disinfectFilesModel.getIspassCheck() == null ||
-//                disinfectFilesModel.getUnpassReason() == null) {
-//            return Responses.errorResponse("Lack Item");
-//        } else {
-//          int row = disinfectFilesService.updateDisinfectFilesModelByProfessor(d);
-//          if (row == 1) {
-//            String professorKey = this.factoryService.getAgentIDByFactoryNumber(disinfectFilesModel.getFactoryNum().toString()) + "_professor";
-//            if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)){
-//                return Responses.errorResponse("cancel error");
-//            }
-//          }
-//          return JudgeUtil.JudgeUpdate(row);
-//        }
-//
-//    }
-//
-//
-//    /**
-//     * 监督员入口 审核isPass1 = 0的数据
-//     * 审核要求:审核时要求条例写完整 审核后 isPass = 1时 无权限再修改
-//     * @param disinfectFilesModel 消毒类
-//     * METHOD:PATCH
-//     * @return 审核结果
-//     */
-//    @RequestMapping(value = "supdate",method = RequestMethod.PATCH)
-//    public Response supervisorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel){
-//        logger.info("invoke supervisorUpdate {}", disinfectFilesModel);
-//        if(disinfectFilesModel.getId() == null ||
-//                disinfectFilesModel.getFactoryNum() == null ||
-//                disinfectFilesModel.getSupervisor() == null ||
-//                disinfectFilesModel.getIspassSup() == null){
-//            return Responses.errorResponse("Lack Item");
-//
-//        } else {
-//          int row = disinfectFilesService.updateDisinfectFilesModelBySupervisor(immunePlanModel);
-//          if (row == 1) {
-//            String supervisorKey = disinfectFilesModel.getFactoryNum().toString() + "_supervisor";
-//            if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
-//                return Responses.errorResponse("cancel error");
-//            }
-//          }
-//          return JudgeUtil.JudgeUpdate(row);
-//        }
-//    }
+
+    /**
+     * 审核入口 审核isPass = 0的数据
+     * METHOD:PATCH
+     * @param disinfectFilesModel 消毒类
+     * @return 更新结果
+     */
+    @RequestMapping(value = "pupdate",method = RequestMethod.PATCH)
+    public Response professorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel) {
+
+        logger.info("invoke professorUpdate {}", disinfectFilesModel);
+        if(disinfectFilesModel.getId() == null ||
+                disinfectFilesModel.getFactoryNum() == null ||
+                disinfectFilesModel.getIspassCheck() == null ||
+                disinfectFilesModel.getUnpassReason() == null) {
+            return Responses.errorResponse("Lack Item");
+        } else {
+            int row = disinfectFilesService.updateDisinfectFilesModelByProfessor(disinfectFilesModel);
+            if (row == 1) {
+                String professorKey = this.factoryService.getAgentIDByFactoryNumber(disinfectFilesModel.getFactoryNum().toString()) + "_professor";
+                if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
+                    return Responses.errorResponse("cancel error");
+                }
+            }
+            return JudgeUtil.JudgeUpdate(row);
+        }
+
+    }
+
+
+    /**
+     * 监督员入口 审核isPass1 = 0的数据
+     * 审核要求:审核时要求条例写完整 审核后 isPass = 1时 无权限再修改
+     * @param disinfectFilesModel 消毒类
+     * METHOD:PATCH
+     * @return 审核结果
+     */
+    @RequestMapping(value = "supdate",method = RequestMethod.PATCH)
+    public Response supervisorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel){
+        logger.info("invoke supervisorUpdate {}", disinfectFilesModel);
+        if(disinfectFilesModel.getId() == null ||
+                disinfectFilesModel.getFactoryNum() == null ||
+                disinfectFilesModel.getSupervisor() == null ||
+                disinfectFilesModel.getIspassSup() == null){
+            return Responses.errorResponse("Lack Item");
+
+        } else {
+          int row = disinfectFilesService.updateDisinfectFilesModelBySupervisor(disinfectFilesModel);
+          if (row == 1) {
+            String supervisorKey = disinfectFilesModel.getFactoryNum().toString() + "_supervisor";
+            if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
+                return Responses.errorResponse("cancel error");
+            }
+          }
+          return JudgeUtil.JudgeUpdate(row);
+        }
+    }
 
     /**
      * 操作员在审核前想修改数据的接口

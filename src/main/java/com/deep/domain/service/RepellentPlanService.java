@@ -1,8 +1,6 @@
 package com.deep.domain.service;
 
 
-import com.deep.api.request.ModuleFindRequest;
-import com.deep.api.request.ModuleUpdateRequest;
 import com.deep.api.request.RepellentRequest;
 import com.deep.domain.model.RepellentPlanModel;
 import com.deep.infra.persistence.sql.mapper.RepellentPlanMapper;
@@ -35,20 +33,14 @@ public class RepellentPlanService {
         return this.repellentPlanMapper.getRepellentPlanModelByFactoryNum(factoryNum , bounds);
     }
 
-    public List<RepellentPlanModel> getRepellentPlanModelByIsPassCheck(ModuleFindRequest request , RowBounds bounds){
-        return this.repellentPlanMapper.getRepellentPlanModelByIsPassCheck(request , bounds);
+
+
+    public int updateRepellentPlanModelByProfessor(RepellentPlanModel repellentPlanModel){
+        return this.repellentPlanMapper.updateRepellentPlanModelByProfessor(repellentPlanModel);
     }
 
-    public List<RepellentPlanModel> getRepellentPlanModelByIsPassSup(ModuleFindRequest request , RowBounds bounds){
-        return this.repellentPlanMapper.getRepellentPlanModelByIsPassSup(request, bounds);
-    }
-
-    public int updateRepellentPlanModelByProfessor(ModuleUpdateRequest request){
-        return this.repellentPlanMapper.updateRepellentPlanModelByProfessor(request);
-    }
-
-    public int updateRepellentPlanModelBySupervisor(ModuleUpdateRequest request){
-        return this.repellentPlanMapper.updateRepellentPlanModelBySupervisor(request);
+    public int updateRepellentPlanModelBySupervisor(RepellentPlanModel repellentPlanModel){
+        return this.repellentPlanMapper.updateRepellentPlanModelBySupervisor(repellentPlanModel);
     }
 
     public int updateRepellentPlanModelByOperator(RepellentPlanModel repellentPlanModel){

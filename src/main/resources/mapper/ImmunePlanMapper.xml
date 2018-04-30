@@ -158,47 +158,24 @@
         factory_num = #{factoryNum}
     </select>
 
-    <select id="getImmunePlanModelByIsPassCheck" resultMap="ImmunePlan">
-        SELECT
-        *
-        FROM
-        immune_plan
-        WHERE
-        1 = 1
-        <if test="request.isPass != null and request.isPass != ''">
-            AND ispass_check = #{request.isPass}
-        </if>
-    </select>
-
-    <select id="getImmunePlanModelByIsPassSup" resultMap="ImmunePlan">
-        SELECT
-        *
-        FROM
-        immune_plan
-        WHERE
-        1 = 1
-        <if test="request.isPass != null and request.isPass != ''">
-            AND ispass_sup = #{request.isPass}
-        </if>
-    </select>
 
     <update id="updateImmunePlanModelByProfessor" >
         UPDATE immune_plan
-        SET  professor = #{request.name},
-        ispass_check = #{request.isPass},
-        upass_reason = #{request.unpassReason},
+        SET  professor = #{immunePlanModel.professor},
+        ispass_check = #{immunePlanModel.ispassCheck},
+        upass_reason = #{immunePlanModel.unpassReason},
         gmt_professor = now()
         WHERE
-        id = #{request.id} and ispass_check = 2
+        id = #{immunePlanModel.id} and ispass_check = 2
     </update>
 
     <update id="updateImmunePlanModelBySupervisor">
         UPDATE immune_plan
-        SET  supervisor = #{request.name},
-        ispass_sup = #{request.isPass},
+        SET  supervisor = #{immunePlanModel.supervisor},
+        ispass_sup = #{immunePlanModel.ispassSup},
         gmt_supervised = now()
         WHERE
-        id = #{request.id} and ispass_sup = 2
+        id = #{immunePlanModel.id} and ispass_sup = 2
     </update>
 
 

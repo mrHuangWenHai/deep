@@ -253,63 +253,63 @@ public class ImmunePlanResource {
 
 
 
-//    /**
-//     * 审核入口 审核isPass = 0的数据
-//     * METHOD:PATCH
-//     * @param immunePlanModel 免疫类
-//     * @return 更新结果
-//     */
-//    @RequestMapping(value = "pupdate",method = RequestMethod.PATCH)
-//    public Response professorUpdate(@RequestBody ImmunePlanModel immunePlanModel) {
-//
-//        logger.info("invoke professorUpdate {}", immunePlanModel);
-//        if(immunePlanModel.getId() == null ||
-//                immunePlanModel.getFactoryNum() == null ||
-//                immunePlanModel.getProfessor() == null ||
-//                immunePlanModel.getIspassCheck() == null ||
-//                immunePlanModel.getUnpassReason() == null) {
-//            return Responses.errorResponse("Lack Item");
-//        } else {
-//          int row = immunePlanService.updateImmunePlanModelByProfessor(immunePlanModel);
-//          if (row == 1) {
-//            String professorKey = this.factoryService.getAgentIDByFactoryNumber(immunePlanModel.getFactoryNum().toString()) + "_professor";
-//            if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)){
-//                return Responses.errorResponse("cancel error");
-//            }
-//          }
-//          return JudgeUtil.JudgeUpdate(row);
-//        }
-//
-//    }
-//
-//
-//    /**
-//     * 监督员入口 审核isPass1 = 0的数据
-//     * 审核要求:审核时要求条例写完整 审核后 isPass = 1时 无权限再修改
-//     * @param immunePlanModel 免疫类
-//     * METHOD:PATCH
-//     * @return 审核结果
-//     */
-//    @RequestMapping(value = "supdate",method = RequestMethod.PATCH)
-//    public Response supervisorUpdate(@RequestBody ImmunePlanModel immunePlanModel){
-//        logger.info("invoke supervisorUpdate {}", immunePlanModel);
-//        if(immunePlanModel.getId() == null ||
-//                immunePlanModel.getFactoryNum() == null ||
-//                immunePlanModel.getSupervisor() == null ||
-//                immunePlanModel.getIspassSup() == null){
-//            return Responses.errorResponse("Lack Item");
-//
-//        } else {
-//          int row = immunePlanService.updateImmunePlanModelBySupervisor(immunePlanModel);
-//          if (row == 1) {
-//            String supervisorKey = immunePlanModel.getFactoryNum().toString() + "_supervisor";
-//            if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
-//                return Responses.errorResponse("cancel error");
-//            }
-//          }
-//          return JudgeUtil.JudgeUpdate(row);
-//        }
-//    }
+    /**
+     * 审核入口 审核isPass = 0的数据
+     * METHOD:PATCH
+     * @param immunePlanModel 免疫类
+     * @return 更新结果
+     */
+    @RequestMapping(value = "pupdate",method = RequestMethod.PATCH)
+    public Response professorUpdate(@RequestBody ImmunePlanModel immunePlanModel) {
+
+        logger.info("invoke professorUpdate {}", immunePlanModel);
+        if(immunePlanModel.getId() == null ||
+                immunePlanModel.getFactoryNum() == null ||
+                immunePlanModel.getProfessor() == null ||
+                immunePlanModel.getIspassCheck() == null ||
+                immunePlanModel.getUnpassReason() == null) {
+            return Responses.errorResponse("Lack Item");
+        } else {
+          int row = immunePlanService.updateImmunePlanModelByProfessor(immunePlanModel);
+          if (row == 1) {
+            String professorKey = this.factoryService.getAgentIDByFactoryNumber(immunePlanModel.getFactoryNum().toString()) + "_professor";
+            if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)){
+                return Responses.errorResponse("cancel error");
+            }
+          }
+          return JudgeUtil.JudgeUpdate(row);
+        }
+
+    }
+
+
+    /**
+     * 监督员入口 审核isPass1 = 0的数据
+     * 审核要求:审核时要求条例写完整 审核后 isPass = 1时 无权限再修改
+     * @param immunePlanModel 免疫类
+     * METHOD:PATCH
+     * @return 审核结果
+     */
+    @RequestMapping(value = "supdate",method = RequestMethod.PATCH)
+    public Response supervisorUpdate(@RequestBody ImmunePlanModel immunePlanModel){
+        logger.info("invoke supervisorUpdate {}", immunePlanModel);
+        if(immunePlanModel.getId() == null ||
+                immunePlanModel.getFactoryNum() == null ||
+                immunePlanModel.getSupervisor() == null ||
+                immunePlanModel.getIspassSup() == null){
+            return Responses.errorResponse("Lack Item");
+
+        } else {
+          int row = immunePlanService.updateImmunePlanModelBySupervisor(immunePlanModel);
+          if (row == 1) {
+            String supervisorKey = immunePlanModel.getFactoryNum().toString() + "_supervisor";
+            if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
+                return Responses.errorResponse("cancel error");
+            }
+          }
+          return JudgeUtil.JudgeUpdate(row);
+        }
+    }
 
 
     /**

@@ -1,8 +1,6 @@
 package com.deep.infra.persistence.sql.mapper;
 
 
-import com.deep.api.request.ModuleFindRequest;
-import com.deep.api.request.ModuleUpdateRequest;
 import com.deep.api.request.RepellentRequest;
 import com.deep.domain.model.RepellentPlanModel;
 import org.apache.ibatis.annotations.Mapper;
@@ -25,13 +23,9 @@ public interface RepellentPlanMapper {
 
     List<RepellentPlanModel> getRepellentPlanModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum , RowBounds bounds);
 
-    List<RepellentPlanModel> getRepellentPlanModelByIsPassCheck(@Param("request") ModuleFindRequest request , RowBounds bounds);
+    int updateRepellentPlanModelByProfessor(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel);
 
-    List<RepellentPlanModel> getRepellentPlanModelByIsPassSup(@Param("request") ModuleFindRequest request , RowBounds bounds);
-
-    int updateRepellentPlanModelByProfessor(@Param("request") ModuleUpdateRequest request);
-
-    int updateRepellentPlanModelBySupervisor(@Param("request") ModuleUpdateRequest request);
+    int updateRepellentPlanModelBySupervisor(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel);
 
     int deleteRepellentPlanModelByid(@Param("id") Long id);
 

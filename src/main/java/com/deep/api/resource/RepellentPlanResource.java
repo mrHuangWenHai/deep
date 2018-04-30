@@ -240,62 +240,62 @@ public class RepellentPlanResource {
     }
 
 
-//    /**
-//     * 审核入口 审核isPass = 0的数据
-//     * METHOD:PATCH
-//     * @param repellentPlanModel 驱虫类
-//     * @return 更新结果
-//     */
-//    @RequestMapping(value = "pupdate",method = RequestMethod.PATCH)
-//    public Response professorUpdate(@RequestBody RepellentPlanModel repellentPlanModel) {
-//
-//        logger.info("invoke pupdate {}", repellentPlanModel);
-//
-//        if (repellentPlanModel.getId() == null ||
-//                repellentPlanModel.getFactoryNum() == null ||
-//                repellentPlanModel.getProfessor() == null ||
-//                repellentPlanModel.getIspassCheck() == null ||
-//                repellentPlanModel.getUnpassReason() == null) {
-//            return Responses.errorResponse("Lack param");
-//        } else {
-//          int row = repellentPlanService.updateRepellentPlanModelByProfessor(repellentPlanModel);
-//          if (row == 1) {
-//            String professorKey = this.factoryService.getAgentIDByFactoryNumber(repellentPlanModel.getFactoryNum().toString()) + "_professor";
-//            JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
-//          }
-//          return JudgeUtil.JudgeUpdate(row);
-//        }
-//    }
-//
-//
-//
-//    /**
-//     * 监督员入口 审核isPass1 = 0的数据
-//     * 审核要求:审核时要求条例写完整 审核后 isPass = 1时 无权限再修改
-//     * @param repellentPlanModel 驱虫类
-//     * METHOD:PATCH
-//     * @return 审核结果
-//     */
-//
-//
-//    @RequestMapping(value = "supdate",method = RequestMethod.PATCH)
-//    public Response SupervisorUpdate(@RequestBody RepellentPlanModel repellentPlanModel) {
-//        logger.info("invoke supervisorUpdate {}", repellentPlanModel);
-//
-//        if( repellentPlanModel.getId() == null ||
-//                repellentPlanModel.getFactoryNum() == null ||
-//                repellentPlanModel.getSupervisor() == null ||
-//                repellentPlanModel.getIspassSup() == null) {
-//            return Responses.errorResponse("Lack Item");
-//        } else {
-//          int row = repellentPlanService.updateRepellentPlanModelBySupervisor(repellentPlanModel);
-//          if (row == 1) {
-//            String supervisorKey = repellentPlanModel.getFactoryNum().toString() + "_supervisor";
-//            JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey);
-//          }
-//          return JudgeUtil.JudgeUpdate(row);
-//        }
-//    }
+    /**
+     * 审核入口 审核isPass = 0的数据
+     * METHOD:PATCH
+     * @param repellentPlanModel 驱虫类
+     * @return 更新结果
+     */
+    @RequestMapping(value = "pupdate",method = RequestMethod.PATCH)
+    public Response professorUpdate(@RequestBody RepellentPlanModel repellentPlanModel) {
+
+        logger.info("invoke pupdate {}", repellentPlanModel);
+
+        if (repellentPlanModel.getId() == null ||
+                repellentPlanModel.getFactoryNum() == null ||
+                repellentPlanModel.getProfessor() == null ||
+                repellentPlanModel.getIspassCheck() == null ||
+                repellentPlanModel.getUnpassReason() == null) {
+            return Responses.errorResponse("Lack param");
+        } else {
+          int row = repellentPlanService.updateRepellentPlanModelByProfessor(repellentPlanModel);
+          if (row == 1) {
+            String professorKey = this.factoryService.getAgentIDByFactoryNumber(repellentPlanModel.getFactoryNum().toString()) + "_professor";
+            JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
+          }
+          return JudgeUtil.JudgeUpdate(row);
+        }
+    }
+
+
+
+    /**
+     * 监督员入口 审核isPass1 = 0的数据
+     * 审核要求:审核时要求条例写完整 审核后 isPass = 1时 无权限再修改
+     * @param repellentPlanModel 驱虫类
+     * METHOD:PATCH
+     * @return 审核结果
+     */
+
+
+    @RequestMapping(value = "supdate",method = RequestMethod.PATCH)
+    public Response SupervisorUpdate(@RequestBody RepellentPlanModel repellentPlanModel) {
+        logger.info("invoke supervisorUpdate {}", repellentPlanModel);
+
+        if( repellentPlanModel.getId() == null ||
+                repellentPlanModel.getFactoryNum() == null ||
+                repellentPlanModel.getSupervisor() == null ||
+                repellentPlanModel.getIspassSup() == null) {
+            return Responses.errorResponse("Lack Item");
+        } else {
+          int row = repellentPlanService.updateRepellentPlanModelBySupervisor(repellentPlanModel);
+          if (row == 1) {
+            String supervisorKey = repellentPlanModel.getFactoryNum().toString() + "_supervisor";
+            JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey);
+          }
+          return JudgeUtil.JudgeUpdate(row);
+        }
+    }
 
 
 

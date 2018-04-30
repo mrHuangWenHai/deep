@@ -2,8 +2,6 @@ package com.deep.infra.persistence.sql.mapper;
 
 
 import com.deep.api.request.ImmuneRequest;
-import com.deep.api.request.ModuleFindRequest;
-import com.deep.api.request.ModuleUpdateRequest;
 import com.deep.domain.model.ImmunePlanModel;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -24,13 +22,9 @@ public interface ImmunePlanMapper {
 
     List<ImmunePlanModel> getImmunePlanModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum , RowBounds bounds);
 
-    List<ImmunePlanModel> getImmunePlanModelByIsPassCheck(@Param("request") ModuleFindRequest request , RowBounds bounds);
+    int updateImmunePlanModelByProfessor(@Param("immunePlanModel") ImmunePlanModel immunePlanModel);
 
-    List<ImmunePlanModel> getImmunePlanModelByIsPassSup(@Param("request") ModuleFindRequest request , RowBounds bounds);
-
-    int updateImmunePlanModelByProfessor(@Param("request") ModuleUpdateRequest request);
-
-    int updateImmunePlanModelBySupervisor(@Param("request") ModuleUpdateRequest request);
+    int updateImmunePlanModelBySupervisor(@Param("immunePlanModel") ImmunePlanModel immunePlanModel);
 
     int updateImmunePlanModelByOperator(@Param("immunePlanModel") ImmunePlanModel immunePlanModel);
 
