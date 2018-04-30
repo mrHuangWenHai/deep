@@ -22,8 +22,8 @@ public class RoleService {
      * 获取所有的角色信息
      * @return
      */
-    public List<RoleModel> getAll() {
-        return roleMapper.queryAllRole();
+    public List<RoleModel> getAll(Long start, Byte size) {
+        return roleMapper.queryAllRole(start, size);
     }
 
     /**

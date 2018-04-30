@@ -47,7 +47,7 @@ public class NutritionResource {
      */
     @PostMapping(value = "")
     public Response addPlan(@RequestBody @Valid NutritionPlanModel planModel, BindingResult bindingResult) throws ParseException {
-        logger.info("invoke addPlan {}, url is nutrition/insert", planModel);
+        logger.info("invoke addPlan {}, url is nutrition", planModel);
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("营养实施档案录入失败");
         }else {
@@ -59,7 +59,10 @@ public class NutritionResource {
 
             insert.setBuilding(planModel.getBuilding());
             insert.setQuantity(planModel.getQuantity());
+
+            // 羊只均重, 后来不使用, 以后需要等待换成耳牌号附件
             insert.setAverage(planModel.getAverage());
+
             insert.setPeriod(planModel.getPeriod());
             insert.setWater(planModel.getWater());
             insert.setOperatorName(planModel.getOperatorName());
@@ -105,7 +108,7 @@ public class NutritionResource {
      */
     @DeleteMapping(value = "/{id}")
     public Response dropPlan(@PathVariable("id") String id){
-        logger.info("invoke dropPlan {}, url is nutrition/delete/{id}", id);
+        logger.info("invoke dropPlan {}, url is nutrition/{id}", id);
         int uid = StringToLongUtil.stringToInt(id);
         if (uid == -1) {
             return Responses.errorResponse("错误");
@@ -130,15 +133,19 @@ public class NutritionResource {
      * @return
      * @throws ParseException
      */
-    @PatchMapping(value = "")
-    public Response changePlanByOperator(@RequestBody @Valid NutritionPlanModel planModel, BindingResult bindingResult) throws ParseException {
-        logger.info("invoke changePlanByOperator {}, url is nutrition/operator", planModel);
+    @PatchMapping(value = "/{id}")
+    public Response changePlanByOperator(@RequestBody @Valid NutritionPlanModel planModel, @PathVariable("id") String id, BindingResult bindingResult) throws ParseException {
+        logger.info("invoke changePlanByOperator {}, url is nutrition/{id}", planModel);
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("营养实施档案更新(操作员页面)失败");
         }else {
+            int uid = StringToLongUtil.stringToInt(id);
+            if (uid <= 0) {
+                return Responses.errorResponse("错误!");
+            }
             //将planModel部分变量拆分传递给对象operator
             NutritionPlanWithBLOBs operator = new NutritionPlanWithBLOBs();
-            operator.setId(planModel.getId());
+            operator.setId(uid);
             operator.setFactoryNum(planModel.getFactoryNum());
             operator.setFactoryName(planModel.getFactoryName());
 
@@ -149,6 +156,8 @@ public class NutritionResource {
             operator.setPeriod(planModel.getPeriod());
             operator.setWater(planModel.getWater());
             operator.setOperatorName(planModel.getOperatorName());
+            operator.setOperatorId(planModel.getOperatorId());
+
             operator.setMaterialA(planModel.getMaterialA());
             operator.setMaterialM(planModel.getMaterialM());
             operator.setMaterialO(planModel.getMaterialO());
@@ -196,7 +205,7 @@ public class NutritionResource {
         NutritionPlanWithBLOBs selectById = nutritionPlanService.findPlanById(uid);
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
-        data.put("List", selectById);
+        data.put("model", selectById);
         response.setData(data);
         return response;
     }
@@ -214,6 +223,7 @@ public class NutritionResource {
                                         @RequestParam(value = "page", defaultValue = "0") String page,
                                         @RequestParam(value = "factoryName", defaultValue = "") String factoryName,
                                         @RequestParam(value = "ispassCheck", defaultValue = "-1") String ispassCheck) {
+        logger.info("invoke findAllOfOneFactory, url is nutrition");
         if (factoryNum == null || size == null || page == null) {
             return Responses.errorResponse("失败");
         }

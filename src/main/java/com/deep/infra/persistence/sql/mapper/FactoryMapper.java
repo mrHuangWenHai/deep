@@ -11,7 +11,7 @@ public interface FactoryMapper {
      * 列出羊场列表
      * @return
      */
-    @Select("select * from factory_manage")
+    @Select("select * from factory_manage limit #{start}, #{size}")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "gmtCreate", column = "gmt_create"),
@@ -21,18 +21,19 @@ public interface FactoryMapper {
             @Result(property = "breedLocation", column = "breed_location"),
             @Result(property = "createTime", column = "create_time"),
             @Result(property = "responsiblePersonId", column = "responsible_person_id"),
+            @Result(property = "responsiblePersonName", column = "responsible_person_name"),
             @Result(property = "remark", column = "remark"),
             @Result(property = "disinfectP", column = "disinfect_p"),
             @Result(property = "agent", column = "agent")
     })
-    List<FactoryModel> queryAllFactory();
+    List<FactoryModel> queryAllFactory(@Param("start") Long start, @Param("size") Byte size);
 
     /**
      * 查找某个代理下的所有羊场
      * @param id
      * @return
      */
-    @Select("select * from factory_manage where agent = #{agent}")
+    @Select("select * from factory_manage where agent = #{agent} limit #{start}, #{size}")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "gmtCreate", column = "gmt_create"),
@@ -42,11 +43,36 @@ public interface FactoryMapper {
             @Result(property = "breedLocation", column = "breed_location"),
             @Result(property = "createTime", column = "create_time"),
             @Result(property = "responsiblePersonId", column = "responsible_person_id"),
+            @Result(property = "responsiblePersonName", column = "responsible_person_name"),
+            @Result(property = "remark", column = "remark"),
+            @Result(property = "disinfectP", column = "disinfect_p"),
+            @Result(property = "agent", column = "agent")
+    })
+    List<FactoryModel> queryFactoryByAgentIDPage(@Param("id") Long id, @Param("start") Long start, @Param("size") Byte size);
+
+
+    /**
+     * 查找某个代理下的所有羊场
+     * @param id
+     * @return
+     */
+    @Select("select * from factory_manage where agent = #{agent} limit #{start}, #{size}")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "gmtCreate", column = "gmt_create"),
+            @Result(property = "gmtModified", column = "gmt_modified"),
+            @Result(property = "pkNumber", column = "pk_number"),
+            @Result(property = "breedName", column = "breed_name"),
+            @Result(property = "breedLocation", column = "breed_location"),
+            @Result(property = "createTime", column = "create_time"),
+            @Result(property = "responsiblePersonId", column = "responsible_person_id"),
+            @Result(property = "responsiblePersonName", column = "responsible_person_name"),
             @Result(property = "remark", column = "remark"),
             @Result(property = "disinfectP", column = "disinfect_p"),
             @Result(property = "agent", column = "agent")
     })
     List<FactoryModel> queryFactoryByAgentID(Long id);
+
 
     /**
      * 查找某个代理下的所有羊场的ID
@@ -65,7 +91,7 @@ public interface FactoryMapper {
      * @param location
      * @return
      */
-    @Select("select * from factory_manage where bread_location = #{location}")
+    @Select("select * from factory_manage where breed_location like #{location}")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "gmtCreate", column = "gmt_create"),
@@ -75,6 +101,7 @@ public interface FactoryMapper {
             @Result(property = "breedLocation", column = "breed_location"),
             @Result(property = "createTime", column = "create_time"),
             @Result(property = "responsiblePersonId", column = "responsible_person_id"),
+            @Result(property = "responsiblePersonName", column = "responsible_person_name"),
             @Result(property = "remark", column = "remark"),
             @Result(property = "disinfectP", column = "disinfect_p"),
             @Result(property = "agent", column = "agent")
@@ -107,6 +134,7 @@ public interface FactoryMapper {
             @Result(property = "breedLocation", column = "breed_location"),
             @Result(property = "createTime", column = "create_time"),
             @Result(property = "responsiblePersonId", column = "responsible_person_id"),
+            @Result(property = "responsiblePersonName", column = "responsible_person_name"),
             @Result(property = "remark", column = "remark"),
             @Result(property = "disinfectP", column = "disinfect_p"),
             @Result(property = "agent", column = "agent")
@@ -126,6 +154,7 @@ public interface FactoryMapper {
             "breed_location," +
             "create_time," +
             "responsible_person_id," +
+            "responsible_person_name," +
             "remark," +
             "disinfect_p," +
             "agent" +
@@ -137,6 +166,7 @@ public interface FactoryMapper {
             "#{breedLocation}, " +
             "#{createTime}, " +
             "#{responsiblePersonId}, " +
+            "#{responsiblePersonName}, " +
             "#{remark}, " +
             "#{disinfectP}, " +
             "#{agent})")
@@ -155,6 +185,7 @@ public interface FactoryMapper {
             "breed_location = #{breedLocation}, " +
             "create_time = #{createTime}, " +
             "responsible_person_id = #{responsiblePersonId}, " +
+            "responsible_person_name = #{responsiblePersonName}, " +
             "remark = #{remark}, " +
             "disinfect_p = #{disinfectP}, " +
             "agent = #{agent} " +

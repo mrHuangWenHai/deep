@@ -87,4 +87,14 @@ public class ExampleResource {
     response.setData(data);
     return response;
   }
+
+  @GetMapping("test/value")
+  public String getValue() {
+    return "redirect: test/value/other";
+  }
+
+  @GetMapping("test/value/other")
+  public Response getResponse() {
+    return Responses.errorResponse("错误");
+  }
 }

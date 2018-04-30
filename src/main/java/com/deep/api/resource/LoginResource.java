@@ -50,7 +50,7 @@ public class LoginResource {
     private UserModel myuserModel;
 
     /**
-     * 用户登录验证并且返回结果
+     * 用户登录验证并且返回结果, 登录有效期为3600s, 1小时
      * @param loginRequest 用户登录加的模型
      * @return0
      */

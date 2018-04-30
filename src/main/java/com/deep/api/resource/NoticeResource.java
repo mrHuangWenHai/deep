@@ -337,10 +337,11 @@ public class NoticeResource {
         logger.info("invoke uploadFile, no params");
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
         String filepath = "/home/doubibobo/picture/";
-        List<String> path = new ArrayList<>();
         for (int i = 0; i < files.size(); i++) {
             MultipartFile file = files.get(i);
             String filename = file.getOriginalFilename();
+            String path = System.currentTimeMillis()+filename;
+            System.out.println(path);
             try {
                 String Header = FileUtil.getFileHeader(file);
                 System.out.println(Header);
@@ -375,18 +376,17 @@ public class NoticeResource {
             }
             if (!file.isEmpty()) {
                 try {
-                    noticePlanService.uploadFile(file.getBytes(), filepath, filename);
+                    noticePlanService.uploadFile(file.getBytes(), filepath, path);
+                    Response response = Responses.successResponse();
+                    HashMap<String, Object> data = new HashMap<>();
+                    data.put("List", "192.168.1.108:9010/picture/" + path);
+                    response.setData(data);
+                    return response;
                 } catch (Exception e) {
                     System.out.println("文件上传失败，请重新上传！");
                     return Responses.errorResponse(e.getMessage());
                 }
             }
-            path.add(filepath+filename);
-            Response response = Responses.successResponse();
-            HashMap<String, Object> data = new HashMap<>();
-            data.put("List", "192.168.1.108/picture/" + filename);
-            response.setData(data);
-            return response;
         }
         return Responses.errorResponse("上传失败");
     }

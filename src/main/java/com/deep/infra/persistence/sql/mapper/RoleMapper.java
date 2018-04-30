@@ -11,16 +11,17 @@ public interface RoleMapper {
      * 列出角色列表
      * @return
      */
-    @Select("select * from role_user")
+    @Select("select * from role_user limit #{start}, #{size}")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "gmtCreate", column = "gmt_create"),
             @Result(property = "gmtModified", column = "gmt_modified"),
             @Result(property = "pkTypeid", column = "pk_typeid"),
             @Result(property = "typeName", column = "type_name"),
+            @Result(property = "roleDescription", column = "role_description"),
             @Result(property = "defaultPermit", column = "default_permit")
     })
-    List<RoleModel> queryAllRole();
+    List<RoleModel> queryAllRole(@Param("start") Long start, @Param("size") Byte size);
 
     /**
      * 根据ID获取单个角色
@@ -34,6 +35,7 @@ public interface RoleMapper {
             @Result(property = "gmtModified", column = "gmt_modified"),
             @Result(property = "pkTypeid", column = "pk_typeid"),
             @Result(property = "typeName", column = "type_name"),
+            @Result(property = "roleDescription", column = "role_description"),
             @Result(property = "defaultPermit", column = "default_permit")
     })
     RoleModel queryRoleById(Long roleId);
@@ -50,6 +52,7 @@ public interface RoleMapper {
             @Result(property = "gmtModified", column = "gmt_modified"),
             @Result(property = "pkTypeid", column = "pk_typeid"),
             @Result(property = "typeName", column = "type_name"),
+            @Result(property = "roleDescription", column = "role_description"),
             @Result(property = "defaultPermit", column = "default_permit")
     })
     RoleModel queryRoleByPkTypeId(Long pkTypeId);
@@ -64,12 +67,14 @@ public interface RoleMapper {
             "gmt_modified," +
             "pk_typeid," +
             "type_name," +
+            "role_description," +
             "default_permit)" +
             "values(" +
             "#{gmtCreate}," +
             "#{gmtModified}," +
             "#{pkTypeid}," +
             "#{typeName}," +
+            "#{roleDescription}," +
             "#{defaultPermit}" +
             ")")
     Long insertRole(RoleModel roleModel);
@@ -84,6 +89,7 @@ public interface RoleMapper {
             "gmt_modified = #{gmtModified}, " +
             "pk_typeid = #{pkTypeid}, " +
             "type_name = #{typeName}, " +
+            "role_description = #{roleDescription}, " +
             "default_permit = #{defaultPermit} " +
             "where id = #{id}")
     Long updateRole(RoleModel roleModel);

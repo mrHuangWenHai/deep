@@ -12,7 +12,7 @@ public class UserModel {
         private Timestamp gmtModified;
 
         @NotBlank(message = "用户名不能为空!")
-        @Pattern(regexp = "^[0-9a-z]+$", message = "用户名只能由a-z以及数字组成")
+        @Pattern(regexp = "^[0-9a-zA-Z]+$", message = "用户名只能由a-z以及数字组成")
         @Size(min = 4, max = 20, message = "用户名最小长度为4, 最大长度为20")
         private String pkUserid;
 
@@ -77,7 +77,6 @@ public class UserModel {
 
         public String getUserEmail() {
             return userEmail;
-
         }
 
         public void setUserEmail(String userEmail) {

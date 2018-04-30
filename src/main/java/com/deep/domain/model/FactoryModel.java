@@ -5,30 +5,34 @@ import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 
 public class FactoryModel {
-    private long id;
+    private Long id;
     private Timestamp gmtCreate;
     private Timestamp gmtModified;
+
+    @NotBlank(message = "羊场号码不能为空")
     private String pkNumber;
+
     @NotBlank(message = "不能为空")
     private String breedName;
+
     @NotBlank(message = "不能为空")
     private String breedLocation;
+
     private Timestamp createTime;
-//    @Min(value = -1, message = "负责人错误")
-    private long responsiblePersonId;
+
+    @Min(value = -1, message = "负责人错误")
+    private Long responsiblePersonId;
+
+    private String responsiblePersonName;
+
     private String remark;
+
     @NotBlank(message = "不能为空")
     private String disinfectP;
-//    @Min(value = -1, message = "代理号错误")
-    private short agent;
 
-    public long getId() {
-        return id;
-    }
+    @Min(value = -1, message = "代理号错误")
+    private Short agent;
 
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public Timestamp getGmtCreate() {
         return gmtCreate;
@@ -78,14 +82,6 @@ public class FactoryModel {
         this.createTime = createTime;
     }
 
-    public long getResponsiblePersonId() {
-        return responsiblePersonId;
-    }
-
-    public void setResponsiblePersonId(long responsiblePersonId) {
-        this.responsiblePersonId = responsiblePersonId;
-    }
-
     public String getRemark() {
         return remark;
     }
@@ -102,11 +98,35 @@ public class FactoryModel {
         this.disinfectP = disinfectP;
     }
 
-    public short getAgent() {
+    public String getResponsiblePersonName() {
+        return responsiblePersonName;
+    }
+
+    public void setResponsiblePersonName(String responsiblePersonName) {
+        this.responsiblePersonName = responsiblePersonName;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getResponsiblePersonId() {
+        return responsiblePersonId;
+    }
+
+    public void setResponsiblePersonId(Long responsiblePersonId) {
+        this.responsiblePersonId = responsiblePersonId;
+    }
+
+    public Short getAgent() {
         return agent;
     }
 
-    public void setAgent(short agent) {
+    public void setAgent(Short agent) {
         this.agent = agent;
     }
 

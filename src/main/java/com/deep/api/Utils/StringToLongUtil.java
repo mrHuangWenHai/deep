@@ -1,7 +1,5 @@
 package com.deep.api.Utils;
 
-import com.deep.api.response.Responses;
-
 public class StringToLongUtil {
     public static long stringToLong(String user) {
         long uid;

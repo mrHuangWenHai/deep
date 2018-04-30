@@ -35,7 +35,7 @@ public interface NutritionPlanMapper {
 
     int updateByExample(@Param("record") NutritionPlan record, @Param("example") NutritionPlanExample example);
 
-    int updateByPrimaryKeySelective(NutritionPlanWithBLOBs record);
+    int updateByPrimaryKeySelective(@Param("record") NutritionPlanWithBLOBs record);
 
     int updateByPrimaryKeyWithBLOBs(NutritionPlanWithBLOBs record);
 
