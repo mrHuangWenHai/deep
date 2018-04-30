@@ -23,7 +23,7 @@ public class ImmunePlanModel {
     @NotBlank
     private String immuneDuring;    //免疫期
     @Min(0)
-    private int operatorId;
+    private Integer operatorId;
     @NotBlank
     private String operatorName;     //操作员
     private String professor;    //技术审核
@@ -198,11 +198,11 @@ public class ImmunePlanModel {
         this.gmtSupervise = gmtSupervise;
     }
 
-    public int getOperatorId() {
+    public Integer getOperatorId() {
         return operatorId;
     }
 
-    public void setOperatorId(int operatorId) {
+    public void setOperatorId(Integer operatorId) {
         this.operatorId = operatorId;
     }
 

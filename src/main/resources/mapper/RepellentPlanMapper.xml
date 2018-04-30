@@ -87,8 +87,16 @@
             AND crowd_num = #{repellentPlanModel.crowdNum}
         </if>
         <if test="repellentPlanModel.repellentTimeStart != null and repellentPlanModel.repellentTimeStart != '' and
+                  (repellentPlanModel.repellentTimeEnd == null or repellentPlanModel.repellentTimeEnd == '') ">
+            AND repellent_t &gt;= #{repellentPlanModel.repellentTimeStart}
+        </if>
+        <if test="repellentPlanModel.repellentTimeStart != null and repellentPlanModel.repellentTimeStart != '' and
                   repellentPlanModel.repellentTimeEnd != null and repellentPlanModel.repellentTimeEnd != '' ">
             AND repellent_t BETWEEN #{repellentPlanModel.repellentTimeStart} AND #{repellentPlanModel.repellentTimeEnd}
+        </if>
+        <if test="(repellentPlanModel.repellentTimeStart == null or repellentPlanModel.repellentTimeStart == '') and
+                  repellentPlanModel.repellentTimeEnd != null and repellentPlanModel.repellentTimeEnd != '' ">
+            AND repellent_t &lt;=  #{repellentPlanModel.repellentTimeEnd}
         </if>
         <if test="repellentPlanModel.repellentName != null and repellentPlanModel.repellentName != '' ">
             AND repellent_n = #{repellentPlanModel.repellentName}
@@ -104,7 +112,7 @@
         <if test="repellentPlanModel.operatorName != null and repellentPlanModel.operatorName != '' ">
             AND operator_name = #{repellentPlanModel.operatorName}
         </if>
-        <if test="repellentPlanModel.operatorId != null and repellentPlanModel.professorId != 0">
+        <if test="repellentPlanModel.operatorId != null and repellentPlanModel.operatorId != ''">
             AND operator_id = #{repellentPlanModel.professorId}
         </if>
         <if test="repellentPlanModel.professor != null and repellentPlanModel.professor != '' ">

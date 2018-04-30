@@ -134,15 +134,13 @@ public class GenealogicalFilesResource {
 
         logger.info("invoke findShow {}",genealogicalRequest);
 
-        if ( genealogicalRequest.getPage() == 0 ) {
-            genealogicalRequest.setPage(0);
-        }
 
         if ( genealogicalRequest.getSize() == 0 ) {
             genealogicalRequest.setSize(10);
         }
 
-        List<GenealogicalFilesModel> genealogicalFilesModels = genealogicalFilesService.getGenealogicalFilesModel(genealogicalRequest,new RowBounds(genealogicalRequest.getPage(),genealogicalRequest.getSize()));
+        System.out.println(genealogicalRequest.getBirthWeightStart() +"  " + genealogicalRequest.getBirthWeightEnd());
+        List<GenealogicalFilesModel> genealogicalFilesModels = genealogicalFilesService.getGenealogicalFilesModel(genealogicalRequest,new RowBounds(genealogicalRequest.getPage() * genealogicalRequest.getSize() ,genealogicalRequest.getSize()));
 
         for (GenealogicalFilesModel genealogicalFilesModel : genealogicalFilesModels) {
             String brief = this.typeBriefService.getTypeBrief(genealogicalFilesModel.getTypeName()).getBrief();

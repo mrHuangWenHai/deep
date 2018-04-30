@@ -7,10 +7,7 @@ import com.deep.domain.model.DisinfectFilesModel;
 import com.deep.domain.service.DisinfectFilesService;
 import com.deep.domain.service.FactoryService;
 import com.deep.domain.service.UserService;
-import com.deep.domain.util.DownloadUtil;
-import com.deep.domain.util.JedisUtil;
-import com.deep.domain.util.JudgeUtil;
-import com.deep.domain.util.UploadUtil;
+import com.deep.domain.util.*;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -185,6 +182,7 @@ public class DisinfectFilesResource {
         if( disinfectRequest.getSize() == 0) {
             disinfectRequest.setSize(10);
         }
+        System.out.println(disinfectRequest.getDisinfectTimeStart() + "  " + disinfectRequest.getDisinfectName());
         List<DisinfectFilesModel> disinfectFilesModels = disinfectFilesService.getDisinfectFilesModel(disinfectRequest,
                 new RowBounds(disinfectRequest.getPage() * disinfectRequest.getSize(),disinfectRequest.getSize()));
 
@@ -206,12 +204,13 @@ public class DisinfectFilesResource {
 
 
     /**
+     * 查看某专家/监督员负责的工厂
      * 前端需要传代理ID
      * @param id 代理ID
      * @return 查询结果
      */
     @RequestMapping(value = "/psfind",method = RequestMethod.GET)
-    public Response psFind(@RequestParam("id") long id,
+    public Response psFind(@RequestParam("id") Long id,
                            @RequestParam(value = "factoryNum",required = false)BigInteger factoryNum,
                            @RequestParam(value = "page" , defaultValue = "0") int page,
                            @RequestParam(value = "size" , defaultValue = "10") int size){
@@ -260,31 +259,29 @@ public class DisinfectFilesResource {
 //     * @param disinfectFilesModel 消毒类
 //     * @return 更新结果
 //     */
-//    @RequestMapping(value = "/pupdate",method = RequestMethod.PATCH)
+//    @RequestMapping(value = "pupdate",method = RequestMethod.PATCH)
 //    public Response professorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel) {
 //
-//        logger.info("invoke professorUpdate {} {}", disinfectFilesModel);
-//
-//        if (disinfectFilesModel.getId() == null ||
+//        logger.info("invoke professorUpdate {}", disinfectFilesModel);
+//        if(disinfectFilesModel.getId() == null ||
 //                disinfectFilesModel.getFactoryNum() == null ||
 //                disinfectFilesModel.getProfessor() == null ||
-//                disinfectFilesModel.getUnpassReason() == null ||
-//                disinfectFilesModel.getIspassCheck() == null ) {
-//
+//                disinfectFilesModel.getIspassCheck() == null ||
+//                disinfectFilesModel.getUnpassReason() == null) {
 //            return Responses.errorResponse("Lack Item");
-//
-//        }else {
-//            int row = this.disinfectFilesService.updateDisinfectFilesModelByProfessor(disinfectFilesModel);
-//            if (row == 1) {
-//                String professorKey = this.factoryService.getAgentIDByFactoryNumber(disinfectFilesModel.getFactoryNum().toString()) + "_professor";
-//                if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)){
-//                    return Responses.errorResponse("cancel error");
-//                }
+//        } else {
+//          int row = disinfectFilesService.updateDisinfectFilesModelByProfessor(d);
+//          if (row == 1) {
+//            String professorKey = this.factoryService.getAgentIDByFactoryNumber(disinfectFilesModel.getFactoryNum().toString()) + "_professor";
+//            if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)){
+//                return Responses.errorResponse("cancel error");
 //            }
-//        return JudgeUtil.JudgeUpdate(row);
+//          }
+//          return JudgeUtil.JudgeUpdate(row);
 //        }
 //
 //    }
+//
 //
 //    /**
 //     * 监督员入口 审核isPass1 = 0的数据
@@ -293,30 +290,27 @@ public class DisinfectFilesResource {
 //     * METHOD:PATCH
 //     * @return 审核结果
 //     */
-//    @RequestMapping(value = "/supdate",method = RequestMethod.PATCH)
-//    public Response supervisorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel) {
-//
+//    @RequestMapping(value = "supdate",method = RequestMethod.PATCH)
+//    public Response supervisorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel){
 //        logger.info("invoke supervisorUpdate {}", disinfectFilesModel);
-//
-//        if (disinfectFilesModel.getId() == null ||
+//        if(disinfectFilesModel.getId() == null ||
 //                disinfectFilesModel.getFactoryNum() == null ||
 //                disinfectFilesModel.getSupervisor() == null ||
-//                disinfectFilesModel.getIspassSup() == null ) {
-//
+//                disinfectFilesModel.getIspassSup() == null){
 //            return Responses.errorResponse("Lack Item");
 //
 //        } else {
-//                //生成更新当前时间
-//                int row = this.disinfectFilesService.updateDisinfectFilesModelBySupervisor(disinfectFilesModel);
-//                if (row == 1) {
-//                    String supervisorKey = disinfectFilesModel.getFactoryNum().toString() + "_supervisor";
-//                    if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
-//                        return Responses.errorResponse("cancel error");
-//                    }
-//                }
-//                return JudgeUtil.JudgeUpdate(row);
+//          int row = disinfectFilesService.updateDisinfectFilesModelBySupervisor(immunePlanModel);
+//          if (row == 1) {
+//            String supervisorKey = disinfectFilesModel.getFactoryNum().toString() + "_supervisor";
+//            if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
+//                return Responses.errorResponse("cancel error");
+//            }
+//          }
+//          return JudgeUtil.JudgeUpdate(row);
 //        }
 //    }
+
     /**
      * 操作员在审核前想修改数据的接口
      * 或处理被退回操作的接口
@@ -373,10 +367,9 @@ public class DisinfectFilesResource {
     }
 
     /**
-     * &#x5220;&#x9664;id = certain &#x7684;&#x6570;&#x636e;
-     * &#x6743;&#x9650;&#x8bbe;&#x7f6e;
+     * 删除对应ID数据
      * @param id id
-     * @return &#x5220;&#x9664;&#x7ed3;&#x679c;
+     * @return 是否成功
      */
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
     public Response delete(@Min(0) @PathVariable(value = "id") Long id) {
@@ -384,8 +377,15 @@ public class DisinfectFilesResource {
         if ("0".equals(id.toString())) {
             return Responses.errorResponse("Wrong id");
         }
+        DisinfectFilesModel disinfectFilesModel = this.disinfectFilesService.getDisinfectFilesModelById(id);
+        String filePath = pathPre + disinfectFilesModel.getFactoryNum() + "/disinfectEartag/"+disinfectFilesModel.getDisinfectEartag();
         int row = this.disinfectFilesService.deleteDisinfectFilesModelById(id);
-        return JudgeUtil.JudgeDelete(row);
+        if (FileUtil.deleteFile(filePath) && row == 1){
+            return JudgeUtil.JudgeDelete(row);
+        } else {
+            return Responses.errorResponse("delete wrong");
+        }
+
     }
 
 }

@@ -21,7 +21,7 @@ public interface RepellentPlanMapper {
     List<RepellentPlanModel> getRepellentPlanModel(@Param("repellentPlanModel") RepellentRequest repellentPlanModel,
                                                    RowBounds bounds);
 
-    RepellentPlanModel getRepellentPlanModelById(@Param("id") long id);
+    RepellentPlanModel getRepellentPlanModelById(@Param("id") Long id);
 
     List<RepellentPlanModel> getRepellentPlanModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum , RowBounds bounds);
 
@@ -33,7 +33,7 @@ public interface RepellentPlanMapper {
 
     int updateRepellentPlanModelBySupervisor(@Param("request") ModuleUpdateRequest request);
 
-    int deleteRepellentPlanModelByid(@Param("id") long id);
+    int deleteRepellentPlanModelByid(@Param("id") Long id);
 
     int updateRepellentPlanModelByOperator(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel);
 

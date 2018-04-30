@@ -19,10 +19,9 @@ public interface GenealogicalFilesMapper {
 
 
     List<GenealogicalFilesModel> getGenealogicalFilesModel(@Param("genealogicalFilesModel") GenealogicalRequest genealogicalFilesModel,
-                                                           RowBounds rowBounds
-                                                           );
+                                                           RowBounds rowBounds);
 
-    List<GenealogicalFilesModel> getGenealogicalFilesModelByFactoryNum (@Param("factoryNum") long factoryNum,
+    List<GenealogicalFilesModel> getGenealogicalFilesModelByFactoryNum (@Param("factoryNum") Long factoryNum,
                                                                         RowBounds rowBounds);
 
     GenealogicalFilesModel getGenealogicalFilesModelByImmuneEartag(@Param("immuneEartag") String immuneEartag);
@@ -34,11 +33,11 @@ public interface GenealogicalFilesMapper {
 
     int allGenealogicalFilesCounts();
 
-    GenealogicalFilesModel getGenealogicalFilesModelById(@Param("id") long id);
+    GenealogicalFilesModel getGenealogicalFilesModelById(@Param("id") Long id);
 
 
     //@Delete(FROM genealogical_files WHERE self_eartag = #{SelfEartag})
-    int deleteGenealogicalFilesModelById(@Param("id") long id);
+    int deleteGenealogicalFilesModelById(@Param("id") Long id);
 
     int updateGenealogicalFilesModel(@Param("genealogicalFilesModel") GenealogicalFilesModel genealogicalFilesModel);
 

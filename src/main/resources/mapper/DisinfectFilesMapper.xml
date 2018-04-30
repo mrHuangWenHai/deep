@@ -9,7 +9,7 @@
         <result property="gmtCreate" column="gmt_create"/>
         <result property="gmtModified" column="gmt_modified"/>
         <result property="gmtProfessor" column="gmt_professor"/>
-        <result property="gmtSupervise" column="gmt_supervise"/>
+        <result property="gmtSupervise" column="gmt_supervised"/>
         <result property="place" column="place"/>
         <result property="factoryNum" column="factory_num"/>
         <result property="factoryName" column="factory_name"/>
@@ -79,6 +79,7 @@
         <if test="disinfectFilesModel.id != null and disinfectFilesModel.id != ''">
             AND id = #{disinfectFilesModel.id}
         </if>
+
         <if test="disinfectFilesModel.factoryNum != null and disinfectFilesModel.factoryNum != '' ">
             AND factory_num = #{disinfectFilesModel.factoryNum}
         </if>
@@ -88,22 +89,38 @@
         </if>
 
         <if test="disinfectFilesModel.disinfectTimeStart != null and disinfectFilesModel.disinfectTimeStart != '' and
+                  (disinfectFilesModel.disinfectTimeEnd == null or disinfectFilesModel.disinfectTimeEnd == '') ">
+            AND disinfect_time &gt;= #{disinfectFilesModel.disinfectTimeStart}
+        </if>
+
+        <if test="disinfectFilesModel.disinfectTimeStart != null and disinfectFilesModel.disinfectTimeStart != '' and
                   disinfectFilesModel.disinfectTimeEnd != null and disinfectFilesModel.disinfectTimeEnd != '' ">
             AND disinfect_time BETWEEN #{disinfectFilesModel.disinfectTimeStart} AND #{disinfectFilesModel.disinfectTimeEnd}
         </if>
 
+        <if test="(disinfectFilesModel.disinfectTimeStart == null or disinfectFilesModel.disinfectTimeStart == '') and
+                  disinfectFilesModel.disinfectTimeEnd != null and disinfectFilesModel.disinfectTimeEnd != '' ">
+            AND disinfect_time &lt;= #{disinfectFilesModel.disinfectTimeEnd}
+        </if>
+
+
         <if test="disinfectFilesModel.disinfectName != null and disinfectFilesModel.disinfectName != '' ">
             AND disinfect_name = #{disinfectFilesModel.disinfectName}
         </if>
+
+
         <if test="disinfectFilesModel.dose != null and disinfectFilesModel.dose != '' ">
             AND dose = #{disinfectFilesModel.dose}
         </if>
+
         <if test="disinfectFilesModel.disinfectWay != null and disinfectFilesModel.disinfectWay != '' ">
             AND disinfect_m = #{disinfectFilesModel.disinfectWay}
         </if>
-        <if test="disinfectFilesModel.operatorId != 0">
+
+        <if test="disinfectFilesModel.operatorId != null and disinfectFilesModel.operatorId != '' ">
             AND operator_id = #{disinfectFilesModel.operatorId}
         </if>
+
         <if test="disinfectFilesModel.operatorName != null and disinfectFilesModel.operatorName != '' ">
             AND operator_name = #{disinfectFilesModel.operatorName}
         </if>
@@ -125,6 +142,7 @@
         <if test="disinfectFilesModel.ispassSup != null and disinfectFilesModel.ispassSup != '' ">
             AND ispass_sup = #{disinfectFilesModel.ispassSup}
         </if>
+
 
     </select>
 

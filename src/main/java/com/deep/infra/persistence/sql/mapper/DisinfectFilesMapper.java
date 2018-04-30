@@ -19,7 +19,7 @@ public interface DisinfectFilesMapper {
     List<DisinfectFilesModel> getDisinfectFilesModel(@Param("disinfectFilesModel") DisinfectRequest disinfectFilesModel,
                                                      RowBounds bounds);
 
-    DisinfectFilesModel getDisinfectFilesModelById(@Param("id") long id);
+    DisinfectFilesModel getDisinfectFilesModelById(@Param("id") Long id);
 
     List<DisinfectFilesModel> getDisinfectFilesModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum , RowBounds bounds);
 

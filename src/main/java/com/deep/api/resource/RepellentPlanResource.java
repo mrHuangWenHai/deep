@@ -358,7 +358,17 @@ public class RepellentPlanResource {
 
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
     public Response delete(@Min(0) @PathVariable(value = "id") Long id) {
+        logger.info("invoke delete {}", id);
+        if ("0".equals(id.toString())) {
+            return Responses.errorResponse("Wrong id");
+        }
+        RepellentPlanModel repellentPlanModel = this.repellentPlanService.getRepellentPlanModelById(id);
+        String filePath = pathPre + repellentPlanModel.getFactoryNum().toString() + "/repellentEartag/" + repellentPlanModel.getRepellentEartag();
         int row = repellentPlanService.deleteRepellentPlanModelByid(id);
-        return JudgeUtil.JudgeDelete(row);
+        if (FileUtil.deleteFile(filePath) && row == 1){
+            return JudgeUtil.JudgeDelete(row);
+        } else {
+            return Responses.errorResponse("delete wrong");
+        }
     }
 }

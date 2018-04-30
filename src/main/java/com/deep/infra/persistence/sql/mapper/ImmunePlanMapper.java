@@ -20,7 +20,7 @@ public interface ImmunePlanMapper {
     List<ImmunePlanModel> getImmunePlanModel(@Param("immunePlanModel") ImmuneRequest immunePlanModel,
                                              RowBounds bounds);
 
-    ImmunePlanModel getImmunePlanModelById(@Param("id") long id);
+    ImmunePlanModel getImmunePlanModelById(@Param("id") Long id);
 
     List<ImmunePlanModel> getImmunePlanModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum , RowBounds bounds);
 

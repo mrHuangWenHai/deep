@@ -15,7 +15,7 @@ public class DisinfectRequest {
     private String disinfectName;     //消毒药品名称
     private String dose;    //用药剂量
     private String disinfectWay;     //消毒方法
-    private int operatorId;
+    private Integer operatorId;
     private String operatorName;      //操作员(创建表操作人员)
     private String professor;       //技术审核(审核表人员 专家) 可空
     private String supervisor;       //监督员(监督操作员人员) 可空
@@ -57,6 +57,14 @@ public class DisinfectRequest {
         this.factoryNum = factoryNum;
     }
 
+    public String getFactoryName() {
+        return factoryName;
+    }
+
+    public void setFactoryName(String factoryName) {
+        this.factoryName = factoryName;
+    }
+
     public String getDisinfectTime() {
         return disinfectTime;
     }
@@ -87,6 +95,14 @@ public class DisinfectRequest {
 
     public void setDisinfectWay(String disinfectWay) {
         this.disinfectWay = disinfectWay;
+    }
+
+    public Integer getOperatorId() {
+        return operatorId;
+    }
+
+    public void setOperatorId(Integer operatorId) {
+        this.operatorId = operatorId;
     }
 
     public String getOperatorName() {
@@ -209,21 +225,7 @@ public class DisinfectRequest {
         this.size = size;
     }
 
-    public String getFactoryName() {
-        return factoryName;
-    }
 
-    public void setFactoryName(String factoryName) {
-        this.factoryName = factoryName;
-    }
-
-    public int getOperatorId() {
-        return operatorId;
-    }
-
-    public void setOperatorId(int operatorId) {
-        this.operatorId = operatorId;
-    }
 
     @Override
     public String toString() {

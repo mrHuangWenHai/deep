@@ -26,7 +26,7 @@ public class DisinfectFilesModel {
     @NotBlank
     private String disinfectWay;     //消毒方法
     @Min(0)
-    private int operatorId;
+    private Integer operatorId;
     @NotBlank
     private String operatorName;      //操作员(创建表操作人员)
     private String professor;       //技术审核(审核表人员 专家) 可空
@@ -203,11 +203,11 @@ public class DisinfectFilesModel {
         this.factoryName = factoryName;
     }
 
-    public int getOperatorId() {
+    public Integer getOperatorId() {
         return operatorId;
     }
 
-    public void setOperatorId(int operatorId) {
+    public void setOperatorId(Integer operatorId) {
         this.operatorId = operatorId;
     }
 

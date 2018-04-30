@@ -2,6 +2,7 @@ package com.deep.domain.util;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -9,6 +10,24 @@ import java.io.InputStream;
  * create by zhongrui on 18-4-5.
  */
 public class FileUtil {
+
+    /**
+     * 生产模块数据删除时
+     * 将耳牌文件一起删除
+     * @param path 路径
+     * @return 是否成功
+     */
+    public static boolean deleteFile(String path) {
+        File file = new File(path);
+        return !file.exists() || file.delete();
+    }
+
+
+    /**
+     * 限定文件类型
+     * @param file MultipartFile
+     * @return
+     */
     public static String getFileHeader( MultipartFile file) {
         InputStream is = null;
         String value = null;

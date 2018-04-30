@@ -123,14 +123,26 @@
             <if test="genealogicalFilesModel.breedingSheepBase != null and genealogicalFilesModel.breedingSheepBase != '' ">
                 AND breedingsheep_base = #{genealogicalFilesModel.breedingSheepBase}
             </if>
+
+            <if test="genealogicalFilesModel.birthTimeStart != null and genealogicalFilesModel.birthTimeStart != '' and
+                     (genealogicalFilesModel.birthTimeEnd == null or genealogicalFilesModel.birthTimeEnd == '') ">
+                AND birth_time &gt;= #{genealogicalFilesModel.birthTimeStart}
+            </if>
+
             <if test="genealogicalFilesModel.birthTimeStart != null and genealogicalFilesModel.birthTimeStart != '' and
                         genealogicalFilesModel.birthTimeEnd != null and genealogicalFilesModel.birthTimeEnd != '' ">
                 AND birth_time BETWEEN #{genealogicalFilesModel.birthTimeStart} AND #{genealogicalFilesModel.birthTimeEnd}
             </if>
 
-            <if test="genealogicalFilesModel.birthTimeStart != null and genealogicalFilesModel.birthTimeStart != '' and
-                     (genealogicalFilesModel.birthTimeEnd == null and genealogicalFilesModel.birthTimeEnd == '') ">
-                AND birth_time &gt;= #{genealogicalFilesModel.birthTimeStart}
+            <if test="(genealogicalFilesModel.birthTimeStart == null or genealogicalFilesModel.birthTimeStart == '') and
+                     (genealogicalFilesModel.birthTimeEnd != null and genealogicalFilesModel.birthTimeEnd != '') ">
+                AND birth_time &lt;= #{genealogicalFilesModel.birthTimeEnd}
+            </if>
+
+
+            <if test="genealogicalFilesModel.birthWeightStart != null and genealogicalFilesModel.birthWeightStart != '' and
+                      (genealogicalFilesModel.birthWeightEnd == null or genealogicalFilesModel.birthWeightEnd == '') ">
+                AND birth_weight &gt;= #{genealogicalFilesModel.birthWeightStart}
             </if>
 
             <if test="genealogicalFilesModel.birthWeightStart != null and genealogicalFilesModel.birthWeightStart != '' and
@@ -138,9 +150,9 @@
                 AND birth_weight BETWEEN #{genealogicalFilesModel.birthWeightStart} AND #{genealogicalFilesModel.birthWeightEnd}
             </if>
 
-            <if test="genealogicalFilesModel.birthWeightStart != null and genealogicalFilesModel.birthWeightStart != '' and
-                   (genealogicalFilesModel.birthWeightEnd == null or genealogicalFilesModel.birthWeightEnd == '') ">
-                AND birth_weight &gt;= #{genealogicalFilesModel.birthWeightStart}
+            <if test="(genealogicalFilesModel.birthWeightStart == null or genealogicalFilesModel.birthWeightStart == '') and
+                      genealogicalFilesModel.birthWeightEnd != null and genealogicalFilesModel.birthWeightEnd != '' ">
+                AND birth_weight &lt;= #{genealogicalFilesModel.birthWeightEnd}
             </if>
 
             <if test="genealogicalFilesModel.color != null and genealogicalFilesModel.color != '' ">

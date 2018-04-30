@@ -22,8 +22,8 @@ public class RepellentPlanModel {
     private String repellentWay;     //给药方式
     @NotBlank
     private String dose;    //给药剂量
-    @Min(1)
-    private int operatorId;
+    @Min(0)
+    private Integer operatorId;
     @NotBlank
     private String operatorName;
     private String professor;
@@ -176,11 +176,11 @@ public class RepellentPlanModel {
         this.dose = dose;
     }
 
-    public int getOperatorId() {
+    public Integer getOperatorId() {
         return operatorId;
     }
 
-    public void setOperatorId(int operatorId) {
+    public void setOperatorId(Integer operatorId) {
         this.operatorId = operatorId;
     }
 

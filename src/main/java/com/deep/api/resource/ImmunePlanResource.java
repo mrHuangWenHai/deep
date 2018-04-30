@@ -380,8 +380,14 @@ public class ImmunePlanResource {
         if ("0".equals(id.toString())) {
             return Responses.errorResponse("Wrong id");
         }
+        ImmunePlanModel immunePlanModel = this.immunePlanService.getImmunePlanModelById(id);
+        String filePath = pathPre + immunePlanModel.getFactoryNum().toString() + "/immuneEartag/" + immunePlanModel.getImmuneEartag();
         int row = immunePlanService.deleteImmunePlanModelById(id);
-        return JudgeUtil.JudgeDelete(row);
+        if (FileUtil.deleteFile(filePath) && row == 1){
+            return JudgeUtil.JudgeDelete(row);
+        } else {
+            return Responses.errorResponse("delete wrong");
+        }
     }
 
 }

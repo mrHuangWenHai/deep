@@ -90,9 +90,18 @@
         </if>
 
         <if test="immunePlanModel.immuneTimeStart != null and immunePlanModel.immuneTimeStart != '' and
+                  (immunePlanModel.immuneTimeEnd == null or immunePlanModel.immuneTimeEnd == '') ">
+            AND immune_t &gt;= #{immunePlanModel.immuneTimeStart}
+        </if>
+        <if test="immunePlanModel.immuneTimeStart != null and immunePlanModel.immuneTimeStart != '' and
                   immunePlanModel.immuneTimeEnd != null and immunePlanModel.immuneTimeEnd != '' ">
             AND immune_t BETWEEN #{immunePlanModel.immuneTimeStart} AND #{immunePlanModel.immuneTimeEnd}
         </if>
+        <if test="(immunePlanModel.immuneTimeStart == null or immunePlanModel.immuneTimeStart == '') and
+                  immunePlanModel.immuneTimeEnd != null and immunePlanModel.immuneTimeEnd != '' ">
+            AND immune_t &lt;=  #{immunePlanModel.immuneTimeEnd}
+        </if>
+
         <if test="immunePlanModel.immuneKind != null and immunePlanModel.immuneKind != '' ">
             AND immune_k = #{immunePlanModel.immuneKind}
         </if>
@@ -105,7 +114,7 @@
         <if test="immunePlanModel.immuneDuring != null and immunePlanModel.immuneDuring != '' ">
             AND immune_d = #{immunePlanModel.immuneDuring}
         </if>
-        <if test="immunePlanModel.operatorId != 0">
+        <if test="immunePlanModel.operatorId != null and immunePlanModel.operatorId != ''">
             AND operator_id = #{immunePlanModel.operatorId}
         </if>
         <if test="immunePlanModel.operatorName != null and immunePlanModel.operatorName != ''">
