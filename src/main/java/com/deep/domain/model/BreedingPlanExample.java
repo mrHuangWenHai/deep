@@ -1055,213 +1055,213 @@ public class BreedingPlanExample {
             return (Criteria) this;
         }
 
-        public Criteria andOperatorIsNull() {
-            addCriterion("operator is null");
+        public Criteria andOperatorNameIsNull() {
+            addCriterion("operator_name is null");
             return (Criteria) this;
         }
 
-        public Criteria andOperatorIsNotNull() {
-            addCriterion("operator is not null");
+        public Criteria andOperatorNameIsNotNull() {
+            addCriterion("operator_name is not null");
             return (Criteria) this;
         }
 
-        public Criteria andOperatorEqualTo(String value) {
-            addCriterion("operator =", value, "operator");
+        public Criteria andOperatorNameEqualTo(String value) {
+            addCriterion("operator_name =", value, "operatorName");
             return (Criteria) this;
         }
 
-        public Criteria andOperatorNotEqualTo(String value) {
-            addCriterion("operator <>", value, "operator");
+        public Criteria andOperatorNameNotEqualTo(String value) {
+            addCriterion("operator_name <>", value, "operatorName");
             return (Criteria) this;
         }
 
-        public Criteria andOperatorGreaterThan(String value) {
-            addCriterion("operator >", value, "operator");
+        public Criteria andOperatorNameGreaterThan(String value) {
+            addCriterion("operator_name >", value, "operatorName");
             return (Criteria) this;
         }
 
-        public Criteria andOperatorGreaterThanOrEqualTo(String value) {
-            addCriterion("operator >=", value, "operator");
+        public Criteria andOperatorNameGreaterThanOrEqualTo(String value) {
+            addCriterion("operator_name >=", value, "operatorName");
             return (Criteria) this;
         }
 
-        public Criteria andOperatorLessThan(String value) {
-            addCriterion("operator <", value, "operator");
+        public Criteria andOperatorNameLessThan(String value) {
+            addCriterion("operator_name <", value, "operatorName");
             return (Criteria) this;
         }
 
-        public Criteria andOperatorLessThanOrEqualTo(String value) {
-            addCriterion("operator <=", value, "operator");
+        public Criteria andOperatorNameLessThanOrEqualTo(String value) {
+            addCriterion("operator_name <=", value, "operatorName");
             return (Criteria) this;
         }
 
-        public Criteria andOperatorLike(String value) {
-            addCriterion("operator like", value, "operator");
+        public Criteria andOperatorNameLike(String value) {
+            addCriterion("operator_name like", value, "operatorName");
             return (Criteria) this;
         }
 
-        public Criteria andOperatorNotLike(String value) {
-            addCriterion("operator not like", value, "operator");
+        public Criteria andOperatorNameNotLike(String value) {
+            addCriterion("operator_name not like", value, "operatorName");
             return (Criteria) this;
         }
 
-        public Criteria andOperatorIn(List<String> values) {
-            addCriterion("operator in", values, "operator");
+        public Criteria andOperatorNameIn(List<String> values) {
+            addCriterion("operator_name in", values, "operatorName");
             return (Criteria) this;
         }
 
-        public Criteria andOperatorNotIn(List<String> values) {
-            addCriterion("operator not in", values, "operator");
+        public Criteria andOperatorNameNotIn(List<String> values) {
+            addCriterion("operator_name not in", values, "operatorName");
             return (Criteria) this;
         }
 
-        public Criteria andOperatorBetween(String value1, String value2) {
-            addCriterion("operator between", value1, value2, "operator");
+        public Criteria andOperatorNameBetween(String value1, String value2) {
+            addCriterion("operator_name between", value1, value2, "operatorName");
             return (Criteria) this;
         }
 
-        public Criteria andOperatorNotBetween(String value1, String value2) {
-            addCriterion("operator not between", value1, value2, "operator");
+        public Criteria andOperatorNameNotBetween(String value1, String value2) {
+            addCriterion("operator_name not between", value1, value2, "operatorName");
             return (Criteria) this;
         }
 
-        public Criteria andProfessorIsNull() {
-            addCriterion("professor is null");
+        public Criteria andProfessorNameIsNull() {
+            addCriterion("professor_name is null");
             return (Criteria) this;
         }
 
-        public Criteria andProfessorIsNotNull() {
-            addCriterion("professor is not null");
+        public Criteria andProfessorNameIsNotNull() {
+            addCriterion("professor_name is not null");
             return (Criteria) this;
         }
 
-        public Criteria andProfessorEqualTo(String value) {
-            addCriterion("professor =", value, "professor");
+        public Criteria andProfessorNameEqualTo(String value) {
+            addCriterion("professor_name =", value, "professorName");
             return (Criteria) this;
         }
 
-        public Criteria andProfessorNotEqualTo(String value) {
-            addCriterion("professor <>", value, "professor");
+        public Criteria andProfessorNameNotEqualTo(String value) {
+            addCriterion("professor_name <>", value, "professorName");
             return (Criteria) this;
         }
 
-        public Criteria andProfessorGreaterThan(String value) {
-            addCriterion("professor >", value, "professor");
+        public Criteria andProfessorNameGreaterThan(String value) {
+            addCriterion("professor_name >", value, "professorName");
             return (Criteria) this;
         }
 
-        public Criteria andProfessorGreaterThanOrEqualTo(String value) {
-            addCriterion("professor >=", value, "professor");
+        public Criteria andProfessorNameGreaterThanOrEqualTo(String value) {
+            addCriterion("professor_name >=", value, "professorName");
             return (Criteria) this;
         }
 
-        public Criteria andProfessorLessThan(String value) {
-            addCriterion("professor <", value, "professor");
+        public Criteria andProfessorNameLessThan(String value) {
+            addCriterion("professor_name <", value, "professorName");
             return (Criteria) this;
         }
 
-        public Criteria andProfessorLessThanOrEqualTo(String value) {
-            addCriterion("professor <=", value, "professor");
+        public Criteria andProfessorNameLessThanOrEqualTo(String value) {
+            addCriterion("professor_name <=", value, "professorName");
             return (Criteria) this;
         }
 
-        public Criteria andProfessorLike(String value) {
-            addCriterion("professor like", value, "professor");
+        public Criteria andProfessorNameLike(String value) {
+            addCriterion("professor_name like", value, "professorName");
             return (Criteria) this;
         }
 
-        public Criteria andProfessorNotLike(String value) {
-            addCriterion("professor not like", value, "professor");
+        public Criteria andProfessorNameNotLike(String value) {
+            addCriterion("professor_name not like", value, "professorName");
             return (Criteria) this;
         }
 
-        public Criteria andProfessorIn(List<String> values) {
-            addCriterion("professor in", values, "professor");
+        public Criteria andProfessorNameIn(List<String> values) {
+            addCriterion("professor_name in", values, "professorName");
             return (Criteria) this;
         }
 
-        public Criteria andProfessorNotIn(List<String> values) {
-            addCriterion("professor not in", values, "professor");
+        public Criteria andProfessorNameNotIn(List<String> values) {
+            addCriterion("professor_name not in", values, "professorName");
             return (Criteria) this;
         }
 
-        public Criteria andProfessorBetween(String value1, String value2) {
-            addCriterion("professor between", value1, value2, "professor");
+        public Criteria andProfessorNameBetween(String value1, String value2) {
+            addCriterion("professor_name between", value1, value2, "professorName");
             return (Criteria) this;
         }
 
-        public Criteria andProfessorNotBetween(String value1, String value2) {
-            addCriterion("professor not between", value1, value2, "professor");
+        public Criteria andProfessorNameNotBetween(String value1, String value2) {
+            addCriterion("professor_name not between", value1, value2, "professorName");
             return (Criteria) this;
         }
 
-        public Criteria andSupervisorIsNull() {
-            addCriterion("supervisor is null");
+        public Criteria andSupervisorNameIsNull() {
+            addCriterion("supervisor_name is null");
             return (Criteria) this;
         }
 
-        public Criteria andSupervisorIsNotNull() {
-            addCriterion("supervisor is not null");
+        public Criteria andSupervisorNameIsNotNull() {
+            addCriterion("supervisor_name is not null");
             return (Criteria) this;
         }
 
-        public Criteria andSupervisorEqualTo(String value) {
-            addCriterion("supervisor =", value, "supervisor");
+        public Criteria andSupervisorNameEqualTo(String value) {
+            addCriterion("supervisor_name =", value, "supervisorName");
             return (Criteria) this;
         }
 
-        public Criteria andSupervisorNotEqualTo(String value) {
-            addCriterion("supervisor <>", value, "supervisor");
+        public Criteria andSupervisorNameNotEqualTo(String value) {
+            addCriterion("supervisor_name <>", value, "supervisorName");
             return (Criteria) this;
         }
 
-        public Criteria andSupervisorGreaterThan(String value) {
-            addCriterion("supervisor >", value, "supervisor");
+        public Criteria andSupervisorNameGreaterThan(String value) {
+            addCriterion("supervisor_name >", value, "supervisorName");
             return (Criteria) this;
         }
 
-        public Criteria andSupervisorGreaterThanOrEqualTo(String value) {
-            addCriterion("supervisor >=", value, "supervisor");
+        public Criteria andSupervisorNameGreaterThanOrEqualTo(String value) {
+            addCriterion("supervisor_name >=", value, "supervisorName");
             return (Criteria) this;
         }
 
-        public Criteria andSupervisorLessThan(String value) {
-            addCriterion("supervisor <", value, "supervisor");
+        public Criteria andSupervisorNameLessThan(String value) {
+            addCriterion("supervisor_name <", value, "supervisorName");
             return (Criteria) this;
         }
 
-        public Criteria andSupervisorLessThanOrEqualTo(String value) {
-            addCriterion("supervisor <=", value, "supervisor");
+        public Criteria andSupervisorNameLessThanOrEqualTo(String value) {
+            addCriterion("supervisor_name <=", value, "supervisorName");
             return (Criteria) this;
         }
 
-        public Criteria andSupervisorLike(String value) {
-            addCriterion("supervisor like", value, "supervisor");
+        public Criteria andSupervisorNameLike(String value) {
+            addCriterion("supervisor_name like", value, "supervisorName");
             return (Criteria) this;
         }
 
-        public Criteria andSupervisorNotLike(String value) {
-            addCriterion("supervisor not like", value, "supervisor");
+        public Criteria andSupervisorNameNotLike(String value) {
+            addCriterion("supervisor_name not like", value, "supervisorName");
             return (Criteria) this;
         }
 
-        public Criteria andSupervisorIn(List<String> values) {
-            addCriterion("supervisor in", values, "supervisor");
+        public Criteria andSupervisorNameIn(List<String> values) {
+            addCriterion("supervisor_name in", values, "supervisorName");
             return (Criteria) this;
         }
 
-        public Criteria andSupervisorNotIn(List<String> values) {
-            addCriterion("supervisor not in", values, "supervisor");
+        public Criteria andSupervisorNameNotIn(List<String> values) {
+            addCriterion("supervisor_name not in", values, "supervisorName");
             return (Criteria) this;
         }
 
-        public Criteria andSupervisorBetween(String value1, String value2) {
-            addCriterion("supervisor between", value1, value2, "supervisor");
+        public Criteria andSupervisorNameBetween(String value1, String value2) {
+            addCriterion("supervisor_name between", value1, value2, "supervisorName");
             return (Criteria) this;
         }
 
-        public Criteria andSupervisorNotBetween(String value1, String value2) {
-            addCriterion("supervisor not between", value1, value2, "supervisor");
+        public Criteria andSupervisorNameNotBetween(String value1, String value2) {
+            addCriterion("supervisor_name not between", value1, value2, "supervisorName");
             return (Criteria) this;
         }
 
@@ -1335,63 +1335,63 @@ public class BreedingPlanExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsPassIsNull() {
-            addCriterion("is_pass is null");
+        public Criteria andIspassCheckIsNull() {
+            addCriterion("ispass_check is null");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassIsNotNull() {
-            addCriterion("is_pass is not null");
+        public Criteria andIspassCheckIsNotNull() {
+            addCriterion("ispass_check is not null");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassEqualTo(Byte value) {
-            addCriterion("is_pass =", value, "isPass");
+        public Criteria andIspassCheckEqualTo(Byte value) {
+            addCriterion("ispass_check =", value, "ispass_check");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassNotEqualTo(Byte value) {
-            addCriterion("is_pass <>", value, "isPass");
+        public Criteria andIspassCheckNotEqualTo(Byte value) {
+            addCriterion("ispass_check <>", value, "ispass_check");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassGreaterThan(Byte value) {
-            addCriterion("is_pass >", value, "isPass");
+        public Criteria andIspassCheckGreaterThan(Byte value) {
+            addCriterion("ispass_check >", value, "ispass_check");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassGreaterThanOrEqualTo(Byte value) {
-            addCriterion("is_pass >=", value, "isPass");
+        public Criteria andIspassCheckGreaterThanOrEqualTo(Byte value) {
+            addCriterion("ispass_check >=", value, "ispass_check");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassLessThan(Byte value) {
-            addCriterion("is_pass <", value, "isPass");
+        public Criteria andIspassCheckLessThan(Byte value) {
+            addCriterion("ispass_check <", value, "ispass_check");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassLessThanOrEqualTo(Byte value) {
-            addCriterion("is_pass <=", value, "isPass");
+        public Criteria andIspassCheckLessThanOrEqualTo(Byte value) {
+            addCriterion("ispass_check <=", value, "ispass_check");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassIn(List<Byte> values) {
-            addCriterion("is_pass in", values, "isPass");
+        public Criteria andIspassCheckIn(List<Byte> values) {
+            addCriterion("ispass_check in", values, "ispass_check");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassNotIn(List<Byte> values) {
-            addCriterion("is_pass not in", values, "isPass");
+        public Criteria andIspassCheckNotIn(List<Byte> values) {
+            addCriterion("ispass_check not in", values, "ispass_check");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassBetween(Byte value1, Byte value2) {
-            addCriterion("is_pass between", value1, value2, "isPass");
+        public Criteria andIspassCheckBetween(Byte value1, Byte value2) {
+            addCriterion("ispass_check between", value1, value2, "ispass_check");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassNotBetween(Byte value1, Byte value2) {
-            addCriterion("is_pass not between", value1, value2, "isPass");
+        public Criteria andIspassCheckNotBetween(Byte value1, Byte value2) {
+            addCriterion("ispass_check not between", value1, value2, "ispass_check");
             return (Criteria) this;
         }
 
@@ -1465,63 +1465,243 @@ public class BreedingPlanExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsPass1IsNull() {
-            addCriterion("is_pass1 is null");
+        public Criteria andIspassSupIsNull() {
+            addCriterion("ispass_sup is null");
             return (Criteria) this;
         }
 
-        public Criteria andIsPass1IsNotNull() {
-            addCriterion("is_pass1 is not null");
+        public Criteria andIspassSupIsNotNull() {
+            addCriterion("ispass_sup is not null");
             return (Criteria) this;
         }
 
-        public Criteria andIsPass1EqualTo(Byte value) {
-            addCriterion("is_pass1 =", value, "isPass1");
+        public Criteria andIspassSupEqualTo(Byte value) {
+            addCriterion("ispass_sup =", value, "ispass_sup");
             return (Criteria) this;
         }
 
-        public Criteria andIsPass1NotEqualTo(Byte value) {
-            addCriterion("is_pass1 <>", value, "isPass1");
+        public Criteria andIspassSupNotEqualTo(Byte value) {
+            addCriterion("ispass_sup <>", value, "ispass_sup");
             return (Criteria) this;
         }
 
-        public Criteria andIsPass1GreaterThan(Byte value) {
-            addCriterion("is_pass1 >", value, "isPass1");
+        public Criteria andIspassSupGreaterThan(Byte value) {
+            addCriterion("ispass_sup >", value, "ispass_sup");
             return (Criteria) this;
         }
 
-        public Criteria andIsPass1GreaterThanOrEqualTo(Byte value) {
-            addCriterion("is_pass1 >=", value, "isPass1");
+        public Criteria andIspassSupGreaterThanOrEqualTo(Byte value) {
+            addCriterion("ispass_sup >=", value, "ispass_sup");
             return (Criteria) this;
         }
 
-        public Criteria andIsPass1LessThan(Byte value) {
-            addCriterion("is_pass1 <", value, "isPass1");
+        public Criteria andIspassSupLessThan(Byte value) {
+            addCriterion("ispass_sup <", value, "ispass_sup");
             return (Criteria) this;
         }
 
-        public Criteria andIsPass1LessThanOrEqualTo(Byte value) {
-            addCriterion("is_pass1 <=", value, "isPass1");
+        public Criteria andIspassSupLessThanOrEqualTo(Byte value) {
+            addCriterion("ispass_sup <=", value, "ispass_sup");
             return (Criteria) this;
         }
 
-        public Criteria andIsPass1In(List<Byte> values) {
-            addCriterion("is_pass1 in", values, "isPass1");
+        public Criteria andIspassSupIn(List<Byte> values) {
+            addCriterion("ispass_sup in", values, "ispass_sup");
             return (Criteria) this;
         }
 
-        public Criteria andIsPass1NotIn(List<Byte> values) {
-            addCriterion("is_pass1 not in", values, "isPass1");
+        public Criteria andIspassSupNotIn(List<Byte> values) {
+            addCriterion("ispass_sup not in", values, "ispass_sup");
             return (Criteria) this;
         }
 
-        public Criteria andIsPass1Between(Byte value1, Byte value2) {
-            addCriterion("is_pass1 between", value1, value2, "isPass1");
+        public Criteria andIspassSupBetween(Byte value1, Byte value2) {
+            addCriterion("ispass_sup between", value1, value2, "ispass_sup");
             return (Criteria) this;
         }
 
-        public Criteria andIsPass1NotBetween(Byte value1, Byte value2) {
-            addCriterion("is_pass1 not between", value1, value2, "isPass1");
+        public Criteria andIspassSupNotBetween(Byte value1, Byte value2) {
+            addCriterion("ispass_sup not between", value1, value2, "ispass_sup");
+            return (Criteria) this;
+        }
+
+        public Criteria andOperatorIdIsNull() {
+            addCriterion("operator_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOperatorIdIsNotNull() {
+            addCriterion("operator_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOperatorIdEqualTo(Integer value) {
+            addCriterion("operator_id =", value, "operatorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOperatorIdNotEqualTo(Integer value) {
+            addCriterion("operator_id <>", value, "operatorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOperatorIdGreaterThan(Integer value) {
+            addCriterion("operator_id >", value, "operatorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOperatorIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("operator_id >=", value, "operatorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOperatorIdLessThan(Integer value) {
+            addCriterion("operator_id <", value, "operatorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOperatorIdLessThanOrEqualTo(Integer value) {
+            addCriterion("operator_id <=", value, "operatorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOperatorIdIn(List<Integer> values) {
+            addCriterion("operator_id in", values, "operatorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOperatorIdNotIn(List<Integer> values) {
+            addCriterion("operator_id not in", values, "operatorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOperatorIdBetween(Integer value1, Integer value2) {
+            addCriterion("operator_id between", value1, value2, "operatorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOperatorIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("operator_id not between", value1, value2, "operatorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfessorIdIsNull() {
+            addCriterion("professor_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfessorIdIsNotNull() {
+            addCriterion("professor_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfessorIdEqualTo(Integer value) {
+            addCriterion("professor_id =", value, "professorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfessorIdNotEqualTo(Integer value) {
+            addCriterion("professor_id <>", value, "professorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfessorIdGreaterThan(Integer value) {
+            addCriterion("professor_id >", value, "professorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfessorIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("professor_id >=", value, "professorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfessorIdLessThan(Integer value) {
+            addCriterion("professor_id <", value, "professorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfessorIdLessThanOrEqualTo(Integer value) {
+            addCriterion("professor_id <=", value, "professorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfessorIdIn(List<Integer> values) {
+            addCriterion("professor_id in", values, "professorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfessorIdNotIn(List<Integer> values) {
+            addCriterion("professor_id not in", values, "professorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfessorIdBetween(Integer value1, Integer value2) {
+            addCriterion("professor_id between", value1, value2, "professorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfessorIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("professor_id not between", value1, value2, "professorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupervisorIdIsNull() {
+            addCriterion("supervisor_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupervisorIdIsNotNull() {
+            addCriterion("supervisor_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupervisorIdEqualTo(Integer value) {
+            addCriterion("supervisor_id =", value, "supervisorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupervisorIdNotEqualTo(Integer value) {
+            addCriterion("supervisor_id <>", value, "supervisorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupervisorIdGreaterThan(Integer value) {
+            addCriterion("supervisor_id >", value, "supervisorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupervisorIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("supervisor_id >=", value, "supervisorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupervisorIdLessThan(Integer value) {
+            addCriterion("supervisor_id <", value, "supervisorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupervisorIdLessThanOrEqualTo(Integer value) {
+            addCriterion("supervisor_id <=", value, "supervisorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupervisorIdIn(List<Integer> values) {
+            addCriterion("supervisor_id in", values, "supervisorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupervisorIdNotIn(List<Integer> values) {
+            addCriterion("supervisor_id not in", values, "supervisorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupervisorIdBetween(Integer value1, Integer value2) {
+            addCriterion("supervisor_id between", value1, value2, "supervisorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupervisorIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("supervisor_id not between", value1, value2, "supervisorId");
             return (Criteria) this;
         }
 
@@ -1550,18 +1730,18 @@ public class BreedingPlanExample {
             return (Criteria) this;
         }
 
-        public Criteria andOperatorLikeInsensitive(String value) {
-            addCriterion("upper(operator) like", value.toUpperCase(), "operator");
+        public Criteria andOperatorNameLikeInsensitive(String value) {
+            addCriterion("upper(operator_name) like", value.toUpperCase(), "operatorName");
             return (Criteria) this;
         }
 
-        public Criteria andProfessorLikeInsensitive(String value) {
-            addCriterion("upper(professor) like", value.toUpperCase(), "professor");
+        public Criteria andProfessorNameLikeInsensitive(String value) {
+            addCriterion("upper(professor_name) like", value.toUpperCase(), "professorName");
             return (Criteria) this;
         }
 
-        public Criteria andSupervisorLikeInsensitive(String value) {
-            addCriterion("upper(supervisor) like", value.toUpperCase(), "supervisor");
+        public Criteria andSupervisorNameLikeInsensitive(String value) {
+            addCriterion("upper(supervisor_name) like", value.toUpperCase(), "supervisorName");
             return (Criteria) this;
         }
 

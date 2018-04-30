@@ -74,7 +74,16 @@ public class ExampleResource {
   public Response getTestUtilAgentFactory(@PathVariable("id") String id) {
     Response response = Responses.successResponse();
     HashMap<String, Object> data = new HashMap<>();
-    data.put("test", AgentUtil.getSubordinateFactory(id));
+    data.put("List", AgentUtil.getSubordinateFactory(id));
+    response.setData(data);
+    return response;
+  }
+
+  @GetMapping("test/agent/factory/id/{id}")
+  public Response getTestUtilAgentFactoryID(@PathVariable("id") String id) {
+    Response response = Responses.successResponse();
+    HashMap<String, Object> data = new HashMap<>();
+    data.put("List", AgentUtil.getSubordinateFactoryID(id));
     response.setData(data);
     return response;
   }
@@ -83,8 +92,18 @@ public class ExampleResource {
   public Response getTestUtilIsAgent(@PathVariable("id") String id) {
     Response response = Responses.successResponse();
     HashMap<String, Object> data = new HashMap<>();
-    data.put("test", AgentUtil.isAgent(id));
+    data.put("List", AgentUtil.isAgent(id));
     response.setData(data);
     return response;
+  }
+
+  @GetMapping("test/value")
+  public String getValue() {
+    return "redirect: test/value/other";
+  }
+
+  @GetMapping("test/value/other")
+  public Response getResponse() {
+    return Responses.errorResponse("错误");
   }
 }

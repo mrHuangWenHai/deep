@@ -8,10 +8,24 @@ public class RoleModel {
     private long id;
     private Timestamp gmtCreate;
     private Timestamp gmtModified;
+
     private String pkTypeid;
+
     @NotBlank(message = "角色名称不能为空")
     private String typeName;
+
+    @NotBlank(message = "角色描述不能为空")
+    private String roleDescription;
+
     private String defaultPermit;
+
+    public String getRoleDescription() {
+        return roleDescription;
+    }
+
+    public void setRoleDescription(String roleDescription) {
+        this.roleDescription = roleDescription;
+    }
 
     public String getPkTypeid() {
         return pkTypeid;

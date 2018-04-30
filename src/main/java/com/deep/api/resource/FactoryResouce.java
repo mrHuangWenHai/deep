@@ -15,7 +15,6 @@ import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/factory")
@@ -34,9 +33,19 @@ public class FactoryResouce {
 
     @GetMapping(value = "")
 
-    public Response factoryLists() {
+    public Response factoryLists(
+            @RequestParam(value = "page", defaultValue = "0") String page,
+            @RequestParam(value = "size", defaultValue = "10") String size
+    ) {
+
         logger.info("invoke factoryLists, url is factory/");
-        List<FactoryModel> factoryModelList = factoryService.getAll();
+        Long upage = StringToLongUtil.stringToLong(page);
+        Byte usize = StringToLongUtil.stringToByte(size);
+        Long start = upage*usize;
+        if (upage < 0 || usize < 0) {
+            return Responses.errorResponse("错误");
+        }
+        List<FactoryModel> factoryModelList = factoryService.getAll(start, usize);
         if (factoryModelList == null) {
             return Responses.errorResponse("暂无羊场信息");
         }
@@ -56,13 +65,23 @@ public class FactoryResouce {
      * @return
      */
     @GetMapping(value = "/agent/{id}")
-    public Response factoryByAgent(@PathVariable("id") String id) {
+    public Response factoryByAgent(
+            @PathVariable("id") String id,
+            @RequestParam(value = "page", defaultValue = "0") String page,
+            @RequestParam(value = "size", defaultValue = "10") String size
+    ) {
         logger.info("invoke factoryByAgent {}, url is factory/agent/{id}", id);
         long uid = StringToLongUtil.stringToInt(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
         }
-        List<FactoryModel> lists = factoryService.getAllFactoryOfOneAgent(uid);
+        Long upage = StringToLongUtil.stringToLong(page);
+        Byte usize = StringToLongUtil.stringToByte(size);
+        Long start = upage*usize;
+        if (upage < 0 || usize < 0) {
+            return Responses.errorResponse("错误");
+        }
+        List<FactoryModel> lists = factoryService.getAllFactoryOfOneAgentPage(uid, start, usize);
         if (lists == null) {
             return Responses.errorResponse("没有相应直属羊场");
         }
@@ -77,18 +96,15 @@ public class FactoryResouce {
     }
 
     /**
-     * 根据羊场的地理位置查询
+     * 根据羊场的地理位置查询(模糊查询)
      * @param location
      * @return
      */
     @Permit(authorities = "customer_inquiry")
-    @PostMapping(value = "/location")
-    public Response factoryByBreadLocation(@RequestBody Map<String, String> location, BindingResult bindingResult) {
+    @GetMapping(value = "/location")
+    public Response factoryByBreadLocation(@RequestParam(value = "location", defaultValue = "") String location) {
         logger.info("invoke getFactory {}, url is factory/location", location);
-        if (bindingResult.hasErrors()) {
-            return Responses.errorResponse("请求错误!");
-        }
-        List<FactoryModel> factoryModels = factoryService.getAgentByBreadLocation(location.get("location"));
+        List<FactoryModel> factoryModels = factoryService.getAgentByBreadLocation("%" + location + "%");
         if (factoryModels == null) {
             return Responses.errorResponse("无该区域的羊场");
         }
@@ -120,7 +136,7 @@ public class FactoryResouce {
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
 
-        data.put("List", factoryModel);
+        data.put("model", factoryModel);
 
         response.setData(data);
         return response;

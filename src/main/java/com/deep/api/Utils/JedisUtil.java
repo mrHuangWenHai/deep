@@ -5,7 +5,7 @@ import redis.clients.jedis.Jedis;
 
 public class JedisUtil {
     public static Jedis jedis = new Jedis(ServiceConfiguration.redisServer, ServiceConfiguration.port);
-    public static int seconds = 60000;
+    public static int seconds = 3600;
     public static String getValue(String key) {
         return jedis.get(String.valueOf(key));
     }
@@ -18,7 +18,9 @@ public class JedisUtil {
     public static boolean doDelete(String key) {
         try {
             jedis.del(key);
+            System.out.println("Yes, it is");
         } catch (Exception e) {
+            System.out.println("Something must be wrong!");
             return false;
         }
         return true;

@@ -16,6 +16,7 @@ public class NutritionPlanModel extends NutritionPlan implements Serializable {
     private String materialWO;
     private String roughageP;
     private String roughageD;
+    private String roughageO;
     private String roughageWP;
     private String roughageWD;
     private String roughageWO;
@@ -369,4 +370,11 @@ public class NutritionPlanModel extends NutritionPlan implements Serializable {
         this.page = page;
     }
 
+    public String getRoughageO() {
+        return roughageO;
+    }
+
+    public void setRoughageO(String roughageO) {
+        this.roughageO = roughageO;
+    }
 }

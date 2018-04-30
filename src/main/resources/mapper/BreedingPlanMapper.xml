@@ -7,6 +7,7 @@
     <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
     <result column="gmt_supervised" property="gmtSupervised" jdbcType="TIMESTAMP" />
     <result column="factory_num" property="factoryNum" jdbcType="BIGINT" />
+    <result column="factory_name" property="factoryName" jdbcType="VARCHAR" />
     <result column="building" property="building" jdbcType="VARCHAR" />
     <result column="m_et_i" property="mEtI" jdbcType="VARCHAR" />
     <result column="m_et_b" property="mEtB" jdbcType="VARCHAR" />
@@ -17,13 +18,16 @@
     <result column="Prenatal_i_t" property="prenatalIT" jdbcType="TIMESTAMP" />
     <result column="cub_t" property="cubT" jdbcType="TIMESTAMP" />
     <result column="quantity" property="quantity" jdbcType="INTEGER" />
-    <result column="operator" property="operator" jdbcType="VARCHAR" />
-    <result column="professor" property="professor" jdbcType="VARCHAR" />
-    <result column="supervisor" property="supervisor" jdbcType="VARCHAR" />
+    <result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
+    <result column="professor_name" property="professorName" jdbcType="VARCHAR" />
+    <result column="supervisor_name" property="supervisorName" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="is_pass" property="isPass" jdbcType="TINYINT" />
+    <result column="ispass_check" property="ispassCheck" jdbcType="TINYINT" />
     <result column="upass_reason" property="upassReason" jdbcType="VARCHAR" />
-    <result column="is_pass1" property="isPass1" jdbcType="TINYINT" />
+    <result column="ispass_sup" property="ispassSup" jdbcType="TINYINT" />
+    <result column="operator_id" property="operatorId" jdbcType="INTEGER" />
+    <result column="professor_id" property="professorId" jdbcType="INTEGER" />
+    <result column="supervisor_id" property="supervisorId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -84,9 +88,10 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, gmt_create, gmt_modified, gmt_supervised, factory_num, building, m_et_i, m_et_b, 
-    f_et_i, f_et_b, Breeding_t, gestation_t, Prenatal_i_t, cub_t, quantity, operator, 
-    professor, supervisor, remark, is_pass, upass_reason, is_pass1
+    id, gmt_create, gmt_modified, gmt_supervised, factory_num, factory_name, building, m_et_i, m_et_b,
+    f_et_i, f_et_b, Breeding_t, gestation_t, Prenatal_i_t, cub_t, quantity, operator_name,
+    professor_name, supervisor_name, remark, ispass_check, upass_reason, ispass_sup, operator_id,
+    professor_id, supervisor_id
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.deep.domain.model.BreedingPlanExample" >
     select
@@ -118,23 +123,24 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.deep.domain.model.BreedingPlan"
-          useGeneratedKeys="true" keyProperty="id" >
+  <insert id="insert" parameterType="com.deep.domain.model.BreedingPlan" >
     insert into breeding_plan (id, gmt_create, gmt_modified,
-    gmt_supervised, factory_num, building,
+    gmt_supervised, factory_num, factory_name, building,
     m_et_i, m_et_b, f_et_i, f_et_b,
     Breeding_t, gestation_t, Prenatal_i_t,
-    cub_t, quantity, operator,
-    professor, supervisor, remark,
-    is_pass, upass_reason, is_pass1
+    cub_t, quantity, operator_name,
+    professor_name, supervisor_name, remark,
+    ispass_check, upass_reason, ispass_sup,
+    operator_id, professor_id, supervisor_id
     )
     values (#{id,jdbcType=INTEGER}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
     #{gmtSupervised,jdbcType=TIMESTAMP}, #{factoryNum,jdbcType=BIGINT}, #{building,jdbcType=VARCHAR},
     #{mEtI,jdbcType=VARCHAR}, #{mEtB,jdbcType=VARCHAR}, #{fEtI,jdbcType=VARCHAR}, #{fEtB,jdbcType=VARCHAR},
     #{breedingT,jdbcType=TIMESTAMP}, #{gestationT,jdbcType=TIMESTAMP}, #{prenatalIT,jdbcType=TIMESTAMP},
-    #{cubT,jdbcType=TIMESTAMP}, #{quantity,jdbcType=INTEGER}, #{operator,jdbcType=VARCHAR},
-    #{professor,jdbcType=VARCHAR}, #{supervisor,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
-    #{isPass,jdbcType=TINYINT}, #{upassReason,jdbcType=VARCHAR}, #{isPass1,jdbcType=TINYINT}
+    #{cubT,jdbcType=TIMESTAMP}, #{quantity,jdbcType=INTEGER}, #{operatorName,jdbcType=VARCHAR},
+    #{professorName,jdbcType=VARCHAR}, #{supervisorName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+    #{ispassCheck,jdbcType=TINYINT}, #{upassReason,jdbcType=VARCHAR}, #{ispassSup,jdbcType=TINYINT},
+    #{operatorId,jdbcType=INTEGER}, #{professorId,jdbcType=INTEGER}, #{supervisorId,jdbcType=INTEGER}
     )
   </insert>
   <insert id="insertSelective" parameterType="com.deep.domain.model.BreedingPlan" >
@@ -154,6 +160,9 @@
       </if>
       <if test="factoryNum != null" >
         factory_num,
+      </if>
+      <if test="factoryName != null" >
+        factory_name,
       </if>
       <if test="building != null" >
         building,
@@ -185,26 +194,35 @@
       <if test="quantity != null" >
         quantity,
       </if>
-      <if test="operator != null" >
-        operator,
+      <if test="operatorName != null" >
+        operator_name,
       </if>
-      <if test="professor != null" >
-        professor,
+      <if test="professorName != null" >
+        professor_name,
       </if>
-      <if test="supervisor != null" >
-        supervisor,
+      <if test="supervisorName != null" >
+        supervisor_name,
       </if>
       <if test="remark != null" >
         remark,
       </if>
-      <if test="isPass != null" >
-        is_pass,
+      <if test="ispassCheck != null" >
+        ispass_check,
       </if>
       <if test="upassReason != null" >
         upass_reason,
       </if>
-      <if test="isPass1 != null" >
-        is_pass1,
+      <if test="ispassSup != null" >
+        ispass_sup,
+      </if>
+      <if test="operatorId != null" >
+        operator_id,
+      </if>
+      <if test="professorId != null" >
+        professor_id,
+      </if>
+      <if test="supervisorId != null" >
+        supervisor_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -253,26 +271,35 @@
       <if test="quantity != null" >
         #{quantity,jdbcType=INTEGER},
       </if>
-      <if test="operator != null" >
-        #{operator,jdbcType=VARCHAR},
+      <if test="operatorName != null" >
+        #{operatorName,jdbcType=VARCHAR},
       </if>
-      <if test="professor != null" >
-        #{professor,jdbcType=VARCHAR},
+      <if test="professorName != null" >
+        #{professorName,jdbcType=VARCHAR},
       </if>
-      <if test="supervisor != null" >
-        #{supervisor,jdbcType=VARCHAR},
+      <if test="supervisorName != null" >
+        #{supervisorName,jdbcType=VARCHAR},
       </if>
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="isPass != null" >
-        #{isPass,jdbcType=TINYINT},
+      <if test="ispassCheck != null" >
+        #{ispassCheck,jdbcType=TINYINT},
       </if>
       <if test="upassReason != null" >
         #{upassReason,jdbcType=VARCHAR},
       </if>
-      <if test="isPass1 != null" >
-        #{isPass1,jdbcType=TINYINT},
+      <if test="ispassSup != null" >
+        #{ispassSup,jdbcType=TINYINT},
+      </if>
+      <if test="operatorId != null" >
+        #{operatorId,jdbcType=INTEGER},
+      </if>
+      <if test="professorId != null" >
+        #{professorId,jdbcType=INTEGER},
+      </if>
+      <if test="supervisorId != null" >
+        #{supervisorId,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -299,6 +326,9 @@
       </if>
       <if test="record.factoryNum != null" >
         factory_num = #{record.factoryNum,jdbcType=BIGINT},
+      </if>
+      <if test="record.factoryName != null" >
+        factory_name = #{record.factoryName,jdbcType=BIGINT},
       </if>
       <if test="record.building != null" >
         building = #{record.building,jdbcType=VARCHAR},
@@ -330,26 +360,35 @@
       <if test="record.quantity != null" >
         quantity = #{record.quantity,jdbcType=INTEGER},
       </if>
-      <if test="record.operator != null" >
-        operator = #{record.operator,jdbcType=VARCHAR},
+      <if test="record.operatorName != null" >
+        operator_name = #{record.operatorName,jdbcType=VARCHAR},
       </if>
-      <if test="record.professor != null" >
-        professor = #{record.professor,jdbcType=VARCHAR},
+      <if test="record.professorName != null" >
+        professor_name = #{record.professorName,jdbcType=VARCHAR},
       </if>
-      <if test="record.supervisor != null" >
-        supervisor = #{record.supervisor,jdbcType=VARCHAR},
+      <if test="record.supervisorName != null" >
+        supervisor_name = #{record.supervisorName,jdbcType=VARCHAR},
       </if>
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
-      <if test="record.isPass != null" >
-        is_pass = #{record.isPass,jdbcType=TINYINT},
+      <if test="record.ispassCheck != null" >
+        ispass_check = #{record.ispassCheck,jdbcType=TINYINT},
       </if>
       <if test="record.upassReason != null" >
         upass_reason = #{record.upassReason,jdbcType=VARCHAR},
       </if>
-      <if test="record.isPass1 != null" >
-        is_pass1 = #{record.isPass1,jdbcType=TINYINT},
+      <if test="record.ispassSup != null" >
+        ispass_sup = #{record.ispassSup,jdbcType=TINYINT},
+      </if>
+      <if test="record.operatorId != null" >
+        operator_id = #{record.operatorId,jdbcType=INTEGER},
+      </if>
+      <if test="record.professorId != null" >
+        professor_id = #{record.professorId,jdbcType=INTEGER},
+      </if>
+      <if test="record.supervisorId != null" >
+        supervisor_id = #{record.supervisorId,jdbcType=INTEGER},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -363,6 +402,7 @@
     gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
     gmt_supervised = #{record.gmtSupervised,jdbcType=TIMESTAMP},
     factory_num = #{record.factoryNum,jdbcType=BIGINT},
+    factory_name = #{record.factoryName,jdbcType=VARCHAR},
     building = #{record.building,jdbcType=VARCHAR},
     m_et_i = #{record.mEtI,jdbcType=VARCHAR},
     m_et_b = #{record.mEtB,jdbcType=VARCHAR},
@@ -373,18 +413,21 @@
     Prenatal_i_t = #{record.prenatalIT,jdbcType=TIMESTAMP},
     cub_t = #{record.cubT,jdbcType=TIMESTAMP},
     quantity = #{record.quantity,jdbcType=INTEGER},
-    operator = #{record.operator,jdbcType=VARCHAR},
-    professor = #{record.professor,jdbcType=VARCHAR},
-    supervisor = #{record.supervisor,jdbcType=VARCHAR},
+    operator_name = #{record.operatorName,jdbcType=VARCHAR},
+    professor_name = #{record.professorName,jdbcType=VARCHAR},
+    supervisor_name = #{record.supervisorName,jdbcType=VARCHAR},
     remark = #{record.remark,jdbcType=VARCHAR},
-    is_pass = #{record.isPass,jdbcType=TINYINT},
+    ispass_check = #{record.ispassCheck,jdbcType=TINYINT},
     upass_reason = #{record.upassReason,jdbcType=VARCHAR},
-    is_pass1 = #{record.isPass1,jdbcType=TINYINT}
+    ispass_sup = #{record.ispassSup,jdbcType=TINYINT},
+    operator_id = #{record.operatorId,jdbcType=INTEGER},
+    professor_id = #{record.professorId,jdbcType=INTEGER},
+    supervisor_id = #{record.supervisorId,jdbcType=INTEGER}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.deep.domain.model.BreedingPlan">
+  <update id="updateByPrimaryKeySelective" parameterType="com.deep.domain.model.BreedingPlan" >
     update breeding_plan
     <set >
       <if test="gmtCreate != null" >
@@ -396,22 +439,25 @@
       <if test="gmtSupervised != null" >
         gmt_supervised = #{gmtSupervised,jdbcType=TIMESTAMP},
       </if>
-      <if test="factoryNum != null and factoryNum != ''" >
+      <if test="factoryNum != null" >
         factory_num = #{factoryNum,jdbcType=BIGINT},
       </if>
-      <if test="building != null and building != ''" >
+      <if test="factoryName != null" >
+        factory_name = #{factoryName,jdbcType=BIGINT},
+      </if>
+      <if test="building != null" >
         building = #{building,jdbcType=VARCHAR},
       </if>
-      <if test="mEtI != null and mEtI != ''" >
+      <if test="mEtI != null" >
         m_et_i = #{mEtI,jdbcType=VARCHAR},
       </if>
-      <if test="mEtB != null and mEtB != ''" >
+      <if test="mEtB != null" >
         m_et_b = #{mEtB,jdbcType=VARCHAR},
       </if>
-      <if test="fEtI != null and fEtI != ''" >
+      <if test="fEtI != null" >
         f_et_i = #{fEtI,jdbcType=VARCHAR},
       </if>
-      <if test="fEtB != null and fEtB != ''" >
+      <if test="fEtB != null" >
         f_et_b = #{fEtB,jdbcType=VARCHAR},
       </if>
       <if test="breedingT != null" >
@@ -426,29 +472,38 @@
       <if test="cubT != null" >
         cub_t = #{cubT,jdbcType=TIMESTAMP},
       </if>
-      <if test="quantity != null and quantity != ''" >
+      <if test="quantity != null" >
         quantity = #{quantity,jdbcType=INTEGER},
       </if>
-      <if test="operator != null and operator != ''" >
-        operator = #{operator,jdbcType=VARCHAR},
+      <if test="operatorName != null" >
+        operator_name = #{operatorName,jdbcType=VARCHAR},
       </if>
-      <if test="professor != null and professor != ''" >
-        professor = #{professor,jdbcType=VARCHAR},
+      <if test="professorName != null" >
+        professor_name = #{professorName,jdbcType=VARCHAR},
       </if>
-      <if test="supervisor != null and supervisor != ''" >
-        supervisor = #{supervisor,jdbcType=VARCHAR},
+      <if test="supervisorName != null" >
+        supervisor_name = #{supervisorName,jdbcType=VARCHAR},
       </if>
-      <if test="remark != null and remark != ''" >
+      <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="isPass != null and isPass != ''" >
-        is_pass = #{isPass,jdbcType=TINYINT},
+      <if test="ispassCheck != null" >
+        ispass_check = #{ispassCheck,jdbcType=TINYINT},
       </if>
-      <if test="upassReason != null and upassReason != ''" >
+      <if test="upassReason != null" >
         upass_reason = #{upassReason,jdbcType=VARCHAR},
       </if>
-      <if test="isPass1 != null and isPass1 != ''" >
-        is_pass1 = #{isPass1,jdbcType=TINYINT},
+      <if test="ispassSup != null" >
+        ispass_sup = #{ispassSup,jdbcType=TINYINT},
+      </if>
+      <if test="operatorId != null" >
+        operator_id = #{operatorId,jdbcType=INTEGER},
+      </if>
+      <if test="professorId != null" >
+        professor_id = #{professorId,jdbcType=INTEGER},
+      </if>
+      <if test="supervisorId != null" >
+        supervisor_id = #{supervisorId,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -459,6 +514,7 @@
       gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
       gmt_supervised = #{gmtSupervised,jdbcType=TIMESTAMP},
       factory_num = #{factoryNum,jdbcType=BIGINT},
+      factory_name = #{factoryName,jdbcType=VARCHAR},
       building = #{building,jdbcType=VARCHAR},
       m_et_i = #{mEtI,jdbcType=VARCHAR},
       m_et_b = #{mEtB,jdbcType=VARCHAR},
@@ -469,13 +525,16 @@
       Prenatal_i_t = #{prenatalIT,jdbcType=TIMESTAMP},
       cub_t = #{cubT,jdbcType=TIMESTAMP},
       quantity = #{quantity,jdbcType=INTEGER},
-      operator = #{operator,jdbcType=VARCHAR},
-      professor = #{professor,jdbcType=VARCHAR},
-      supervisor = #{supervisor,jdbcType=VARCHAR},
+      operator_name = #{operatorName,jdbcType=VARCHAR},
+      professor_name = #{professorName,jdbcType=VARCHAR},
+      supervisor_name = #{supervisorName,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
-      is_pass = #{isPass,jdbcType=TINYINT},
+      ispass_check = #{ispassCheck,jdbcType=TINYINT},
       upass_reason = #{upassReason,jdbcType=VARCHAR},
-      is_pass1 = #{isPass1,jdbcType=TINYINT}
+      ispass_sup = #{ispassSup,jdbcType=TINYINT},
+      operator_id = #{operatorId,jdbcType=INTEGER},
+      professor_id = #{professorId,jdbcType=INTEGER},
+      supervisor_id = #{supervisorId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select resultMap="BaseResultMap" parameterType="com.deep.domain.model.BreedingPlanExample" id="selectByExampleWithRowbounds" >

@@ -19,8 +19,10 @@ public class FactoryService {
      * 获取所有的羊场信息
      * @return
      */
-    public List<FactoryModel> getAll() {
-        return factoryMapper.queryAllFactory();
+    public List<FactoryModel> getAll(Long start, Byte size) {
+        System.out.println(start);
+        System.out.println(size);
+        return factoryMapper.queryAllFactory(start, size);
     }
 
     /**
@@ -33,14 +35,21 @@ public class FactoryService {
     }
 
     /**
-     * 根据代理号查询所有的羊场
-
+     * 根据代理号查询所有的羊场(包括分页)
      * @param id 代理号
-
      * @return
      */
     public List<FactoryModel> getAllFactoryOfOneAgent(Long id) {
         return factoryMapper.queryFactoryByAgentID(id);
+    }
+
+    /**
+     * 根据代理号查询所有的羊场(包括分页)
+     * @param id 代理号
+     * @return
+     */
+    public List<FactoryModel> getAllFactoryOfOneAgentPage(Long id, Long start, Byte page) {
+        return factoryMapper.queryFactoryByAgentIDPage(id, start, page);
     }
 
     /**

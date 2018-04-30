@@ -143,8 +143,7 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
         permitMap.put(109, "query_permit");
     }
 
-    public boolean preHandle(HttpServletRequest request,
-                             HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         logger.info("invoke preHandle of PermitInterceptor", request, response, handler);
 
         System.out.println("this is the preHandle of PermitInterceptor");

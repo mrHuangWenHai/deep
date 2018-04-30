@@ -179,6 +179,14 @@ public class UserService {
     }
 
     /**
+     * 获取所有的用户信息
+     * @return
+     */
+    public List<UserModel> getAllWithNoCondition() {
+        return userMapper.queryAllUserNoCondition();
+    }
+
+    /**
      * 根据主键获取单个用户的信息
      */
     public UserModel getOneUser(Long id) {

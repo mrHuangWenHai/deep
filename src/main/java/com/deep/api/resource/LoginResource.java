@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.HEAD;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,7 +51,7 @@ public class LoginResource {
 
 
     /**
-     * 用户登录验证并且返回结果
+     * 用户登录验证并且返回结果, 登录有效期为3600s, 1小时
      * @param loginRequest 用户登录加的模型
      * @return0
      */
@@ -76,11 +75,13 @@ public class LoginResource {
             // 验证密码信息, 忽略大小写
             if( userModel.getUserPwd().equalsIgnoreCase(password)) {
 
-              Response response = Responses.successResponse();
-              HashMap<String, Object> data = new HashMap<>();
-              data.put("successMessage", "登录成功!");
-              data.put("id", userModel.getId());
-              data.put("role_id", userModel.getUserRole());
+                Response response = Responses.successResponse();
+                HashMap<String, Object> data = new HashMap<>();
+                data.put("successMessage", "登录成功!");
+                data.put("id", userModel.getId());
+                data.put("usernmae", userModel.getPkUserid());
+                data.put("role_id", userModel.getUserRole());
+
               if (userModel.getIsFactory() == 0) {
                 // 如果是羊场
                 FactoryModel factoryModel = factoryService.getOneFactory(userModel.getUserFactory());
@@ -212,6 +213,12 @@ public class LoginResource {
     }
 
 
+    /**
+     * 找回密码接口
+     * @param name 用户名:pkUserId
+     * @return
+     */
+
     @GetMapping(value = "/question")
     public Response requestQuestion(@RequestParam("name") String name) {
         logger.info("invoke requestQuestion{}, url is requestQuestion", name);
@@ -277,6 +284,7 @@ public class LoginResource {
         if (id == null) {
             return Responses.errorResponse("error!");
         }
+        System.out.println("this is id = " + id);
         if (!JedisUtil.doDelete(id)) {
             return Responses.errorResponse("退出登录失败, 请检查网络之后重试");
         }

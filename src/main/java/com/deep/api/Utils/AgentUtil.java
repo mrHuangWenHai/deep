@@ -86,13 +86,32 @@ public class AgentUtil {
         }
         Map<String, Object> map = new HashMap<>();
         List<AgentModel> agentModels = agentUtil.agentService.getSons(uid);
+        // -1 表示直属羊场信息
+        map.put(String.valueOf(-1), agentUtil.factoryService.getAllFactoryOfOneAgent((long)uid));
+        map.put(String.valueOf(0), agentUtil.agentService.getOneAgent((long)uid));
         if (agentModels != null) {
             for (int i = 0; i < agentModels.size(); i++) {
-                // -1 表示直属羊场信息
-                map.put(String.valueOf(-1), agentUtil.factoryService.getAllFactoryOfOneAgent((long)uid));
-                // 0 表示下层数据
-                map.put(String.valueOf(0), agentUtil.agentService.getAllSons(agentModels.get(i).getId()));
-                map.put(String.valueOf(i+1), agentModels.get(i));
+                System.out.println(""+agentModels.get(i).getId());
+                map.put(String.valueOf(i+1), getSubordinateFactory(""+agentModels.get(i).getId()));
+            }
+        }
+        return map;
+    }
+
+    public static Map<String, Object> getSubordinateFactoryID(String id) {
+        int uid = StringToLongUtil.stringToInt(id);
+        if (uid == -1) {
+            return null;
+        }
+        Map<String, Object> map = new HashMap<>();
+        List<AgentModel> agentModels = agentUtil.agentService.getSons(uid);
+        // -1 表示直属羊场信息
+        map.put(String.valueOf(-1), agentUtil.factoryService.queryFactoryIDByAgentID((long)uid));
+        map.put(String.valueOf(0), agentUtil.agentService.getOneAgent((long)uid).getId());
+        if (agentModels != null) {
+            for (int i = 0; i < agentModels.size(); i++) {
+                System.out.println(""+agentModels.get(i).getId());
+                map.put(String.valueOf(i+1), getSubordinateFactoryID(""+agentModels.get(i).getId()));
             }
         }
         return map;

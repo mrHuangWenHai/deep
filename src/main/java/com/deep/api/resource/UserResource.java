@@ -5,6 +5,10 @@ import com.deep.api.Utils.ExportExcelUtil;
 import com.deep.api.Utils.JedisUtil;
 import com.deep.api.Utils.StringToLongUtil;
 import com.deep.api.authorization.annotation.Permit;
+import com.deep.api.authorization.token.TokenManagerRealization;
+import com.deep.api.authorization.token.TokenModel;
+import com.deep.api.authorization.tools.Constants;
+import com.deep.api.request.PasswordRequest;
 import com.deep.api.response.Professor;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
@@ -15,8 +19,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.ws.rs.Path;
 import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -34,22 +40,27 @@ public class UserResource {
     @Resource
     private UserService userService;
 
+    @Resource
+    private TokenManagerRealization tokenManagerRealization;
+
     /**
      * 查找下级的所有用户列表
      * @return 返回所有的用户信息
      */
     @Permit(authorities = "query_user")
-    @GetMapping(value = "user/subordinate/{roleID}")
+//    @GetMapping(value = "user/subordinate/{roleID}")
+    @GetMapping(value = "user")
     public Response userList(@PathVariable("roleID") long roleID) {
         logger.info("invoke userList, url is user/");
-        List<UserModel> userLists = userService.getAll(roleID);
+//        List<UserModel> userLists = userService.getAll(roleID);
+        List<UserModel> userLists = userService.getAllWithNoCondition();
         if (userLists == null) {
-            return Responses.errorResponse("系统中暂时没有下级用户");
+                return Responses.errorResponse("系统中暂时没有下级用户");
         }
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
-        data.put("allUser", userLists);
-        data.put("userNumber", userLists.size());
+        data.put("List", userLists);
+        data.put("size", userLists.size());
         response.setData(data);
         return response;
     }
@@ -74,7 +85,7 @@ public class UserResource {
         }
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
-        data.put("oneUser", userModel);
+        data.put("model", userModel);
         response.setData(data);
         return response;
     }
@@ -85,20 +96,26 @@ public class UserResource {
      * @return
      */
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
-    @GetMapping(value = "user/detail/{id}")
-    public Response getUserOneDetail(@PathVariable("id") String id) {
+    @GetMapping(value = "user/detail/{username}")
+    public Response getUserOneDetail(@PathVariable("username") String id) {
         logger.info("invoke getUserOneDetail{}, url is user/detail/{id}", id);
         long uid = StringToLongUtil.stringToLong(id);
-        if (uid == -1) {
-            return Responses.errorResponse("查询错误");
+        if (uid < 0) {
+            return Responses.errorResponse("错误");
         }
         UserModel userModel = userService.getOneUser(uid);
         if (userModel == null) {
             return Responses.errorResponse("系统中该用户不存在");
         }
+
+        // 前端不需要的字段
+        userModel.setUserPermit("0");
+        userModel.setUserPwd("0");
+        userModel.setUserRole(0);
+
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
-        data.put("oneUser", userModel);
+        data.put("model", userModel);
         response.setData(data);
         return response;
     }
@@ -122,7 +139,7 @@ public class UserResource {
         }
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
-        data.put("oneUser", userModel);
+        data.put("model", userModel);
         response.setData(data);
         return response;
     }
@@ -146,9 +163,15 @@ public class UserResource {
         if (userModel == null) {
             return Responses.errorResponse("系统中不存在该用户");
         }
+
+        // 前端不需要的字段
+        userModel.setUserPermit("0");
+        userModel.setUserPwd("0");
+        userModel.setUserRole(0);
+
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
-        data.put("oneUser", userModel);
+        data.put("model", userModel);
         response.setData(data);
         return response;
     }
@@ -159,11 +182,11 @@ public class UserResource {
      * @param bindingResult
      * @return
      */
-    @PostMapping("/register")
+    @PostMapping("user/add")
     public Response addUser(@RequestBody @Valid UserModel userModel,  BindingResult bindingResult) {
         logger.info("invoke addUser{}, url is register", userModel, bindingResult);
 
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors() || userModel.getPkUserid() == null) {
             Response response = Responses.errorResponse("验证失败");
             HashMap<String, Object> data = new HashMap<>();
             data.put("errorMessage", bindingResult.getAllErrors());
@@ -181,22 +204,23 @@ public class UserResource {
             userModel.setGmtCreate(new Timestamp(System.currentTimeMillis()));
             userModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
 
-            userModel.setIsFactory((byte)0);
+
 
             if (userModel.getUserPermit() == null || userModel.getUserPermit().equals("")) {
 
                 userModel.setUserPermit("000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
             }
+
             userModel.setIsExtended((byte)0);
             userModel.setUserRole(0);
 
-            Long addID = userService.addUser(userModel);
-            if (addID <= 0) {
+            Long success = userService.addUser(userModel);
+            if (success <= 0) {
                 return Responses.errorResponse("用户信息增加失败,请检查网络后重试");
             }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("addID", addID);
+            data.put("success", success);
             response.setData(data);
             return response;
         }
@@ -211,12 +235,8 @@ public class UserResource {
      */
     @Permit(authorities = {"modify_user", "modify_expert", "modify_technician", "modify_administrator"})
     @PutMapping(value = "user/{id}")
-    public Response modifyUser(@RequestBody @Valid UserModel userModel, @PathVariable("id") String id, BindingResult bindingResult) {
-        logger.info("invoke modifyUser{}, url is user/{id}", userModel, id, bindingResult);
-        long uid = StringToLongUtil.stringToLong(id);
-        if (uid == -1) {
-            return Responses.errorResponse("查询错误");
-        }
+    public Response modifyUser(@RequestBody @Valid UserModel userModel, @PathVariable("id") String id, BindingResult bindingResult, HttpServletRequest request) {
+        logger.info("invoke modifyUser{}, url is user/{username}", userModel, id, bindingResult);
         Response response;
         if (bindingResult.hasErrors()) {
             response = Responses.errorResponse("验证失败");
@@ -225,21 +245,54 @@ public class UserResource {
             response.setData(data);
             return response;
         }
-        userModel.setId(uid);
+
+        long uid = StringToLongUtil.stringToLong(id);
+        if (uid < 0) {
+            return Responses.errorResponse("错误");
+        }
+
         UserModel user = userService.getOneUser(uid);
         //用户名不可以更改
+        userModel.setId(uid);
         userModel.setPkUserid(user.getPkUserid());
+        userModel.setUserPermit(user.getUserPermit());
+        userModel.setUserPwd(user.getUserPwd());
+        userModel.setUserRole(user.getUserRole());
         userModel.setGmtCreate(user.getGmtCreate());
         userModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
-        Long updateID = userService.updateUser(userModel);
-        if (updateID <= 0) {
+        Long success = userService.updateUser(userModel);
+        if (success <= 0) {
             return Responses.errorResponse("用户信息修改失败,请检查网络后重试");
         }
         response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
-        data.put("updateID", updateID);
+        data.put("success", success);
         response.setData(data);
         return response;
+    }
+
+    @PatchMapping(value = "/user/password/{id}")
+    public Response modifyUserPassword(@PathVariable("id") String id, @RequestBody @Valid PasswordRequest passwordRequest) {
+        long uid = StringToLongUtil.stringToLong(id);
+        if (uid < 0) {
+            return Responses.errorResponse("错误");
+        } else {
+            UserModel oldUser = userService.getOneUser(uid);
+            if (oldUser == null) {
+                return Responses.errorResponse("错误");
+            }
+            String oldPassword = oldUser.getUserPwd();
+            if (oldPassword.equals(passwordRequest.getOldPassword())) {
+                oldUser.setUserPwd(passwordRequest.getNewPassword());
+                Long success = userService.updateUser(oldUser);
+                if (success == null) {
+                    return Responses.errorResponse("修改失败");
+                }
+                return Responses.successResponse();
+            } else {
+                return Responses.errorResponse("修改失败");
+            }
+        }
     }
 
     /**
@@ -255,13 +308,13 @@ public class UserResource {
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
         }
-        Long deleteId = userService.deleteUser(uid);
-        if (deleteId <= 0) {
+        Long success = userService.deleteUser(uid);
+        if (success <= 0) {
             return Responses.errorResponse("用户信息删除失败,请检查网络后重试");
         }
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
-        data.put("deleteID", deleteId);
+        data.put("success", success);
         response.setData(data);
         return response;
     }
@@ -364,7 +417,7 @@ public class UserResource {
             } else {
                 response = Responses.successResponse();
                 Map<String, Object> data = new HashMap<>();
-                data.put("data", userLists);
+                data.put("List", userLists);
                 data.put("size", userLists.size());
                 response.setData(data);
                 return response;

@@ -8,6 +8,7 @@ import com.deep.domain.model.NoticePlan;
 import com.deep.domain.service.NoticePlanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +34,7 @@ import java.util.List;
 @RequestMapping(value = "notice")
 
 public class NoticeResource {
+
     @Resource
     private NoticePlanService noticePlanService;
 
@@ -321,7 +323,7 @@ public class NoticeResource {
 //    }
 
     /**
-     * 站内搜索接口：/searchInSite
+     * 站内搜索接口：/inSite
      * 站内搜索方法名：searchInSite()
      * 接收的参数：用户在搜索栏输入的信息（字符串）
 
@@ -329,7 +331,6 @@ public class NoticeResource {
      */
     @GetMapping(value = "/inSite")
     public Response searchInSite(@RequestParam(value = "content", defaultValue = "") String content){
-//        System.out.println("content = " + content);
         logger.info("invoke searchInSite {}, url is notice/inSite", content);
         List<NoticePlan> selectInSite = noticePlanService.selectInSite("%" + content + "%");
         if (selectInSite == null) {
@@ -356,11 +357,12 @@ public class NoticeResource {
         logger.info("invoke uploadFile, no params");
 
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
-        String filepath = "../picture/rich_text_format/";
-        List<String> path = new ArrayList<>();
+        String filepath = "/home/doubibobo/picture/";
         for (int i = 0; i < files.size(); i++) {
             MultipartFile file = files.get(i);
             String filename = file.getOriginalFilename();
+            String path = System.currentTimeMillis()+filename;
+            System.out.println(path);
             try {
                 String Header = FileUtil.getFileHeader(file);
                 System.out.println(Header);
@@ -397,20 +399,21 @@ public class NoticeResource {
             }
             if (!file.isEmpty()) {
                 try {
-                    noticePlanService.uploadFile(file.getBytes(), filepath, filename);
+                    noticePlanService.uploadFile(file.getBytes(), filepath, path);
+                    Response response = Responses.successResponse();
+                    HashMap<String, Object> data = new HashMap<>();
+                    data.put("List", "192.168.1.108:9010/picture/" + path);
+                    response.setData(data);
+                    return response;
                 } catch (Exception e) {
                     System.out.println("文件上传失败，请重新上传！");
+                    return Responses.errorResponse(e.getMessage());
                 }
             }
-            path.add(filepath+filename);
         }
-        Response response = Responses.successResponse();
-        HashMap<String, Object> data = new HashMap<>();
 
-        data.put("address",path);
+        return Responses.errorResponse("上传失败");
 
-        response.setData(data);
-        return response;
     }
 
     /**

@@ -12,7 +12,7 @@ public class UserModel {
         private Timestamp gmtModified;
 
         @NotBlank(message = "用户名不能为空!")
-        @Pattern(regexp = "^[0-9a-z]+$", message = "用户名只能由a-z以及数字组成")
+        @Pattern(regexp = "^[0-9a-zA-Z]+$", message = "用户名只能由a-z以及数字组成")
         @Size(min = 4, max = 20, message = "用户名最小长度为4, 最大长度为20")
         private String pkUserid;
 
@@ -33,8 +33,10 @@ public class UserModel {
         private String userTelephone;
 
         private String userRemark;
-        private long userFactory;
-        private long userRole;
+
+        private Long userFactory;
+
+        private Long userRole;
 
         private String userPermit;
 
@@ -58,15 +60,16 @@ public class UserModel {
 
         @NotNull(message = "必须设置密保问题3")
         private String question_3;
-        @NotNull(message = "必须设置密保问题3的答案")
+
+//        @NotNull(message = "必须设置密保问题3的答案")
         private String answer_3;
 
         @Email(message = "邮箱格式不正确")
         private String userEmail;
 
-        private String MSN;
+        private String msn;
 
-        private String QQ;
+        private String qq;
 
         @Pattern(regexp = "^$|^(\\d+|\\-){7,}$")
         private String officialPhone;
@@ -77,30 +80,37 @@ public class UserModel {
 
         public String getUserEmail() {
             return userEmail;
-
         }
 
         public void setUserEmail(String userEmail) {
             this.userEmail = userEmail;
         }
 
-        public String getMSN() {
-            return MSN;
-        }
+    public void setUserFactory(Long userFactory) {
+        this.userFactory = userFactory;
+    }
 
-        public void setMSN(String MSN) {
-            this.MSN = MSN;
-        }
+    public void setUserRole(Long userRole) {
+        this.userRole = userRole;
+    }
 
-        public String getQQ() {
-            return QQ;
-        }
+    public String getMsn() {
+        return msn;
+    }
 
-        public void setQQ(String QQ) {
-            this.QQ = QQ;
-        }
+    public void setMsn(String msn) {
+        this.msn = msn;
+    }
 
-        public String getOfficialPhone() {
+    public String getQq() {
+        return qq;
+    }
+
+    public void setQq(String qq) {
+        this.qq = qq;
+    }
+
+    public String getOfficialPhone() {
             return officialPhone;
         }
 
