@@ -4,13 +4,11 @@ package com.deep.api.resource;
 import com.deep.api.request.RepellentRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
-import com.deep.api.response.ValidResponse;
 import com.deep.domain.model.RepellentPlanModel;
 import com.deep.domain.service.FactoryService;
 import com.deep.domain.service.RepellentPlanService;
 import com.deep.domain.service.UserService;
 import com.deep.domain.util.*;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,14 +16,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.io.File;
 import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -199,6 +195,29 @@ public class RepellentPlanResource {
     }
 
     /**
+     * 前端需要传代理ID
+     * @param id 代理ID
+     * @return 查询结果
+     */
+    @RequestMapping(value = "/psfind",method = RequestMethod.GET)
+    public Response psFind(@RequestParam("id") long id,
+                           @RequestParam(value = "factoryNum",required = false)BigInteger factoryNum,
+                           @RequestParam(value = "page" , defaultValue = "0") int page,
+                           @RequestParam(value = "size" , defaultValue = "10") int size){
+        logger.info(" invoke psFind{id} {}" , id);
+        long[] factoryIDs = this.factoryService.queryFactoryIDByAgentID(id);
+        List<RepellentPlanModel> list = new ArrayList<>();
+        if (factoryNum != null ) {
+            list.addAll(repellentPlanService.getRepellentPlanModelByFactoryNum(factoryNum , new RowBounds( page * size , size)));
+        } else {
+            for (long factoryID : factoryIDs) {
+                list.addAll(repellentPlanService.getRepellentPlanModelByFactoryNum(BigInteger.valueOf(factoryID) , new RowBounds( page * size , size)));
+            }
+        }
+        return JudgeUtil.JudgeFind(list , list.size());
+    }
+
+    /**
      * 下载文件 并保存到自定义路径
      * @param response  HttpServletResponse
      * @param factoryNum  下载文件所属工厂号
@@ -221,62 +240,62 @@ public class RepellentPlanResource {
     }
 
 
-    /**
-     * 审核入口 审核isPass = 0的数据
-     * METHOD:PATCH
-     * @param repellentPlanModel 驱虫类
-     * @return 更新结果
-     */
-    @RequestMapping(value = "pupdate",method = RequestMethod.PATCH)
-    public Response professorUpdate(@RequestBody RepellentPlanModel repellentPlanModel) {
-
-        logger.info("invoke pupdate {}", repellentPlanModel);
-
-        if (repellentPlanModel.getId() == null ||
-                repellentPlanModel.getFactoryNum() == null ||
-                repellentPlanModel.getProfessor() == null ||
-                repellentPlanModel.getIspassCheck() == null ||
-                repellentPlanModel.getUnpassReason() == null) {
-            return Responses.errorResponse("Lack param");
-        } else {
-          int row = repellentPlanService.updateRepellentPlanModelByProfessor(repellentPlanModel);
-          if (row == 1) {
-            String professorKey = this.factoryService.getAgentIDByFactoryNumber(repellentPlanModel.getFactoryNum().toString()) + "_professor";
-            JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
-          }
-          return JudgeUtil.JudgeUpdate(row);
-        }
-    }
-
-
-
-    /**
-     * 监督员入口 审核isPass1 = 0的数据
-     * 审核要求:审核时要求条例写完整 审核后 isPass = 1时 无权限再修改
-     * @param repellentPlanModel 驱虫类
-     * METHOD:PATCH
-     * @return 审核结果
-     */
-
-
-    @RequestMapping(value = "supdate",method = RequestMethod.PATCH)
-    public Response SupervisorUpdate(@RequestBody RepellentPlanModel repellentPlanModel) {
-        logger.info("invoke supervisorUpdate {}", repellentPlanModel);
-
-        if( repellentPlanModel.getId() == null ||
-                repellentPlanModel.getFactoryNum() == null ||
-                repellentPlanModel.getSupervisor() == null ||
-                repellentPlanModel.getIspassSup() == null) {
-            return Responses.errorResponse("Lack Item");
-        } else {
-          int row = repellentPlanService.updateRepellentPlanModelBySupervisor(repellentPlanModel);
-          if (row == 1) {
-            String supervisorKey = repellentPlanModel.getFactoryNum().toString() + "_supervisor";
-            JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey);
-          }
-          return JudgeUtil.JudgeUpdate(row);
-        }
-    }
+//    /**
+//     * 审核入口 审核isPass = 0的数据
+//     * METHOD:PATCH
+//     * @param repellentPlanModel 驱虫类
+//     * @return 更新结果
+//     */
+//    @RequestMapping(value = "pupdate",method = RequestMethod.PATCH)
+//    public Response professorUpdate(@RequestBody RepellentPlanModel repellentPlanModel) {
+//
+//        logger.info("invoke pupdate {}", repellentPlanModel);
+//
+//        if (repellentPlanModel.getId() == null ||
+//                repellentPlanModel.getFactoryNum() == null ||
+//                repellentPlanModel.getProfessor() == null ||
+//                repellentPlanModel.getIspassCheck() == null ||
+//                repellentPlanModel.getUnpassReason() == null) {
+//            return Responses.errorResponse("Lack param");
+//        } else {
+//          int row = repellentPlanService.updateRepellentPlanModelByProfessor(repellentPlanModel);
+//          if (row == 1) {
+//            String professorKey = this.factoryService.getAgentIDByFactoryNumber(repellentPlanModel.getFactoryNum().toString()) + "_professor";
+//            JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
+//          }
+//          return JudgeUtil.JudgeUpdate(row);
+//        }
+//    }
+//
+//
+//
+//    /**
+//     * 监督员入口 审核isPass1 = 0的数据
+//     * 审核要求:审核时要求条例写完整 审核后 isPass = 1时 无权限再修改
+//     * @param repellentPlanModel 驱虫类
+//     * METHOD:PATCH
+//     * @return 审核结果
+//     */
+//
+//
+//    @RequestMapping(value = "supdate",method = RequestMethod.PATCH)
+//    public Response SupervisorUpdate(@RequestBody RepellentPlanModel repellentPlanModel) {
+//        logger.info("invoke supervisorUpdate {}", repellentPlanModel);
+//
+//        if( repellentPlanModel.getId() == null ||
+//                repellentPlanModel.getFactoryNum() == null ||
+//                repellentPlanModel.getSupervisor() == null ||
+//                repellentPlanModel.getIspassSup() == null) {
+//            return Responses.errorResponse("Lack Item");
+//        } else {
+//          int row = repellentPlanService.updateRepellentPlanModelBySupervisor(repellentPlanModel);
+//          if (row == 1) {
+//            String supervisorKey = repellentPlanModel.getFactoryNum().toString() + "_supervisor";
+//            JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey);
+//          }
+//          return JudgeUtil.JudgeUpdate(row);
+//        }
+//    }
 
 
 

@@ -2,6 +2,7 @@ package com.deep.domain.util;
 
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
+import com.deep.domain.model.EnvironmentTraceModel;
 
 import java.util.HashMap;
 
@@ -58,6 +59,7 @@ public class JudgeUtil {
      * 用于判断查询操作是否成功执行
      * 返回结果为多个对象数组
      * @param object
+     * @param size
      * @return
      */
     public static Response JudgeFind(Object object ,int size) {
@@ -67,6 +69,18 @@ public class JudgeUtil {
         return Responses.successResponse(data);
     }
 
+    /**
+     * 用于返回两个对象
+     * @param object1
+     * @param object2
+     * @return
+     */
+    public static Response JudgeFind(Object object1 ,Object object2) {
+        HashMap<String,Object> data = new HashMap<>();
+        data.put("model1",object1);
+        data.put("model2",object2);
+        return Responses.successResponse(data);
+    }
     /**
      * 用于返回成功方法
      * 内部构造HashMap
@@ -80,26 +94,5 @@ public class JudgeUtil {
         return Responses.successResponse(data);
     }
 
-    /**
-     * 用于返回成功方法
-     * 多个S->O
-     * 内部构造HashMap
-     * @param details1
-     * @param o1
-     * @param details2
-     * @param o2
-     * @param details3
-     * @param o3
-     * @return
-     */
-    public static Response JudgeSuccess(String details1,Object o1,
-                                        String details2,Object o2,
-                                        String details3,Object o3) {
-        HashMap<String,Object> data = new HashMap<>();
-        data.put(details1,o1);
-        data.put(details2,o2);
-        data.put(details3,o3);
-        return Responses.successResponse(data);
-    }
 
 }

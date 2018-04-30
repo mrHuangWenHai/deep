@@ -13,7 +13,7 @@ public class WebInterceptor implements HandlerInterceptor {
         //登录 登录结果 注册 注册结果 游客页面 不拦截
         response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        response.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET, PUT, POST, DELETE");
+        response.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET, PUT, POST, DELETE, PATCH");
         response.setHeader("Access-Control-Expose-Headers", "Authorization");
         /*if(request.getRequestURI().equals("/login") || request.getRequestURI().equals("/register") ||
                 request.getRequestURI().equals("/allfunction") ||request.getRequestURI().equals("/loginresult")||

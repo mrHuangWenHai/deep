@@ -6,6 +6,10 @@
 
     <resultMap id="DisinfectFiles" type="com.deep.domain.model.DisinfectFilesModel">
         <id property="id" column="id"/>
+        <result property="gmtCreate" column="gmt_create"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="gmtProfessor" column="gmt_professor"/>
+        <result property="gmtSupervise" column="gmt_supervise"/>
         <result property="place" column="place"/>
         <result property="factoryNum" column="factory_num"/>
         <result property="factoryName" column="factory_name"/>
@@ -20,12 +24,9 @@
         <result property="supervisor" column="supervisor"/>
         <result property="remark" column="remark"/>
         <result property="ispassCheck" column="ispass_check"/>
-        <result property="upassReason" column="upass_reason"/>
+        <result property="unpassReason" column="upass_reason"/>
         <result property="ispassSup" column="ispass_sup"/>
-        <result property="gmtCreate" column="gmt_create"/>
-        <result property="gmtModified" column="gmt_modified"/>
-        <result property="gmtProfessor" column="gmt_professor"/>
-        <result property="gmtSupervise" column="gmt_supervise"/>
+
     </resultMap>
 
     <insert id="setDisinfectFilesModel">
@@ -137,23 +138,58 @@
     </select>
 
 
+    <select id="getDisinfectFilesModelByFactoryNum" resultMap="DisinfectFiles">
+        SELECT
+        *
+        FROM
+        disinfect_files
+        WHERE
+        factory_num = #{factoryNum}
+    </select>
+
+    <select id="getDisinfectFilesModelByIsPassCheck" resultMap="DisinfectFiles">
+        SELECT
+        *
+        FROM
+        disinfect_files
+        WHERE
+        1 = 1
+        <if test="request.isPass != null and request.isPass != ''">
+            AND ispass_check = #{request.isPass}
+        </if>
+    </select>
+
+
+    <select id="getDisinfectFilesModelByIsPassSup" resultMap="DisinfectFiles">
+        SELECT
+        *
+        FROM
+        disinfect_files
+        WHERE
+        1 = 1
+        <if test="request.isPass != null and request.isPass != ''">
+            AND ispass_sup = #{request.isPass}
+        </if>
+    </select>
+
+
     <update id="updateDisinfectFilesModelByProfessor">
         UPDATE disinfect_files
-        SET  professor = #{disinfectFilesModel.professor},
-        ispass_check = #{disinfectFilesModel.ispassCheck},
-        upass_reason = #{disinfectFilesModel.unpassReason},
+        SET  professor = #{request.name},
+        ispass_check = #{request.isPass},
+        upass_reason = #{request.unpassReason},
         gmt_professor = now()
         WHERE
-        id = #{disinfectFilesModel.id} and ispass_check = 2
+        id = #{request.id} and ispass_check = 2
     </update>
 
     <update id="updateDisinfectFilesModelBySupervisor">
         UPDATE disinfect_files
-        SET  supervisor = #{disinfectFilesModel.supervisor},
-        ispass_sup = #{disinfectFilesModel.ispassSup},
+        SET  supervisor = #{request.name},
+        ispass_sup = #{request.isPass},
         gmt_supervised = now()
         WHERE
-        id = #{disinfectFilesModel.id} and ispass_sup = 2
+        id = #{request.id} and ispass_sup = 2
     </update>
 
     <update id="updateDisinfectFilesModelByOperatorName">

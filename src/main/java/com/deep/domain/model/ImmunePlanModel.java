@@ -37,6 +37,7 @@ public class ImmunePlanModel {
     private String gmtProfessor;    //技术审核时间 可空
     private String gmtSupervise;    //监督审核时间 可空
 
+
     public Long getId() {
         return id;
     }

@@ -10,20 +10,19 @@ import java.math.BigInteger;
 public class DisinfectFilesModel {
 
     private Long id;      //id
-
+    @NotBlank
+    private String place;
     @Min(0)
     private BigInteger factoryNum;
     @NotBlank
     private String factoryName;
     private String disinfectEartag;
     @NotBlank
-    private String place;
-    @NotBlank
     private String disinfectTime;     //消毒时间
     @NotBlank
     private String disinfectName;     //消毒药品名称
     @NotBlank
-    private String  dose;    //用药剂量
+    private String dose;    //用药剂量
     @NotBlank
     private String disinfectWay;     //消毒方法
     @Min(0)
@@ -40,6 +39,8 @@ public class DisinfectFilesModel {
     private String gmtModified;     //修改时间
     private String gmtProfessor;     //审核时间 可空
     private String gmtSupervise;     //监督确认时间 可空
+
+
 
 
     public Long getId() {

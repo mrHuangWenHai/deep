@@ -2,8 +2,11 @@ package com.deep.domain.service;
 
 
 import com.deep.api.request.ImmuneRequest;
+import com.deep.api.request.ModuleFindRequest;
+import com.deep.api.request.ModuleUpdateRequest;
 import com.deep.domain.model.ImmunePlanModel;
 import com.deep.infra.persistence.sql.mapper.ImmunePlanMapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
@@ -30,13 +33,26 @@ public class ImmunePlanService {
         return this.immunePlanMapper.getImmunePlanModelById(id);
     }
 
-    public int updateImmunePlanModelByProfessor(ImmunePlanModel immunePlanModel) {
-        return this.immunePlanMapper.updateImmunePlanModelByProfessor(immunePlanModel);
+    public List<ImmunePlanModel> getImmunePlanModelByFactoryNum(BigInteger factoryNum , RowBounds bounds){
+        return this.immunePlanMapper.getImmunePlanModelByFactoryNum(factoryNum , bounds);
     }
 
-    public int updateImmunePlanModelBySupervisor(ImmunePlanModel immunePlanModel){
-        return this.immunePlanMapper.updateImmunePlanModelBySupervisor(immunePlanModel);
+    public List<ImmunePlanModel> getImmunePlanModelByIsPassCheck(ModuleFindRequest  request , RowBounds bounds){
+        return this.immunePlanMapper.getImmunePlanModelByIsPassCheck(request , bounds);
     }
+
+    public List<ImmunePlanModel> getImmunePlanModelByIsPassSup(ModuleFindRequest request , RowBounds bounds){
+        return this.immunePlanMapper.getImmunePlanModelByIsPassSup(request , bounds);
+    }
+
+    public int updateImmunePlanModelByProfessor(ModuleUpdateRequest request){
+        return this.immunePlanMapper.updateImmunePlanModelByProfessor(request);
+    }
+
+    public int updateImmunePlanModelBySupervisor(ModuleUpdateRequest request){
+        return this.immunePlanMapper.updateImmunePlanModelBySupervisor(request);
+    }
+
 
     public int updateImmunePlanModelByOperator(ImmunePlanModel immunePlanModel){
         return this.immunePlanMapper.updateImmunePlanModelByOperator(immunePlanModel);

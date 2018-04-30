@@ -38,13 +38,8 @@
         <mapper resource="mapper/GenealogicalFilesTransMapper.xml"/>
         <mapper resource="mapper/DisinfectionArchivesMapper.xml" />
         <mapper resource="mapper/OperationFileMapper.xml" />
-        <mapper resource="mapper/CO2DataMapper.xml"/>
-        <mapper resource="mapper/HumDataMapper.xml"/>
-        <mapper resource="mapper/NH3DataMapper.xml"/>
-        <mapper resource="mapper/TempDataMapper.xml"/>
         <mapper resource="mapper/TypeBriefMapper.xml"/>
-        <mapper resource="mapper/EnvironmentMapper.xml"/>
-
+        <mapper resource="mapper/EnvironmentTraceMapper.xml"/>
     </mappers>
 </configuration>
 

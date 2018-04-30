@@ -37,6 +37,7 @@ public class RepellentPlanModel {
     private String gmtProfessor;
     private String gmtSupervise;
 
+
     public Long getId() {
         return id;
     }

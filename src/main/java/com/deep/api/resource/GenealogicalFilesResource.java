@@ -159,8 +159,8 @@ public class GenealogicalFilesResource {
      * @param size  条数
      * @return  查询结果
      */
-     @RequestMapping(value = "find/{id}")
-     public Response findGenealogicalFiles(@NotNull @PathVariable(value = "id") long factoryNum,
+     @RequestMapping(value = "find",method = RequestMethod.GET)
+     public Response findGenealogicalFiles(@NotNull @RequestParam(value = "factoryNum") long factoryNum,
                                            @RequestParam(value = "page", defaultValue = "0") int page,
                                            @RequestParam(value = "size", defaultValue = "10") int size) {
          if (page < 0 || size < 0) {

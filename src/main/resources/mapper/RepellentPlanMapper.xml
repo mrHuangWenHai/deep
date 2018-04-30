@@ -136,23 +136,59 @@
         id = #{id}
     </select>
 
+    <select id="getRepellentPlanModelByFactoryNum" resultMap="RepellentPlan">
+        SELECT
+        *
+        FROM
+        repellent_plan
+        WHERE
+        factory_num = #{factoryNum}
+    </select>
+
+
+    <select id="getRepellentPlanModelByIsPassCheck" resultMap="RepellentPlan">
+        SELECT
+        *
+        FROM
+        repellent_plan
+        WHERE
+        1 = 1
+        <if test="request.isPass != null and request.isPass != ''">
+            AND ispass_check = #{request.isPass}
+        </if>
+    </select>
+
+
+    <select id="getRepellentPlanModelByIsPassSup" resultMap="RepellentPlan">
+        SELECT
+        *
+        FROM
+        repellent_plan
+        WHERE
+        1 = 1
+        <if test="request.isPass != null and request.isPass != ''">
+            AND ispass_sup = #{request.isPass}
+        </if>
+    </select>
+
+
     <update id="updateRepellentPlanModelByProfessor" >
         UPDATE repellent_plan
-        SET  professor = #{repellentPlanModel.professor},
-        ispass_check = #{repellentPlanModel.ispassCheck},
-        upass_reason = #{repellentPlanModel.unpassReason},
+        SET  professor = #{request.name},
+        ispass_check = #{request.isPass},
+        upass_reason = #{request.unpassReason},
         gmt_professor = now()
         WHERE
-        id = #{repellentPlanModel.id} and ispass_check = 2
+        id = #{request.id} and ispass_check = 2
     </update>
 
     <update id="updateRepellentPlanModelBySupervisor" >
         UPDATE repellent_plan
-        SET  supervisor = #{repellentPlanModel.supervisor},
-        ispass_sup = #{repellentPlanModel.ispassSup},
+        SET  supervisor = #{request.name},
+        ispass_sup = #{request.isPass},
         gmt_supervised = now()
         WHERE
-        id = #{repellentPlanModel.id} and ispass_sup = 2
+        id = #{request.id} and ispass_sup = 2
     </update>
 
     <update id="updateRepellentPlanModelByOperator">
