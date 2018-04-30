@@ -34,6 +34,13 @@ public class ImmunePlanService {
         return this.immunePlanMapper.getImmunePlanModelByFactoryNum(factoryNum , bounds);
     }
 
+    public List<ImmunePlanModel> getImmunePlanModelByFactoryNumAndIsPassCheck(BigInteger factoryNum , String ispassCheck, RowBounds bounds){
+        return this.immunePlanMapper.getImmunePlanModelByFactoryNumAndIsPassCheck(factoryNum , ispassCheck, bounds);
+    }
+
+    public List<ImmunePlanModel> getImmunePlanModelByFactoryNumAndIsPassSup(BigInteger factoryNum , String ispassSup, RowBounds bounds){
+        return this.immunePlanMapper.getImmunePlanModelByFactoryNumAndIsPassSup(factoryNum , ispassSup, bounds);
+    }
 
 
     public int updateImmunePlanModelByProfessor(ImmunePlanModel immunePlanModel){

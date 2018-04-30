@@ -32,6 +32,14 @@ public class DisinfectFilesService {
         return this.disinfectFilesMapper.getDisinfectFilesModelByFactoryNum(factoryNum,bounds);
     }
 
+    public List<DisinfectFilesModel> getDisinfectFilesModelByFactoryNumAndIsPassCheck(BigInteger factoryNum, String ispassCheck, RowBounds bounds){
+        return this.disinfectFilesMapper.getDisinfectFilesModelByFactoryNumAndIsPassCheck(factoryNum, ispassCheck, bounds);
+    }
+
+    public List<DisinfectFilesModel> getDisinfectFilesModelByFactoryNumAndIsPassSup(BigInteger factoryNum, String ispassSup, RowBounds bounds){
+        return this.disinfectFilesMapper.getDisinfectFilesModelByFactoryNumAndIsPassSup(factoryNum, ispassSup, bounds);
+    }
+
 
     public int updateDisinfectFilesModelByProfessor(DisinfectFilesModel disinfectFilesModel){
         return this.disinfectFilesMapper.updateDisinfectFilesModelByProfessor(disinfectFilesModel);

@@ -1,5 +1,6 @@
 package com.deep.api.resource;
 
+import com.deep.api.Utils.AgentUtil;
 import com.deep.api.request.DisinfectRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
@@ -204,29 +205,61 @@ public class DisinfectFilesResource {
 
 
     /**
-     * 查看某专家/监督员负责的工厂
-     * 前端需要传代理ID
-     * @param id 代理ID
+     * 查看某专家负责的工厂
+     * @param agentId 代理ID
+     * @param factoryNum 工厂号
+     * @param page 页号
+     * @param size 页数
      * @return 查询结果
      */
-    @RequestMapping(value = "/psfind",method = RequestMethod.GET)
-    public Response psFind(@RequestParam("id") Long id,
+    @RequestMapping(value = "/professor",method = RequestMethod.GET)
+    public Response pFind(@RequestParam("agentId") Long agentId,
                            @RequestParam(value = "factoryNum",required = false)BigInteger factoryNum,
+                           @RequestParam(value = "ispassCheck",required = false)String ispassCheck,
                            @RequestParam(value = "page" , defaultValue = "0") int page,
                            @RequestParam(value = "size" , defaultValue = "10") int size){
-        logger.info(" invoke psFind{id} {}" , id);
-
-        long[] factoryIDs = this.factoryService.queryFactoryIDByAgentID(id);
+        logger.info(" invoke pFind{agentId, factoryNum, ispassCheck ,page ,size} {}" , agentId, factoryNum, ispassCheck, page ,size);
         List<DisinfectFilesModel> list = new ArrayList<>();
-        if (factoryNum != null ) {
-            list.addAll(disinfectFilesService.getDisinfectFilesModelByFactoryNum(factoryNum, new RowBounds(page * size , size)));
-        } else {
-            for (long factoryID : factoryIDs) {
-                list.addAll(disinfectFilesService.getDisinfectFilesModelByFactoryNum(BigInteger.valueOf(factoryID) , new RowBounds(page * size , size)));
+        if (factoryNum == null){
+            //未指定factoryNum 查询出负责的所有的factoryID
+            long[] factoryId = AgentUtil.getFactory(agentId.toString());
+            if (factoryId == null){
+                return Responses.errorResponse("find no factory");
             }
+
+
+            for (long factory : factoryId){
+                list.addAll(this.disinfectFilesService.getDisinfectFilesModelByFactoryNumAndIsPassCheck(BigInteger.valueOf(factory), ispassCheck, new RowBounds(page * size ,size)));
+            }
+            return JudgeUtil.JudgeFind(list , list.size());
+            //指定查询的factoryNum
+        } else {
+            list.addAll(this.disinfectFilesService.getDisinfectFilesModelByFactoryNumAndIsPassCheck(factoryNum, ispassCheck, new RowBounds(page * size ,size)));
+            return JudgeUtil.JudgeFind(list , list.size());
         }
-        return JudgeUtil.JudgeFind(list , list.size());
+
     }
+
+    /**
+     * 查看某监督员负责的工厂
+     * @param factoryNum 工厂号
+     * @param ispassSup  审核
+     * @param page  页
+     * @param size  条
+     * @return  查询结果
+     */
+    @RequestMapping(value = "/supervisor",method = RequestMethod.GET)
+    public Response sFind(@RequestParam(value = "factoryNum")BigInteger factoryNum,
+                          @RequestParam(value = "ispassSup",required = false)String ispassSup,
+                          @RequestParam(value = "page" , defaultValue = "0") int page,
+                          @RequestParam(value = "size" , defaultValue = "10") int size){
+        logger.info(" invoke sFind{factoryNum, ispassSup, page, size } {}" , factoryNum, ispassSup, page ,size);
+        List<DisinfectFilesModel> list = this.disinfectFilesService.getDisinfectFilesModelByFactoryNumAndIsPassSup(factoryNum, ispassSup, new RowBounds(page * size , size));
+        return JudgeUtil.JudgeFind(list, list.size());
+    }
+
+
+
 
 
     /**
@@ -260,7 +293,7 @@ public class DisinfectFilesResource {
      * @param disinfectFilesModel 消毒类
      * @return 更新结果
      */
-    @RequestMapping(value = "pupdate",method = RequestMethod.PATCH)
+    @RequestMapping(value = "/professor/select",method = RequestMethod.PATCH)
     public Response professorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel) {
 
         logger.info("invoke professorUpdate {}", disinfectFilesModel);
@@ -290,7 +323,7 @@ public class DisinfectFilesResource {
      * METHOD:PATCH
      * @return 审核结果
      */
-    @RequestMapping(value = "supdate",method = RequestMethod.PATCH)
+    @RequestMapping(value = "/supervisor/select",method = RequestMethod.PATCH)
     public Response supervisorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel){
         logger.info("invoke supervisorUpdate {}", disinfectFilesModel);
         if(disinfectFilesModel.getId() == null ||

@@ -22,6 +22,14 @@ public interface ImmunePlanMapper {
 
     List<ImmunePlanModel> getImmunePlanModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum , RowBounds bounds);
 
+    List<ImmunePlanModel> getImmunePlanModelByFactoryNumAndIsPassCheck(@Param("factoryNum")BigInteger factoryNum ,
+                                                                       @Param("ispassCheck")String ispassCheck,
+                                                                       RowBounds bounds);
+
+    List<ImmunePlanModel> getImmunePlanModelByFactoryNumAndIsPassSup(@Param("factoryNum")BigInteger factoryNum ,
+                                                                     @Param("ispassSup")String ispassSup,
+                                                                     RowBounds bounds);
+
     int updateImmunePlanModelByProfessor(@Param("immunePlanModel") ImmunePlanModel immunePlanModel);
 
     int updateImmunePlanModelBySupervisor(@Param("immunePlanModel") ImmunePlanModel immunePlanModel);

@@ -158,6 +158,29 @@
         factory_num = #{factoryNum}
     </select>
 
+    <select id="getImmunePlanModelByFactoryNumAndIsPassCheck" resultMap="ImmunePlan">
+        SELECT
+        *
+        FROM
+        immune_plan
+        WHERE
+        factory_num = #{factoryNum}
+        <if test="ispassCheck != null and ispassCheck != ''">
+            AND ispass_check = #{ispassCheck}
+        </if>
+    </select>
+
+    <select id="getImmunePlanModelByFactoryNumAndIsPassSup" resultMap="ImmunePlan">
+        SELECT
+        *
+        FROM
+        immune_plan
+        WHERE
+        factory_num = #{factoryNum}
+        <if test="ispassSup != null and ispassSup != ''">
+            AND ispass_sup = #{ispassSup}
+        </if>
+    </select>
 
     <update id="updateImmunePlanModelByProfessor" >
         UPDATE immune_plan

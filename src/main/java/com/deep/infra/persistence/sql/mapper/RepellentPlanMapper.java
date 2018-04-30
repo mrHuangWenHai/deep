@@ -23,6 +23,14 @@ public interface RepellentPlanMapper {
 
     List<RepellentPlanModel> getRepellentPlanModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum , RowBounds bounds);
 
+    List<RepellentPlanModel> getRepellentPlanModelByFactoryNumAndIsPassCheck(@Param("factoryNum")BigInteger factoryNum ,
+                                                                             @Param("ispassCheck")String ispassCheck,
+                                                                             RowBounds bounds);
+
+    List<RepellentPlanModel> getRepellentPlanModelByFactoryNumAndIsPassSup(@Param("factoryNum")BigInteger factoryNum ,
+                                                                           @Param("ispassSup")String ispassSup,
+                                                                           RowBounds bounds);
+
     int updateRepellentPlanModelByProfessor(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel);
 
     int updateRepellentPlanModelBySupervisor(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel);

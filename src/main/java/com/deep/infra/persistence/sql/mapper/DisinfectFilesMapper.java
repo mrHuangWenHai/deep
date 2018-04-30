@@ -21,6 +21,13 @@ public interface DisinfectFilesMapper {
 
     List<DisinfectFilesModel> getDisinfectFilesModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum , RowBounds bounds);
 
+    List<DisinfectFilesModel> getDisinfectFilesModelByFactoryNumAndIsPassCheck(@Param("factoryNum")BigInteger factoryNum,
+                                                                               @Param("ispassCheck")String ispassCheck,
+                                                                               RowBounds bounds);
+
+    List<DisinfectFilesModel> getDisinfectFilesModelByFactoryNumAndIsPassSup(@Param("factoryNum")BigInteger factoryNum,
+                                                                             @Param("ispassSup")String ispassSup,
+                                                                             RowBounds bounds);
 
     int updateDisinfectFilesModelByProfessor(@Param("disinfectFilesModel") DisinfectFilesModel disinfectFilesModel);
 

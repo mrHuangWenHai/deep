@@ -34,6 +34,13 @@ public class RepellentPlanService {
     }
 
 
+    public List<RepellentPlanModel> getRepellentPlanModelByFactoryNumAndIsPassCheck(BigInteger factoryNum , String ispassCheck, RowBounds bounds){
+        return this.repellentPlanMapper.getRepellentPlanModelByFactoryNumAndIsPassCheck(factoryNum, ispassCheck, bounds);
+    }
+
+    public List<RepellentPlanModel> getRepellentPlanModelByFactoryNumAndIsPassSup(BigInteger factoryNum ,String ispassSup, RowBounds bounds){
+        return this.repellentPlanMapper.getRepellentPlanModelByFactoryNumAndIsPassSup(factoryNum, ispassSup, bounds);
+    }
 
     public int updateRepellentPlanModelByProfessor(RepellentPlanModel repellentPlanModel){
         return this.repellentPlanMapper.updateRepellentPlanModelByProfessor(repellentPlanModel);
