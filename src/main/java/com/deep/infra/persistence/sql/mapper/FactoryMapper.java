@@ -19,6 +19,7 @@ public interface FactoryMapper {
             @Result(property = "pkNumber", column = "pk_number"),
             @Result(property = "breedName", column = "breed_name"),
             @Result(property = "breedLocation", column = "breed_location"),
+            @Result(property = "breedLocationDetail", column = "breed_location_detail"),
             @Result(property = "createTime", column = "create_time"),
             @Result(property = "responsiblePersonId", column = "responsible_person_id"),
             @Result(property = "responsiblePersonName", column = "responsible_person_name"),
@@ -41,6 +42,7 @@ public interface FactoryMapper {
             @Result(property = "pkNumber", column = "pk_number"),
             @Result(property = "breedName", column = "breed_name"),
             @Result(property = "breedLocation", column = "breed_location"),
+            @Result(property = "breedLocationDetail", column = "breed_location_detail"),
             @Result(property = "createTime", column = "create_time"),
             @Result(property = "responsiblePersonId", column = "responsible_person_id"),
             @Result(property = "responsiblePersonName", column = "responsible_person_name"),
@@ -56,7 +58,7 @@ public interface FactoryMapper {
      * @param id
      * @return
      */
-    @Select("select * from factory_manage where agent = #{agent} limit #{start}, #{size}")
+    @Select("select * from factory_manage where agent = #{agent}")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "gmtCreate", column = "gmt_create"),
@@ -64,6 +66,7 @@ public interface FactoryMapper {
             @Result(property = "pkNumber", column = "pk_number"),
             @Result(property = "breedName", column = "breed_name"),
             @Result(property = "breedLocation", column = "breed_location"),
+            @Result(property = "breedLocationDetail", column = "breed_location_detail"),
             @Result(property = "createTime", column = "create_time"),
             @Result(property = "responsiblePersonId", column = "responsible_person_id"),
             @Result(property = "responsiblePersonName", column = "responsible_person_name"),
@@ -99,6 +102,7 @@ public interface FactoryMapper {
             @Result(property = "pkNumber", column = "pk_number"),
             @Result(property = "breedName", column = "breed_name"),
             @Result(property = "breedLocation", column = "breed_location"),
+            @Result(property = "breedLocationDetail", column = "breed_location_detail"),
             @Result(property = "createTime", column = "create_time"),
             @Result(property = "responsiblePersonId", column = "responsible_person_id"),
             @Result(property = "responsiblePersonName", column = "responsible_person_name"),
@@ -132,6 +136,7 @@ public interface FactoryMapper {
             @Result(property = "pkNumber", column = "pk_number"),
             @Result(property = "breedName", column = "breed_name"),
             @Result(property = "breedLocation", column = "breed_location"),
+            @Result(property = "breedLocationDetail", column = "breed_location_detail"),
             @Result(property = "createTime", column = "create_time"),
             @Result(property = "responsiblePersonId", column = "responsible_person_id"),
             @Result(property = "responsiblePersonName", column = "responsible_person_name"),
@@ -152,6 +157,7 @@ public interface FactoryMapper {
             "pk_number," +
             "breed_name," +
             "breed_location," +
+            "breed_location_detail," +
             "create_time," +
             "responsible_person_id," +
             "responsible_person_name," +
@@ -164,6 +170,7 @@ public interface FactoryMapper {
             "#{pkNumber}, " +
             "#{breedName}, " +
             "#{breedLocation}, " +
+            "#{breedLocationDetail}, " +
             "#{createTime}, " +
             "#{responsiblePersonId}, " +
             "#{responsiblePersonName}, " +
@@ -182,7 +189,8 @@ public interface FactoryMapper {
             "gmt_modified = #{gmtModified}, " +
             "pk_number = #{pkNumber}, " +
             "breed_name = #{breedName}, " +
-            "breed_location = #{breedLocation}, " +
+            "breed_location = #{breedLocation}," +
+            "breed_location_detail = #{breedLocationDetail}, " +
             "create_time = #{createTime}, " +
             "responsible_person_id = #{responsiblePersonId}, " +
             "responsible_person_name = #{responsiblePersonName}, " +

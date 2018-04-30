@@ -18,6 +18,9 @@ public class FactoryModel {
     @NotBlank(message = "不能为空")
     private String breedLocation;
 
+    @NotBlank(message = "不能为空")
+    private String breedLocationDetail;
+
     private Timestamp createTime;
 
     @Min(value = -1, message = "负责人错误")
@@ -33,6 +36,13 @@ public class FactoryModel {
     @Min(value = -1, message = "代理号错误")
     private Short agent;
 
+    public String getBreedLocationDetail() {
+        return breedLocationDetail;
+    }
+
+    public void setBreedLocationDetail(String breedLocationDetail) {
+        this.breedLocationDetail = breedLocationDetail;
+    }
 
     public Timestamp getGmtCreate() {
         return gmtCreate;

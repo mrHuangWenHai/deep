@@ -32,7 +32,7 @@ public class AgentResource {
      * @return
      */
     @Permit(authorities = "query_agent")
-    @GetMapping(value = "/")
+    @GetMapping(value = "")
     public Response agentLists() {
         logger.info("invoke agentLists, url is agent/");
         List<AgentModel> agents = agentService.getAll();
@@ -41,8 +41,8 @@ public class AgentResource {
         }
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
-        data.put("allAgent", agents);
-        data.put("number", agents.size());
+        data.put("List", agents);
+        data.put("size", agents.size());
         response.setData(data);
         return response;
     }
@@ -66,7 +66,7 @@ public class AgentResource {
         }
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
-        data.put("oneAgent", agentModel);
+        data.put("model", agentModel);
         response.setData(data);
         return response;
     }
@@ -101,7 +101,7 @@ public class AgentResource {
      * @return
      */
     @Permit(authorities = "add_agent")
-    @PostMapping(value = "/add")
+    @PostMapping(value = "")
     public Response addOne(@Valid @RequestBody AgentModel agentModel, BindingResult bindingResult) {
         logger.info("invoke addOne{}, url is agent/add", agentModel);
         if (bindingResult.hasErrors())  {
@@ -115,7 +115,7 @@ public class AgentResource {
             }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("oneAgent", addID);
+            data.put("success", addID);
             response.setData(data);
             return response;
         }
