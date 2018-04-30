@@ -27,15 +27,19 @@ public class OperationFileResource {
   @Resource
   private OperationFileService operationFileService;
 
-  @RequestMapping(value = "/add", method = RequestMethod.POST)
+  @PostMapping(value = "")
   Response addOperationFile(@Valid @RequestBody OperationFile operationFile,
                             BindingResult bindingResult) {
 
     if (bindingResult.hasErrors()) {
-      return Responses.errorResponse("param is invalid");
+      Response response = Responses.errorResponse("param is error");
+      Map<String, Object> map = new HashMap<String, Object>();
+      map.put("param",bindingResult.getAllErrors());
+      response.setData(map);
+      return response;
     }
 
-    logger.info("/of/add {}",operationFile);
+    logger.info("invoke Post /of {}",operationFile);
     try {
       int isSuccess  = operationFileService.addOperationFile(operationFile);
       if (isSuccess == 1) {
@@ -53,14 +57,14 @@ public class OperationFileResource {
     }
   }
 
-  @RequestMapping(value = "/find", method = RequestMethod.POST)
-  Response getOperationFile(@RequestBody OperationCoditionRequest operationCoditionRequest) {
-    logger.info("/of/find {}",operationCoditionRequest);
+  @GetMapping(value = "")
+  Response getOperationFile(OperationCoditionRequest operationCoditionRequest) {
+    logger.info("invoke Get /of {}",operationCoditionRequest);
     try {
       List<OperationFile> list = operationFileService.getOperationFile(operationCoditionRequest);
       Map<String, Object> data = new HashMap<>();
-      data.put("count",data.size());
-      data.put("data",list);
+      data.put("size",data.size());
+      data.put("List",list);
       Response response = Responses.successResponse();
       response.setData(data);
       return response;
@@ -69,13 +73,14 @@ public class OperationFileResource {
     }
   }
 
-  @RequestMapping(value = "/set", method = RequestMethod.PATCH)
-  Response setCheckStatus(@RequestBody Map<String, Integer> json) {
+ // @RequestMapping(value = "/set", method = RequestMethod.PATCH)
+  @PatchMapping(value = "/{id}")
+  Response setCheckStatus(@PathVariable(value = "id")int id,
+                          @RequestBody Map<String, Integer> json) {
 
-    if (!json.containsKey("id") || !json.containsKey("checkStatus")) {
-      return Responses.errorResponse("lock param");
+    if (!json.containsKey("checkStatus")) {
+      return Responses.errorResponse("lock param checkStatus");
     }
-    int id = json.get("id").intValue();
     short checkStatus = json.get("checkStatus").shortValue();
     if (id < 0 || checkStatus < 0 || checkStatus > 2) {
       return Responses.errorResponse("param is invalid");

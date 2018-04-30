@@ -15,11 +15,11 @@ public class OperationCoditionRequest {
   @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
   private Timestamp checkTime;
 
-  public int getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 

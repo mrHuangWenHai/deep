@@ -1,43 +1,43 @@
 package com.deep.infra.persistence.sql.mapper;
 
-import com.deep.domain.model.DiagnosisPlan;
-import com.deep.domain.model.DiagnosisPlanExample;
-import com.deep.domain.model.DiagnosisPlanWithBLOBs;
+import com.deep.api.request.DiagnosisRequest;
+import com.deep.domain.model.DiagnosisPlanModel;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
-
 import java.util.List;
 
+@Mapper
 public interface DiagnosisPlanMapper {
-    int countByExample(DiagnosisPlanExample example);
 
-    int deleteByExample(DiagnosisPlanExample example);
+
+
 
     int deleteByPrimaryKey(Integer id);
 
-    int insert(DiagnosisPlanWithBLOBs record);
+    int insert(@Param("diagnosisPlanModel") DiagnosisPlanModel diagnosisPlanModel);
 
-    int insertSelective(DiagnosisPlanWithBLOBs record);
 
-    List<DiagnosisPlanWithBLOBs> selectByExampleWithBLOBsWithRowbounds(DiagnosisPlanExample example, RowBounds rowBounds);
+    List<DiagnosisPlanModel> selectDiagnosisPlanModelByDiagnosisRequest(@Param("diagnosisRequest") DiagnosisRequest diagnosisRequest,
+                                                                        RowBounds rowBounds);
 
-    List<DiagnosisPlanWithBLOBs> selectByExampleWithBLOBs(DiagnosisPlanExample example);
+    DiagnosisPlanModel selectByPrimaryKey(@Param("id") Integer id);
 
-    List<DiagnosisPlan> selectByExampleWithRowbounds(DiagnosisPlanExample example, RowBounds rowBounds);
+    List<DiagnosisPlanModel> professorFindPlan(long factoryNum,
+                                             int ispassSup,
+                                             RowBounds rowBounds);
 
-    List<DiagnosisPlan> selectByExample(DiagnosisPlanExample example);
+    int checkDiagnosisPlanModelById(@Param("id") int id,
+                                    @Param("ispassCheck") short ispassCheck,
+                                    @Param("professorId") int professorId);
 
-    DiagnosisPlanWithBLOBs selectByPrimaryKey(Integer id);
+    int supCheckDiagnosisPlanModelById(@Param("id") int id,
+                                       @Param("ispassSup") short ispassSup,
+                                       @Param("upassReason") String upassReason);
 
-    int updateByExampleSelective(@Param("record") DiagnosisPlanWithBLOBs record, @Param("example") DiagnosisPlanExample example);
+    int updateDiagnosisPlanModel(@Param("diagnosisPlanModel") DiagnosisPlanModel diagnosisPlanModel);
 
-    int updateByExampleWithBLOBs(@Param("record") DiagnosisPlanWithBLOBs record, @Param("example") DiagnosisPlanExample example);
 
-    int updateByExample(@Param("record") DiagnosisPlan record, @Param("example") DiagnosisPlanExample example);
 
-    int updateByPrimaryKeySelective(DiagnosisPlanWithBLOBs record);
 
-    int updateByPrimaryKeyWithBLOBs(DiagnosisPlanWithBLOBs record);
-
-    int updateByPrimaryKey(DiagnosisPlan record);
 }

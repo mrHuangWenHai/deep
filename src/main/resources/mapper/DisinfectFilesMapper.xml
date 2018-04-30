@@ -197,7 +197,6 @@
         UPDATE disinfect_files
         SET  professor = #{disinfectFilesModel.professor},
         ispass_check = #{disinfectFilesModel.ispassCheck},
-        upass_reason = #{disinfectFilesModel.unpassReason},
         gmt_professor = now()
         WHERE
         id = #{disinfectFilesModel.id} and ispass_check = 2

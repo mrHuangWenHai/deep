@@ -99,8 +99,6 @@ public class DisinfectFilesResource {
                     JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
                     JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
 
-
-
                     System.out.println("插入后,审核前");
                     System.out.println("pk+"+professorKey+" "+"pv:"+JedisUtil.getCertainKeyValue(professorKey));
                     System.out.println("sk+"+supervisorKey+" "+"sv:"+JedisUtil.getCertainKeyValue(supervisorKey));

@@ -22,31 +22,31 @@ public class OperationFile {
   @NotNull
   @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
   private Timestamp checkTime;
-
+  @NotNull
   private Boolean colonyHouse;
-
+  @NotNull
   private Boolean warehouseWorkshop;
-
+  @NotNull
   private Boolean killWormDeratization;
-
+  @NotNull
   private Boolean sterilizingRoom;
-
+  @NotNull
   private Boolean operation;
-
+  @NotNull
   private Boolean needleSheep;
-
+  @NotNull
   private Boolean vaccine;
-
+  @NotNull
   private Boolean safetyProtection;
-
+  @NotNull
   private Boolean rubbishWater;
-
+  @NotNull
   private Boolean operationSpecification;
-
+  @NotNull
   private Boolean airTemperature;
-
+  @NotNull
   private Boolean exerciseDaylighting;
-
+  @NotNull
   private Boolean carDisinfect;
   @Min(0)
   private int operatorId;
