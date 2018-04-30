@@ -234,6 +234,7 @@ public class DisinfectFilesResource {
             return JudgeUtil.JudgeFind(list , list.size());
             //指定查询的factoryNum
         } else {
+            System.out.println("11");
             list.addAll(this.disinfectFilesService.getDisinfectFilesModelByFactoryNumAndIsPassCheck(factoryNum, ispassCheck, new RowBounds(page * size ,size)));
             return JudgeUtil.JudgeFind(list , list.size());
         }
