@@ -17,6 +17,8 @@ public class NutritionPlanWithBLOBs extends NutritionPlan implements Serializabl
 
     private String roughageD;
 
+    private String roughageO;
+
     private String roughageWP;
 
     private String roughageWD;
@@ -30,6 +32,14 @@ public class NutritionPlanWithBLOBs extends NutritionPlan implements Serializabl
     private String pickingO;
 
     private static final long serialVersionUID = 1L;
+
+    public String getRoughageO() {
+        return roughageO;
+    }
+
+    public void setRoughageO(String roughageO) {
+        this.roughageO = roughageO;
+    }
 
     public String getMaterialA() {
         return materialA;

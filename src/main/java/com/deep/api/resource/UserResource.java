@@ -159,11 +159,11 @@ public class UserResource {
      * @param bindingResult
      * @return
      */
-    @PostMapping("/register")
+    @PostMapping("user/add")
     public Response addUser(@RequestBody @Valid UserModel userModel,  BindingResult bindingResult) {
         logger.info("invoke addUser{}, url is register", userModel, bindingResult);
 
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors() || userModel.getPkUserid() == null) {
             Response response = Responses.errorResponse("验证失败");
             HashMap<String, Object> data = new HashMap<>();
             data.put("errorMessage", bindingResult.getAllErrors());
@@ -181,20 +181,20 @@ public class UserResource {
             userModel.setGmtCreate(new Timestamp(System.currentTimeMillis()));
             userModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
 
-            userModel.setIsFactory((byte)0);
             if (userModel.getUserPermit() == null || userModel.getUserPermit().equals("")) {
                 userModel.setUserPermit("000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
             }
+
             userModel.setIsExtended((byte)0);
             userModel.setUserRole(0);
 
-            Long addID = userService.addUser(userModel);
-            if (addID <= 0) {
+            Long success = userService.addUser(userModel);
+            if (success <= 0) {
                 return Responses.errorResponse("用户信息增加失败,请检查网络后重试");
             }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("addID", addID);
+            data.put("success", success);
             response.setData(data);
             return response;
         }

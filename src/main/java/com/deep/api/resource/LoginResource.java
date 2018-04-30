@@ -202,6 +202,11 @@ public class LoginResource {
         return response;
     }
 
+    /**
+     * 找回密码接口
+     * @param name 用户名:pkUserId
+     * @return
+     */
     @GetMapping(value = "/question")
     public Response requestQuestion(@RequestParam("name") String name) {
         logger.info("invoke requestQuestion{}, url is requestQuestion", name);

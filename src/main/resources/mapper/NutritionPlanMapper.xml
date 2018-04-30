@@ -7,19 +7,23 @@
     <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
     <result column="gmt_supervised" property="gmtSupervised" jdbcType="TIMESTAMP" />
     <result column="factory_num" property="factoryNum" jdbcType="BIGINT" />
+    <result column="factory_name" property="factoryName" jdbcType="VARCHAR" />
     <result column="building" property="building" jdbcType="VARCHAR" />
     <result column="nutrition_t" property="nutritionT" jdbcType="TIMESTAMP" />
     <result column="quantity" property="quantity" jdbcType="BIGINT" />
     <result column="average" property="average" jdbcType="VARCHAR" />
     <result column="period" property="period" jdbcType="VARCHAR" />
     <result column="water" property="water" jdbcType="VARCHAR" />
-    <result column="operator" property="operator" jdbcType="VARCHAR" />
-    <result column="professor" property="professor" jdbcType="VARCHAR" />
-    <result column="supervisor" property="supervisor" jdbcType="VARCHAR" />
+    <result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
+    <result column="professor_name" property="professorName" jdbcType="VARCHAR" />
+    <result column="supervisor_name" property="supervisorName" jdbcType="VARCHAR" />
+    <result column="operator_id" property="operatorId" jdbcType="BIGINT" />
+    <result column="professor_id" property="professorId" jdbcType="BIGINT" />
+    <result column="supervisor_id" property="supervisorId" jdbcType="BIGINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="is_pass" property="isPass" jdbcType="TINYINT" />
+    <result column="ispass_check" property="ispassCheck" jdbcType="TINYINT" />
     <result column="upass_reason" property="upassReason" jdbcType="VARCHAR" />
-    <result column="is_pass1" property="isPass1" jdbcType="TINYINT" />
+    <result column="ispass_sup" property="ispassSup" jdbcType="TINYINT" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.deep.domain.model.NutritionPlanWithBLOBs" extends="BaseResultMap" >
     <result column="material_a" property="materialA" jdbcType="LONGVARCHAR" />
@@ -29,6 +33,7 @@
     <result column="material_w_o" property="materialWO" jdbcType="LONGVARCHAR" />
     <result column="roughage_p" property="roughageP" jdbcType="LONGVARCHAR" />
     <result column="roughage_d" property="roughageD" jdbcType="LONGVARCHAR" />
+    <result column="roughage_o" property="roughageO" jdbcType="LONGVARCHAR" />
     <result column="roughage_w_p" property="roughageWP" jdbcType="LONGVARCHAR" />
     <result column="roughage_w_d" property="roughageWD" jdbcType="LONGVARCHAR" />
     <result column="roughage_w_o" property="roughageWO" jdbcType="LONGVARCHAR" />
@@ -95,12 +100,12 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, gmt_create, gmt_modified, gmt_supervised, factory_num, building, nutrition_t, 
-    quantity, average, period, water, operator, professor, supervisor, remark, is_pass, 
-    upass_reason, is_pass1
+    id, gmt_create, gmt_modified, gmt_supervised, factory_num, factory_name, building, nutrition_t,
+    quantity, average, period, water, operator_name, professor_name, supervisor_name, operator_id, professor_id, supervisor_id , remark, ispass_check,
+    upass_reason, ispass_sup
   </sql>
   <sql id="Blob_Column_List" >
-    material_a, material_m, material_o, material_w_m, material_w_o, roughage_p, roughage_d, 
+    material_a, material_m, material_o, material_w_m, material_w_o, roughage_p, roughage_d, roughage_o,
     roughage_w_p, roughage_w_d, roughage_w_o, picking_m, picking_r, picking_o
   </sql>
   <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.deep.domain.model.NutritionPlanExample" >
@@ -153,26 +158,22 @@
   </delete>
   <insert id="insert" parameterType="com.deep.domain.model.NutritionPlanWithBLOBs"
           useGeneratedKeys="true" keyProperty="id">
-    insert into nutrition_plan (id, gmt_create, gmt_modified, 
-      gmt_supervised, factory_num, building, 
-      nutrition_t, quantity, average, 
-      period, water, operator, 
-      professor, supervisor, remark, 
-      is_pass, upass_reason, is_pass1, 
-      material_a, material_m, material_o, 
-      material_w_m, material_w_o, roughage_p, 
-      roughage_d, roughage_w_p, roughage_w_d, 
-      roughage_w_o, picking_m, picking_r, 
-      picking_o)
+    insert into nutrition_plan (
+      id, gmt_create, gmt_modified, gmt_supervised, factory_num, factory_name, building, nutrition_t,
+      quantity, average, period, water, operator_name, professor_name, supervisor_name, operator_id, professor_id, supervisor_id , remark, ispass_check,
+      upass_reason, ispass_sup, material_a, material_m, material_o, material_w_m, material_w_o, roughage_p, roughage_d, roughage_o,
+      roughage_w_p, roughage_w_d, roughage_w_o, picking_m, picking_r, picking_o
+    )
     values (#{id,jdbcType=INTEGER}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, 
-      #{gmtSupervised,jdbcType=TIMESTAMP}, #{factoryNum,jdbcType=BIGINT}, #{building,jdbcType=VARCHAR}, 
-      #{nutritionT,jdbcType=TIMESTAMP}, #{quantity,jdbcType=BIGINT}, #{average,jdbcType=VARCHAR}, 
-      #{period,jdbcType=VARCHAR}, #{water,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, 
-      #{professor,jdbcType=VARCHAR}, #{supervisor,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
-      #{isPass,jdbcType=TINYINT}, #{upassReason,jdbcType=VARCHAR}, #{isPass1,jdbcType=TINYINT}, 
+      #{gmtSupervised,jdbcType=TIMESTAMP}, #{factoryNum,jdbcType=BIGINT}, #{factoryName,jdbcType=VARCHAR},
+      #{building,jdbcType=VARCHAR},#{nutritionT,jdbcType=TIMESTAMP}, #{quantity,jdbcType=BIGINT}, #{average,jdbcType=VARCHAR},
+      #{period,jdbcType=VARCHAR}, #{water,jdbcType=VARCHAR}, #{operator_name,jdbcType=VARCHAR},
+      #{professor_name,jdbcType=VARCHAR}, #{supervisor_name,jdbcType=VARCHAR}, #{operator_id,jdbcType=BIGINT},
+      #{professor_id,jdbcType=BIGINT}, #{supervisor_id, jdbcType=BIGINT}, #{remark,jdbcType=VARCHAR},
+      #{ispassCheckCheck,jdbcType=TINYINT}, #{upassReason,jdbcType=VARCHAR}, #{ispassCheckSup,jdbcType=TINYINT},
       #{materialA,jdbcType=LONGVARCHAR}, #{materialM,jdbcType=LONGVARCHAR}, #{materialO,jdbcType=LONGVARCHAR}, 
       #{materialWM,jdbcType=LONGVARCHAR}, #{materialWO,jdbcType=LONGVARCHAR}, #{roughageP,jdbcType=LONGVARCHAR}, 
-      #{roughageD,jdbcType=LONGVARCHAR}, #{roughageWP,jdbcType=LONGVARCHAR}, #{roughageWD,jdbcType=LONGVARCHAR}, 
+      #{roughageD,jdbcType=LONGVARCHAR}, #{roughageO,jdbcType=LONGVARCHAR}, #{roughageWP,jdbcType=LONGVARCHAR}, #{roughageWD,jdbcType=LONGVARCHAR},
       #{roughageWO,jdbcType=LONGVARCHAR}, #{pickingM,jdbcType=LONGVARCHAR}, #{pickingR,jdbcType=LONGVARCHAR}, 
       #{pickingO,jdbcType=LONGVARCHAR})
   </insert>
@@ -224,14 +225,14 @@
       <if test="remark != null" >
         remark,
       </if>
-      <if test="isPass != null" >
-        is_pass,
+      <if test="ispassCheck != null" >
+        ispass_check,
       </if>
       <if test="upassReason != null" >
         upass_reason,
       </if>
-      <if test="isPass1 != null" >
-        is_pass1,
+      <if test="ispassSup != null" >
+        ispass_sup,
       </if>
       <if test="materialA != null" >
         material_a,
@@ -319,14 +320,14 @@
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="isPass != null" >
-        #{isPass,jdbcType=TINYINT},
+      <if test="ispassCheck != null" >
+        #{ispassCheck,jdbcType=TINYINT},
       </if>
       <if test="upassReason != null" >
         #{upassReason,jdbcType=VARCHAR},
       </if>
-      <if test="isPass1 != null" >
-        #{isPass1,jdbcType=TINYINT},
+      <if test="ispassSup != null" >
+        #{ispassSup,jdbcType=TINYINT},
       </if>
       <if test="materialA != null" >
         #{materialA,jdbcType=LONGVARCHAR},
@@ -393,6 +394,11 @@
       <if test="record.factoryNum != null" >
         factory_num = #{record.factoryNum,jdbcType=BIGINT},
       </if>
+
+        <if test="record.factoryName != null" >
+            factory_name = #{record.factoryName,jdbcType=BIGINT},
+        </if>
+
       <if test="record.building != null" >
         building = #{record.building,jdbcType=VARCHAR},
       </if>
@@ -411,26 +417,37 @@
       <if test="record.water != null" >
         water = #{record.water,jdbcType=VARCHAR},
       </if>
-      <if test="record.operator != null" >
-        operator = #{record.operator,jdbcType=VARCHAR},
+      <if test="record.operatorName != null" >
+        operator_name = #{record.operatorName,jdbcType=VARCHAR},
       </if>
-      <if test="record.professor != null" >
-        professor = #{record.professor,jdbcType=VARCHAR},
+      <if test="record.professorName != null" >
+        professor_name = #{record.professorName,jdbcType=VARCHAR},
       </if>
-      <if test="record.supervisor != null" >
-        supervisor = #{record.supervisor,jdbcType=VARCHAR},
+      <if test="record.supervisorName != null" >
+        supervisor_name = #{record.supervisorName,jdbcType=VARCHAR},
       </if>
+
+        <if test="record.operatorId != null" >
+            operator_id = #{record.operatorId,jdbcType=VARCHAR},
+        </if>
+        <if test="record.professorId != null" >
+            professor_id = #{record.professorId,jdbcType=VARCHAR},
+        </if>
+        <if test="record.supervisorId != null" >
+            supervisor_id = #{record.supervisorId,jdbcType=VARCHAR},
+        </if>
+
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
-      <if test="record.isPass != null" >
-        is_pass = #{record.isPass,jdbcType=TINYINT},
+      <if test="record.ispassCheck != null" >
+        ispass_check = #{record.ispassCheck,jdbcType=TINYINT},
       </if>
       <if test="record.upassReason != null" >
         upass_reason = #{record.upassReason,jdbcType=VARCHAR},
       </if>
-      <if test="record.isPass1 != null" >
-        is_pass1 = #{record.isPass1,jdbcType=TINYINT},
+      <if test="record.ispassSup != null" >
+        ispass_sup = #{record.ispassSup,jdbcType=TINYINT},
       </if>
       <if test="record.materialA != null" >
         material_a = #{record.materialA,jdbcType=LONGVARCHAR},
@@ -453,6 +470,11 @@
       <if test="record.roughageD != null" >
         roughage_d = #{record.roughageD,jdbcType=LONGVARCHAR},
       </if>
+
+        <if test="record.roughageD != null" >
+            roughage_d = #{record.roughageD,jdbcType=LONGVARCHAR},
+        </if>
+
       <if test="record.roughageWP != null" >
         roughage_w_p = #{record.roughageWP,jdbcType=LONGVARCHAR},
       </if>
@@ -483,19 +505,23 @@
     gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
     gmt_supervised = #{record.gmtSupervised,jdbcType=TIMESTAMP},
     factory_num = #{record.factoryNum,jdbcType=BIGINT},
+    factory_name = #{record.factoryName,jdbcType=VARCHAR},
     building = #{record.building,jdbcType=VARCHAR},
     nutrition_t = #{record.nutritionT,jdbcType=TIMESTAMP},
     quantity = #{record.quantity,jdbcType=BIGINT},
     average = #{record.average,jdbcType=VARCHAR},
     period = #{record.period,jdbcType=VARCHAR},
     water = #{record.water,jdbcType=VARCHAR},
-    operator = #{record.operator,jdbcType=VARCHAR},
-    professor = #{record.professor,jdbcType=VARCHAR},
-    supervisor = #{record.supervisor,jdbcType=VARCHAR},
+    operator_name = #{record.operator,jdbcType=VARCHAR},
+    professor_name = #{record.professor,jdbcType=VARCHAR},
+    supervisor_name = #{record.supervisor,jdbcType=VARCHAR},
+    operator_id = #{record.operatorId,jdbcType=BIGINT},
+    professor_id = #{record.professorId,jdbcType=BIGINT},
+    supervisor_id = #{record.supervisorId,jdbcType=BIGINT},
     remark = #{record.remark,jdbcType=VARCHAR},
-    is_pass = #{record.isPass,jdbcType=TINYINT},
+    ispass_check = #{record.ispassCheck,jdbcType=TINYINT},
     upass_reason = #{record.upassReason,jdbcType=VARCHAR},
-    is_pass1 = #{record.isPass1,jdbcType=TINYINT},
+    ispass_sup = #{record.ispassSup,jdbcType=TINYINT},
     material_a = #{record.materialA,jdbcType=LONGVARCHAR},
     material_m = #{record.materialM,jdbcType=LONGVARCHAR},
     material_o = #{record.materialO,jdbcType=LONGVARCHAR},
@@ -503,6 +529,7 @@
     material_w_o = #{record.materialWO,jdbcType=LONGVARCHAR},
     roughage_p = #{record.roughageP,jdbcType=LONGVARCHAR},
     roughage_d = #{record.roughageD,jdbcType=LONGVARCHAR},
+    roughage_o = #{record.roughageO,jdbcType=LONGVARCHAR},
     roughage_w_p = #{record.roughageWP,jdbcType=LONGVARCHAR},
     roughage_w_d = #{record.roughageWD,jdbcType=LONGVARCHAR},
     roughage_w_o = #{record.roughageWO,jdbcType=LONGVARCHAR},
@@ -520,19 +547,23 @@
     gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
     gmt_supervised = #{record.gmtSupervised,jdbcType=TIMESTAMP},
     factory_num = #{record.factoryNum,jdbcType=BIGINT},
+    factory_name = #{record.factoryName,jdbcType=VARCHAR},
     building = #{record.building,jdbcType=VARCHAR},
     nutrition_t = #{record.nutritionT,jdbcType=TIMESTAMP},
     quantity = #{record.quantity,jdbcType=BIGINT},
     average = #{record.average,jdbcType=VARCHAR},
     period = #{record.period,jdbcType=VARCHAR},
     water = #{record.water,jdbcType=VARCHAR},
-    operator = #{record.operator,jdbcType=VARCHAR},
-    professor = #{record.professor,jdbcType=VARCHAR},
-    supervisor = #{record.supervisor,jdbcType=VARCHAR},
+    operator_name = #{record.operator,jdbcType=VARCHAR},
+    professor_name = #{record.professor,jdbcType=VARCHAR},
+    supervisor_name = #{record.supervisor,jdbcType=VARCHAR},
+    operator_id = #{record.operatorId,jdbcType=BIGINT},
+    professor_id = #{record.professorId,jdbcType=BIGINT},
+    supervisor_id = #{record.supervisorId,jdbcType=BIGINT},
     remark = #{record.remark,jdbcType=VARCHAR},
-    is_pass = #{record.isPass,jdbcType=TINYINT},
+    ispass_check = #{record.ispassCheck,jdbcType=TINYINT},
     upass_reason = #{record.upassReason,jdbcType=VARCHAR},
-    is_pass1 = #{record.isPass1,jdbcType=TINYINT}
+    ispass_sup = #{record.ispassSup,jdbcType=TINYINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -540,95 +571,116 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.deep.domain.model.NutritionPlanWithBLOBs" >
     update nutrition_plan
     <set >
-      <if test="gmtCreate != null" >
-        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      <if test="record.gmtCreate != null" >
+        gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
       </if>
-      <if test="gmtModified != null" >
-        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      <if test="record.gmtModified != null" >
+        gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
       </if>
-      <if test="gmtSupervised != null" >
-        gmt_supervised = #{gmtSupervised,jdbcType=TIMESTAMP},
+      <if test="record.gmtSupervised != null" >
+        gmt_supervised = #{record.gmtSupervised,jdbcType=TIMESTAMP},
       </if>
-      <if test="factoryNum != null and factoryNum != ''" >
-        factory_num = #{factoryNum,jdbcType=BIGINT},
+      <if test="record.factoryNum != null" >
+        factory_num = #{record.factoryNum,jdbcType=BIGINT},
       </if>
-      <if test="building != null and building != ''" >
-        building = #{building,jdbcType=VARCHAR},
+
+      <if test="record.factoryName != null" >
+        factory_name = #{record.factoryName,jdbcType=BIGINT},
       </if>
-      <if test="nutritionT != null" >
-        nutrition_t = #{nutritionT,jdbcType=TIMESTAMP},
+
+      <if test="record.building != null" >
+        building = #{record.building,jdbcType=VARCHAR},
       </if>
-      <if test="quantity != null and quantity != ''" >
-        quantity = #{quantity,jdbcType=BIGINT},
+      <if test="record.nutritionT != null" >
+        nutrition_t = #{record.nutritionT,jdbcType=TIMESTAMP},
       </if>
-      <if test="average != null and average != ''" >
-        average = #{average,jdbcType=VARCHAR},
+      <if test="record.quantity != null" >
+        quantity = #{record.quantity,jdbcType=BIGINT},
       </if>
-      <if test="period != null and period != ''" >
-        period = #{period,jdbcType=VARCHAR},
+      <if test="record.average != null" >
+        average = #{record.average,jdbcType=VARCHAR},
       </if>
-      <if test="water != null and water != ''" >
-        water = #{water,jdbcType=VARCHAR},
+      <if test="record.period != null" >
+        period = #{record.period,jdbcType=VARCHAR},
       </if>
-      <if test="operator != null and operator != ''" >
-        operator = #{operator,jdbcType=VARCHAR},
+      <if test="record.water != null" >
+        water = #{record.water,jdbcType=VARCHAR},
       </if>
-      <if test="professor != null and professor != ''" >
-        professor = #{professor,jdbcType=VARCHAR},
+      <if test="record.operatorName != null" >
+        operator_name = #{record.operatorName,jdbcType=VARCHAR},
       </if>
-      <if test="supervisor != null and supervisor != ''" >
-        supervisor = #{supervisor,jdbcType=VARCHAR},
+      <if test="record.professorName != null" >
+        professor_name = #{record.professorName,jdbcType=VARCHAR},
       </if>
-      <if test="remark != null and remark != ''" >
-        remark = #{remark,jdbcType=VARCHAR},
+      <if test="record.supervisorName != null" >
+        supervisor_name = #{record.supervisorName,jdbcType=VARCHAR},
       </if>
-      <if test="isPass != null and isPass != ''" >
-        is_pass = #{isPass,jdbcType=TINYINT},
+
+      <if test="record.operatorId != null" >
+        operator_id = #{record.operatorId,jdbcType=VARCHAR},
       </if>
-      <if test="upassReason != null and upassReason != ''" >
-        upass_reason = #{upassReason,jdbcType=VARCHAR},
+      <if test="record.professorId != null" >
+        professor_id = #{record.professorId,jdbcType=VARCHAR},
       </if>
-      <if test="isPass1 != null and isPass1 != ''" >
-        is_pass1 = #{isPass1,jdbcType=TINYINT},
+      <if test="record.supervisorId != null" >
+        supervisor_id = #{record.supervisorId,jdbcType=VARCHAR},
       </if>
-      <if test="materialA != null and materialA != ''" >
-        material_a = #{materialA,jdbcType=LONGVARCHAR},
+
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
       </if>
-      <if test="materialM != null and materialM != ''" >
-        material_m = #{materialM,jdbcType=LONGVARCHAR},
+      <if test="record.ispassCheck != null" >
+        ispass_check = #{record.ispassCheck,jdbcType=TINYINT},
       </if>
-      <if test="materialO != null and materialO != ''" >
-        material_o = #{materialO,jdbcType=LONGVARCHAR},
+      <if test="record.upassReason != null" >
+        upass_reason = #{record.upassReason,jdbcType=VARCHAR},
       </if>
-      <if test="materialWM != null and materialWM != ''" >
-        material_w_m = #{materialWM,jdbcType=LONGVARCHAR},
+      <if test="record.ispassSup != null" >
+        ispass_sup = #{record.ispassSup,jdbcType=TINYINT},
       </if>
-      <if test="materialWO != null and materialWO != ''" >
-        material_w_o = #{materialWO,jdbcType=LONGVARCHAR},
+      <if test="record.materialA != null" >
+        material_a = #{record.materialA,jdbcType=LONGVARCHAR},
       </if>
-      <if test="roughageP != null and roughageP != ''" >
-        roughage_p = #{roughageP,jdbcType=LONGVARCHAR},
+      <if test="record.materialM != null" >
+        material_m = #{record.materialM,jdbcType=LONGVARCHAR},
       </if>
-      <if test="roughageD != null and roughageD != ''" >
-        roughage_d = #{roughageD,jdbcType=LONGVARCHAR},
+      <if test="record.materialO != null" >
+        material_o = #{record.materialO,jdbcType=LONGVARCHAR},
       </if>
-      <if test="roughageWP != null and roughageWP != ''" >
-        roughage_w_p = #{roughageWP,jdbcType=LONGVARCHAR},
+      <if test="record.materialWM != null" >
+        material_w_m = #{record.materialWM,jdbcType=LONGVARCHAR},
       </if>
-      <if test="roughageWD != null and roughageWD != ''" >
-        roughage_w_d = #{roughageWD,jdbcType=LONGVARCHAR},
+      <if test="record.materialWO != null" >
+        material_w_o = #{record.materialWO,jdbcType=LONGVARCHAR},
       </if>
-      <if test="roughageWO != null and roughageWO != ''" >
-        roughage_w_o = #{roughageWO,jdbcType=LONGVARCHAR},
+      <if test="record.roughageP != null" >
+        roughage_p = #{record.roughageP,jdbcType=LONGVARCHAR},
       </if>
-      <if test="pickingM != null and pickingM != ''" >
-        picking_m = #{pickingM,jdbcType=LONGVARCHAR},
+      <if test="record.roughageD != null" >
+        roughage_d = #{record.roughageD,jdbcType=LONGVARCHAR},
       </if>
-      <if test="pickingR != null and pickingR != ''" >
-        picking_r = #{pickingR,jdbcType=LONGVARCHAR},
+
+      <if test="record.roughageD != null" >
+        roughage_d = #{record.roughageD,jdbcType=LONGVARCHAR},
       </if>
-      <if test="pickingO != null and pickingO != ''" >
-        picking_o = #{pickingO,jdbcType=LONGVARCHAR},
+
+      <if test="record.roughageWP != null" >
+        roughage_w_p = #{record.roughageWP,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.roughageWD != null" >
+        roughage_w_d = #{record.roughageWD,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.roughageWO != null" >
+        roughage_w_o = #{record.roughageWO,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.pickingM != null" >
+        picking_m = #{record.pickingM,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.pickingR != null" >
+        picking_r = #{record.pickingR,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.pickingO != null" >
+        picking_o = #{record.pickingO,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -636,56 +688,65 @@
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.deep.domain.model.NutritionPlanWithBLOBs" >
     update nutrition_plan
     set gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
-      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
-      gmt_supervised = #{gmtSupervised,jdbcType=TIMESTAMP},
-      factory_num = #{factoryNum,jdbcType=BIGINT},
-      building = #{building,jdbcType=VARCHAR},
-      nutrition_t = #{nutritionT,jdbcType=TIMESTAMP},
-      quantity = #{quantity,jdbcType=BIGINT},
-      average = #{average,jdbcType=VARCHAR},
-      period = #{period,jdbcType=VARCHAR},
-      water = #{water,jdbcType=VARCHAR},
-      operator = #{operator,jdbcType=VARCHAR},
-      professor = #{professor,jdbcType=VARCHAR},
-      supervisor = #{supervisor,jdbcType=VARCHAR},
-      remark = #{remark,jdbcType=VARCHAR},
-      is_pass = #{isPass,jdbcType=TINYINT},
-      upass_reason = #{upassReason,jdbcType=VARCHAR},
-      is_pass1 = #{isPass1,jdbcType=TINYINT},
-      material_a = #{materialA,jdbcType=LONGVARCHAR},
-      material_m = #{materialM,jdbcType=LONGVARCHAR},
-      material_o = #{materialO,jdbcType=LONGVARCHAR},
-      material_w_m = #{materialWM,jdbcType=LONGVARCHAR},
-      material_w_o = #{materialWO,jdbcType=LONGVARCHAR},
-      roughage_p = #{roughageP,jdbcType=LONGVARCHAR},
-      roughage_d = #{roughageD,jdbcType=LONGVARCHAR},
-      roughage_w_p = #{roughageWP,jdbcType=LONGVARCHAR},
-      roughage_w_d = #{roughageWD,jdbcType=LONGVARCHAR},
-      roughage_w_o = #{roughageWO,jdbcType=LONGVARCHAR},
-      picking_m = #{pickingM,jdbcType=LONGVARCHAR},
-      picking_r = #{pickingR,jdbcType=LONGVARCHAR},
-      picking_o = #{pickingO,jdbcType=LONGVARCHAR}
+    gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+    gmt_supervised = #{record.gmtSupervised,jdbcType=TIMESTAMP},
+    factory_num = #{record.factoryNum,jdbcType=BIGINT},
+    factory_name = #{record.factoryName,jdbcType=VARCHAR},
+    building = #{record.building,jdbcType=VARCHAR},
+    nutrition_t = #{record.nutritionT,jdbcType=TIMESTAMP},
+    quantity = #{record.quantity,jdbcType=BIGINT},
+    average = #{record.average,jdbcType=VARCHAR},
+    period = #{record.period,jdbcType=VARCHAR},
+    water = #{record.water,jdbcType=VARCHAR},
+    operator_name = #{record.operator,jdbcType=VARCHAR},
+    professor_name = #{record.professor,jdbcType=VARCHAR},
+    supervisor_name = #{record.supervisor,jdbcType=VARCHAR},
+    operator_id = #{record.operatorId,jdbcType=BIGINT},
+    professor_id = #{record.professorId,jdbcType=BIGINT},
+    supervisor_id = #{record.supervisorId,jdbcType=BIGINT},
+    remark = #{record.remark,jdbcType=VARCHAR},
+    ispass_check = #{record.ispassCheck,jdbcType=TINYINT},
+    upass_reason = #{record.upassReason,jdbcType=VARCHAR},
+    ispass_sup = #{record.ispassSup,jdbcType=TINYINT},
+    material_a = #{record.materialA,jdbcType=LONGVARCHAR},
+    material_m = #{record.materialM,jdbcType=LONGVARCHAR},
+    material_o = #{record.materialO,jdbcType=LONGVARCHAR},
+    material_w_m = #{record.materialWM,jdbcType=LONGVARCHAR},
+    material_w_o = #{record.materialWO,jdbcType=LONGVARCHAR},
+    roughage_p = #{record.roughageP,jdbcType=LONGVARCHAR},
+    roughage_d = #{record.roughageD,jdbcType=LONGVARCHAR},
+    roughage_o = #{record.roughageO,jdbcType=LONGVARCHAR},
+    roughage_w_p = #{record.roughageWP,jdbcType=LONGVARCHAR},
+    roughage_w_d = #{record.roughageWD,jdbcType=LONGVARCHAR},
+    roughage_w_o = #{record.roughageWO,jdbcType=LONGVARCHAR},
+    picking_m = #{record.pickingM,jdbcType=LONGVARCHAR},
+    picking_r = #{record.pickingR,jdbcType=LONGVARCHAR},
+    picking_o = #{record.pickingO,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.deep.domain.model.NutritionPlan" >
     update nutrition_plan
     set gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
-      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
-      gmt_supervised = #{gmtSupervised,jdbcType=TIMESTAMP},
-      factory_num = #{factoryNum,jdbcType=BIGINT},
-      building = #{building,jdbcType=VARCHAR},
-      nutrition_t = #{nutritionT,jdbcType=TIMESTAMP},
-      quantity = #{quantity,jdbcType=BIGINT},
-      average = #{average,jdbcType=VARCHAR},
-      period = #{period,jdbcType=VARCHAR},
-      water = #{water,jdbcType=VARCHAR},
-      operator = #{operator,jdbcType=VARCHAR},
-      professor = #{professor,jdbcType=VARCHAR},
-      supervisor = #{supervisor,jdbcType=VARCHAR},
-      remark = #{remark,jdbcType=VARCHAR},
-      is_pass = #{isPass,jdbcType=TINYINT},
-      upass_reason = #{upassReason,jdbcType=VARCHAR},
-      is_pass1 = #{isPass1,jdbcType=TINYINT}
+    gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+    gmt_supervised = #{record.gmtSupervised,jdbcType=TIMESTAMP},
+    factory_num = #{record.factoryNum,jdbcType=BIGINT},
+    factory_name = #{record.factoryName,jdbcType=VARCHAR},
+    building = #{record.building,jdbcType=VARCHAR},
+    nutrition_t = #{record.nutritionT,jdbcType=TIMESTAMP},
+    quantity = #{record.quantity,jdbcType=BIGINT},
+    average = #{record.average,jdbcType=VARCHAR},
+    period = #{record.period,jdbcType=VARCHAR},
+    water = #{record.water,jdbcType=VARCHAR},
+    operator_name = #{record.operator,jdbcType=VARCHAR},
+    professor_name = #{record.professor,jdbcType=VARCHAR},
+    supervisor_name = #{record.supervisor,jdbcType=VARCHAR},
+    operator_id = #{record.operatorId,jdbcType=BIGINT},
+    professor_id = #{record.professorId,jdbcType=BIGINT},
+    supervisor_id = #{record.supervisorId,jdbcType=BIGINT},
+    remark = #{record.remark,jdbcType=VARCHAR},
+    ispass_check = #{record.ispassCheck,jdbcType=TINYINT},
+    upass_reason = #{record.upassReason,jdbcType=VARCHAR},
+    ispass_sup = #{record.ispassSup,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select resultMap="ResultMapWithBLOBs" parameterType="com.deep.domain.model.NutritionPlanExample" id="selectByExampleWithBLOBsWithRowbounds" >

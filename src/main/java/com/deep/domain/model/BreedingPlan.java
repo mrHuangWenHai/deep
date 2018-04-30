@@ -14,6 +14,8 @@ public class BreedingPlan implements Serializable {
 
     private Long factoryNum;
 
+    private String factoryName;
+
     private String building;
 
     private String mEtI;
@@ -255,5 +257,13 @@ public class BreedingPlan implements Serializable {
 
     public void setSupervisorId(Integer supervisorId) {
         this.supervisorId = supervisorId;
+    }
+
+    public String getFactoryName() {
+        return factoryName;
+    }
+
+    public void setFactoryName(String factoryName) {
+        this.factoryName = factoryName;
     }
 }

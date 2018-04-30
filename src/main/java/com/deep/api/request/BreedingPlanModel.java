@@ -20,6 +20,8 @@ public class BreedingPlanModel implements Serializable {
 
     private Long factoryNum;
 
+    private String factoryName;
+
     private String building;
 
     private String mEtI;
@@ -526,4 +528,11 @@ public class BreedingPlanModel implements Serializable {
         this.page = page;
     }
 
+    public String getFactoryName() {
+        return factoryName;
+    }
+
+    public void setFactoryName(String factoryName) {
+        this.factoryName = factoryName;
+    }
 }

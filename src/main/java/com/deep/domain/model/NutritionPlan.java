@@ -1,5 +1,7 @@
 package com.deep.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -14,8 +16,11 @@ public class NutritionPlan implements Serializable {
 
     private Long factoryNum;
 
+    private String factoryName;
+
     private String building;
 
+    @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
     private Date nutritionT;
 
     private Long quantity;
@@ -26,19 +31,25 @@ public class NutritionPlan implements Serializable {
 
     private String water;
 
-    private String operator;
+    private String operatorName;
 
-    private String professor;
+    private String professorName;
 
-    private String supervisor;
+    private String supervisorName;
+
+    private Long operatorId;
+
+    private Long professorId;
+
+    private Long supervisorId;
 
     private String remark;
 
-    private Byte isPass;
+    private Byte ispassCheck;
 
     private String upassReason;
 
-    private Byte isPass1;
+    private Byte ispassSup;
 
     private static final long serialVersionUID = 1L;
 
@@ -106,6 +117,78 @@ public class NutritionPlan implements Serializable {
         this.nutritionT = nutritionT == null ? null : nutritionT.trim();
     }*/
 
+    public String getFactoryName() {
+        return factoryName;
+    }
+
+    public void setFactoryName(String factoryName) {
+        this.factoryName = factoryName;
+    }
+
+    public String getOperatorName() {
+        return operatorName;
+    }
+
+    public void setOperatorName(String operatorName) {
+        this.operatorName = operatorName;
+    }
+
+    public String getProfessorName() {
+        return professorName;
+    }
+
+    public void setProfessorName(String professorName) {
+        this.professorName = professorName;
+    }
+
+    public String getSupervisorName() {
+        return supervisorName;
+    }
+
+    public void setSupervisorName(String supervisorName) {
+        this.supervisorName = supervisorName;
+    }
+
+    public Long getOperatorId() {
+        return operatorId;
+    }
+
+    public void setOperatorId(Long operatorId) {
+        this.operatorId = operatorId;
+    }
+
+    public Long getProfessorId() {
+        return professorId;
+    }
+
+    public void setProfessorId(Long professorId) {
+        this.professorId = professorId;
+    }
+
+    public Long getSupervisorId() {
+        return supervisorId;
+    }
+
+    public void setSupervisorId(Long supervisorId) {
+        this.supervisorId = supervisorId;
+    }
+
+    public Byte getIspassCheck() {
+        return ispassCheck;
+    }
+
+    public void setIspassCheck(Byte ispassCheck) {
+        this.ispassCheck = ispassCheck;
+    }
+
+    public Byte getIspassSup() {
+        return ispassSup;
+    }
+
+    public void setIspassSup(Byte ispassSup) {
+        this.ispassSup = ispassSup;
+    }
+
     public Long getQuantity() {
         return quantity;
     }
@@ -138,30 +221,6 @@ public class NutritionPlan implements Serializable {
         this.water = water == null ? null : water.trim();
     }
 
-    public String getOperator() {
-        return operator;
-    }
-
-    public void setOperator(String operator) {
-        this.operator = operator == null ? null : operator.trim();
-    }
-
-    public String getProfessor() {
-        return professor;
-    }
-
-    public void setProfessor(String professor) {
-        this.professor = professor == null ? null : professor.trim();
-    }
-
-    public String getSupervisor() {
-        return supervisor;
-    }
-
-    public void setSupervisor(String supervisor) {
-        this.supervisor = supervisor == null ? null : supervisor.trim();
-    }
-
     public String getRemark() {
         return remark;
     }
@@ -170,27 +229,11 @@ public class NutritionPlan implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Byte getIsPass() {
-        return isPass;
-    }
-
-    public void setIsPass(Byte isPass) {
-        this.isPass = isPass;
-    }
-
     public String getUpassReason() {
         return upassReason;
     }
 
     public void setUpassReason(String upassReason) {
         this.upassReason = upassReason == null ? null : upassReason.trim();
-    }
-
-    public Byte getIsPass1() {
-        return isPass1;
-    }
-
-    public void setIsPass1(Byte isPass1) {
-        this.isPass1 = isPass1;
     }
 }

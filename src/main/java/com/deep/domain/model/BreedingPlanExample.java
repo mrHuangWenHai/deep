@@ -1335,63 +1335,63 @@ public class BreedingPlanExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsPassCheckIsNull() {
-            addCriterion("is_pass is null");
+        public Criteria andIspassCheckIsNull() {
+            addCriterion("ispass_check is null");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassCheckIsNotNull() {
-            addCriterion("is_pass is not null");
+        public Criteria andIspassCheckIsNotNull() {
+            addCriterion("ispass_check is not null");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassCheckEqualTo(Byte value) {
-            addCriterion("is_pass =", value, "ispassCheck");
+        public Criteria andIspassCheckEqualTo(Byte value) {
+            addCriterion("ispass_check =", value, "ispass_check");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassCheckNotEqualTo(Byte value) {
-            addCriterion("is_pass <>", value, "ispassCheck");
+        public Criteria andIspassCheckNotEqualTo(Byte value) {
+            addCriterion("ispass_check <>", value, "ispass_check");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassCheckGreaterThan(Byte value) {
-            addCriterion("is_pass >", value, "ispassCheck");
+        public Criteria andIspassCheckGreaterThan(Byte value) {
+            addCriterion("ispass_check >", value, "ispass_check");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassCheckGreaterThanOrEqualTo(Byte value) {
-            addCriterion("is_pass >=", value, "ispassCheck");
+        public Criteria andIspassCheckGreaterThanOrEqualTo(Byte value) {
+            addCriterion("ispass_check >=", value, "ispass_check");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassCheckLessThan(Byte value) {
-            addCriterion("is_pass <", value, "ispassCheck");
+        public Criteria andIspassCheckLessThan(Byte value) {
+            addCriterion("ispass_check <", value, "ispass_check");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassCheckLessThanOrEqualTo(Byte value) {
-            addCriterion("is_pass <=", value, "ispassCheck");
+        public Criteria andIspassCheckLessThanOrEqualTo(Byte value) {
+            addCriterion("ispass_check <=", value, "ispass_check");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassCheckIn(List<Byte> values) {
-            addCriterion("is_pass in", values, "ispassCheck");
+        public Criteria andIspassCheckIn(List<Byte> values) {
+            addCriterion("ispass_check in", values, "ispass_check");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassCheckNotIn(List<Byte> values) {
-            addCriterion("is_pass not in", values, "ispassCheck");
+        public Criteria andIspassCheckNotIn(List<Byte> values) {
+            addCriterion("ispass_check not in", values, "ispass_check");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassCheckBetween(Byte value1, Byte value2) {
-            addCriterion("is_pass between", value1, value2, "ispassCheck");
+        public Criteria andIspassCheckBetween(Byte value1, Byte value2) {
+            addCriterion("ispass_check between", value1, value2, "ispass_check");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassCheckNotBetween(Byte value1, Byte value2) {
-            addCriterion("is_pass not between", value1, value2, "ispassCheck");
+        public Criteria andIspassCheckNotBetween(Byte value1, Byte value2) {
+            addCriterion("ispass_check not between", value1, value2, "ispass_check");
             return (Criteria) this;
         }
 
@@ -1465,63 +1465,63 @@ public class BreedingPlanExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsPassSupIsNull() {
-            addCriterion("is_pass1 is null");
+        public Criteria andIspassSupIsNull() {
+            addCriterion("ispass_sup is null");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassSupIsNotNull() {
-            addCriterion("is_pass1 is not null");
+        public Criteria andIspassSupIsNotNull() {
+            addCriterion("ispass_sup is not null");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassSupEqualTo(Byte value) {
-            addCriterion("is_pass1 =", value, "ispassSup");
+        public Criteria andIspassSupEqualTo(Byte value) {
+            addCriterion("ispass_sup =", value, "ispass_sup");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassSupNotEqualTo(Byte value) {
-            addCriterion("is_pass1 <>", value, "ispassSup");
+        public Criteria andIspassSupNotEqualTo(Byte value) {
+            addCriterion("ispass_sup <>", value, "ispass_sup");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassSupGreaterThan(Byte value) {
-            addCriterion("is_pass1 >", value, "ispassSup");
+        public Criteria andIspassSupGreaterThan(Byte value) {
+            addCriterion("ispass_sup >", value, "ispass_sup");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassSupGreaterThanOrEqualTo(Byte value) {
-            addCriterion("is_pass1 >=", value, "ispassSup");
+        public Criteria andIspassSupGreaterThanOrEqualTo(Byte value) {
+            addCriterion("ispass_sup >=", value, "ispass_sup");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassSupLessThan(Byte value) {
-            addCriterion("is_pass1 <", value, "ispassSup");
+        public Criteria andIspassSupLessThan(Byte value) {
+            addCriterion("ispass_sup <", value, "ispass_sup");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassSupLessThanOrEqualTo(Byte value) {
-            addCriterion("is_pass1 <=", value, "ispassSup");
+        public Criteria andIspassSupLessThanOrEqualTo(Byte value) {
+            addCriterion("ispass_sup <=", value, "ispass_sup");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassSupIn(List<Byte> values) {
-            addCriterion("is_pass1 in", values, "ispassSup");
+        public Criteria andIspassSupIn(List<Byte> values) {
+            addCriterion("ispass_sup in", values, "ispass_sup");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassSupNotIn(List<Byte> values) {
-            addCriterion("is_pass1 not in", values, "ispassSup");
+        public Criteria andIspassSupNotIn(List<Byte> values) {
+            addCriterion("ispass_sup not in", values, "ispass_sup");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassSupBetween(Byte value1, Byte value2) {
-            addCriterion("is_pass1 between", value1, value2, "ispassSup");
+        public Criteria andIspassSupBetween(Byte value1, Byte value2) {
+            addCriterion("ispass_sup between", value1, value2, "ispass_sup");
             return (Criteria) this;
         }
 
-        public Criteria andIsPassSupNotBetween(Byte value1, Byte value2) {
-            addCriterion("is_pass1 not between", value1, value2, "ispassSup");
+        public Criteria andIspassSupNotBetween(Byte value1, Byte value2) {
+            addCriterion("ispass_sup not between", value1, value2, "ispass_sup");
             return (Criteria) this;
         }
 

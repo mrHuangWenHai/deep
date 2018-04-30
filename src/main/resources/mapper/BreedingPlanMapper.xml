@@ -7,6 +7,7 @@
     <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
     <result column="gmt_supervised" property="gmtSupervised" jdbcType="TIMESTAMP" />
     <result column="factory_num" property="factoryNum" jdbcType="BIGINT" />
+    <result column="factory_name" property="factoryName" jdbcType="VARCHAR" />
     <result column="building" property="building" jdbcType="VARCHAR" />
     <result column="m_et_i" property="mEtI" jdbcType="VARCHAR" />
     <result column="m_et_b" property="mEtB" jdbcType="VARCHAR" />
@@ -87,7 +88,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, gmt_create, gmt_modified, gmt_supervised, factory_num, building, m_et_i, m_et_b, 
+    id, gmt_create, gmt_modified, gmt_supervised, factory_num, factory_name, building, m_et_i, m_et_b,
     f_et_i, f_et_b, Breeding_t, gestation_t, Prenatal_i_t, cub_t, quantity, operator_name,
     professor_name, supervisor_name, remark, ispass_check, upass_reason, ispass_sup, operator_id,
     professor_id, supervisor_id
@@ -124,7 +125,7 @@
   </delete>
   <insert id="insert" parameterType="com.deep.domain.model.BreedingPlan" >
     insert into breeding_plan (id, gmt_create, gmt_modified,
-    gmt_supervised, factory_num, building,
+    gmt_supervised, factory_num, factory_name, building,
     m_et_i, m_et_b, f_et_i, f_et_b,
     Breeding_t, gestation_t, Prenatal_i_t,
     cub_t, quantity, operator_name,
@@ -159,6 +160,9 @@
       </if>
       <if test="factoryNum != null" >
         factory_num,
+      </if>
+      <if test="factoryName != null" >
+        factory_name,
       </if>
       <if test="building != null" >
         building,
@@ -323,6 +327,9 @@
       <if test="record.factoryNum != null" >
         factory_num = #{record.factoryNum,jdbcType=BIGINT},
       </if>
+      <if test="record.factoryName != null" >
+        factory_name = #{record.factoryName,jdbcType=BIGINT},
+      </if>
       <if test="record.building != null" >
         building = #{record.building,jdbcType=VARCHAR},
       </if>
@@ -395,6 +402,7 @@
     gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
     gmt_supervised = #{record.gmtSupervised,jdbcType=TIMESTAMP},
     factory_num = #{record.factoryNum,jdbcType=BIGINT},
+    factory_name = #{record.factoryName,jdbcType=VARCHAR},
     building = #{record.building,jdbcType=VARCHAR},
     m_et_i = #{record.mEtI,jdbcType=VARCHAR},
     m_et_b = #{record.mEtB,jdbcType=VARCHAR},
@@ -433,6 +441,9 @@
       </if>
       <if test="factoryNum != null" >
         factory_num = #{factoryNum,jdbcType=BIGINT},
+      </if>
+      <if test="factoryName != null" >
+        factory_name = #{factoryName,jdbcType=BIGINT},
       </if>
       <if test="building != null" >
         building = #{building,jdbcType=VARCHAR},
@@ -503,6 +514,7 @@
       gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
       gmt_supervised = #{gmtSupervised,jdbcType=TIMESTAMP},
       factory_num = #{factoryNum,jdbcType=BIGINT},
+      factory_name = #{factoryName,jdbcType=VARCHAR},
       building = #{building,jdbcType=VARCHAR},
       m_et_i = #{mEtI,jdbcType=VARCHAR},
       m_et_b = #{mEtB,jdbcType=VARCHAR},
