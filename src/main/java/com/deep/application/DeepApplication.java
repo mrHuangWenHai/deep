@@ -19,7 +19,9 @@ import java.util.Properties;
 @ComponentScan(basePackages={"com.deep"})
 @MapperScan("com.deep.infra")
 public class DeepApplication {
+
   public static void main(String[] args) throws Exception {
+
     //验证redis
     //Jedis jedis = new Jedis("localhost");
     //System.out.println("connecting");

@@ -1,164 +1,96 @@
 package com.deep.api.request;
 
-import com.deep.domain.model.NutritionPlan;
+import com.deep.domain.model.DiagnosisPlan;
 
 import java.io.Serializable;
 
 /**
  * author: Created  By  Caojiawei
- * date: 2018/4/12  20:36
+ * date: 2018/4/12  20:06
  */
-public class NutritionPlanModel extends NutritionPlan implements Serializable {
-    private String materialA;
-    private String materialM;
-    private String materialO;
-    private String materialWM;
-    private String materialWO;
-    private String roughageP;
-    private String roughageD;
-    private String roughageWP;
-    private String roughageWD;
-    private String roughageWO;
-    private String pickingM;
-    private String pickingR;
-    private String pickingO;
+public class DiagnosisPlanModel extends DiagnosisPlan implements Serializable {
+    private String diagnosisC;
+
+    private String diagnosisM;
+
+    private String drugQ;
+
+    private String search_string;
+
+    private String s_breedingT;
+
+    private String s_gestationT;
+
+    private String s_prenatalIT;
+
+    private String s_cubT;
+
+    private String s_diagnosisT;
 
     private String s_nutritionT;
 
-    // 多条件查询
-    private String s_nutritionT1;
-    private String s_nutritionT2;
-
-
-    private String search_string;
-    private String s_breedingT;
-    private String s_gestationT;
-    private String s_prenatalIT;
-    private String s_cubT;
-    private String s_diagnosisT;
-
     private String s_gmtCreate1;
+
     private String s_gmtCreate2;
+
     private String s_gmtModified1;
+
     private String s_gmtModified2;
+
     private String s_breedingT1;
+
     private String s_breedingT2;
+
     private String s_gestationT1;
+
     private String s_gestationT2;
+
     private String s_prenatalIT1;
+
     private String s_prenatalIT2;
+
     private String s_cubT1;
+
     private String s_cubT2;
+
     private String s_diagnosisT1;
+
     private String s_diagnosisT2;
 
+    private String s_nutritionT1;
+
+    private String s_nutritionT2;
+
     private String downloadPath;
+
     private int size;
+
     private int page;
 
     private static final long serialVersionUID = 1L;
-    public String getMaterialA() {
-        return materialA;
+
+    public String getDiagnosisC() {
+        return diagnosisC;
     }
 
-    public void setMaterialA(String materialA) {
-        this.materialA = materialA;
+    public void setDiagnosisC(String diagnosisC) {
+        this.diagnosisC = diagnosisC;
     }
 
-    public String getMaterialM() {
-        return materialM;
+    public String getDiagnosisM() {
+        return diagnosisM;
     }
 
-    public void setMaterialM(String materialM) {
-        this.materialM = materialM;
+    public void setDiagnosisM(String diagnosisM) {
+        this.diagnosisM = diagnosisM;
     }
 
-    public String getMaterialO() {
-        return materialO;
+    public String getDrugQ() {
+        return drugQ;
     }
 
-    public void setMaterialO(String materialO) {
-        this.materialO = materialO;
-    }
-
-    public String getMaterialWM() {
-        return materialWM;
-    }
-
-    public void setMaterialWM(String materialWM) {
-        this.materialWM = materialWM;
-    }
-
-    public String getMaterialWO() {
-        return materialWO;
-    }
-
-    public void setMaterialWO(String materialWO) {
-        this.materialWO = materialWO;
-    }
-
-    public String getRoughageP() {
-        return roughageP;
-    }
-
-    public void setRoughageP(String roughageP) {
-        this.roughageP = roughageP;
-    }
-
-    public String getRoughageD() {
-        return roughageD;
-    }
-
-    public void setRoughageD(String roughageD) {
-        this.roughageD = roughageD;
-    }
-
-    public String getRoughageWP() {
-        return roughageWP;
-    }
-
-    public void setRoughageWP(String roughageWP) {
-        this.roughageWP = roughageWP;
-    }
-
-    public String getRoughageWD() {
-        return roughageWD;
-    }
-
-    public void setRoughageWD(String roughageWD) {
-        this.roughageWD = roughageWD;
-    }
-
-    public String getRoughageWO() {
-        return roughageWO;
-    }
-
-    public void setRoughageWO(String roughageWO) {
-        this.roughageWO = roughageWO;
-    }
-
-    public String getPickingM() {
-        return pickingM;
-    }
-
-    public void setPickingM(String pickingM) {
-        this.pickingM = pickingM;
-    }
-
-    public String getPickingR() {
-        return pickingR;
-    }
-
-    public void setPickingR(String pickingR) {
-        this.pickingR = pickingR;
-    }
-
-    public String getPickingO() {
-        return pickingO;
-    }
-
-    public void setPickingO(String pickingO) {
-        this.pickingO = pickingO;
+    public void setDrugQ(String drugQ) {
+        this.drugQ = drugQ;
     }
 
     public String getSearch_string() {

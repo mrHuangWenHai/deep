@@ -1,5 +1,6 @@
 package com.deep.api.resource;
 
+
 import com.deep.api.Utils.StringToLongUtil;
 import com.deep.api.request.NutritionPlanModel;
 import com.deep.api.response.Response;
@@ -13,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.text.ParseException;
@@ -27,10 +27,12 @@ import java.util.List;
  * date: 2018/2/21  19:34
  */
 @RestController
+
 @RequestMapping(value = "nutrition")
 public class NutritionResource {
 
     private final Logger logger = LoggerFactory.getLogger(NutritionResource.class);
+
 
     @Resource
     private NutritionPlanService nutritionPlanService;
@@ -49,19 +51,24 @@ public class NutritionResource {
      */
     @PostMapping(value = "/insert")
     public Response addPlan(@RequestBody @Valid NutritionPlanModel planModel, BindingResult bindingResult) throws ParseException {
+
         logger.info("invoke addPlan {}, url is nutrition/insert", planModel);
+
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("营养实施档案录入失败");
         }else {
             //将planModel部分变量拆分传递给对象insert
             NutritionPlanWithBLOBs insert = new NutritionPlanWithBLOBs();
+
             insert.setFactoryNum(planModel.getFactoryNum());
             insert.setBuilding(planModel.getBuilding());
+
             insert.setQuantity(planModel.getQuantity());
             insert.setAverage(planModel.getAverage());
             insert.setPeriod(planModel.getPeriod());
             insert.setWater(planModel.getWater());
             insert.setOperator(planModel.getOperator());
+
             insert.setMaterialA(planModel.getMaterialA());
             insert.setMaterialM(planModel.getMaterialM());
             insert.setMaterialO(planModel.getMaterialO());
@@ -78,14 +85,17 @@ public class NutritionResource {
 
             //将planModel部分变量拆分传递给对象otherTime
             OtherTime otherTime = new OtherTime();
+
             otherTime.setS_nutritionT(planModel.getS_nutritionT());
 
             Byte zero = 0;
             Date nutritionT = (otherTime.getS_nutritionT() == null || otherTime.getS_nutritionT().isEmpty()) ? new Date() : new SimpleDateFormat( "yyyy-MM-dd HH:mm:SS").parse(otherTime.getS_nutritionT());
+
             insert.setGmtCreate(new Date());
             insert.setNutritionT(nutritionT);
             insert.setIsPass(zero);
             insert.setIsPass1(zero);
+
             int success = nutritionPlanService.addPlan(insert);
             if (success <= 0) {
                 return Responses.errorResponse("插入失败");
@@ -93,6 +103,7 @@ public class NutritionResource {
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("success", success);
+
             response.setData(data);
             return response;
         }
@@ -102,6 +113,7 @@ public class NutritionResource {
      * 按主键删除的接口：/nutritionDeleteById
      * 按主键删除的方法名：dropPlan()
      * 接收参数：整型id，根据主键号删除
+
      * @return
      */
     @DeleteMapping(value = "/delete/{id}")
@@ -131,6 +143,7 @@ public class NutritionResource {
      * @return
      * @throws ParseException
      */
+
     @PostMapping(value = "/operator")
     public Response changePlanByOperator(@RequestBody @Valid NutritionPlanModel planModel, BindingResult bindingResult) throws ParseException {
         logger.info("invoke changePlanByOperator {}, url is nutrition/operator", planModel);
@@ -148,6 +161,7 @@ public class NutritionResource {
             operator.setPeriod(planModel.getPeriod());
             operator.setWater(planModel.getWater());
             operator.setOperator(planModel.getOperator());
+
             operator.setMaterialA(planModel.getMaterialA());
             operator.setMaterialM(planModel.getMaterialM());
             operator.setMaterialO(planModel.getMaterialO());
@@ -188,9 +202,11 @@ public class NutritionResource {
      * @param bindingResult
      * @return
      */
+
     @PostMapping(value = "/professor")
     public Response changePlanByProfessor(@RequestBody @Valid NutritionPlanWithBLOBs professor, BindingResult bindingResult) {
         logger.info("invoke changePlanByProfessor {}, url is nutrition/professor", professor);
+
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("营养实施档案更新(专家页面)失败");
         }else {
@@ -198,6 +214,7 @@ public class NutritionResource {
             if (professor.getIsPass() == 1){
                 professor.setUpassReason("操作员已经修改档案并通过技术审核");
             }
+
             int changeID = nutritionPlanService.changePlanSelective(professor);
             if (changeID <= 0) {
                 return Responses.errorResponse("错误");
@@ -205,6 +222,7 @@ public class NutritionResource {
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("nutrition_plan",changeID);
+
             response.setData(data);
             return response;
         }
@@ -218,13 +236,16 @@ public class NutritionResource {
      * @param bindingResult
      * @return
      */
+
     @PostMapping(value = "/supervisor")
     public Response changePlanBySupervisor(@RequestBody @Valid NutritionPlanWithBLOBs supervisor, BindingResult bindingResult){
         logger.info("invoke changePlanBySupervisor {}, url is nutrition/supervisor", supervisor);
+
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("营养实施档案更新(监督页面)失败");
         }else {
             supervisor.setGmtSupervised(new Date());
+
             int changeID = nutritionPlanService.changePlanSelective(supervisor);
             if (changeID <= 0) {
                 return Responses.errorResponse("失败");
@@ -232,6 +253,7 @@ public class NutritionResource {
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("nutrition_plan",changeID);
+
             response.setData(data);
             return response;
         }
@@ -241,6 +263,7 @@ public class NutritionResource {
      * 按主键查询的接口：/nutritionSelectById
      * 按主键查询的方法名：findPlanById()
      * 接收参数：整型的主键号（保留接口查询，前端不调用此接口）
+
      * @return
      */
     @GetMapping(value = "/{id}")
@@ -257,6 +280,7 @@ public class NutritionResource {
         data.put("List", selectById);
         response.setData(data);
         return response;
+
     }
 
     /**
@@ -268,9 +292,11 @@ public class NutritionResource {
      * @return
      * @throws ParseException
      */
+
     @PostMapping(value = "/selective")
     public Response findPlanSelective(@RequestBody @Valid NutritionPlanModel planModel, BindingResult bindingResult) throws ParseException {
         logger.info("invoke findPlanSelective {}, url is nutrition/selective", planModel);
+
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("营养实施档案(根据条件)查询失败");
         }else {
@@ -394,6 +420,7 @@ public class NutritionResource {
                 criteria.andIsPass1EqualTo(nutritionPlanWithBLOBs.getIsPass1());
             }
             List<NutritionPlanWithBLOBs> select = nutritionPlanService.findPlanSelective(nutritionPlanExample,new RowBounds(otherTime.getPage(),otherTime.getSize()));
+
             if (select == null) {
                 return Responses.errorResponse("错误");
             }
@@ -401,6 +428,7 @@ public class NutritionResource {
             HashMap<String, Object> data = new HashMap<>();
             data.put("List", select);
             data.put("size", select.size());
+
             response.setData(data);
             return response;
         }
@@ -414,9 +442,11 @@ public class NutritionResource {
      * @param bindingResult
      * @return
      */
+
     @PostMapping(value = "/professor/selective")
     public Response findPlanSelectByProfessor(@RequestBody @Valid NutritionPlanModel planModel, BindingResult bindingResult) {
         logger.info("invoke findPlanSelectByProfessor {}, url is nutrition/professor/selective", planModel);
+
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("营养实施档案(根据条件)查询失败");
         }else {
@@ -502,6 +532,7 @@ public class NutritionResource {
             }
             criteria.andIsPassEqualTo(notPassed);
             List<NutritionPlanWithBLOBs> select = nutritionPlanService.findPlanSelective(nutritionPlanExample,new RowBounds(otherTime.getPage(),otherTime.getSize()));
+
             if (select == null) {
                 return Responses.errorResponse("错误");
             }
@@ -509,6 +540,7 @@ public class NutritionResource {
             HashMap<String, Object> data = new HashMap<>();
             data.put("List", select);
             data.put("size", select.size());
+
             response.setData(data);
             return response;
         }
@@ -522,9 +554,11 @@ public class NutritionResource {
      * @param bindingResult
      * @return
      */
+
     @PostMapping(value = "/supervisor/selective")
     public Response findPlanSelectBySupervisor(@RequestBody @Valid NutritionPlanModel planModel, BindingResult bindingResult) {
         logger.info("invoke findPlanSelectBySupervisor {}, url is nutrition/supervisor/selective", planModel);
+
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("营养实施档案(根据条件)查询失败");
         }else {

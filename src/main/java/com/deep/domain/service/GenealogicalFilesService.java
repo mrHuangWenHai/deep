@@ -48,25 +48,15 @@ public class  GenealogicalFilesService {
       return total;
     }
 
-    public GenealogicalFilesModel getGenealogicalFilesModelByid(int id) {
-        return this.genealogicalFilesMapper.getGenealogicalFilesModelByid(id);
-    }
 
-    public GenealogicalFilesModel getGenealogicalFilesModelByNativeEartag(String nativeEartag) {
-        return this.genealogicalFilesMapper.getGenealogicalFilesModelByNativeEartag(nativeEartag);
-    }
-
-    public GenealogicalFilesModel getGenealogicalFilesModelByimmuneEartag(String immuneEartag) {
-        return this.genealogicalFilesMapper.getGenealogicalFilesModelByimmuneEartag(immuneEartag);
-    }
-
-    public GenealogicalFilesModel getGenealogicalFilesModelBytradeMarkEartag(String tradeMarkEartag) {
-        return this.genealogicalFilesMapper.getGenealogicalFilesModelBytradeMarkEartag(tradeMarkEartag);
+    public GenealogicalFilesModel getGenealogicalFilesModelById(long id) {
+        return this.genealogicalFilesMapper.getGenealogicalFilesModelById(id);
     }
 
 
-    public int deleteGenealogicalFilesModel(int id) {
-        int success = this.genealogicalFilesMapper.deleteGenealogicalFilesModel(id);
+    public int deleteGenealogicalFilesModelById(long id) {
+        int success = this.genealogicalFilesMapper.deleteGenealogicalFilesModelById(id);
+
         if (success == 1) {
           if (total != -1 && total > 0) {
             total --;

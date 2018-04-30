@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 @RestController
 public class LoginResource {
 
@@ -49,6 +50,7 @@ public class LoginResource {
     @Resource
     private UserModel myuserModel;
 
+
     /**
      * 用户登录验证并且返回结果
      * @param loginRequest 用户登录加的模型
@@ -60,58 +62,64 @@ public class LoginResource {
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
         UserModel userModel = userService.getUserByPkuserID(username);
+
         if( userModel == null) {
+
             //数据库中未查到用户名
             Response response = Responses.errorResponse("用户名或者密码错误");
             HashMap<String, Object> data = new HashMap<>();
             data.put("errorMessage", "error");
             response.setData(data);
             return response;
+
         } else {
             // 验证密码信息, 忽略大小写
             if( userModel.getUserPwd().equalsIgnoreCase(password)) {
-                Response response = Responses.successResponse();
-                HashMap<String, Object> data = new HashMap<>();
-                data.put("successMessage", "登录成功!");
-                data.put("id", userModel.getId());
-                data.put("role_id", userModel.getUserRole());
-                if (userModel.getIsFactory() == 0) {
-                    // 如果是羊场
-                    FactoryModel factoryModel = factoryService.getOneFactory(userModel.getUserFactory());
-                    data.put("factory_id", userModel.getUserFactory());
-                    data.put("agent_id", factoryModel.getAgent());
-                } else if (userModel.getIsFactory() == 1) {
-                    // 如果是代理
-                    AgentModel agentModel = agentService.getOneAgent(userModel.getUserFactory());
-                    data.put("agent_id", userModel.getUserFactory());
-                    data.put("agent_father_id", agentModel.getAgentFather());
-                }
-                response.setData(data);
-                Long roleInt = userModel.getUserRole();
-                String defaultPermit = roleService.findRoleDefaultPermits(userModel.getUserRole());
-                defaultPermit =  roleService.findExtendPermit(defaultPermit, userModel.getUserPermit());
 
-                TokenModel tokenModel = new TokenModel(userModel.getId(), String.valueOf(roleInt));
-                JedisUtil.setValue(String.valueOf(userModel.getId()), tokenModel.getToken());
-                JedisUtil.doExpire(String.valueOf(userModel.getId()));
+              Response response = Responses.successResponse();
+              HashMap<String, Object> data = new HashMap<>();
+              data.put("successMessage", "登录成功!");
+              data.put("id", userModel.getId());
+              data.put("role_id", userModel.getUserRole());
+              if (userModel.getIsFactory() == 0) {
+                // 如果是羊场
+                FactoryModel factoryModel = factoryService.getOneFactory(userModel.getUserFactory());
+                data.put("factory_id", userModel.getUserFactory());
+                data.put("agent_id", factoryModel.getAgent());
+              } else if (userModel.getIsFactory() == 1) {
 
-                JedisUtil.setValue("defaultPermit" + userModel.getId(), defaultPermit);
-                JedisUtil.doExpire("defaultPermit" + userModel.getId());
+                // 如果是代理
+                AgentModel agentModel = agentService.getOneAgent(userModel.getUserFactory());
+                data.put("agent_id", userModel.getUserFactory());
+                data.put("agent_father_id", agentModel.getAgentFather());
+              }
+              response.setData(data);
+              Long roleInt = userModel.getUserRole();
+              String defaultPermit = roleService.findRoleDefaultPermits(userModel.getUserRole());
+              defaultPermit = roleService.findExtendPermit(defaultPermit, userModel.getUserPermit());
 
-                httpServletResponse.setHeader("Authorization", userModel.getId() + ":" + tokenModel.getToken());
-                return response;
+              TokenModel tokenModel = new TokenModel(userModel.getId(), String.valueOf(roleInt));
+              JedisUtil.setValue(String.valueOf(userModel.getId()), tokenModel.getToken());
+              JedisUtil.doExpire(String.valueOf(userModel.getId()));
+
+              JedisUtil.setValue("defaultPermit" + userModel.getId(), defaultPermit);
+              JedisUtil.doExpire("defaultPermit" + userModel.getId());
+
+              httpServletResponse.setHeader("Authorization", userModel.getId() + ":" + tokenModel.getToken());
+              return response;
             } else {
-                Response response = Responses.errorResponse("用户名或者密码错误");
-                HashMap<String, Object> data = new HashMap<>();
-                data.put("errorMessage", "error");
-                response.setData(data);
-                return response;
+              Response response = Responses.errorResponse("用户名或者密码错误");
+              HashMap<String, Object> data = new HashMap<>();
+              data.put("errorMessage", "error");
+              response.setData(data);
+              return response;
             }
         }
     }
 
     /**
      *  通过电话号码找回并且返回相关的数据
+
      * @param usernameP 用户名
      * @return
      */
@@ -193,6 +201,7 @@ public class LoginResource {
             HashMap<String, Object> data = new HashMap<>();
             data.put("errorMessage", "valid success");
             response.setData(data);
+
         }else{
             response = Responses.errorResponse("valid failed!");
             HashMap<String, Object> data = new HashMap<>();
@@ -202,6 +211,7 @@ public class LoginResource {
         return response;
     }
 
+
     @GetMapping(value = "/question")
     public Response requestQuestion(@RequestParam("name") String name) {
         logger.info("invoke requestQuestion{}, url is requestQuestion", name);
@@ -210,13 +220,16 @@ public class LoginResource {
         }
         myuserModel = userService.getUserByPkuserID(name);
         if (myuserModel == null) {
+
             return Responses.errorResponse("请求失败");
         } else {
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
+
             data.put("question_1", myuserModel.getQuestion_1());
             data.put("question_2", myuserModel.getQuestion_2());
             data.put("question_3", myuserModel.getQuestion_3());
+
             response.setData(data);
             return response;
         }
@@ -252,9 +265,11 @@ public class LoginResource {
     }
 
     /**
+
      * user logout for himself
      * @param id 用户名
      * @return
+
      */
     @GetMapping(value = "/logout/{id}")
     public Response logout(@PathVariable("id") String id) {

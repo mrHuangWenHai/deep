@@ -19,7 +19,7 @@ import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -137,19 +137,20 @@ public class GenealogicalFilesResource {
 
         logger.info("invoke findShow {}",genealogicalRequest);
 
-        if ( genealogicalRequest.getPage() == 0 ) {
-            genealogicalRequest.setPage(0);
-        }
+
+
 
         if ( genealogicalRequest.getSize() == 0 ) {
             genealogicalRequest.setSize(10);
         }
 
-        List<GenealogicalFilesModel> genealogicalFilesModels = genealogicalFilesService.getGenealogicalFilesModel(genealogicalRequest,new RowBounds(genealogicalRequest.getPage(),genealogicalRequest.getSize()));
+        System.out.println(genealogicalRequest.getBirthWeightStart() +"  " + genealogicalRequest.getBirthWeightEnd());
+        List<GenealogicalFilesModel> genealogicalFilesModels = genealogicalFilesService.getGenealogicalFilesModel(genealogicalRequest,new RowBounds(genealogicalRequest.getPage() * genealogicalRequest.getSize() ,genealogicalRequest.getSize()));
 
-        for(int i = 0 ; i < genealogicalFilesModels.size() ; i ++) {
-            String brief = this.typeBriefService.getTypeBrief(genealogicalFilesModels.get(i).getTypeName()).getBrief();
-            genealogicalFilesModels.get(i).setBrief(brief);
+        for (GenealogicalFilesModel genealogicalFilesModel : genealogicalFilesModels) {
+            String brief = this.typeBriefService.getTypeBrief(genealogicalFilesModel.getTypeName()).getBrief();
+            genealogicalFilesModel.setBrief(brief);
+
 
         }
         return JudgeUtil.JudgeFind(genealogicalFilesModels,genealogicalFilesModels.size());
@@ -157,12 +158,14 @@ public class GenealogicalFilesResource {
 
     /**
      * 用于条件查找
-     * RowBounds为必传参数
-     * @param
-     * @return
+     * @param factoryNum 工厂号
+     * @param page  页号
+     * @param size  条数
+     * @return  查询结果
      */
-     @RequestMapping(value = "find/{id}")
-     public Response findGenealogicalFiles(@NotNull @PathVariable(value = "id") long factoryNum,
+     @RequestMapping(value = "find",method = RequestMethod.GET)
+     public Response findGenealogicalFiles(@NotNull @RequestParam(value = "factoryNum") long factoryNum,
+
                                            @RequestParam(value = "page", defaultValue = "0") int page,
                                            @RequestParam(value = "size", defaultValue = "10") int size) {
          if (page < 0 || size < 0) {
@@ -182,20 +185,20 @@ public class GenealogicalFilesResource {
      }
 
     /**
-     * 查询出满足若干条件后的结果
-     * 可由id进行操作
+     * 根据查询id进行操作
      * METHOD:GET
      * @param id id
      * @return 查询结果
      */
     @ResponseBody
 
-    @RequestMapping(value = "/show/{id}",method = RequestMethod.GET)
-    public Response findShowById(@NotNull @PathVariable("id") int id ) {
+    @RequestMapping(value = "/find/{id}",method = RequestMethod.GET)
+    public Response find(@NotNull @PathVariable("id") long id ) {
 
-        logger.info("invoke showById {}", id);
+        logger.info("invoke find{id} {}", id);
 
-        GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesService.getGenealogicalFilesModelByid(id);
+        GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesService.getGenealogicalFilesModelById(id);
+
         return JudgeUtil.JudgeFind(genealogicalFilesModel);
     }
 
@@ -229,9 +232,9 @@ public class GenealogicalFilesResource {
      * @return  删除结果
      */
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
-    public Response delete(@NotNull @PathVariable(value = "id") int id) {
+    public Response delete(@NotNull @PathVariable(value = "id") long id) {
         logger.info("invoke delete {}", id);
-        int row = genealogicalFilesService.deleteGenealogicalFilesModel(id);
+        int row = genealogicalFilesService.deleteGenealogicalFilesModelById(id);
         return JudgeUtil.JudgeDelete(row);
     }
 

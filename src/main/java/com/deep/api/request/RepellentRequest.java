@@ -17,7 +17,7 @@ public class RepellentRequest {
     private String repellentTime;
     private String repellentName;
     private String repellentWay;
-    private String repellentQuality;
+    private String dose;    //用药剂量
     private String operatorId;
     private String professor;
     private String operatorName;
@@ -93,12 +93,14 @@ public class RepellentRequest {
         this.repellentWay = repellentWay;
     }
 
-    public String getRepellentQuality() {
-        return repellentQuality;
+
+    public String getDose() {
+        return dose;
     }
 
-    public void setRepellentQuality(String repellentQuality) {
-        this.repellentQuality = repellentQuality;
+    public void setDose(String dose) {
+        this.dose = dose;
+
     }
 
     public String getSupervisor() {
@@ -248,7 +250,7 @@ public class RepellentRequest {
             ", repellentTime='" + repellentTime + '\'' +
             ", repellentName='" + repellentName + '\'' +
             ", repellentWay='" + repellentWay + '\'' +
-            ", repellentQuality='" + repellentQuality + '\'' +
+            ", dose='" + dose + '\'' +
             ", operatorName='" + operatorName + '\'' +
             ", operatorId='" + operatorId + '\'' +
             ", professor='" + professor + '\'' +

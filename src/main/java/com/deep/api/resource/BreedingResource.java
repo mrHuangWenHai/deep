@@ -33,7 +33,9 @@ public class BreedingResource {
     @Resource
     private BreedingPlanService breedingPlanService;
 
+
     private final Logger logger = LoggerFactory.getLogger(BreedingResource.class);
+
 
     /**
      * 添加一条记录信息
@@ -46,7 +48,9 @@ public class BreedingResource {
      */
     @PostMapping(value = "/insert")
     public Response addPlan(@RequestBody @Valid BreedingPlanModel planModel, BindingResult bindingResult) throws ParseException {
+
         logger.info("invoke addPlan {}, url = /breeding/insert", planModel);
+
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案录入失败");
         }else {
@@ -139,7 +143,9 @@ public class BreedingResource {
      */
     @PostMapping(value = "/operator")
     public Response changePlanByOperator(@RequestBody @Valid BreedingPlanModel planModel, BindingResult bindingResult) throws ParseException {
+
         logger.info("invoke changePlanByOperator {}, url is breeding/operator", planModel);
+
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案(操作员页面)修改失败");
         }else{
@@ -245,7 +251,9 @@ public class BreedingResource {
      */
     @PostMapping(value = "/professor")
     public Response changePlanByProfessor(@RequestBody @Valid BreedingPlan professor, BindingResult bindingResult) {
+
         logger.info("invoke changePlanByProfessor {}, url is breeding/professor", professor);
+
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案(专家页面)修改失败");
         }else{
@@ -274,7 +282,9 @@ public class BreedingResource {
      */
     @PostMapping(value = "/supervisor")
     public Response changePlanBySupervisor(@RequestBody @Valid BreedingPlan supervisor, BindingResult bindingResult) {
+
         logger.info("invoke changePlanBySupervisor {}, url is breeding/supervisor", supervisor);
+
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案(监督页面)修改失败");
         }else{
@@ -327,7 +337,9 @@ public class BreedingResource {
      */
     @PostMapping(value = "/select")
     public Response findPlanSelective(@RequestBody @Valid BreedingPlanModel planModel, BindingResult bindingResult) throws ParseException {
+
         logger.info("invoke findPlanSelective {}, url is breeding/select", planModel);
+
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案(根据条件)查询失败");
         }else {
@@ -487,7 +499,9 @@ public class BreedingResource {
      */
     @PostMapping(value = "/professor/select")
     public Response findPlanSelectByProfessor(@RequestBody @Valid BreedingPlanModel planModel, BindingResult bindingResult){
+
         logger.info("invoke findPlanSelectByProfessor {}, url is breeding/professor/select", planModel);
+
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案(监督页面)修改失败");
         }else {
@@ -581,7 +595,9 @@ public class BreedingResource {
      */
     @PostMapping(value = "/supervisor/select")
     public Response findPlanSelectBySupervisor(@RequestBody @Valid BreedingPlanModel planModel, BindingResult bindingResult){
+
         logger.info("invoke findPlanSelectBySupervisor {}, url is breeding/supervisor/select", planModel);
+
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案(监督页面)修改失败");
         }else {

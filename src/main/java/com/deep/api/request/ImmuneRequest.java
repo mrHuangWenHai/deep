@@ -9,7 +9,9 @@ import java.math.BigInteger;
  */
 public class ImmuneRequest {
 
+
     private Long id;
+
     private BigInteger factoryNum;
     private String factoryName;
     private String crowdNum;

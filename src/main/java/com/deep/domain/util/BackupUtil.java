@@ -19,8 +19,13 @@ public class BackupUtil {
      * @param database  数据库
      * @param tableName 表名
      * @param suffix   文件后缀
+<<<<<<< HEAD
      * @return
      * @throws InterruptedException
+=======
+     * @return 数据库备份结果
+     * @throws InterruptedException 备份冲突
+>>>>>>> e04cf5483c3eee48081696bf0c707c196e806db6
      */
     public static boolean sqlBackup(String savePath, String hostIP, String username, String password, String database, String tableName, String suffix) throws InterruptedException{
         File saveFile = new File(savePath);

@@ -29,13 +29,17 @@ public class TrackBackResource {
   TrackBackService trackBackService;
 
   @RequestMapping("/immune")
+
   Response trackBackSheepByImmuneEarTag(@RequestParam("immuneEarTag") @NotNull String immuneEarTag) {
+
     logger.info("/trackBack/immune  immuneTag = {}",immuneEarTag);
     if (immuneEarTag.length() == 0) {
       return Responses.errorResponse("immuneTag is empty");
     }
 
+
     GenealogicalFilesModel genealogicalFilesModel = trackBackService.getGenealogicalFilesModelByimmuneEartag(immuneEarTag);
+
     Map<String, Object> data = new  HashMap<String, Object>();
     data.put("GenealogicalFilesModel", genealogicalFilesModel);
     Response response = Responses.successResponse();
@@ -44,12 +48,16 @@ public class TrackBackResource {
   }
 
   @RequestMapping("/trademark")
+
   Response trackBackSheepByTrademarkEarTag(@RequestParam("trademarkEarTag") @NotNull String trademarkEarTag) {
+
     logger.info("/trackBack/trademark TrademarkEarTag = {}",trademarkEarTag);
     if (trademarkEarTag.length() == 0) {
       return Responses.errorResponse("trademarkEarTag is empty");
     }
+
     GenealogicalFilesModel genealogicalFilesModel = trackBackService.getGenealogicalFilesModelBytradeMarkEartag(trademarkEarTag);
+
     Map<String, Object> data = new  HashMap<String, Object>();
     data.put("GenealogicalFilesModel", genealogicalFilesModel);
     Response response = Responses.successResponse();
@@ -58,6 +66,7 @@ public class TrackBackResource {
   }
 
   @RequestMapping("/native")
+
   Response trackBackSheepByNativeEarTag(@RequestParam("nativeEarTag") @NotNull String nativeEarTag) {
     logger.info("/trackBack/trademark nativeEarTag = {}",nativeEarTag);
     if (nativeEarTag.length() == 0) {

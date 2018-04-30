@@ -19,24 +19,26 @@ public interface GenealogicalFilesMapper {
 
 
     List<GenealogicalFilesModel> getGenealogicalFilesModel(@Param("genealogicalFilesModel") GenealogicalRequest genealogicalFilesModel,
-                                                           RowBounds rowBounds
-                                                           );
 
-    List<GenealogicalFilesModel> getGenealogicalFilesModelByFactoryNum (@Param("factoryNum") long factoryNum,
+                                                           RowBounds rowBounds);
+
+    List<GenealogicalFilesModel> getGenealogicalFilesModelByFactoryNum (@Param("factoryNum") Long factoryNum,
                                                                         RowBounds rowBounds);
+
+    GenealogicalFilesModel getGenealogicalFilesModelByImmuneEartag(@Param("immuneEartag") String immuneEartag);
+
+
+    GenealogicalFilesModel getGenealogicalFilesModelByTradeMarkEartag(@Param("tradeMarkEartag")String tradeMarkEartag);
+
+    GenealogicalFilesModel getGenealogicalFilesModelByNativeEartag(@Param("nativeEartag")String nativeEartag);
 
     int allGenealogicalFilesCounts();
 
-    GenealogicalFilesModel getGenealogicalFilesModelByid(@Param("id") int id);
+    GenealogicalFilesModel getGenealogicalFilesModelById(@Param("id") Long id);
 
-    GenealogicalFilesModel getGenealogicalFilesModelByNativeEartag(@Param("nativeEartag") String nativeEartag);
-
-    GenealogicalFilesModel getGenealogicalFilesModelByimmuneEartag(@Param("immuneEartag") String immuneEartag);
-
-    GenealogicalFilesModel getGenealogicalFilesModelBytradeMarkEartag(@Param("tradeMarkEartag") String tradeMarkEartag);
 
     //@Delete(FROM genealogical_files WHERE self_eartag = #{SelfEartag})
-    int deleteGenealogicalFilesModel(@Param("id") int id);
+    int deleteGenealogicalFilesModelById(@Param("id") Long id);
 
     int updateGenealogicalFilesModel(@Param("genealogicalFilesModel") GenealogicalFilesModel genealogicalFilesModel);
 

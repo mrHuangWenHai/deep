@@ -1,6 +1,8 @@
 package com.deep.domain.model;
 
+
 import javax.validation.constraints.NotBlank;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -10,6 +12,7 @@ public class NoticePlan implements Serializable {
     private Date gmtCreate;
 
     private Date gmtModified;
+
 
     @NotBlank(message = "不能为空")
     private String operatorName;
@@ -62,6 +65,7 @@ public class NoticePlan implements Serializable {
 
     public void setOperatorId(Integer operatorId) {
         this.operatorId = operatorId;
+
     }
 
     public Byte getType() {
@@ -77,7 +81,9 @@ public class NoticePlan implements Serializable {
     }
 
     public void setTitle(String title) {
+
         this.title = title;
+
     }
 
     public String getContent() {
@@ -85,6 +91,8 @@ public class NoticePlan implements Serializable {
     }
 
     public void setContent(String content) {
+
         this.content = content;
     }
+
 }

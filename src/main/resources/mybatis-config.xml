@@ -25,11 +25,13 @@
         <mapper class="com.deep.infra.persistence.sql.mapper.UserMapper"/>
         <mapper class="com.deep.infra.persistence.sql.mapper.AgentMapper"/>
         <mapper class="com.deep.infra.persistence.sql.mapper.RoleMapper" />
+
         <mapper class="com.deep.infra.persistence.sql.mapper.NoticeMapper"/>
         <mapper resource="mapper/BreedingPlanMapper.xml"/>
         <mapper resource="mapper/DiagnosisPlanMapper.xml"/>
         <mapper resource="mapper/NutritionPlanMapper.xml"/>
         <!--<mapper resource="mapper/NoticePlanMapper.xml"/>-->
+
         <mapper resource="mapper/PicMapper.xml"/>
         <mapper resource="mapper/MessageMapper.xml"/>
         <mapper resource="mapper/GenealogicalFilesMapperxml.xml" />
@@ -39,12 +41,9 @@
         <mapper resource="mapper/GenealogicalFilesTransMapper.xml"/>
         <mapper resource="mapper/DisinfectionArchivesMapper.xml" />
         <mapper resource="mapper/OperationFileMapper.xml" />
-        <mapper resource="mapper/CO2DataMapper.xml"/>
-        <mapper resource="mapper/HumDataMapper.xml"/>
-        <mapper resource="mapper/NH3DataMapper.xml"/>
-        <mapper resource="mapper/TempDataMapper.xml"/>
+
         <mapper resource="mapper/TypeBriefMapper.xml"/>
-        <mapper resource="mapper/EnvironmentMapper.xml"/>
+        <mapper resource="mapper/EnvironmentTraceMapper.xml"/>
 
     </mappers>
 </configuration>

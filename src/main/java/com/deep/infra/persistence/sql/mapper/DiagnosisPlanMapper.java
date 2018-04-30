@@ -1,5 +1,6 @@
 package com.deep.infra.persistence.sql.mapper;
 
+
 import com.deep.api.request.DiagnosisRequest;
 import com.deep.domain.model.DiagnosisPlanModel;
 import org.apache.ibatis.annotations.Mapper;
@@ -36,8 +37,6 @@ public interface DiagnosisPlanMapper {
                                        @Param("upassReason") String upassReason);
 
     int updateDiagnosisPlanModel(@Param("diagnosisPlanModel") DiagnosisPlanModel diagnosisPlanModel);
-
-
 
 
 }

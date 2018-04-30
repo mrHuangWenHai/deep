@@ -1,17 +1,14 @@
 package com.deep.api.resource;
 
+import com.deep.api.Utils.AgentUtil;
 import com.deep.api.request.DisinfectRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
-import com.deep.api.response.ValidResponse;
 import com.deep.domain.model.DisinfectFilesModel;
 import com.deep.domain.service.DisinfectFilesService;
+import com.deep.domain.service.FactoryService;
 import com.deep.domain.service.UserService;
-import com.deep.domain.util.DownloadUtil;
-import com.deep.domain.util.JedisUtil;
-import com.deep.domain.util.JudgeUtil;
-import com.deep.domain.util.UploadUtil;
-import org.apache.ibatis.annotations.Param;
+import com.deep.domain.util.*;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Null;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +43,9 @@ public class DisinfectFilesResource {
     @Resource
     private UserService userService;
 
+    //用于查询羊厂代理id
+    @Resource
+    private FactoryService factoryService;
     /**
      * 返回插入结果
      * 成功：success
@@ -65,7 +63,7 @@ public class DisinfectFilesResource {
                              BindingResult bindingResult,
                              @RequestParam(value = "disinfectEartagFile") MultipartFile disinfectEartagFile,
                              HttpServletRequest request
-                            ) {
+    ) {
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse(bindingResult.toString());
         }
@@ -73,93 +71,97 @@ public class DisinfectFilesResource {
         if( disinfectEartagFile.isEmpty() ) {
             return Responses.errorResponse("Lack Item");
         } else {
+            try {
+                //System.out.println("running");
+                String fileName = disinfectEartagFile.getOriginalFilename();
+                //目的路径
+                String filePath = pathPre + disinfectFilesModel.getFactoryNum().toString() + "/disinfectEartag/";
+                fileName = UploadUtil.uploadFile(disinfectEartagFile.getBytes(),filePath,fileName);
+                //System.out.println("save before");
+
+                //数据插入数据库
+                //System.out.println("mysql执行前");
+
+                disinfectFilesModel.setDisinfectEartag(fileName);
+
+                disinfectFilesService.setDisinfectFilesModel(disinfectFilesModel);
+
+                //System.out.println("pppppppppppppppppppppppppppp  "+ disinfectFilesModel.getId());
+                //数据插入redis
 
 
-                try {
-                    String fileName = disinfectEartagFile.getOriginalFilename();
-                    //目的路径
-                    String filePath = pathPre + disinfectFilesModel.getFactoryNum().toString() + "/disinfectEartag/";
-                    fileName = UploadUtil.uploadFile(disinfectEartagFile.getBytes(),filePath,fileName);
-                    //System.out.println("save before");
+                //professor字段为 代理ID + _professor
+                //supervisor字段为 工厂号 + _supervisor
+                short agentID = this.factoryService.getAgentIDByFactoryNumber(disinfectFilesModel.getFactoryNum().toString());
+                String professorKey = agentID + "_professor";
+                String supervisorKey = disinfectFilesModel.getFactoryNum().toString() + "_supervisor";
 
-                    //数据插入数据库
-                    //System.out.println("mysql执行前");
+                String testSendProfessor = agentID + "_professor_AlreadySend";
+                String testSendSupervisor = disinfectFilesModel.getFactoryNum().toString() + "_supervisor_AlreadySend";
 
-                    disinfectFilesModel.setDisinfectEartag(fileName);
-
-                    disinfectFilesService.setDisinfectFilesModel(disinfectFilesModel);
-
-                    //System.out.println("pppppppppppppppppppppppppppp  "+ disinfectFilesModel.getId());
-                    //数据插入redis
-                    String professorKey = disinfectFilesModel.getFactoryNum().toString() + "_disinfectFiles_professor";
-                    String supervisorKey = disinfectFilesModel.getFactoryNum().toString() + "_disinfectFiles_supervisor";
-                    String testSendProfessor = disinfectFilesModel.getFactoryNum().toString() + "_disinfectFiles_professor_AlreadySend";
-                    String testSendSupervisor = disinfectFilesModel.getFactoryNum().toString() + "_disinfectFiles_supervisor_AlreadySend";
-
-                    JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
-                    JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
-
-                    System.out.println("插入后,审核前");
-                    System.out.println("pk+"+professorKey+" "+"pv:"+JedisUtil.getCertainKeyValue(professorKey));
-                    System.out.println("sk+"+supervisorKey+" "+"sv:"+JedisUtil.getCertainKeyValue(supervisorKey));
-                    System.out.println("tpk+"+testSendProfessor+" "+"tpv:"+JedisUtil.getCertainKeyValue(testSendProfessor));
-                    System.out.println("tsk+"+testSendSupervisor+" "+"tsv:"+JedisUtil.getCertainKeyValue(testSendSupervisor));
-
-                    //发送短信后 testSendProfessor存放在redis中 过期时间为ExpireTime
-                    if( !("1".equals(JedisUtil.getCertainKeyValue(testSendProfessor)))) {
-                        //System.out.println("testSendProfessorValue:"+jedisUtil.getCertainKeyValue(testSendProfessor));
-                        if( JedisUtil.redisJudgeTime(professorKey) ) {
-
-                            System.out.println("in redis:");
-
-                            List<String> phone = userService.getProfessorTelephoneByFactoryNum(disinfectFilesModel.getFactoryNum());
-
-                            //需完成:userModels.getTelephone()赋值给String
-                            // 获得StringBuffer手机号
-                            StringBuffer phoneList = new StringBuffer("");
-
-                            for (String aPhone : phone) {
-                                phoneList = phoneList.append(aPhone).append(",");
-                            }
-
-                            if (phoneList.length() != 0) {
-                                if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
-                                    JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
-                                }
-                            }
+                JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
+                JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
 
 
+
+                System.out.println("插入后,审核前");
+                System.out.println("pk+"+professorKey+" "+"pv:"+JedisUtil.getCertainKeyValue(professorKey));
+                System.out.println("sk+"+supervisorKey+" "+"sv:"+JedisUtil.getCertainKeyValue(supervisorKey));
+                System.out.println("tpk+"+testSendProfessor+" "+"tpv:"+JedisUtil.getCertainKeyValue(testSendProfessor));
+                System.out.println("tsk+"+testSendSupervisor+" "+"tsv:"+JedisUtil.getCertainKeyValue(testSendSupervisor));
+
+                //发送短信后 testSendProfessor存放在redis中 过期时间为ExpireTime
+                if( !("1".equals(JedisUtil.getCertainKeyValue(testSendProfessor)))) {
+                    //System.out.println("testSendProfessorValue:"+jedisUtil.getCertainKeyValue(testSendProfessor));
+                    if( JedisUtil.redisJudgeTime(professorKey) ) {
+
+                        System.out.println("in redis:");
+
+                        List<String> phone = userService.getProfessorTelephoneByFactoryNum(disinfectFilesModel.getFactoryNum());
+
+                        //需完成:userModels.getTelephone()赋值给String
+                        // 获得StringBuffer手机号
+                        StringBuffer phoneList = new StringBuffer("");
+
+                        for (String aPhone : phone) {
+                            phoneList = phoneList.append(aPhone).append(",");
                         }
-                    }
 
-                    if( !("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
-                        if(JedisUtil.redisJudgeTime(supervisorKey)) {
-                            List<String> phone = userService.getProfessorTelephoneByFactoryNum(disinfectFilesModel.getFactoryNum());
-
-                            StringBuffer phoneList = new StringBuffer("");
-
-
-                            for (String aPhone : phone) {
-                                phoneList = phoneList.append(aPhone).append(",");
-
-                            }
-
-                            if (phoneList.length() != 0) {
-
-                                if( JedisUtil.redisSendMessage(phoneList.toString(),JedisUtil.getCertainKeyValue("Message"))) {
-                                    JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime"))*24*60*60);
-                                    return JudgeUtil.JudgeSuccess("successMessage","Message Sent");
-                                }
+                        if (phoneList.length() != 0) {
+                            if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
+                                JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
                             }
                         }
 
+
                     }
-                    return JudgeUtil.JudgeSuccess("id",disinfectFilesModel.getId());
-
-                } catch (Exception e) {
-
-                    e.printStackTrace();
                 }
+
+                if( !("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
+                    if(JedisUtil.redisJudgeTime(supervisorKey)) {
+                        List<String> phone = userService.getSuperiorTelephoneByFactoryNum(disinfectFilesModel.getFactoryNum());
+
+                        StringBuffer phoneList = new StringBuffer("");
+
+                        for (String aPhone : phone) {
+                            phoneList = phoneList.append(aPhone).append(",");
+                        }
+
+                        if (phoneList.length() != 0) {
+
+                            if( JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
+                                JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime"))*24*60*60);
+                            }
+                        }
+                    }
+
+                }
+                return JudgeUtil.JudgeSuccess("id",disinfectFilesModel.getId());
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
+            }
 
         }
         return Responses.errorResponse("Exception");
@@ -176,29 +178,106 @@ public class DisinfectFilesResource {
      */
     @RequestMapping(value = "/findshow",method = RequestMethod.POST)
     public Response findShow(@RequestBody DisinfectRequest disinfectRequest) {
-
         logger.info("invoke findShow {}",disinfectRequest);
 
         if( disinfectRequest.getSize() == 0) {
             disinfectRequest.setSize(10);
         }
+        System.out.println(disinfectRequest.getDisinfectTimeStart() + "  " + disinfectRequest.getDisinfectName());
         List<DisinfectFilesModel> disinfectFilesModels = disinfectFilesService.getDisinfectFilesModel(disinfectRequest,
-                new RowBounds(disinfectRequest.getPage() * disinfectRequest.getSize(),disinfectRequest.getSize()));
+            new RowBounds(disinfectRequest.getPage() * disinfectRequest.getSize(),disinfectRequest.getSize()));
 
         return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
     }
 
     /**
-     * 下载文件 并保存到自定义路径
-     * @param response HttpServletResponse
-     * @throws Exception 下载文件异常
+     * 用于id查询
+     * @param id id
+     * @return 查询结果
      */
-    @RequestMapping(value = "/down",method = RequestMethod.GET)
+    @RequestMapping(value = "/find/{id}",method = RequestMethod.GET)
+    public Response find(@PathVariable("id") long id){
+
+        logger.info(" invoke find{id} {}" , id);
+        DisinfectFilesModel disinfectFilesModel = this.disinfectFilesService.getDisinfectFilesModelById(id);
+        return JudgeUtil.JudgeFind(disinfectFilesModel);
+    }
+
+
+    /**
+     * 查看某专家负责的工厂
+     * @param agentId 代理ID
+     * @param factoryNum 工厂号
+     * @param page 页号
+     * @param size 页数
+     * @return 查询结果
+     */
+    @RequestMapping(value = "/professor",method = RequestMethod.GET)
+    public Response pFind(@RequestParam("agentId") Long agentId,
+                          @RequestParam(value = "factoryNum",required = false)BigInteger factoryNum,
+                          @RequestParam(value = "ispassCheck",required = false)String ispassCheck,
+                          @RequestParam(value = "page" , defaultValue = "0") int page,
+                          @RequestParam(value = "size" , defaultValue = "10") int size){
+        logger.info(" invoke pFind{agentId, factoryNum, ispassCheck ,page ,size} {}" , agentId, factoryNum, ispassCheck, page ,size);
+        List<DisinfectFilesModel> list = new ArrayList<>();
+        if (factoryNum == null){
+            //未指定factoryNum 查询出负责的所有的factoryID
+            long[] factoryId = AgentUtil.getFactory(agentId.toString());
+            if (factoryId == null){
+                return Responses.errorResponse("find no factory");
+            }
+
+
+            for (long factory : factoryId){
+                list.addAll(this.disinfectFilesService.getDisinfectFilesModelByFactoryNumAndIsPassCheck(BigInteger.valueOf(factory), ispassCheck, new RowBounds(page * size ,size)));
+            }
+            return JudgeUtil.JudgeFind(list , list.size());
+            //指定查询的factoryNum
+        } else {
+            System.out.println("11");
+            list.addAll(this.disinfectFilesService.getDisinfectFilesModelByFactoryNumAndIsPassCheck(factoryNum, ispassCheck, new RowBounds(page * size ,size)));
+            return JudgeUtil.JudgeFind(list , list.size());
+        }
+
+    }
+
+    /**
+     * 查看某监督员负责的工厂
+     * @param factoryNum 工厂号
+     * @param ispassSup  审核
+     * @param page  页
+     * @param size  条
+     * @return  查询结果
+     */
+    @RequestMapping(value = "/supervisor",method = RequestMethod.GET)
+    public Response sFind(@RequestParam(value = "factoryNum")BigInteger factoryNum,
+                          @RequestParam(value = "ispassSup",required = false)String ispassSup,
+                          @RequestParam(value = "page" , defaultValue = "0") int page,
+                          @RequestParam(value = "size" , defaultValue = "10") int size){
+        logger.info(" invoke sFind{factoryNum, ispassSup, page, size } {}" , factoryNum, ispassSup, page ,size);
+        List<DisinfectFilesModel> list = this.disinfectFilesService.getDisinfectFilesModelByFactoryNumAndIsPassSup(factoryNum, ispassSup, new RowBounds(page * size , size));
+        return JudgeUtil.JudgeFind(list, list.size());
+    }
+
+
+
+
+
+    /**
+     * 下载文件 并保存到自定义路径
+     * @param response  HttpServletResponse
+     * @param factoryNum  下载文件所属工厂号
+     * @param file  文件名
+     * @param locate  目的地址
+     * @return  下载结果
+     */
+    @RequestMapping(value = "/down/{num}/{file}/{locate}",method = RequestMethod.GET)
     public Response download(HttpServletResponse response,
-                         @Param("file") String file,
-                         @Param("locate") String locate)throws Exception {
+                             @PathVariable("num") String factoryNum,
+                             @PathVariable("file") String file,
+                             @PathVariable("locate") String locate){
         logger.info("invoke download {}", response, file, locate);
-        String filePath = "../EartagDocument/disinfectEartag/";
+        String filePath = "../EartagDocument" + factoryNum + "/disinfectEartag/";
         if (DownloadUtil.downloadFile(response , file, filePath, locate)) {
             return JudgeUtil.JudgeSuccess("download","Success");
         } else {
@@ -206,42 +285,8 @@ public class DisinfectFilesResource {
         }
     }
 
-    //更新接口
-    //权限仅为专家和监督员
-    /**
-     * 专家入口 查看isPass = 0或者isPass = 1的数据
-     * METHOD:GET
-     * @param  json
-     * @return 查询结果/查询结果条数
 
-     */
-    @RequestMapping(value = "/pfind",method = RequestMethod.POST)
-    public Response professorFind(@RequestBody Map<String, Integer> json) {
 
-        Integer isPass;
-        if (!json.containsKey("isPass")) {
-            return Responses.errorResponse("lack param isPass");
-        }
-        isPass = json.get("isPass");
-
-        int page = 0;
-        if (json.containsKey("page")) {
-            page = json.get("page");
-        }
-
-        int size = 10;
-        if (json.containsKey("size")) {
-            size = json.get("size");
-        }
-
-        logger.info("invoke professorFind {}", isPass, page, size);
-        if ("2".equals(isPass.toString())) {
-            return Responses.errorResponse("Wrong Pass num");
-        }
-        List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesService.getDisinfectFilesModelByProfessor(isPass,new RowBounds(page * size,size));
-
-        return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
-    }
 
     /**
      * 审核入口 审核isPass = 0的数据
@@ -249,42 +294,27 @@ public class DisinfectFilesResource {
      * @param disinfectFilesModel 消毒类
      * @return 更新结果
      */
-    @RequestMapping(value = "/pupdate",method = RequestMethod.PATCH)
+    @RequestMapping(value = "/professor/select",method = RequestMethod.PATCH)
     public Response professorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel) {
 
-        logger.info("invoke professorUpdate {} {}", disinfectFilesModel);
-
-        int row = this.disinfectFilesService.updateDisinfectFilesModelByProfessor(disinfectFilesModel);
-        if (row == 1) {
-            String professorKey = disinfectFilesModel.getFactoryNum().toString() + "_disinfectFiles_professor";
-            JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
+        logger.info("invoke professorUpdate {}", disinfectFilesModel);
+        if(disinfectFilesModel.getId() == null ||
+            disinfectFilesModel.getFactoryNum() == null ||
+            disinfectFilesModel.getIspassCheck() == null ||
+            disinfectFilesModel.getUnpassReason() == null) {
+            return Responses.errorResponse("Lack Item");
+        } else {
+            int row = disinfectFilesService.updateDisinfectFilesModelByProfessor(disinfectFilesModel);
+            if (row == 1) {
+                String professorKey = this.factoryService.getAgentIDByFactoryNumber(disinfectFilesModel.getFactoryNum().toString()) + "_professor";
+                if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
+                    return Responses.errorResponse("cancel error");
+                }
+            }
+            return JudgeUtil.JudgeUpdate(row);
         }
-        return JudgeUtil.JudgeUpdate(row);
 
     }
-
-    /**
-     * 审核入口 展示所有isPass1 = 0或者isPass1 = 1的数据
-     * @param ispassSup 审核标志位
-     * @param page   页码
-     * @param size   条数
-     * METHOD:GET
-     * @return 查询结果
-     */
-    @RequestMapping(value = "/sfind",method = RequestMethod.GET)
-    public Response supervisorFind(@RequestParam(value = "ispassSup",defaultValue = "2") Integer ispassSup,
-                                   @RequestParam(value = "page",defaultValue = "0") int page,
-                                   @RequestParam(value = "size",defaultValue = "10") int size) {
-
-        logger.info("invoke supervisorFind {}", ispassSup, page, size);
-        if ("2".equals(ispassSup.toString())) {
-            return Responses.errorResponse("Wrong Pass Num");
-        }
-        List<DisinfectFilesModel> disinfectFilesModels = this.disinfectFilesService.getDisinfectFilesModelBySupervisor(ispassSup,new RowBounds(page * size,size));
-
-        return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
-    }
-
 
 
     /**
@@ -294,25 +324,24 @@ public class DisinfectFilesResource {
      * METHOD:PATCH
      * @return 审核结果
      */
-    @RequestMapping(value = "/supdate",method = RequestMethod.PATCH)
-    public Response supervisorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel) {
-
+    @RequestMapping(value = "/supervisor/select",method = RequestMethod.PATCH)
+    public Response supervisorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel){
         logger.info("invoke supervisorUpdate {}", disinfectFilesModel);
-
-        if (disinfectFilesModel.getId() == null ||
-                disinfectFilesModel.getSupervisor() == null ||
-                disinfectFilesModel.getIspassSup() == null ) {
-
+        if(disinfectFilesModel.getId() == null ||
+            disinfectFilesModel.getFactoryNum() == null ||
+            disinfectFilesModel.getSupervisor() == null ||
+            disinfectFilesModel.getIspassSup() == null){
             return Responses.errorResponse("Lack Item");
 
         } else {
-                //生成更新当前时间
-                int row = this.disinfectFilesService.updateDisinfectFilesModelBySupervisor(disinfectFilesModel);
-                if (row == 1) {
-                    String professorKey = disinfectFilesModel.getFactoryNum().toString() + "_disinfectFiles_supervisor";
-                    JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
+            int row = disinfectFilesService.updateDisinfectFilesModelBySupervisor(disinfectFilesModel);
+            if (row == 1) {
+                String supervisorKey = disinfectFilesModel.getFactoryNum().toString() + "_supervisor";
+                if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
+                    return Responses.errorResponse("cancel error");
                 }
-                return JudgeUtil.JudgeUpdate(row);
+            }
+            return JudgeUtil.JudgeUpdate(row);
         }
     }
 
@@ -372,10 +401,9 @@ public class DisinfectFilesResource {
     }
 
     /**
-     * &#x5220;&#x9664;id = certain &#x7684;&#x6570;&#x636e;
-     * &#x6743;&#x9650;&#x8bbe;&#x7f6e;
+     * 删除对应ID数据
      * @param id id
-     * @return &#x5220;&#x9664;&#x7ed3;&#x679c;
+     * @return 是否成功
      */
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
     public Response delete(@Min(0) @PathVariable(value = "id") Long id) {
@@ -383,8 +411,15 @@ public class DisinfectFilesResource {
         if ("0".equals(id.toString())) {
             return Responses.errorResponse("Wrong id");
         }
-        int row = this.disinfectFilesService.deleteDisinfectFilesModelByid(id);
-        return JudgeUtil.JudgeDelete(row);
+        DisinfectFilesModel disinfectFilesModel = this.disinfectFilesService.getDisinfectFilesModelById(id);
+        String filePath = pathPre + disinfectFilesModel.getFactoryNum() + "/disinfectEartag/"+disinfectFilesModel.getDisinfectEartag();
+        int row = this.disinfectFilesService.deleteDisinfectFilesModelById(id);
+        if (FileUtil.deleteFile(filePath) && row == 1){
+            return JudgeUtil.JudgeDelete(row);
+        } else {
+            return Responses.errorResponse("delete wrong");
+        }
     }
 
 }
+

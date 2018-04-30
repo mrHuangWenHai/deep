@@ -27,23 +27,25 @@ public class ImmunePlanService {
     }
 
 
-    public ImmunePlanModel getImmunePlanModelByfactoryNumAndcrowdNumAndimmuneTime(BigInteger factoryNum, String crowdNum, String immuneTime){
-        return this.immunePlanMapper.getImmunePlanModelByfactoryNumAndcrowdNumAndimmuneTime(factoryNum,crowdNum,immuneTime);
+    public ImmunePlanModel getImmunePlanModelById(long id){
+        return this.immunePlanMapper.getImmunePlanModelById(id);
     }
 
-    public List<ImmunePlanModel> getImmunePlanModelByProfessor(String ispassCheck, RowBounds bounds) {
-        return this.immunePlanMapper.getImmunePlanModelByProfessor(ispassCheck, bounds);
+    public List<ImmunePlanModel> getImmunePlanModelByFactoryNum(BigInteger factoryNum , RowBounds bounds){
+        return this.immunePlanMapper.getImmunePlanModelByFactoryNum(factoryNum , bounds);
     }
 
-    public List<ImmunePlanModel> getImmunePlanModelBySupervisor(String ispassSup, RowBounds bounds) {
-        return this.immunePlanMapper.getImmunePlanModelBySupervisor(ispassSup,bounds);
+    public List<ImmunePlanModel> getImmunePlanModelByFactoryNumAndIsPassCheck(BigInteger factoryNum , String ispassCheck, RowBounds bounds){
+        return this.immunePlanMapper.getImmunePlanModelByFactoryNumAndIsPassCheck(factoryNum , ispassCheck, bounds);
     }
 
-    public ImmunePlanModel getImmunePlanModelByid(Long id) {
-        return this.immunePlanMapper.getImmunePlanModelByid(id);
+    public List<ImmunePlanModel> getImmunePlanModelByFactoryNumAndIsPassSup(BigInteger factoryNum , String ispassSup, RowBounds bounds){
+        return this.immunePlanMapper.getImmunePlanModelByFactoryNumAndIsPassSup(factoryNum , ispassSup, bounds);
     }
 
-    public int updateImmunePlanModelByProfessor(ImmunePlanModel immunePlanModel) {
+
+    public int updateImmunePlanModelByProfessor(ImmunePlanModel immunePlanModel){
+
         return this.immunePlanMapper.updateImmunePlanModelByProfessor(immunePlanModel);
     }
 
@@ -55,9 +57,9 @@ public class ImmunePlanService {
         return this.immunePlanMapper.updateImmunePlanModelByOperator(immunePlanModel);
     }
 
+    public int deleteImmunePlanModelById(Long id){
+        return this.immunePlanMapper.deleteImmunePlanModelById(id);
 
-    public int deleteImmunePlanModelByid(Long id){
-        return this.immunePlanMapper.deleteImmunePlanModelByid(id);
     }
 
 

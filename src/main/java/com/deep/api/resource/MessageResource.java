@@ -65,6 +65,7 @@ public class MessageResource {
         }
     }
 
+
     @RequestMapping(value = "/messageBoard/search",method = RequestMethod.POST)
     public Response searchByMessage(@RequestBody  Message message) {
 
@@ -81,12 +82,14 @@ public class MessageResource {
         if(message.getsTime() != null && message.geteTime() != null)
            criteria.andInserttimeBetween(message.getsTime(),message.geteTime());
 
+
         List<Message> select = messageService.findMessageSelectiveWithRowbounds(messageExample,message.getPageNumb(),message.getLimit());
 
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
         data.put("data",select);
         data.put("size",select.size());
+
         response.setData(data);
         return response;
     }
@@ -156,6 +159,7 @@ public class MessageResource {
     public Response searchByIntention(@NotNull(message = "购买意向不能为空")  @RequestParam(value = "intention",required = false,defaultValue = "")String intention,
                               @RequestParam(value = "pageNumb",required = false, defaultValue = "0")int pageNumb,
                               @RequestParam(value = "limit",required = false, defaultValue = "10")int limit) {
+
         logger.info("/messageBoard/searchByIntention {} {} {}",intention,pageNumb,limit);
         MessageExample messageExample = new MessageExample();
         MessageExample.Criteria criteria = messageExample.createCriteria();

@@ -25,20 +25,23 @@ public class RepellentPlanService {
         return this.repellentPlanMapper.getRepellentPlanModel(repellentPlanModel,bounds);
     }
 
-    public RepellentPlanModel getRepellentPlanModelByfactoryNumAndcrowdNumAndrepellentTimeAndrepellentName(BigInteger factoryNum,String crowdNum,String repellentTime,String repellentName){
-        return this.repellentPlanMapper.getRepellentPlanModelByfactoryNumAndcrowdNumAndrepellentTimeAndrepellentName(factoryNum, crowdNum, repellentTime, repellentName);
+
+    public RepellentPlanModel getRepellentPlanModelById(long id){
+        return this.repellentPlanMapper.getRepellentPlanModelById(id);
     }
 
-    public List<RepellentPlanModel> getRepellentPlanModelByProfessor(Integer ispassCheck, RowBounds bounds){
-        return this.repellentPlanMapper.getRepellentPlanModelByProfessor(ispassCheck,bounds);
+    public List<RepellentPlanModel> getRepellentPlanModelByFactoryNum(BigInteger factoryNum , RowBounds bounds){
+        return this.repellentPlanMapper.getRepellentPlanModelByFactoryNum(factoryNum , bounds);
     }
 
-    public List<RepellentPlanModel> getRepellentPlanModelBySupervisor(Integer ispassSup, RowBounds bounds){
-        return this.repellentPlanMapper.getRepellentPlanModelBySupervisor(ispassSup,bounds);
+
+    public List<RepellentPlanModel> getRepellentPlanModelByFactoryNumAndIsPassCheck(BigInteger factoryNum , String ispassCheck, RowBounds bounds){
+        return this.repellentPlanMapper.getRepellentPlanModelByFactoryNumAndIsPassCheck(factoryNum, ispassCheck, bounds);
     }
 
-    public RepellentPlanModel getRepellentPlanModelByid(Long id){
-        return this.repellentPlanMapper.getRepellentPlanModelByid(id);
+    public List<RepellentPlanModel> getRepellentPlanModelByFactoryNumAndIsPassSup(BigInteger factoryNum ,String ispassSup, RowBounds bounds){
+        return this.repellentPlanMapper.getRepellentPlanModelByFactoryNumAndIsPassSup(factoryNum, ispassSup, bounds);
+
     }
 
     public int updateRepellentPlanModelByProfessor(RepellentPlanModel repellentPlanModel){

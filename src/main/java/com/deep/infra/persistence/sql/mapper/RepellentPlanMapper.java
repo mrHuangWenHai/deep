@@ -17,28 +17,25 @@ public interface RepellentPlanMapper {
 
 
     List<RepellentPlanModel> getRepellentPlanModel(@Param("repellentPlanModel") RepellentRequest repellentPlanModel,
-
                                                    RowBounds bounds);
 
-    RepellentPlanModel getRepellentPlanModelByfactoryNumAndcrowdNumAndrepellentTimeAndrepellentName(@Param("factoryNum")BigInteger factoryNum,
-                                                                                                    @Param("crowdNum")String crowdNum,
-                                                                                                    @Param("repellentTime")String repellentTime,
-                                                                                                    @Param("repellentName")String repellentName);
+    RepellentPlanModel getRepellentPlanModelById(@Param("id") Long id);
 
+    List<RepellentPlanModel> getRepellentPlanModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum , RowBounds bounds);
 
-    List<RepellentPlanModel> getRepellentPlanModelByProfessor(@Param("ispassCheck") Integer ispassCheck,
-                                                              RowBounds bounds);
-    List<RepellentPlanModel> getRepellentPlanModelBySupervisor(@Param("ispassSup") Integer ispassSup,
-                                                               RowBounds bounds);
+    List<RepellentPlanModel> getRepellentPlanModelByFactoryNumAndIsPassCheck(@Param("factoryNum")BigInteger factoryNum ,
+                                                                             @Param("ispassCheck")String ispassCheck,
+                                                                             RowBounds bounds);
 
-    RepellentPlanModel getRepellentPlanModelByid(@Param("id") Long id);
-
-
-    int deleteRepellentPlanModelByid(@Param("id") Long id);
+    List<RepellentPlanModel> getRepellentPlanModelByFactoryNumAndIsPassSup(@Param("factoryNum")BigInteger factoryNum ,
+                                                                           @Param("ispassSup")String ispassSup,
+                                                                           RowBounds bounds);
 
     int updateRepellentPlanModelByProfessor(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel);
 
     int updateRepellentPlanModelBySupervisor(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel);
+
+    int deleteRepellentPlanModelByid(@Param("id") Long id);
 
     int updateRepellentPlanModelByOperator(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel);
 

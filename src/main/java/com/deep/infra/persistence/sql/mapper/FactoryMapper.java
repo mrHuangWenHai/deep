@@ -17,12 +17,14 @@ public interface FactoryMapper {
             @Result(property = "gmtCreate", column = "gmt_create"),
             @Result(property = "gmtModified", column = "gmt_modified"),
             @Result(property = "pkNumber", column = "pk_number"),
+
             @Result(property = "breedName", column = "breed_name"),
             @Result(property = "breedLocation", column = "breed_location"),
             @Result(property = "createTime", column = "create_time"),
             @Result(property = "responsiblePersonId", column = "responsible_person_id"),
             @Result(property = "remark", column = "remark"),
             @Result(property = "disinfectP", column = "disinfect_p"),
+
             @Result(property = "agent", column = "agent")
     })
     List<FactoryModel> queryAllFactory();
@@ -38,12 +40,14 @@ public interface FactoryMapper {
             @Result(property = "gmtCreate", column = "gmt_create"),
             @Result(property = "gmtModified", column = "gmt_modified"),
             @Result(property = "pkNumber", column = "pk_number"),
+
             @Result(property = "breedName", column = "breed_name"),
             @Result(property = "breedLocation", column = "breed_location"),
             @Result(property = "createTime", column = "create_time"),
             @Result(property = "responsiblePersonId", column = "responsible_person_id"),
             @Result(property = "remark", column = "remark"),
             @Result(property = "disinfectP", column = "disinfect_p"),
+
             @Result(property = "agent", column = "agent")
     })
     List<FactoryModel> queryFactoryByAgentID(Long id);
@@ -71,12 +75,14 @@ public interface FactoryMapper {
             @Result(property = "gmtCreate", column = "gmt_create"),
             @Result(property = "gmtModified", column = "gmt_modified"),
             @Result(property = "pkNumber", column = "pk_number"),
+
             @Result(property = "breedName", column = "breed_name"),
             @Result(property = "breedLocation", column = "breed_location"),
             @Result(property = "createTime", column = "create_time"),
             @Result(property = "responsiblePersonId", column = "responsible_person_id"),
             @Result(property = "remark", column = "remark"),
             @Result(property = "disinfectP", column = "disinfect_p"),
+
             @Result(property = "agent", column = "agent")
     })
     List<FactoryModel> queryFactoryByLocation(String location);
@@ -103,12 +109,14 @@ public interface FactoryMapper {
             @Result(property = "gmtCreate", column = "gmt_create"),
             @Result(property = "gmtModified", column = "gmt_modified"),
             @Result(property = "pkNumber", column = "pk_number"),
+
             @Result(property = "breedName", column = "breed_name"),
             @Result(property = "breedLocation", column = "breed_location"),
             @Result(property = "createTime", column = "create_time"),
             @Result(property = "responsiblePersonId", column = "responsible_person_id"),
             @Result(property = "remark", column = "remark"),
             @Result(property = "disinfectP", column = "disinfect_p"),
+
             @Result(property = "agent", column = "agent")
     })
     FactoryModel queryFactoryByID(Long id);
@@ -149,6 +157,7 @@ public interface FactoryMapper {
      */
     @Update("update factory_manage set " +
             "gmt_create = #{gmtCreate}, " +
+
             "gmt_modified = #{gmtModified}, " +
             "pk_number = #{pkNumber}, " +
             "breed_name = #{breedName}, " +
@@ -158,6 +167,7 @@ public interface FactoryMapper {
             "remark = #{remark}, " +
             "disinfect_p = #{disinfectP}, " +
             "agent = #{agent} " +
+
             "where id = #{id}")
     Long updateFactory(FactoryModel factoryModel);
 

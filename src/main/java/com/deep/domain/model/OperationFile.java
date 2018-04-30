@@ -22,6 +22,7 @@ public class OperationFile {
   @NotNull
   @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
   private Timestamp checkTime;
+
   @NotNull
   private Boolean colonyHouse;
   @NotNull

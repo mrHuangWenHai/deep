@@ -21,7 +21,9 @@
         <result property="supervisor" column="supervisor"/>
         <result property="remark" column="remark"/>
         <result property="ispassCheck" column="ispass_check"/>
-        <result property="unpassReason" column="unpass_reason"/>
+
+        <result property="unpassReason" column="upass_reason"/>
+
         <result property="ispassSup" column="ispass_sup"/>
         <result property="gmtCreate" column="gmt_create"/>
         <result property="gmtModified" column="gmt_modified"/>
@@ -77,7 +79,9 @@
         repellent_plan
         WHERE
         1=1
-        <if test="repellentPlanModel.id != null">
+
+        <if test="repellentPlanModel.id != null and repellentPlanModel.id != ''">
+
             AND id = #{repellentPlanModel.id}
         </if>
         <if test="repellentPlanModel.factoryNum != null and repellentPlanModel.factoryNum != '' ">
@@ -87,9 +91,19 @@
             AND crowd_num = #{repellentPlanModel.crowdNum}
         </if>
         <if test="repellentPlanModel.repellentTimeStart != null and repellentPlanModel.repellentTimeStart != '' and
+
+                  (repellentPlanModel.repellentTimeEnd == null or repellentPlanModel.repellentTimeEnd == '') ">
+            AND repellent_t &gt;= #{repellentPlanModel.repellentTimeStart}
+        </if>
+        <if test="repellentPlanModel.repellentTimeStart != null and repellentPlanModel.repellentTimeStart != '' and
                   repellentPlanModel.repellentTimeEnd != null and repellentPlanModel.repellentTimeEnd != '' ">
             AND repellent_t BETWEEN #{repellentPlanModel.repellentTimeStart} AND #{repellentPlanModel.repellentTimeEnd}
         </if>
+        <if test="(repellentPlanModel.repellentTimeStart == null or repellentPlanModel.repellentTimeStart == '') and
+                  repellentPlanModel.repellentTimeEnd != null and repellentPlanModel.repellentTimeEnd != '' ">
+            AND repellent_t &lt;=  #{repellentPlanModel.repellentTimeEnd}
+        </if>
+
         <if test="repellentPlanModel.repellentName != null and repellentPlanModel.repellentName != '' ">
             AND repellent_n = #{repellentPlanModel.repellentName}
         </if>
@@ -97,14 +111,18 @@
         <if test="repellentPlanModel.repellentWay != null and repellentPlanModel.repellentWay != '' ">
             AND repellent_m = #{repellentPlanModel.repellentWay}
         </if>
-        <if test="repellentPlanModel.repellentQuality != null and repellentPlanModel.repellentQuality != '' ">
-            AND repellent_q = #{repellentPlanModel.repellentQuality}
+
+        <if test="repellentPlanModel.dose != null and repellentPlanModel.dose != '' ">
+            AND dose = #{repellentPlanModel.dose}
+
         </if>
 
         <if test="repellentPlanModel.operatorName != null and repellentPlanModel.operatorName != '' ">
             AND operator_name = #{repellentPlanModel.operatorName}
         </if>
-        <if test="repellentPlanModel.operatorId != null and repellentPlanModel.professorId != 0">
+
+        <if test="repellentPlanModel.operatorId != null and repellentPlanModel.operatorId != ''">
+
             AND operator_id = #{repellentPlanModel.professorId}
         </if>
         <if test="repellentPlanModel.professor != null and repellentPlanModel.professor != '' ">
@@ -127,54 +145,59 @@
         </if>
     </select>
 
-    <select id="getRepellentPlanModelByfactoryNumAndrepellentTime" resultMap="RepellentPlan">
-        SELECT
-        *
-        FROM
-        repellent_plan
-        WHERE
-        factory_num = #{factoryNum} AND repellent_t BETWEEN #{gmtCreate} AND #{gmtTrans}
-    </select>
 
-    <select id="getRepellentPlanModelByfactoryNumAndcrowdNumAndrepellentTimeAndrepellentName" resultMap="RepellentPlan">
-        SELECT
-        *
-        FROM
-        repellent_plan
-        WHERE
-        factory_num = #{factoryNum} AND crowd_num = #{crowdNum} AND repellent_t = #{repellentTime} AND repellent_n = #{repellentName}
-    </select>
+    <select id="getRepellentPlanModelById" resultMap="RepellentPlan">
 
-    <select id="getRepellentPlanModelByid" resultMap="RepellentPlan">
         SELECT
         *
         FROM
         repellent_plan
         WHERE
+
         id = #{id}
     </select>
 
-    <select id="getRepellentPlanModelByProfessor" resultMap="RepellentPlan">
+    <select id="getRepellentPlanModelByFactoryNum" resultMap="RepellentPlan">
+
         SELECT
         *
         FROM
         repellent_plan
         WHERE
-        ispass_check = #{ispassCheck}
+        factory_num = #{factoryNum}
     </select>
 
-    <select id="getRepellentPlanModelBySupervisor" resultMap="RepellentPlan">
+    <select id="getRepellentPlanModelByFactoryNumAndIsPassCheck" resultMap="RepellentPlan">
+
         SELECT
         *
         FROM
         repellent_plan
         WHERE
-        ispass_sup = #{ispassSup}
+
+        factory_num = #{factoryNum}
+        <if test="ispassCheck != null and ispassCheck != '' ">
+            AND ispass_check = #{ispassCheck}
+        </if>
+    </select>
+
+    <select id="getRepellentPlanModelByFactoryNumAndIsPassSup" resultMap="RepellentPlan">
+
+        SELECT
+        *
+        FROM
+        repellent_plan
+        WHERE
+
+        factory_num = #{factoryNum}
+        <if test="ispassSup != null and ispassSup != '' ">
+            AND ispass_sup = #{ispassSup}
+        </if>
     </select>
 
 
+    <update id="updateRepellentPlanModelByProfessor" >
 
-    <update id="updateRepellentPlanModelByProfessor" parameterType="com.deep.domain.model.RepellentPlanModel">
         UPDATE repellent_plan
         SET  professor = #{repellentPlanModel.professor},
         ispass_check = #{repellentPlanModel.ispassCheck},
@@ -184,7 +207,9 @@
         id = #{repellentPlanModel.id} and ispass_check = 2
     </update>
 
-    <update id="updateRepellentPlanModelBySupervisor" parameterType="com.deep.domain.model.RepellentPlanModel">
+
+    <update id="updateRepellentPlanModelBySupervisor" >
+
         UPDATE repellent_plan
         SET  supervisor = #{repellentPlanModel.supervisor},
         ispass_sup = #{repellentPlanModel.ispassSup},
@@ -193,15 +218,23 @@
         id = #{repellentPlanModel.id} and ispass_sup = 2
     </update>
 
-    <update id="updateRepellentPlanModelByOperator" parameterType="com.deep.domain.model.RepellentPlanModel">
+    <update id="updateRepellentPlanModelByOperator">
         UPDATE repellent_plan
         <set>
+
             <if test="repellentPlanModel.factoryNum != null and repellentPlanModel.factoryNum != ''">
                 factory_num = #{repellentPlanModel.factoryNum},
+            </if>
+            <if test="repellentPlanModel.factoryName != null and repellentPlanModel.factoryName != ''">
+                factory_name = #{repellentPlanModel.factoryName},
             </if>
             <if test="repellentPlanModel.crowdNum != null and repellentPlanModel.crowdNum != ''">
                 crowd_num = #{repellentPlanModel.crowdNum},
             </if>
+            <if test="repellentPlanModel.repellentEartag != null and repellentPlanModel.repellentEartag != ''">
+                repellent_et = #{repellentPlanModel.repellentEartag},
+            </if>
+
             <if test="repellentPlanModel.repellentTime != null and repellentPlanModel.repellentTime != ''">
                 repellent_t = #{repellentPlanModel.repellentTime},
             </if>
@@ -214,7 +247,9 @@
             <if test="repellentPlanModel.dose != null and repellentPlanModel.dose != ''">
                 dose = #{repellentPlanModel.dose},
             </if>
-            <if test="repellentPlanModel.remark != null">
+
+            <if test="repellentPlanModel.remark != null and repellentPlanModel.remark != ''" >
+
                 remark = #{repellentPlanModel.remark}
             </if>
         </set>
@@ -222,7 +257,9 @@
         id = #{repellentPlanModel.id} and ispass_check = 2 and ispass_sup = 2
     </update>
 
-    <delete id="deleteRepellentPlanModelByid" parameterType="Long">
+
+    <delete id="deleteRepellentPlanModelByid" >
+
         DELETE FROM
         repellent_plan
         WHERE

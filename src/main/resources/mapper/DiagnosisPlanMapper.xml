@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.deep.infra.persistence.sql.mapper.DiagnosisPlanMapper" >
 
+
   <resultMap id="BaseResultMap" type="com.deep.domain.model.DiagnosisPlanModel" >
     <id column="id" property="id" />
     <result column="gmt_create" property="gmtCreate"  />
@@ -65,6 +66,7 @@
     delete from diagnosis_plan
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
 
   <insert id="insert" parameterType="com.deep.domain.model.DiagnosisPlanModel"
           useGeneratedKeys="true" keyProperty="diagnosisPlanModel.id">
@@ -236,7 +238,5 @@
       AND ispass_sup = #{diagnosisRequest.ispassSup}
     </if>
   </select>
-
-
 
 </mapper>

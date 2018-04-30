@@ -6,10 +6,16 @@
 
     <resultMap id="ImmunePlan" type="com.deep.domain.model.ImmunePlanModel">
         <id property="id" column="id"/>
+
+        <result property="gmtCreate" column="gmt_create"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="gmtProfessor" column="gmt_professor"/>
+        <result property="gmtSupervise" column="gmt_supervised"/>
         <result property="factoryNum" column="factory_num"/>
         <result property="factoryName" column="factory_name"/>
         <result property="crowdNum" column="crowd_num"/>
-        <result property="immuneEartag" column="immuneEartag"/>
+        <result property="immuneEartag" column="immune_et"/>
+
         <result property="immuneTime" column="immune_t"/>
         <result property="immuneKind" column="immune_k"/>
         <result property="immuneWay" column="immune_m"/>
@@ -23,10 +29,9 @@
         <result property="ispassCheck" column="ispass_check"/>
         <result property="unpassReason" column="upass_reason"/>
         <result property="ispassSup" column="ispass_sup"/>
-        <result property="gmtCreate" column="gmt_create"/>
-        <result property="gmtModified" column="gmt_modified"/>
-        <result property="gmtProfessor" column="gmt_professor"/>
-        <result property="gmtSupervise" column="gmt_supervised"/>
+
+
+
     </resultMap>
 
     <insert id="setImmunePlanModel" parameterType="com.deep.domain.model.ImmunePlanModel">
@@ -78,10 +83,9 @@
         immune_plan
         WHERE
         1=1
-        <if test="immunePlanModel.id != null">
-            AND id = #{immunePlanModel.id}
-        </if>
-        <if test="immunePlanModel.factoryNum != null">
+
+        <if test="immunePlanModel.factoryNum != null and immunePlanModel.factoryNum != ''">
+
             AND factory_num = #{immunePlanModel.factoryNum}
         </if>
         <if test="immunePlanModel.factoryName != null and immunePlanModel.factoryName !=''">
@@ -92,9 +96,20 @@
         </if>
 
         <if test="immunePlanModel.immuneTimeStart != null and immunePlanModel.immuneTimeStart != '' and
+
+                  (immunePlanModel.immuneTimeEnd == null or immunePlanModel.immuneTimeEnd == '') ">
+            AND immune_t &gt;= #{immunePlanModel.immuneTimeStart}
+        </if>
+        <if test="immunePlanModel.immuneTimeStart != null and immunePlanModel.immuneTimeStart != '' and
                   immunePlanModel.immuneTimeEnd != null and immunePlanModel.immuneTimeEnd != '' ">
             AND immune_t BETWEEN #{immunePlanModel.immuneTimeStart} AND #{immunePlanModel.immuneTimeEnd}
         </if>
+        <if test="(immunePlanModel.immuneTimeStart == null or immunePlanModel.immuneTimeStart == '') and
+                  immunePlanModel.immuneTimeEnd != null and immunePlanModel.immuneTimeEnd != '' ">
+            AND immune_t &lt;=  #{immunePlanModel.immuneTimeEnd}
+        </if>
+
+
         <if test="immunePlanModel.immuneKind != null and immunePlanModel.immuneKind != '' ">
             AND immune_k = #{immunePlanModel.immuneKind}
         </if>
@@ -102,12 +117,15 @@
             AND immune_m = #{immunePlanModel.immuneWay}
         </if>
         <if test="immunePlanModel.dose != null and immunePlanModel.dose != '' ">
-            AND immune_q = #{immunePlanModel.dose}
+            AND dose = #{immunePlanModel.dose}
+
         </if>
         <if test="immunePlanModel.immuneDuring != null and immunePlanModel.immuneDuring != '' ">
             AND immune_d = #{immunePlanModel.immuneDuring}
         </if>
-        <if test="immunePlanModel.operatorId != 0">
+
+        <if test="immunePlanModel.operatorId != null and immunePlanModel.operatorId != ''">
+
             AND operator_id = #{immunePlanModel.operatorId}
         </if>
         <if test="immunePlanModel.operatorName != null and immunePlanModel.operatorName != ''">
@@ -133,7 +151,9 @@
         </if>
     </select>
 
-    <select id="getImmunePlanModelByid" resultMap="ImmunePlan">
+
+    <select id="getImmunePlanModelById" resultMap="ImmunePlan">
+
         SELECT
         *
         FROM
@@ -142,62 +162,68 @@
         id = #{id}
     </select>
 
-    <select id="getImmunePlanModelByfactoryNumAndimmuneTime" resultMap="ImmunePlan">
+
+    <select id="getImmunePlanModelByFactoryNum" resultMap="ImmunePlan">
+
         SELECT
         *
         FROM
         immune_plan
         WHERE
-        factory_num = #{facctoryNum} AND immune_t BETWEEN #{gmtCreate} AND #{gmtTrans}
+
+
+        factory_num = #{factoryNum}
     </select>
 
+    <select id="getImmunePlanModelByFactoryNumAndIsPassCheck" resultMap="ImmunePlan">
 
-
-    <select id="getImmunePlanModelByfactoryNumAndcrowdNumAndimmuneTime" resultMap="ImmunePlan">
         SELECT
         *
         FROM
         immune_plan
         WHERE
-        factory_num = #{factoryNum} AND crowd_num = #{crowdNum} AND immune_t = #{immuneTime}
+
+        factory_num = #{factoryNum}
+        <if test="ispassCheck != null and ispassCheck != ''">
+            AND ispass_check = #{ispassCheck}
+        </if>
     </select>
 
-    <select id="getImmunePlanModelByProfessor" resultMap="ImmunePlan">
+    <select id="getImmunePlanModelByFactoryNumAndIsPassSup" resultMap="ImmunePlan">
+
         SELECT
         *
         FROM
         immune_plan
         WHERE
-        ispass_check = #{ispassCheck}
+        factory_num = #{factoryNum}
+        <if test="ispassSup != null and ispassSup != ''">
+            AND ispass_sup = #{ispassSup}
+        </if>
     </select>
 
-    <select id="getImmunePlanModelBySupervisor" resultMap="ImmunePlan">
-        SELECT
-        *
-        FROM
-        immune_plan
-        WHERE
-        ispass_sup = #{ispassSup}
-    </select>
+    <update id="updateImmunePlanModelByProfessor" >
 
-
-    <update id="updateImmunePlanModelByProfessor" parameterType="com.deep.domain.model.ImmunePlanModel">
         UPDATE immune_plan
         SET  professor = #{immunePlanModel.professor},
         ispass_check = #{immunePlanModel.ispassCheck},
         upass_reason = #{immunePlanModel.unpassReason},
         gmt_professor = now()
         WHERE
-        id = #{immunePlanModel.id} and ispass_check = 0
+
+        id = #{immunePlanModel.id} and ispass_check = 2
     </update>
 
-    <update id="updateImmunePlanModelBySupervisor" parameterType="com.deep.domain.model.ImmunePlanModel">
+    <update id="updateImmunePlanModelBySupervisor">
+
         UPDATE immune_plan
         SET  supervisor = #{immunePlanModel.supervisor},
         ispass_sup = #{immunePlanModel.ispassSup},
         gmt_supervised = now()
         WHERE
-        id = #{immunePlanModel.id} and ispass_sup = 0
+
+        id = #{immunePlanModel.id} and ispass_sup = 2
+
     </update>
 
 
@@ -214,6 +240,11 @@
             <if test="immunePlanModel.crowdNum != null and immunePlanModel.crowdNum != ''">
                 crowd_num = #{immunePlanModel.crowdNum},
             </if>
+
+            <if test="immunePlanModel.immuneEartag != null and immunePlanModel.immuneEartag != ''">
+                immune_et = #{immunePlanModel.immuneEartag},
+            </if>
+
             <if test="immunePlanModel.immuneTime != null and immunePlanModel.immuneTime != ''">
                 immune_t = #{immunePlanModel.immuneTime},
             </if>
@@ -234,10 +265,12 @@
             </if>
         </set>
         WHERE
-        id = #{immunePlanModel.id}
+
+        id = #{immunePlanModel.id} and ispass_check = 2 and ispass_sup = 2
     </update>
 
-    <delete id="deleteImmunePlanModelByid" parameterType="Long">
+    <delete id="deleteImmunePlanModelById" parameterType="Long">
+
         DELETE FROM
         immune_plan
         WHERE

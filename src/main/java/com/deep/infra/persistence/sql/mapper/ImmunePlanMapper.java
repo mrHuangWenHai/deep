@@ -19,24 +19,26 @@ public interface ImmunePlanMapper {
 
                                              RowBounds bounds);
 
-    ImmunePlanModel getImmunePlanModelByfactoryNumAndcrowdNumAndimmuneTime(@Param("factoryNum") BigInteger factoryNum,
-                                                                           @Param("crowdNum") String crowdNum,
-                                                                           @Param("immuneTime") String immuneTime);
+    ImmunePlanModel getImmunePlanModelById(@Param("id") Long id);
 
-    List<ImmunePlanModel> getImmunePlanModelByProfessor(@Param("ispassCheck") String ispassCheck ,
-                                                        RowBounds bounds);
+    List<ImmunePlanModel> getImmunePlanModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum , RowBounds bounds);
 
-    List<ImmunePlanModel> getImmunePlanModelBySupervisor(@Param("ispassSup") String ispassSup,
-                                                         RowBounds bounds);
+    List<ImmunePlanModel> getImmunePlanModelByFactoryNumAndIsPassCheck(@Param("factoryNum")BigInteger factoryNum ,
+                                                                       @Param("ispassCheck")String ispassCheck,
+                                                                       RowBounds bounds);
 
-    ImmunePlanModel getImmunePlanModelByid(@Param("id") Long id);
-
-    int deleteImmunePlanModelByid(@Param("id") Long id);
-
+    List<ImmunePlanModel> getImmunePlanModelByFactoryNumAndIsPassSup(@Param("factoryNum")BigInteger factoryNum ,
+                                                                     @Param("ispassSup")String ispassSup,
+                                                                     RowBounds bounds);
 
     int updateImmunePlanModelByProfessor(@Param("immunePlanModel") ImmunePlanModel immunePlanModel);
+
     int updateImmunePlanModelBySupervisor(@Param("immunePlanModel") ImmunePlanModel immunePlanModel);
+
     int updateImmunePlanModelByOperator(@Param("immunePlanModel") ImmunePlanModel immunePlanModel);
+
+    int deleteImmunePlanModelById(@Param("id") Long id);
+
 
 
 }

@@ -1,16 +1,17 @@
 package com.deep.api.resource;
 
+
 import com.deep.api.request.DiagnosisRequest;
 import com.deep.domain.model.DiagnosisPlanModel;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
+
 import com.deep.domain.service.DiagnosisPlanService;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.text.ParseException;
@@ -18,11 +19,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 /**
  * author: Created  By  Caojiawei
  * date: 2018/2/18  11:46
  */
 @RestController
+
 @RequestMapping(value = "/diagnosis")
 public class DiagnosisResource {
 
@@ -49,6 +52,7 @@ public class DiagnosisResource {
         } else {
             int isSuccess = diagnosisPlanService.addPlan(diagnosisPlanModel);
             if (isSuccess <= 0) {
+
                 return Responses.errorResponse("插入错误");
             }
             Response response = Responses.successResponse();
@@ -65,6 +69,7 @@ public class DiagnosisResource {
      * @return
      */
     @DeleteMapping(value = "/{id}")
+
     public Response dropPlan(@PathVariable("id") int id) {
 
         logger.info("invoke diagnosis/{}", id);
@@ -86,6 +91,7 @@ public class DiagnosisResource {
      * @return
      * @throws ParseException
      */
+
     @PatchMapping(value = "/{id}")
     public Response changePlanByOperator(@PathVariable(value = "id") int id,
                                          @RequestBody @Valid DiagnosisPlanModel diagnosisPlanModel,
@@ -149,18 +155,19 @@ public class DiagnosisResource {
         Response response = Responses.successResponse();
         return response;
 
+
     }
 
     /**
      * 监督者使用按主键修改的接口：/diagnosisUpdateBySupervisor
      * 监督者使用按主键修改的方法名：changePlanBySupervisor()
      * 监督者使用接收参数：整个表单信息（整型id必填，各参数选填）
+
      * @return response
      */
     @RequestMapping(value = "/s/{id}",method = RequestMethod.PATCH)
     public Response changePlanBySupervisor(@PathVariable(value = "id") int id,
                                            @RequestBody Map<String, Object> json) {
-
         logger.info("invoke diagnosis/supdate/{} {}", id,json);
         if (!json.containsKey("ispassSup")) {
             return Responses.errorResponse("lack ispassSup");
@@ -201,11 +208,13 @@ public class DiagnosisResource {
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
         data.put("model", diagnosisPlanModel);
+
         response.setData(data);
         return response;
     }
 
     /**
+
      * 按条件查询接口：/
      * 按条件查询方法名：findPlanSelective()
      * @param diagnosisRequest
@@ -225,15 +234,13 @@ public class DiagnosisResource {
         return response;
     }
 
-    @GetMapping(value = "professor/select")
-    public Response professorFindPlan(@RequestParam("factoryNum") long factoryNum,
-                                      @RequestParam("ispassSup") int ispassSup,
-                                      @RequestParam(value = "page", defaultValue = "0") int page,
-                                      @RequestParam(value = "size", defaultValue = "10") int size) {
-      logger.info("invoke Get diagnosis/professor/select {},{},{},{}", factoryNum,ispassSup,page,size);
-      RowBounds rowBounds = new RowBounds(page*size,size);
-
-
-
-    }
+//    @GetMapping(value = "professor/select")
+//    public Response professorFindPlan(@RequestParam("factoryNum") long factoryNum,
+//                                      @RequestParam("ispassSup") int ispassSup,
+//                                      @RequestParam(value = "page", defaultValue = "0") int page,
+//                                      @RequestParam(value = "size", defaultValue = "10") int size) {
+//      logger.info("invoke Get diagnosis/professor/select {},{},{},{}", factoryNum,ispassSup,page,size);
+//      RowBounds rowBounds = new RowBounds(page*size,size);
+//
+//    }
 }

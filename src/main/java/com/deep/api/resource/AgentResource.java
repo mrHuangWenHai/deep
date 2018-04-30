@@ -140,7 +140,9 @@ public class AgentResource {
             return Responses.errorResponse("修改代理失败");
         } else {
             agentModel.setId(uid);
+
             agentModel.setGmtCreate(agentService.getOneAgent((long)uid).getGmtCreate());
+
             agentModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
             Long updateID = agentService.updateAgent(agentModel);
             if (updateID <= 0) {

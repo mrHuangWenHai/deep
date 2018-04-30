@@ -1,11 +1,11 @@
 package com.deep.domain.service;
 
+
 import com.deep.api.request.DiagnosisRequest;
 import com.deep.domain.model.DiagnosisPlanModel;
 import com.deep.infra.persistence.sql.mapper.DiagnosisPlanMapper;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
 import java.util.List;
 
@@ -17,6 +17,7 @@ import java.util.List;
 public class DiagnosisPlanService {
     @Resource
     private DiagnosisPlanMapper diagnosisPlanMapper;
+
 
     public int addPlan(DiagnosisPlanModel diagnosisPlanModel) {
         return this.diagnosisPlanMapper.insert(diagnosisPlanModel);
@@ -46,10 +47,10 @@ public class DiagnosisPlanService {
         return this.diagnosisPlanMapper.selectDiagnosisPlanModelByDiagnosisRequest(diagnosisRequest,rowBounds);
     }
 
-    public List<DiagnosisPlanModel> professorFindPlan(long factoryNum,
-                                                      int ispassSup,
-                                                      RowBounds rowBounds) {
-
-    }
+//    public List<DiagnosisPlanModel> professorFindPlan(long factoryNum,
+//                                                      int ispassSup,
+//                                                      RowBounds rowBounds) {
+//
+//    }
 
 }

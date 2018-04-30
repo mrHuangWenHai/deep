@@ -15,18 +15,19 @@ import javax.annotation.Resource;
 public class TrackBackService {
 
   @Resource
+
   GenealogicalFilesMapper genealogicalFilesMapper;
 
   @Resource
   GenealogicalFilesTransMapper genealogicalFilesTransMapper;
 
   public GenealogicalFilesModel getGenealogicalFilesModelByimmuneEartag(String immuneEarTag) {
-    GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesMapper.getGenealogicalFilesModelByimmuneEartag(immuneEarTag);
+    GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesMapper.getGenealogicalFilesModelByImmuneEartag(immuneEarTag);
     return genealogicalFilesModel;
   }
 
   public GenealogicalFilesModel getGenealogicalFilesModelBytradeMarkEartag(String tradeMarkEartag) {
-    GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesMapper.getGenealogicalFilesModelBytradeMarkEartag(tradeMarkEartag);
+    GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesMapper.getGenealogicalFilesModelByTradeMarkEartag(tradeMarkEartag);
     return genealogicalFilesModel;
   }
 
@@ -34,8 +35,5 @@ public class TrackBackService {
     GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesMapper.getGenealogicalFilesModelByNativeEartag(nativeEartag);
     return genealogicalFilesModel;
   }
-
-
-
 
 }

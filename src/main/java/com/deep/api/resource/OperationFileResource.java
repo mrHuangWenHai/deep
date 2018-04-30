@@ -27,11 +27,14 @@ public class OperationFileResource {
   @Resource
   private OperationFileService operationFileService;
 
+
   @PostMapping(value = "")
+
   Response addOperationFile(@Valid @RequestBody OperationFile operationFile,
                             BindingResult bindingResult) {
 
     if (bindingResult.hasErrors()) {
+
       Response response = Responses.errorResponse("param is error");
       Map<String, Object> map = new HashMap<String, Object>();
       map.put("param",bindingResult.getAllErrors());
@@ -41,6 +44,7 @@ public class OperationFileResource {
 
     logger.info("invoke Post /of {}",operationFile);
     try {
+
       int isSuccess  = operationFileService.addOperationFile(operationFile);
       if (isSuccess == 1) {
         Response response = Responses.successResponse();
@@ -57,6 +61,7 @@ public class OperationFileResource {
     }
   }
 
+
   @GetMapping(value = "")
   Response getOperationFile(OperationCoditionRequest operationCoditionRequest) {
     logger.info("invoke Get /of {}",operationCoditionRequest);
@@ -65,6 +70,7 @@ public class OperationFileResource {
       Map<String, Object> data = new HashMap<>();
       data.put("size",data.size());
       data.put("List",list);
+
       Response response = Responses.successResponse();
       response.setData(data);
       return response;
@@ -72,6 +78,7 @@ public class OperationFileResource {
       return Responses.errorResponse(e.getMessage());
     }
   }
+
 
  // @RequestMapping(value = "/set", method = RequestMethod.PATCH)
   @PatchMapping(value = "/{id}")
@@ -81,11 +88,13 @@ public class OperationFileResource {
     if (!json.containsKey("checkStatus")) {
       return Responses.errorResponse("lock param checkStatus");
     }
+
     short checkStatus = json.get("checkStatus").shortValue();
     if (id < 0 || checkStatus < 0 || checkStatus > 2) {
       return Responses.errorResponse("param is invalid");
     }
     logger.info("/of/set {}",id,checkStatus);
+
     try {
       int isSuccess = operationFileService.updateOperationFile(id, checkStatus);
       if (isSuccess == 1) {

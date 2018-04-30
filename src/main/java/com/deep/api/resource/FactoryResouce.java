@@ -31,7 +31,9 @@ public class FactoryResouce {
      * @return
      */
     @Permit(authorities = "customer_inquiry")
+
     @GetMapping(value = "")
+
     public Response factoryLists() {
         logger.info("invoke factoryLists, url is factory/");
         List<FactoryModel> factoryModelList = factoryService.getAll();
@@ -40,8 +42,10 @@ public class FactoryResouce {
         }
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
+
         data.put("List", factoryModelList);
         data.put("size", factoryModelList.size());
+
         response.setData(data);
         return response;
     }
@@ -64,7 +68,9 @@ public class FactoryResouce {
         }
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
+
         data.put("List", lists);
+
         data.put("size", lists.size());
         response.setData(data);
         return response;
@@ -88,7 +94,9 @@ public class FactoryResouce {
         }
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
+
         data.put("List", factoryModels);
+
         data.put("size", factoryModels.size());
         response.setData(data);
         return response;
@@ -111,14 +119,18 @@ public class FactoryResouce {
         }
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
+
         data.put("List", factoryModel);
+
         response.setData(data);
         return response;
     }
 
     /**
      * 根据工厂的主键删除一个羊场
+
      * @param id 羊场主键
+
      */
     @Permit(authorities = "delete_customer")
     @DeleteMapping(value = "/{id}")
@@ -136,17 +148,21 @@ public class FactoryResouce {
         }
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
+
         data.put("List", deleteID);
+
         response.setData(data);
         return response;
     }
 
     /**
      * 修改一个羊场
+
      * @param factoryModel 羊场实体
      * @param id 羊场主键
      * @param bindingResult 错误对象
      * @return Response响应
+
      */
     @Permit(authorities = "modify_customer")
     @PutMapping(value = "/{id}")
@@ -159,7 +175,9 @@ public class FactoryResouce {
             return Responses.errorResponse("查询错误");
         }
         if (bindingResult.hasErrors()) {
+
             return Responses.errorResponse("羊场修改失败, 数据校验失败");
+
         } else {
             factoryModel.setId(uid);
             factoryModel.setGmtCreate(factoryService.getOneFactory(uid).getGmtCreate());
@@ -170,7 +188,9 @@ public class FactoryResouce {
             }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
+
             data.put("List", updateID);
+
             response.setData(data);
             return response;
         }
@@ -183,12 +203,14 @@ public class FactoryResouce {
      * @return
      */
     @Permit(authorities = "increase_customer")
+
     @PostMapping(value = "")
     public Response addFactory(@Valid @RequestBody FactoryModel factoryModel, BindingResult bindingResult) {
 
         logger.info("invoke addFactory{}, url is factory/add", factoryModel);
 
         if (bindingResult.hasErrors()) {
+
             return Responses.errorResponse(bindingResult.getFieldError().toString());
         } else {
             factoryModel.setGmtCreate(new Timestamp(System.currentTimeMillis()));
@@ -201,6 +223,7 @@ public class FactoryResouce {
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("issuccess", issuccess);
+
             response.setData(data);
             return response;
         }

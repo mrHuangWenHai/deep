@@ -4,7 +4,9 @@ package com.deep.api.request;
  * create by zhongrui on 18-4-18.
  */
 public class GenealogicalRequest {
-    private int id;
+
+    private Long id;
+    private String factoryNum;  //工厂号
     private String nativeEartag;  //原耳牌
     private String immuneEartag;  //免疫耳牌
     private String tradeMarkEartag;  //商标耳牌
@@ -13,7 +15,7 @@ public class GenealogicalRequest {
     private String brief;    //对该品种的简介 查询时返回
     private String breedingSheepBase;  //种羊基地
     private String birthTime;  //出登时间or出生时间
-    private float birthWeight;  //初登体重
+    private Float birthWeight;  //初登体重
     private String color;  //颜色
     private String sex;   //性别
     private String eartagOfFather;  //父耳牌
@@ -27,6 +29,9 @@ public class GenealogicalRequest {
     private String gmtCreate;     //建立时间
 
     private String gmtModified;   //修改时间
+    private int operatorId;       //操作员id
+    private String operatorName;    //操作员姓名
+
 
     //查询关键字
     private String birthTimeStart;
@@ -36,13 +41,27 @@ public class GenealogicalRequest {
     private int page;
     private int size;
 
-    public int getId() {
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
+
+    public void setBirthWeight(Float birthWeight) {
+        this.birthWeight = birthWeight;
+    }
+
+    public String getFactoryNum() {
+        return factoryNum;
+    }
+
+    public void setFactoryNum(String factoryNum) {
+        this.factoryNum = factoryNum;
+    }
+
 
     public String getNativeEartag() {
         return nativeEartag;
@@ -84,6 +103,12 @@ public class GenealogicalRequest {
         this.brief = brief;
     }
 
+
+    public Float getBirthWeight() {
+        return birthWeight;
+    }
+
+
     public String getBreedingSheepBase() {
         return breedingSheepBase;
     }
@@ -100,13 +125,6 @@ public class GenealogicalRequest {
         this.birthTime = birthTime;
     }
 
-    public float getBirthWeight() {
-        return birthWeight;
-    }
-
-    public void setBirthWeight(float birthWeight) {
-        this.birthWeight = birthWeight;
-    }
 
     public String getColor() {
         return color;
@@ -211,6 +229,23 @@ public class GenealogicalRequest {
     public void setBirthTimeEnd(String birthTimeEnd) {
         this.birthTimeEnd = birthTimeEnd;
     }
+
+    public int getOperatorId() {
+        return operatorId;
+    }
+
+    public void setOperatorId(int operatorId) {
+        this.operatorId = operatorId;
+    }
+
+    public String getOperatorName() {
+        return operatorName;
+    }
+
+    public void setOperatorName(String operatorName) {
+        this.operatorName = operatorName;
+    }
+
 
     public String getBirthWeightStart() {
         return birthWeightStart;

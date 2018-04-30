@@ -82,12 +82,7 @@ public interface UserMapper {
     })
     UserModel queryUserById(Long userId);
 
-    /**
-     * 查询某一个用户的角色
-     * @param agentID
-     * @param roleID
-     * @return
-     */
+
     @Select("select id, pk_userid, user_telephone, user_role, user_email, QQ, official_phone from user_manage where is_factory = 1 and user_factory = #{agentID} and user_role = #{roleID}")
     @Results({
             @Result(property = "id", column = "id"),
@@ -99,6 +94,7 @@ public interface UserMapper {
             @Result(property = "officialPhone", column = "official_phone")
     })
     UserService.UserRole queryByAgentAndRole(short agentID, short roleID);
+
 
     /**
      * 查询上级代理专家的手机号
@@ -121,6 +117,7 @@ public interface UserMapper {
             @Result(property = "userTelephone", column = "user_telephone"),
     })
     List<String> querySuperiorTelephoneByAgentAndRole(short agentID);
+
 
     /**
      * 根据用户名获取单个用户

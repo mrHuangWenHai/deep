@@ -1,10 +1,14 @@
 package com.deep.api.resource;
 
 
+
+import com.deep.api.Utils.AgentUtil;
+
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.api.response.ValidResponse;
 import com.deep.domain.model.ImmunePlanModel;
+import com.deep.domain.service.FactoryService;
 import com.deep.domain.service.ImmunePlanService;
 import com.deep.domain.service.UserService;
 import com.deep.api.request.ImmuneRequest;
@@ -27,6 +31,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.io.File;
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -46,6 +51,12 @@ public class ImmunePlanResource {
     //用于查询专家/监督员电话并抉择发送短信
     @Resource
     private UserService userService;
+
+
+    //用于查询羊厂代理id
+    @Resource
+    private FactoryService factoryService;
+
 
     /**
      * 返回插入结果
@@ -78,9 +89,8 @@ public class ImmunePlanResource {
 
             try {
                 String fileName = immuneEartagFile.getOriginalFilename();
-                String filePath = new StringBuilder(pathPre)
-                    .append(immunePlanModel.getFactoryNum().toString())
-                    .append("/disinfectEartag/").toString();
+                String filePath = pathPre + immunePlanModel.getFactoryNum().toString() + "/immuneEartag/";
+
 
                 fileName = UploadUtil.uploadFile(immuneEartagFile.getBytes(),filePath,fileName);
 
@@ -95,14 +105,25 @@ public class ImmunePlanResource {
                 immunePlanModel.setImmuneEartag(fileName);
                 immunePlanService.setImmunePlanModel(immunePlanModel);
 
-                //数据插入redis
-                String professorKey = immunePlanModel.getFactoryNum().toString() + "_immunePlan_professor";
-                String supervisorKey = immunePlanModel.getFactoryNum().toString() + "_immunePlan_supervisor";
-                String testSendProfessor = immunePlanModel.getFactoryNum().toString() + "_immunePlan_professor_AlreadySend";
-                String testSendSupervisor = immunePlanModel.getFactoryNum().toString() + "_immunePlan_supervisor_AlreadySend";
+
+                short agentID = this.factoryService.getAgentIDByFactoryNumber(immunePlanModel.getFactoryNum().toString());
+                String professorKey = agentID + "_professor";
+                String supervisorKey = immunePlanModel.getFactoryNum().toString() + "_supervisor";
+
+                String testSendProfessor = agentID + "_professor_AlreadySend";
+                String testSendSupervisor = immunePlanModel.getFactoryNum().toString() + "_supervisor_AlreadySend";
+
 
                 JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
                 JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
+
+
+                System.out.println("插入后,审核前");
+                System.out.println("pk+"+professorKey+" "+"pv:"+JedisUtil.getCertainKeyValue(professorKey));
+                System.out.println("sk+"+supervisorKey+" "+"sv:"+JedisUtil.getCertainKeyValue(supervisorKey));
+                System.out.println("tpk+"+testSendProfessor+" "+"tpv:"+JedisUtil.getCertainKeyValue(testSendProfessor));
+                System.out.println("tsk+"+testSendSupervisor+" "+"tsv:"+JedisUtil.getCertainKeyValue(testSendSupervisor));
+
 
                 //若redis中 若干天未发送短信
                 //若未完成超过50条
@@ -110,8 +131,7 @@ public class ImmunePlanResource {
                     if (JedisUtil.redisJudgeTime(professorKey)) {
                         //需完成:userModels.getTelephone()赋值给String
                         //获得StringBuffer手机号
-                        System.out.println("running here");
-                        System.out.println("factoryNum"+immunePlanModel.getFactoryNum());
+
 
                         List<String> phone = this.userService.getProfessorTelephoneByFactoryNum(immunePlanModel.getFactoryNum());
 
@@ -134,7 +154,9 @@ public class ImmunePlanResource {
                 if (!("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
                     if (JedisUtil.redisJudgeTime(supervisorKey)) {
 
-                        List<String> phone = userService.getProfessorTelephoneByFactoryNum(immunePlanModel.getFactoryNum());
+
+                        List<String> phone = userService.getSuperiorTelephoneByFactoryNum(immunePlanModel.getFactoryNum());
+
 
                         StringBuffer phoneList = new StringBuffer("");
 
@@ -144,17 +166,18 @@ public class ImmunePlanResource {
 
                         if (phoneList.length() != 0) {
                           if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
-                            //System.out.println("发送成功！");
+                            System.out.println("发送成功！");
                             JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
 
-                            return JudgeUtil.JudgeSuccess("successMessage", "Message Sent");
 
                           }
                         }
                     }
 
                 }
-                return Responses.successResponse();
+
+                return JudgeUtil.JudgeSuccess("id",immunePlanModel.getId());
+
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -184,19 +207,87 @@ public class ImmunePlanResource {
         return JudgeUtil.JudgeFind(immunePlanModels,immunePlanModels.size());
     }
 
+    /**
+     * 用于id查询
+     * @param id id
+     * @return 查询结果
+     */
+    @RequestMapping(value = "/find/{id}",method = RequestMethod.GET)
+    public Response find(@PathVariable("id") long id){
 
+        logger.info(" invoke find{id} {}" , id);
+        ImmunePlanModel immunePlanModel = this.immunePlanService.getImmunePlanModelById(id);
+        return JudgeUtil.JudgeFind(immunePlanModel);
+    }
 
     /**
-     * 下载文件 并保存到自定义路径
-     * @param response HttpServletResponse
-     * @throws Exception 下载文件异常
+     * 查看某专家负责的工厂
+     * @param agentId 代理ID
+     * @param factoryNum 工厂号
+     * @param page 页号
+     * @param size 页数
+     * @return 查询结果
      */
-    @RequestMapping(value = "/down",method = RequestMethod.GET)
+    @RequestMapping(value = "/professor",method = RequestMethod.GET)
+    public Response pFind(@RequestParam("agentId") Long agentId,
+                          @RequestParam(value = "factoryNum",required = false)BigInteger factoryNum,
+                          @RequestParam(value = "ispassCheck",required = false)String ispassCheck,
+                          @RequestParam(value = "page" , defaultValue = "0") int page,
+                          @RequestParam(value = "size" , defaultValue = "10") int size){
+        logger.info(" invoke pFind{agentId, factoryNum, ispassCheck ,page ,size} {}" , agentId, factoryNum, ispassCheck, page ,size);
+        List<ImmunePlanModel> list = new ArrayList<>();
+        if (factoryNum == null){
+            //未指定factoryNum 查询出负责的所有的factoryID
+            long[] factoryId = AgentUtil.getFactory(agentId.toString());
+            if (factoryId == null){
+                return Responses.errorResponse("find no factory");
+            }
+
+            for (long factory : factoryId){
+                list.addAll(this.immunePlanService.getImmunePlanModelByFactoryNumAndIsPassCheck(BigInteger.valueOf(factory), ispassCheck, new RowBounds(page * size ,size)));
+            }
+            return JudgeUtil.JudgeFind(list , list.size());
+            //指定查询的factoryNum
+        } else {
+            list.addAll(this.immunePlanService.getImmunePlanModelByFactoryNumAndIsPassCheck(factoryNum, ispassCheck, new RowBounds(page * size ,size)));
+            return JudgeUtil.JudgeFind(list , list.size());
+        }
+
+    }
+
+    /**
+     * 查看某监督员负责的工厂
+     * @param factoryNum 工厂号
+     * @param ispassSup  审核
+     * @param page  页
+     * @param size  条
+     * @return  查询结果
+     */
+    @RequestMapping(value = "/supervisor",method = RequestMethod.GET)
+    public Response sFind(@RequestParam(value = "factoryNum")BigInteger factoryNum,
+                          @RequestParam(value = "ispassSup",required = false)String ispassSup,
+                          @RequestParam(value = "page" , defaultValue = "0") int page,
+                          @RequestParam(value = "size" , defaultValue = "10") int size){
+        logger.info(" invoke sFind{supervisorId, factoryNum, ispassSup, page, size } {}" ,factoryNum, ispassSup, page ,size);
+        List<ImmunePlanModel> list = this.immunePlanService.getImmunePlanModelByFactoryNumAndIsPassSup(factoryNum, ispassSup, new RowBounds(page * size , size));
+        return JudgeUtil.JudgeFind(list, list.size());
+    }
+    /**
+     * 下载文件 并保存到自定义路径
+     * @param response  HttpServletResponse
+     * @param factoryNum  下载文件所属工厂号
+     * @param file  文件名
+     * @param locate  目的地址
+     * @return  下载结果
+     */
+    @RequestMapping(value = "/down/{num}/{file}/{locate}",method = RequestMethod.GET)
     public Response download(HttpServletResponse response,
-                             @Param("file") String file,
-                             @Param("locate") String locate)throws Exception {
+                             @PathVariable("num") String factoryNum,
+                             @PathVariable("file") String file,
+                             @PathVariable("locate") String locate) {
         logger.info("invoke download {}", response, file, locate);
-        String filePath = "../EartagDocument/immuneEartag/";
+        String filePath = "../EartagDocument" + factoryNum + "/immuneEartag/";
+
         if (DownloadUtil.downloadFile(response , file, filePath, locate)) {
             return JudgeUtil.JudgeSuccess("download","Success");
         } else {
@@ -205,29 +296,6 @@ public class ImmunePlanResource {
     }
 
 
-//    /**
-//     * 专家入口 查看isPass = 0或者isPass = 1的数据
-//     * METHOD:GET
-//     * @param ispassCheck 审核标志位
-//     * @param page  页号
-//     * @param size  条数
-//     * @return 查询结果/查询结果条数
-//     */
-//
-//    @RequestMapping(value = "pfind",method = RequestMethod.GET)
-//    public Response professorFind(@RequestParam(value = "ispassCheck",defaultValue = "2") String ispassCheck,
-//                                  @RequestParam(value = "page",defaultValue = "0") int page,
-//                                  @RequestParam(value = "size",defaultValue = "10") int size) {
-//        logger.info("invoke professorFind {}", ispassCheck, page, size);
-//
-//        if ("2".equals(ispassCheck)) {
-//            return Responses.errorResponse("Wrong Pass num");
-//        }
-//        List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModelByProfessor(ispassCheck,new RowBounds(page,size));
-//
-//        return JudgeUtil.JudgeFind(immunePlanModels,immunePlanModels.size());
-//    }
-
 
     /**
      * 审核入口 审核isPass = 0的数据
@@ -235,51 +303,31 @@ public class ImmunePlanResource {
      * @param immunePlanModel 免疫类
      * @return 更新结果
      */
-    @RequestMapping(value = "pupdate",method = RequestMethod.PATCH)
+
+    @RequestMapping(value = "/professor/select",method = RequestMethod.PATCH)
     public Response professorUpdate(@RequestBody ImmunePlanModel immunePlanModel) {
 
         logger.info("invoke professorUpdate {}", immunePlanModel);
-        if(immunePlanModel.getId() == null||
-                immunePlanModel.getProfessor() == null||
-                immunePlanModel.getIspassCheck() == null||
+        if(immunePlanModel.getId() == null ||
+                immunePlanModel.getFactoryNum() == null ||
+                immunePlanModel.getProfessor() == null ||
+                immunePlanModel.getIspassCheck() == null ||
+
                 immunePlanModel.getUnpassReason() == null) {
             return Responses.errorResponse("Lack Item");
         } else {
           int row = immunePlanService.updateImmunePlanModelByProfessor(immunePlanModel);
           if (row == 1) {
-            String professorKey = immunePlanModel.getFactoryNum().toString() + "_immunePlan_professor";
-            JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
+            String professorKey = this.factoryService.getAgentIDByFactoryNumber(immunePlanModel.getFactoryNum().toString()) + "_professor";
+            if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)){
+                return Responses.errorResponse("cancel error");
+            }
+
           }
           return JudgeUtil.JudgeUpdate(row);
         }
 
     }
-
-
-//    /**
-//     * 审核入口 展示所有isPass1 = 0或者isPass1 = 1的数据
-//     * @param ispassSup 审核标志位
-//     * @param page   页码
-//     * @param size   条数
-//     * METHOD:GET
-//     * @return 查询结果
-//     */
-//    @RequestMapping(value = "sfind",method = RequestMethod.GET)
-//    public Response supervisorFind(@RequestParam(value = "ispassSup",defaultValue = "2") String ispassSup,
-//                                   @RequestParam(value = "page",defaultValue = "0") int page,
-//                                   @RequestParam(value = "size",defaultValue = "10") int size) {
-//
-//        logger.info("invoke supervisorFind {}", ispassSup, page, size);
-//        if ("2".equals(ispassSup)) {
-//            return Responses.errorResponse("Wrong Pass num");
-//        }
-//
-//        List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModelBySupervisor(ispassSup,new RowBounds(page,size));
-//
-//
-//        return JudgeUtil.JudgeFind(immunePlanModels,immunePlanModels.size());
-//
-//    }
 
     /**
      * 监督员入口 审核isPass1 = 0的数据
@@ -288,23 +336,29 @@ public class ImmunePlanResource {
      * METHOD:PATCH
      * @return 审核结果
      */
-    @RequestMapping(value = "supdate",method = RequestMethod.PATCH)
+    @RequestMapping(value = "/supervisor/select",method = RequestMethod.PATCH)
     public Response supervisorUpdate(@RequestBody ImmunePlanModel immunePlanModel){
         logger.info("invoke supervisorUpdate {}", immunePlanModel);
-        if(immunePlanModel.getId() == null||
-                immunePlanModel.getSupervisor() == null||
+        if(immunePlanModel.getId() == null ||
+                immunePlanModel.getFactoryNum() == null ||
+                immunePlanModel.getSupervisor() == null ||
+
                 immunePlanModel.getIspassSup() == null){
             return Responses.errorResponse("Lack Item");
 
         } else {
           int row = immunePlanService.updateImmunePlanModelBySupervisor(immunePlanModel);
           if (row == 1) {
-            String supervisorKey = immunePlanModel.getFactoryNum().toString() + "_immunePlan_supervisor";
-            JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey);
+            String supervisorKey = immunePlanModel.getFactoryNum().toString() + "_supervisor";
+            if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
+                return Responses.errorResponse("cancel error");
+            }
+
           }
           return JudgeUtil.JudgeUpdate(row);
         }
     }
+
 
     /**
      * 操作员在审核前想修改数据的接口
@@ -333,7 +387,8 @@ public class ImmunePlanResource {
 
       if (immuneEartagFile != null) {
 
-        String filePath = pathPre + immunePlanModel.getFactoryNum().toString() + "/disinfectEartag/";
+        String filePath = pathPre + immunePlanModel.getFactoryNum().toString() + "/immuneEartag/";
+
         String fileName = immuneEartagFile.getOriginalFilename();
         try {
           fileName = UploadUtil.uploadFile(immuneEartagFile.getBytes(),filePath,fileName);
@@ -366,6 +421,7 @@ public class ImmunePlanResource {
      * @param id id
      * @return 删除结果
      */
+
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
     public Response delete(@Min(0) @PathVariable(value = "id") Long id) {
 
@@ -373,7 +429,16 @@ public class ImmunePlanResource {
         if ("0".equals(id.toString())) {
             return Responses.errorResponse("Wrong id");
         }
-        int row = immunePlanService.deleteImmunePlanModelByid(id);
-        return JudgeUtil.JudgeDelete(row);
+
+        ImmunePlanModel immunePlanModel = this.immunePlanService.getImmunePlanModelById(id);
+        String filePath = pathPre + immunePlanModel.getFactoryNum().toString() + "/immuneEartag/" + immunePlanModel.getImmuneEartag();
+        int row = immunePlanService.deleteImmunePlanModelById(id);
+        if (FileUtil.deleteFile(filePath) && row == 1){
+            return JudgeUtil.JudgeDelete(row);
+        } else {
+            return Responses.errorResponse("delete wrong");
+        }
     }
+
+
 }

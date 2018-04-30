@@ -16,7 +16,9 @@ public class PicService {
     @Resource
     private PicMapper picMapper;
 
+
     public int insertPic(Pic pic) {
+
 
         int flag=picMapper.insert(pic);
 
@@ -24,12 +26,14 @@ public class PicService {
 
     }
 
+
     public List<Pic> findPicSelective(PicExample picExample) {
         List<Pic>find=this.picMapper.selectByExample(picExample);
         return find;
     }
 
     public List<Pic> findPicSelectiveWithRowbounds(PicExample picExample,int pageNumb,int limit) {
+
         int offset=(pageNumb-1)*limit;
 
         RowBounds rowBounds=new RowBounds(offset,limit);

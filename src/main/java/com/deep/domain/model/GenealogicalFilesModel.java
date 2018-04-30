@@ -7,9 +7,11 @@ import javax.validation.constraints.*;
  **/
 public class GenealogicalFilesModel {
 
-    private int id;
+
+    private Integer id;
     @Min(0)
-    private long factoryNum;
+    private Long factoryNum;
+
     @NotEmpty
     @NotNull
     private String nativeEartag;  //原耳牌
@@ -33,12 +35,15 @@ public class GenealogicalFilesModel {
     @NotNull
     private String birthTime;  //出登时间or出生时间
     @DecimalMin(value = "0.0")
-    private float birthWeight;  //初登体重
+    private Float birthWeight;  //初登体重
+
     @NotEmpty
     @NotNull
     private String color;  //颜色
     @NotNull
-    private int sex;   //性别
+
+    private Integer sex;   //性别
+
     @NotEmpty
     @NotNull
     private String eartagOfFather;  //父耳牌
@@ -99,19 +104,21 @@ public class GenealogicalFilesModel {
 
     }
 
-    public int getId() {
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public long getFactoryNum() {
+    public Long getFactoryNum() {
         return factoryNum;
     }
 
-    public void setFactoryNum(long factoryNum) {
+    public void setFactoryNum(Long factoryNum) {
+
         this.factoryNum = factoryNum;
     }
 
@@ -171,11 +178,13 @@ public class GenealogicalFilesModel {
         this.birthTime = birthTime;
     }
 
-    public float getBirthWeight() {
+
+    public Float getBirthWeight() {
         return birthWeight;
     }
 
-    public void setBirthWeight(float birthWeight) {
+    public void setBirthWeight(Float birthWeight) {
+
         this.birthWeight = birthWeight;
     }
 
@@ -187,11 +196,13 @@ public class GenealogicalFilesModel {
         this.color = color;
     }
 
-    public int getSex() {
+
+    public Integer getSex() {
         return sex;
     }
 
-    public void setSex(int sex) {
+    public void setSex(Integer sex) {
+
         this.sex = sex;
     }
 

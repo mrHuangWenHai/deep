@@ -11,23 +11,27 @@ public class DisinfectFilesModel {
 
     private Long id;      //id
 
+    @NotBlank
+    private String place;
+
     @Min(0)
     private BigInteger factoryNum;
     @NotBlank
     private String factoryName;
     private String disinfectEartag;
     @NotBlank
-    private String place;
-    @NotBlank
+
     private String disinfectTime;     //消毒时间
     @NotBlank
     private String disinfectName;     //消毒药品名称
     @NotBlank
-    private String  dose;    //用药剂量
+
+    private String dose;    //用药剂量
     @NotBlank
     private String disinfectWay;     //消毒方法
     @Min(0)
-    private int operatorId;
+    private Integer operatorId;
+
     @NotBlank
     private String operatorName;      //操作员(创建表操作人员)
     private String professor;       //技术审核(审核表人员 专家) 可空
@@ -202,11 +206,13 @@ public class DisinfectFilesModel {
         this.factoryName = factoryName;
     }
 
-    public int getOperatorId() {
+
+    public Integer getOperatorId() {
         return operatorId;
     }
 
-    public void setOperatorId(int operatorId) {
+    public void setOperatorId(Integer operatorId) {
+
         this.operatorId = operatorId;
     }
 
