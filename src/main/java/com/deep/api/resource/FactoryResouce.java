@@ -141,7 +141,6 @@ public class FactoryResouce {
         response.setData(data);
         return response;
     }
-
     /**
      * 根据工厂的主键删除一个羊场
 
@@ -233,9 +232,11 @@ public class FactoryResouce {
             factoryModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
 
             int issuccess = factoryService.addFactory(factoryModel);
+
             if (issuccess == 0) {
                 return Responses.errorResponse("添加失败");
             }
+
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("issuccess", issuccess);

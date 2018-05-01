@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.io.File;
 
-
 @RestController
 @RequestMapping(value = "/df",method = RequestMethod.GET)
 public class DisinfectFilesResource {
@@ -46,6 +45,7 @@ public class DisinfectFilesResource {
     //用于查询羊厂代理id
     @Resource
     private FactoryService factoryService;
+
     /**
      * 返回插入结果
      * 成功：success
@@ -159,10 +159,8 @@ public class DisinfectFilesResource {
                 return JudgeUtil.JudgeSuccess("id",disinfectFilesModel.getId());
 
             } catch (Exception e) {
-
                 e.printStackTrace();
             }
-
         }
         return Responses.errorResponse("Exception");
 
