@@ -50,7 +50,8 @@ public class UserResource {
     @Permit(authorities = "query_user")
 //    @GetMapping(value = "user/subordinate/{roleID}")
     @GetMapping(value = "user")
-    public Response userList(@PathVariable("roleID") long roleID) {
+//    @PathVariable("roleID") long roleID
+    public Response userList() {
         logger.info("invoke userList, url is user/");
 //        List<UserModel> userLists = userService.getAll(roleID);
         List<UserModel> userLists = userService.getAllWithNoCondition();

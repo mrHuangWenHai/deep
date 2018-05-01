@@ -7,6 +7,10 @@ import java.util.List;
 
 @Mapper
 public interface FactoryMapper {
+
+//    @Select("select count(*) from agent_factory where agent_rank != 0")
+//    Long queryCount();
+
     /**
      * 列出羊场列表
      * @return

@@ -6,6 +6,7 @@ import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.AgentModel;
 import com.deep.domain.service.AgentService;
+import org.apache.ibatis.annotations.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
@@ -33,16 +34,32 @@ public class AgentResource {
      */
     @Permit(authorities = "query_agent")
     @GetMapping(value = "")
-    public Response agentLists() {
+    public Response agentLists(
+            @RequestParam(value = "page", defaultValue = "0") String page,
+            @RequestParam(value = "size", defaultValue = "10") String size,
+            @RequestParam(value = "flag", defaultValue = "2") Byte flag,
+            @RequestParam(value = "factoryId", defaultValue = "0") String factoryId
+    ) {
         logger.info("invoke agentLists, url is agent/");
-        List<AgentModel> agents = agentService.getAll();
+//        if (flag  == 2 || flag == 0) {
+//            return Responses.errorResponse("无权限, 您不能查看不属于您管辖的代理");
+//        }
+//        Integer ufactoryId = StringToLongUtil.stringToInt(factoryId);
+        Long upage = StringToLongUtil.stringToLong(page);
+        Byte usize = StringToLongUtil.stringToByte(size);
+        Long start = upage*usize;
+        if (upage < 0 || usize < 0) {
+            return Responses.errorResponse("错误");
+        }
+//        List<AgentModel> agents = agentService.getSons(ufactoryId);
+        List<AgentModel> agents = agentService.getAll(start, usize);
         if (agents == null) {
             return Responses.errorResponse("系统中暂时没有代理");
         }
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
         data.put("List", agents);
-        data.put("size", agents.size());
+        data.put("size", agentService.queryCount());
         response.setData(data);
         return response;
     }
