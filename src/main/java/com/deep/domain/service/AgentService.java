@@ -19,12 +19,16 @@ public class AgentService {
     @Resource
     private UserService userService;
 
+    public Long queryCount() {
+        return agentMapper.queryCount();
+    }
+
     /**
      * 获取所有的代理信息
      * @return
      */
-    public List<AgentModel> getAll() {
-        return agentMapper.queryAllAgent();
+    public List<AgentModel> getAll(Long start, Byte size) {
+        return agentMapper.queryAllAgent(start, size);
     }
 
     /**

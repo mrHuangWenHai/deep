@@ -18,6 +18,27 @@ public class AgentModel {
 
     private int agentFather;
 
+    private long responsibleId;
+
+    private String responsibleName;
+
+
+    public long getResponsibleId() {
+        return responsibleId;
+    }
+
+    public void setResponsibleId(long responsibleId) {
+        this.responsibleId = responsibleId;
+    }
+
+    public String getResponsibleName() {
+        return responsibleName;
+    }
+
+    public void setResponsibleName(String responsibleName) {
+        this.responsibleName = responsibleName;
+    }
+
     public int getId() {
         return id;
     }

@@ -74,25 +74,36 @@ public class LoginResource {
         } else {
             // 验证密码信息, 忽略大小写
             if( userModel.getUserPwd().equalsIgnoreCase(password)) {
-
                 Response response = Responses.successResponse();
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("successMessage", "登录成功!");
                 data.put("id", userModel.getId());
-                data.put("usernmae", userModel.getPkUserid());
-                data.put("role_id", userModel.getUserRole());
-
+                data.put("username", userModel.getPkUserid());
+                data.put("roleId", userModel.getUserRole());
               if (userModel.getIsFactory() == 0) {
+                  data.put("flag", 0);
                 // 如果是羊场
                 FactoryModel factoryModel = factoryService.getOneFactory(userModel.getUserFactory());
-                data.put("factory_id", userModel.getUserFactory());
-                data.put("agent_id", factoryModel.getAgent());
+                data.put("factoryId", userModel.getUserFactory());
+                data.put("agentId", factoryModel.getAgent());
+                data.put("departmentName", factoryModel.getBreedName());
+                data.put("agentRank", null);
               } else if (userModel.getIsFactory() == 1) {
-
-                // 如果是代理
-                AgentModel agentModel = agentService.getOneAgent(userModel.getUserFactory());
-                data.put("agent_id", userModel.getUserFactory());
-                data.put("agent_father_id", agentModel.getAgentFather());
+                  data.put("flag", 1);
+                  // 如果是代理
+                  AgentModel agentModel = agentService.getOneAgent(userModel.getUserFactory());
+//                data.put("agent_id", userModel.getUserFactory());
+                  data.put("factoryId", userModel.getUserFactory());
+                  data.put("agentId", agentModel.getAgentFather());
+                  data.put("departmentName", agentModel.getAgentName());
+                  data.put("agentRank", agentModel.getAgentRank());
+//                  data.put("agent_father_id", agentModel.getAgentFather());
+              } else {
+                  data.put("flag", 2);
+                  data.put("factoryId", null);
+                  data.put("agentId", null);
+                  data.put("departmentName", null);
+                  data.put("agentRank", null);
               }
               response.setData(data);
               Long roleInt = userModel.getUserRole();

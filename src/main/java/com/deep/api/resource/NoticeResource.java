@@ -402,7 +402,7 @@ public class NoticeResource {
                     noticePlanService.uploadFile(file.getBytes(), filepath, path);
                     Response response = Responses.successResponse();
                     HashMap<String, Object> data = new HashMap<>();
-                    data.put("List", "192.168.1.108:9010/picture/" + path);
+                    data.put("List", "180.76.180.95:9010/picture/" + path);
                     response.setData(data);
                     return response;
                 } catch (Exception e) {
