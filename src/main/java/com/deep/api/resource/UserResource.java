@@ -6,8 +6,6 @@ import com.deep.api.Utils.JedisUtil;
 import com.deep.api.Utils.StringToLongUtil;
 import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.authorization.token.TokenManagerRealization;
-import com.deep.api.authorization.token.TokenModel;
-import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.PasswordRequest;
 import com.deep.api.response.Professor;
 import com.deep.api.response.Response;
@@ -261,6 +259,7 @@ public class UserResource {
         userModel.setUserRole(user.getUserRole());
         userModel.setGmtCreate(user.getGmtCreate());
         userModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
+
         Long success = userService.updateUser(userModel);
         if (success <= 0) {
             return Responses.errorResponse("用户信息修改失败,请检查网络后重试");

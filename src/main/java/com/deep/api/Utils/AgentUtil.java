@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,10 @@ public class AgentUtil {
     private AgentService agentService;
     @Resource
     private FactoryService factoryService;
+
+    private List<Long> allFactory;
+
+    private List<Long> allAgent;
 
     private static AgentUtil agentUtil;
 
@@ -98,6 +103,11 @@ public class AgentUtil {
         return map;
     }
 
+    /**
+     * 查找下级的羊场和代理的ID号
+     * @param id
+     * @return
+     */
     public static Map<String, Object> getSubordinateFactoryID(String id) {
         int uid = StringToLongUtil.stringToInt(id);
         if (uid == -1) {
@@ -115,5 +125,57 @@ public class AgentUtil {
             }
         }
         return map;
+    }
+
+    /**
+     * 查找工厂所有的ID, 存放到一个数组中
+     * @param id
+     */
+    public static void getSubordinateAllFactory(String id) {
+        int uid = StringToLongUtil.stringToInt(id);
+        if (uid == -1) {
+            return;
+        }
+        long[] factoryIDByAgentIDs = agentUtil.factoryService.queryFactoryIDByAgentID((long)uid);
+        for(long factoryIDByAgent : factoryIDByAgentIDs) {
+            agentUtil.allFactory.add(factoryIDByAgent);
+        }
+        List<AgentModel> agentModels = agentUtil.agentService.getSons(uid);
+        if (agentModels != null) {
+            for (AgentModel agentModel : agentModels) {
+                getSubordinateAllFactory("" + agentModel.getId());
+            }
+        }
+    }
+
+    /**
+     * 调用递归方法
+     * @param id
+     * @return
+     */
+    public static List<Long> getAllSubordinateFactory(String id) {
+        agentUtil.allFactory = new ArrayList<>();
+        getSubordinateAllFactory(id);
+        return agentUtil.allFactory;
+    }
+
+    public static void getSubordinateAllAgent(String id) {
+        int uid = StringToLongUtil.stringToInt(id);
+        if (uid == -1) {
+            return;
+        }
+        List<AgentModel> agentModels = agentUtil.agentService.getSons(uid);
+        if (agentModels != null) {
+            for (AgentModel agentModel : agentModels) {
+                agentUtil.allAgent.add((long)agentModel.getId());
+                getSubordinateAllAgent("" + agentModel.getId());
+            }
+        }
+    }
+
+    public static List<Long> getAllSubordinateAgent(String id) {
+        agentUtil.allAgent = new ArrayList<>();
+        getSubordinateAllAgent(id);
+        return agentUtil.allAgent;
     }
 }

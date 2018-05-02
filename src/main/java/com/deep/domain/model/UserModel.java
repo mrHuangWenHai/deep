@@ -48,6 +48,9 @@ public class UserModel {
 //        @Max(1)
         private byte isFactory;
 
+        @NotBlank(message = "不能为空")
+        private String factoryName;
+
         @NotNull(message = "必须设置密保问题1")
         private String question_1;    //找回密码问题1
         @NotNull(message = "必须设置密保问题1的答案")
@@ -86,33 +89,33 @@ public class UserModel {
             this.userEmail = userEmail;
         }
 
-    public void setUserFactory(Long userFactory) {
-        this.userFactory = userFactory;
-    }
-
-    public void setUserRole(Long userRole) {
-        this.userRole = userRole;
-    }
-
-    public String getMsn() {
-        return msn;
-    }
-
-    public void setMsn(String msn) {
-        this.msn = msn;
-    }
-
-    public String getQq() {
-        return qq;
-    }
-
-    public void setQq(String qq) {
-        this.qq = qq;
-    }
-
-    public String getOfficialPhone() {
-            return officialPhone;
+        public void setUserFactory(Long userFactory) {
+            this.userFactory = userFactory;
         }
+
+        public void setUserRole(Long userRole) {
+            this.userRole = userRole;
+        }
+
+        public String getMsn() {
+            return msn;
+        }
+
+        public void setMsn(String msn) {
+            this.msn = msn;
+        }
+
+        public String getQq() {
+            return qq;
+        }
+
+        public void setQq(String qq) {
+            this.qq = qq;
+        }
+
+        public String getOfficialPhone() {
+                return officialPhone;
+            }
 
         public void setOfficialPhone(String officialPhone) {
             this.officialPhone = officialPhone;
@@ -180,6 +183,14 @@ public class UserModel {
 
         public void setIsFactory(byte isFactory) {
             this.isFactory = isFactory;
+        }
+
+        public String getFactoryName() {
+            return factoryName;
+        }
+
+        public void setFactoryName(String factoryName) {
+            this.factoryName = factoryName;
         }
 
         @JsonView(UserSimpleView.class)
