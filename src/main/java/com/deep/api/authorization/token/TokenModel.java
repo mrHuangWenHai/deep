@@ -14,9 +14,9 @@ public class TokenModel {
     public TokenModel () {
 
     }
-    public TokenModel(long userId, String roleInt) {
+    public TokenModel(long userId, String roleInt, String flag) {
         this.userId = userId;
-        this.token = UUID.randomUUID().toString() + ":" + roleInt;
+        this.token = UUID.randomUUID().toString() + ":" + roleInt + ":" + flag;
     }
 
     public TokenModel(Long userId, String token) {
