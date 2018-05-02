@@ -144,7 +144,6 @@ public interface FactoryMapper {
             @Result(property = "gmtCreate", column = "gmt_create"),
             @Result(property = "gmtModified", column = "gmt_modified"),
             @Result(property = "pkNumber", column = "pk_number"),
-
             @Result(property = "breedName", column = "breed_name"),
             @Result(property = "breedLocation", column = "breed_location"),
             @Result(property = "breedLocationDetail", column = "breed_location_detail"),
@@ -153,7 +152,6 @@ public interface FactoryMapper {
             @Result(property = "responsiblePersonName", column = "responsible_person_name"),
             @Result(property = "remark", column = "remark"),
             @Result(property = "disinfectP", column = "disinfect_p"),
-
             @Result(property = "agent", column = "agent")
     })
     FactoryModel queryFactoryByID(Long id);

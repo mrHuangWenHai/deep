@@ -3,6 +3,7 @@ package com.deep.domain.service;
 import com.deep.api.request.DisinfectRequest;
 import com.deep.domain.model.DisinfectFilesModel;
 import com.deep.infra.persistence.sql.mapper.DisinfectFilesMapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
@@ -21,44 +22,47 @@ public class DisinfectFilesService {
     }
 
     public List<DisinfectFilesModel> getDisinfectFilesModel(DisinfectRequest disinfectRequest,
-                                                            RowBounds bounds){
+                                                            RowBounds bounds) {
         return this.disinfectFilesMapper.getDisinfectFilesModel(disinfectRequest,bounds);
     }
 
-
-    public DisinfectFilesModel getDisinfectFilesModelById(long id){
+    public DisinfectFilesModel getDisinfectFilesModelById(long id) {
         return this.disinfectFilesMapper.getDisinfectFilesModelById(id);
     }
 
-    public List<DisinfectFilesModel> getDisinfectFilesModelByFactoryNum(BigInteger factoryNum , RowBounds bounds){
+    public List<DisinfectFilesModel> getDisinfectFilesModelByFactoryNum(BigInteger factoryNum , RowBounds bounds) {
         return this.disinfectFilesMapper.getDisinfectFilesModelByFactoryNum(factoryNum,bounds);
     }
 
-    public List<DisinfectFilesModel> getDisinfectFilesModelByFactoryNumAndIsPassCheck(BigInteger factoryNum, String ispassCheck, RowBounds bounds){
+    public List<DisinfectFilesModel> getDisinfectFilesModelByFactoryNumAndIsPassCheck(BigInteger factoryNum, String ispassCheck, RowBounds bounds) {
         return this.disinfectFilesMapper.getDisinfectFilesModelByFactoryNumAndIsPassCheck(factoryNum, ispassCheck, bounds);
     }
 
-    public List<DisinfectFilesModel> getDisinfectFilesModelByFactoryNumAndIsPassSup(BigInteger factoryNum, String ispassSup, RowBounds bounds){
+    public List<DisinfectFilesModel> getDisinfectFilesModelByFactoryNumAndIsPassSup(BigInteger factoryNum, String ispassSup, RowBounds bounds) {
         return this.disinfectFilesMapper.getDisinfectFilesModelByFactoryNumAndIsPassSup(factoryNum, ispassSup, bounds);
     }
 
+//    public  List<DisinfectFilesModel> getDisinfectFilesModelByFactoryList(@Param("disinfectFilesModel") DisinfectRequest disinfectFilesModel,
+//                                                                          RowBounds bounds) {
+//        return this.disinfectFilesMapper.getDisinfectFilesModelByFactoryList(disinfectFilesModel, bounds);
+//    }
 
-    public int updateDisinfectFilesModelByProfessor(DisinfectFilesModel disinfectFilesModel){
-        return this.disinfectFilesMapper.updateDisinfectFilesModelByProfessor(disinfectFilesModel);
+
+    public int updateDisinfectFilesModelByProfessor(DisinfectRequest disinfectRequest) {
+        return this.disinfectFilesMapper.updateDisinfectFilesModelByProfessor(disinfectRequest);
     }
 
 
-    public int updateDisinfectFilesModelBySupervisor(DisinfectFilesModel disinfectFilesModel){
-        return this.disinfectFilesMapper.updateDisinfectFilesModelBySupervisor(disinfectFilesModel);
+    public int updateDisinfectFilesModelBySupervisor(DisinfectRequest disinfectRequest) {
+        return this.disinfectFilesMapper.updateDisinfectFilesModelBySupervisor(disinfectRequest);
     }
 
 
-    public int updateDisinfectFilesModelByOperatorName(DisinfectFilesModel disinfectFilesModel){
+    public int updateDisinfectFilesModelByOperatorName(DisinfectFilesModel disinfectFilesModel) {
         return this.disinfectFilesMapper.updateDisinfectFilesModelByOperatorName(disinfectFilesModel);
     }
 
-
-    public int deleteDisinfectFilesModelById(Long id){
+    public int deleteDisinfectFilesModelById(Long id) {
         return this.disinfectFilesMapper.deleteDisinfectFilesModelById(id);
 
     }

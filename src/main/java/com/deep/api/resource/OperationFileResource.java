@@ -29,7 +29,6 @@ public class OperationFileResource {
 
 
   @PostMapping(value = "")
-
   Response addOperationFile(@Valid @RequestBody OperationFile operationFile,
                             BindingResult bindingResult) {
 

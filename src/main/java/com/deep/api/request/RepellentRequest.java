@@ -3,6 +3,7 @@ package com.deep.api.request;
 import com.deep.domain.model.RepellentPlanModel;
 
 import java.math.BigInteger;
+import java.util.List;
 
 /**
  * create by zhongrui on 18-4-13.
@@ -33,9 +34,9 @@ public class RepellentRequest {
 
     private String repellentTimeStart;
     private String repellentTimeEnd;
-    private int page;
-    private int size;
-
+    private int page = 0;
+    private int size = 10;
+    private List<Integer> factoryList;
 
     public Long getId() {
         return id;
@@ -237,6 +238,14 @@ public class RepellentRequest {
 
     public void setProfessor(String professor) {
         this.professor = professor;
+    }
+
+    public List<Integer> getFactoryList() {
+        return factoryList;
+    }
+
+    public void setFactoryList(List<Integer> factoryList) {
+        this.factoryList = factoryList;
     }
 
     @Override

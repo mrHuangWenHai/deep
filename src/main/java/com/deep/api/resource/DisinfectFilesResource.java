@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Path;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.math.BigInteger;
@@ -31,10 +32,8 @@ import java.io.File;
 @RestController
 @RequestMapping(value = "/df",method = RequestMethod.GET)
 public class DisinfectFilesResource {
-
     private final Logger logger = LoggerFactory.getLogger(DisinfectFilesResource.class);
     private final String pathPre = "../EartagDocument/";
-
     @Resource
     private DisinfectFilesService disinfectFilesService;
 
@@ -58,16 +57,21 @@ public class DisinfectFilesResource {
      * @param disinfectFilesModel 消毒类
      * @return 插入结果
      */
-    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    @PostMapping(value = "")
     public Response saveShow(@Valid DisinfectFilesModel disinfectFilesModel,
                              BindingResult bindingResult,
                              @RequestParam(value = "disinfectEartagFile") MultipartFile disinfectEartagFile,
-                             HttpServletRequest request
-    ) {
+                             HttpServletRequest request) {
+
         if (bindingResult.hasErrors()) {
-            return Responses.errorResponse(bindingResult.toString());
+            Response response = Responses.errorResponse("param is error");
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("param",bindingResult.getAllErrors());
+            response.setData(map);
+            return response;
         }
-        logger.info("invoke save {}", disinfectFilesModel, disinfectEartagFile, request);
+
+        logger.info("invoke Post /df {}", disinfectFilesModel);
         if( disinfectEartagFile.isEmpty() ) {
             return Responses.errorResponse("Lack Item");
         } else {
@@ -154,7 +158,6 @@ public class DisinfectFilesResource {
                             }
                         }
                     }
-
                 }
                 return JudgeUtil.JudgeSuccess("id",disinfectFilesModel.getId());
 
@@ -174,88 +177,86 @@ public class DisinfectFilesResource {
      * @param disinfectRequest 消毒请求类
      * @return 查询结果/查询结果条数
      */
-    @RequestMapping(value = "/findshow",method = RequestMethod.POST)
-    public Response findShow(@RequestBody DisinfectRequest disinfectRequest) {
-        logger.info("invoke findShow {}",disinfectRequest);
-
-        if( disinfectRequest.getSize() == 0) {
-            disinfectRequest.setSize(10);
-        }
-        System.out.println(disinfectRequest.getDisinfectTimeStart() + "  " + disinfectRequest.getDisinfectName());
+    @GetMapping(value = "/{id}")
+    public Response findShow(@PathVariable(value = "id")int id,
+                             DisinfectRequest disinfectRequest) {
+        logger.info("invoke get /{} {}",id,disinfectRequest);
+        List<Integer> factorys = new ArrayList<Integer>();
+        factorys.add(2);
+        factorys.add(3);
+        factorys.add(4);
+        disinfectRequest.setFactoryList(factorys);
         List<DisinfectFilesModel> disinfectFilesModels = disinfectFilesService.getDisinfectFilesModel(disinfectRequest,
             new RowBounds(disinfectRequest.getPage() * disinfectRequest.getSize(),disinfectRequest.getSize()));
-
         return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
     }
 
-    /**
-     * 用于id查询
-     * @param id id
-     * @return 查询结果
-     */
-    @RequestMapping(value = "/find/{id}",method = RequestMethod.GET)
-    public Response find(@PathVariable("id") long id){
-
-        logger.info(" invoke find{id} {}" , id);
-        DisinfectFilesModel disinfectFilesModel = this.disinfectFilesService.getDisinfectFilesModelById(id);
-        return JudgeUtil.JudgeFind(disinfectFilesModel);
-    }
-
-
-    /**
-     * 查看某专家负责的工厂
-     * @param agentId 代理ID
-     * @param factoryNum 工厂号
-     * @param page 页号
-     * @param size 页数
-     * @return 查询结果
-     */
-    @RequestMapping(value = "/professor",method = RequestMethod.GET)
-    public Response pFind(@RequestParam("agentId") Long agentId,
-                          @RequestParam(value = "factoryNum",required = false)BigInteger factoryNum,
-                          @RequestParam(value = "ispassCheck",required = false)String ispassCheck,
-                          @RequestParam(value = "page" , defaultValue = "0") int page,
-                          @RequestParam(value = "size" , defaultValue = "10") int size){
-        logger.info(" invoke pFind{agentId, factoryNum, ispassCheck ,page ,size} {}" , agentId, factoryNum, ispassCheck, page ,size);
-        List<DisinfectFilesModel> list = new ArrayList<>();
-        if (factoryNum == null){
-            //未指定factoryNum 查询出负责的所有的factoryID
-            long[] factoryId = AgentUtil.getFactory(agentId.toString());
-            if (factoryId == null){
-                return Responses.errorResponse("find no factory");
-            }
+//    /**
+//     * 用于id查询
+//     * @param id id
+//     * @return 查询结果
+//     */
+//    @RequestMapping(value = "/find/{id}",method = RequestMethod.GET)
+//    public Response find(@PathVariable("id") long id) {
+//
+//        logger.info(" invoke find{id} {}" , id);
+//        DisinfectFilesModel disinfectFilesModel = this.disinfectFilesService.getDisinfectFilesModelById(id);
+//        return JudgeUtil.JudgeFind(disinfectFilesModel);
+//    }
 
 
-            for (long factory : factoryId){
-                list.addAll(this.disinfectFilesService.getDisinfectFilesModelByFactoryNumAndIsPassCheck(BigInteger.valueOf(factory), ispassCheck, new RowBounds(page * size ,size)));
-            }
-            return JudgeUtil.JudgeFind(list , list.size());
-            //指定查询的factoryNum
-        } else {
-            System.out.println("11");
-            list.addAll(this.disinfectFilesService.getDisinfectFilesModelByFactoryNumAndIsPassCheck(factoryNum, ispassCheck, new RowBounds(page * size ,size)));
-            return JudgeUtil.JudgeFind(list , list.size());
-        }
+//    /**
+//     * 查看某专家负责的工厂
+//     * @param agentId 代理ID
+//     * @param factoryNum 工厂号
+//     * @param page 页号
+//     * @param size 页数
+//     * @return 查询结果
+//     */
+//    @RequestMapping(value = "/professor",method = RequestMethod.GET)
+//    public Response pFind(@RequestParam("agentId") Long agentId,
+//                          @RequestParam(value = "factoryNum",required = false)BigInteger factoryNum,
+//                          @RequestParam(value = "ispassCheck",required = false)String ispassCheck,
+//                          @RequestParam(value = "page" , defaultValue = "0") int page,
+//                          @RequestParam(value = "size" , defaultValue = "10") int size) {
+//        logger.info(" invoke pFind{agentId, factoryNum, ispassCheck ,page ,size} {}" , agentId, factoryNum, ispassCheck, page ,size);
+//        List<DisinfectFilesModel> list = new ArrayList<>();
+//        if (factoryNum == null) {
+//            //未指定factoryNum 查询出负责的所有的factoryID
+//            long[] factoryId = AgentUtil.getFactory(agentId.toString());
+//            if (factoryId == null) {
+//                return Responses.errorResponse("find no factory");
+//            }
+//            for (long factory : factoryId) {
+//                list.addAll(this.disinfectFilesService.getDisinfectFilesModelByFactoryNumAndIsPassCheck(BigInteger.valueOf(factory), ispassCheck, new RowBounds(page * size ,size)));
+//            }
+//            return JudgeUtil.JudgeFind(list , list.size());
+//            //指定查询的factoryNum
+//        } else {
+//            System.out.println("11");
+//            list.addAll(this.disinfectFilesService.getDisinfectFilesModelByFactoryNumAndIsPassCheck(factoryNum, ispassCheck, new RowBounds(page * size ,size)));
+//            return JudgeUtil.JudgeFind(list , list.size());
+//        }
+//
+//    }
 
-    }
-
-    /**
-     * 查看某监督员负责的工厂
-     * @param factoryNum 工厂号
-     * @param ispassSup  审核
-     * @param page  页
-     * @param size  条
-     * @return  查询结果
-     */
-    @RequestMapping(value = "/supervisor",method = RequestMethod.GET)
-    public Response sFind(@RequestParam(value = "factoryNum")BigInteger factoryNum,
-                          @RequestParam(value = "ispassSup",required = false)String ispassSup,
-                          @RequestParam(value = "page" , defaultValue = "0") int page,
-                          @RequestParam(value = "size" , defaultValue = "10") int size){
-        logger.info(" invoke sFind{factoryNum, ispassSup, page, size } {}" , factoryNum, ispassSup, page ,size);
-        List<DisinfectFilesModel> list = this.disinfectFilesService.getDisinfectFilesModelByFactoryNumAndIsPassSup(factoryNum, ispassSup, new RowBounds(page * size , size));
-        return JudgeUtil.JudgeFind(list, list.size());
-    }
+//    /**
+//     * 查看某监督员负责的工厂
+//     * @param factoryNum 工厂号
+//     * @param ispassSup  审核
+//     * @param page  页
+//     * @param size  条
+//     * @return  查询结果
+//     */
+//    @RequestMapping(value = "/supervisor",method = RequestMethod.GET)
+//    public Response sFind(@RequestParam(value = "factoryNum")BigInteger factoryNum,
+//                          @RequestParam(value = "ispassSup",required = false)String ispassSup,
+//                          @RequestParam(value = "page" , defaultValue = "0") int page,
+//                          @RequestParam(value = "size" , defaultValue = "10") int size){
+//        logger.info(" invoke sFind{factoryNum, ispassSup, page, size } {}" , factoryNum, ispassSup, page ,size);
+//        List<DisinfectFilesModel> list = this.disinfectFilesService.getDisinfectFilesModelByFactoryNumAndIsPassSup(factoryNum, ispassSup, new RowBounds(page * size , size));
+//        return JudgeUtil.JudgeFind(list, list.size());
+//    }
 
 
 
@@ -273,7 +274,7 @@ public class DisinfectFilesResource {
     public Response download(HttpServletResponse response,
                              @PathVariable("num") String factoryNum,
                              @PathVariable("file") String file,
-                             @PathVariable("locate") String locate){
+                             @PathVariable("locate") String locate) {
         logger.info("invoke download {}", response, file, locate);
         String filePath = "../EartagDocument" + factoryNum + "/disinfectEartag/";
         if (DownloadUtil.downloadFile(response , file, filePath, locate)) {
@@ -283,28 +284,24 @@ public class DisinfectFilesResource {
         }
     }
 
-
-
-
     /**
-     * 审核入口 审核isPass = 0的数据
+     * 审核入口 IspassCheck = 0的数据
      * METHOD:PATCH
-     * @param disinfectFilesModel 消毒类
+     * @param disinfectRequest 消毒类
      * @return 更新结果
      */
-    @RequestMapping(value = "/professor/select",method = RequestMethod.PATCH)
-    public Response professorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel) {
-
-        logger.info("invoke professorUpdate {}", disinfectFilesModel);
-        if(disinfectFilesModel.getId() == null ||
-            disinfectFilesModel.getFactoryNum() == null ||
-            disinfectFilesModel.getIspassCheck() == null ||
-            disinfectFilesModel.getUnpassReason() == null) {
+    @RequestMapping(value = "/p/{id}",method = RequestMethod.PATCH)
+    public Response professorUpdate(@PathVariable(value = "id") int id,
+                                    @RequestBody DisinfectRequest disinfectRequest) {
+        disinfectRequest.setId(id);
+        logger.info("invoke gf/p/{} {}",id, disinfectRequest);
+        if( disinfectRequest.getIspassCheck() == null
+            || disinfectRequest.getUnpassReason() == null) {
             return Responses.errorResponse("Lack Item");
         } else {
-            int row = disinfectFilesService.updateDisinfectFilesModelByProfessor(disinfectFilesModel);
+            int row = disinfectFilesService.updateDisinfectFilesModelByProfessor(disinfectRequest);
             if (row == 1) {
-                String professorKey = this.factoryService.getAgentIDByFactoryNumber(disinfectFilesModel.getFactoryNum().toString()) + "_professor";
+                String professorKey = this.factoryService.getAgentIDByFactoryNumber(disinfectRequest.getFactoryNum().toString()) + "_professor";
                 if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
                     return Responses.errorResponse("cancel error");
                 }
@@ -314,27 +311,27 @@ public class DisinfectFilesResource {
 
     }
 
-
     /**
      * 监督员入口 审核isPass1 = 0的数据
      * 审核要求:审核时要求条例写完整 审核后 isPass = 1时 无权限再修改
-     * @param disinfectFilesModel 消毒类
+     * @param disinfectRequest 消毒类
      * METHOD:PATCH
      * @return 审核结果
      */
-    @RequestMapping(value = "/supervisor/select",method = RequestMethod.PATCH)
-    public Response supervisorUpdate(@RequestBody DisinfectFilesModel disinfectFilesModel){
-        logger.info("invoke supervisorUpdate {}", disinfectFilesModel);
-        if(disinfectFilesModel.getId() == null ||
-            disinfectFilesModel.getFactoryNum() == null ||
-            disinfectFilesModel.getSupervisor() == null ||
-            disinfectFilesModel.getIspassSup() == null){
-            return Responses.errorResponse("Lack Item");
+    @PatchMapping(value = "/s/{id}")
+    public Response supervisorUpdate(@PathVariable(value = "id") int id,
+                                     @RequestBody DisinfectRequest disinfectRequest) {
 
+        disinfectRequest.setId(id);
+        logger.info("invoke supervisorUpdate {}", disinfectRequest);
+        if(disinfectRequest.getFactoryNum() == null
+            || disinfectRequest.getSupervisor() == null
+            || disinfectRequest.getIspassSup() == null) {
+            return Responses.errorResponse("Lack Item");
         } else {
-            int row = disinfectFilesService.updateDisinfectFilesModelBySupervisor(disinfectFilesModel);
+            int row = disinfectFilesService.updateDisinfectFilesModelBySupervisor(disinfectRequest);
             if (row == 1) {
-                String supervisorKey = disinfectFilesModel.getFactoryNum().toString() + "_supervisor";
+                String supervisorKey = disinfectRequest.getFactoryNum().toString() + "_supervisor";
                 if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
                     return Responses.errorResponse("cancel error");
                 }
@@ -352,8 +349,9 @@ public class DisinfectFilesResource {
      * @param disinfectFilesModel 消毒类
      * @return 更新结果
      */
-    @RequestMapping(value = "/update",method = RequestMethod.POST)
-    public Response operatorUpdate(@Validated DisinfectFilesModel disinfectFilesModel,
+    @PutMapping(value = "/{id}")
+    public Response operatorUpdate(@PathVariable(value = "id")long id,
+                                   @Validated DisinfectFilesModel disinfectFilesModel,
                                    BindingResult bindingResult,
                                    @RequestParam(value = "disinfectEartagFile", required = false) MultipartFile disinfectEartagFile) {
 
@@ -366,10 +364,7 @@ public class DisinfectFilesResource {
         }
         logger.info("invoke operatorUpdate {}", disinfectFilesModel);
 
-        if (disinfectFilesModel.getId() == null) {
-            return Responses.errorResponse("Operate wrong");
-        }
-
+        disinfectFilesModel.setId(id);
         if (disinfectEartagFile != null) {
 
             String filePath = pathPre + disinfectFilesModel.getFactoryNum().toString() + "/disinfectEartag/";
@@ -403,7 +398,7 @@ public class DisinfectFilesResource {
      * @param id id
      * @return 是否成功
      */
-    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
     public Response delete(@Min(0) @PathVariable(value = "id") Long id) {
         logger.info("invoke delete {}", id);
         if ("0".equals(id.toString())) {

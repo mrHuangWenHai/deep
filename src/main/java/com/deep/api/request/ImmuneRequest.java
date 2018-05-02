@@ -3,6 +3,7 @@ package com.deep.api.request;
 import com.deep.domain.model.ImmunePlanModel;
 
 import java.math.BigInteger;
+import java.util.List;
 
 /**
  * create by zhongrui on 18-4-13.
@@ -36,8 +37,9 @@ public class ImmuneRequest {
 
     private String immuneTimeStart;
     private String immuneTimeEnd;
-    private int page;
-    private int size;
+    private int page = 0;
+    private int size = 10;
+    private List<Integer> factoryList;
 
     public BigInteger getFactoryNum() {
         return factoryNum;
@@ -247,6 +249,14 @@ public class ImmuneRequest {
         this.id = id;
     }
 
+    public List<Integer> getFactoryList() {
+        return factoryList;
+    }
+
+    public void setFactoryList(List<Integer> factoryList) {
+        this.factoryList = factoryList;
+    }
+
     @Override
     public String toString() {
         return "ImmuneRequest{" +
@@ -276,6 +286,7 @@ public class ImmuneRequest {
             ", immuneTimeEnd='" + immuneTimeEnd + '\'' +
             ", page=" + page +
             ", size=" + size +
+            ", factoryList=" + factoryList +
             '}';
     }
 }

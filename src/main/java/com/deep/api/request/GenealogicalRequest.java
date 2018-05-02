@@ -1,5 +1,7 @@
 package com.deep.api.request;
 
+import java.util.List;
+
 /**
  * create by zhongrui on 18-4-18.
  */
@@ -38,9 +40,10 @@ public class GenealogicalRequest {
     private String birthTimeEnd;
     private String birthWeightStart;
     private String birthWeightEnd;
-    private int page;
-    private int size;
+    private int page = 0;
+    private int size = 10;
 
+    private List<Integer> factoryList;
 
     public Long getId() {
         return id;
@@ -277,5 +280,49 @@ public class GenealogicalRequest {
 
     public void setSize(int size) {
         this.size = size;
+    }
+
+    public List<Integer> getFactoryList() {
+        return factoryList;
+    }
+
+    public void setFactoryList(List<Integer> factoryList) {
+        this.factoryList = factoryList;
+    }
+
+    @Override
+    public String toString() {
+        return "GenealogicalRequest{" +
+            "id=" + id +
+            ", factoryNum='" + factoryNum + '\'' +
+            ", nativeEartag='" + nativeEartag + '\'' +
+            ", immuneEartag='" + immuneEartag + '\'' +
+            ", tradeMarkEartag='" + tradeMarkEartag + '\'' +
+            ", type='" + type + '\'' +
+            ", brief='" + brief + '\'' +
+            ", breedingSheepBase='" + breedingSheepBase + '\'' +
+            ", birthTime='" + birthTime + '\'' +
+            ", birthWeight=" + birthWeight +
+            ", color='" + color + '\'' +
+            ", sex='" + sex + '\'' +
+            ", eartagOfFather='" + eartagOfFather + '\'' +
+            ", eartagOfMother='" + eartagOfMother + '\'' +
+            ", eartagOfFathersFather='" + eartagOfFathersFather + '\'' +
+            ", eartagOfFathersMother='" + eartagOfFathersMother + '\'' +
+            ", eartagOfMothersFather='" + eartagOfMothersFather + '\'' +
+            ", eartagOfMothersMother='" + eartagOfMothersMother + '\'' +
+            ", remark='" + remark + '\'' +
+            ", gmtCreate='" + gmtCreate + '\'' +
+            ", gmtModified='" + gmtModified + '\'' +
+            ", operatorId=" + operatorId +
+            ", operatorName='" + operatorName + '\'' +
+            ", birthTimeStart='" + birthTimeStart + '\'' +
+            ", birthTimeEnd='" + birthTimeEnd + '\'' +
+            ", birthWeightStart='" + birthWeightStart + '\'' +
+            ", birthWeightEnd='" + birthWeightEnd + '\'' +
+            ", page=" + page +
+            ", size=" + size +
+            ", factoryList=" + factoryList +
+            '}';
     }
 }

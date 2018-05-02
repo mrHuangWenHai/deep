@@ -31,10 +31,12 @@ public interface DisinfectFilesMapper {
                                                                              @Param("ispassSup")String ispassSup,
                                                                              RowBounds bounds);
 
+//    List<DisinfectFilesModel> getDisinfectFilesModelByFactoryList(@Param("disinfectFilesModel") DisinfectRequest disinfectFilesModel,
+//                                                                  RowBounds bounds);
 
-    int updateDisinfectFilesModelByProfessor(@Param("disinfectFilesModel") DisinfectFilesModel disinfectFilesModel);
+    int updateDisinfectFilesModelByProfessor(@Param("disinfectRequest") DisinfectRequest disinfectRequest);
 
-    int updateDisinfectFilesModelBySupervisor(@Param("disinfectFilesModel") DisinfectFilesModel disinfectFilesModel);
+    int updateDisinfectFilesModelBySupervisor(@Param("disinfectRequest") DisinfectRequest disinfectRequest);
 
     int updateDisinfectFilesModelByOperatorName(@Param("disinfectFilesModel") DisinfectFilesModel disinfectFilesModel);
 

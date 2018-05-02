@@ -108,9 +108,14 @@
         FROM
         genealogical_files
         WHERE 1 = 1
-
-            <if test="genealogicalFilesModel.factoryNum != null and genealogicalFilesModel.factoryNum != ''">
-
+            <if test="genealogicalFilesModel.factoryList != null">
+                AND factory_num in (
+                <foreach collection="genealogicalFilesModel.factoryList" separator="," index="index" item="factoryNum">
+                    #{factoryNum}
+                </foreach>
+                )
+            </if>
+            <if test="genealogicalFilesModel.factoryNum != null">
                 AND factory_num = #{genealogicalFilesModel.factoryNum}
             </if>
             <if test="genealogicalFilesModel.operatorName != null and genealogicalFilesModel.operatorName != ''">
