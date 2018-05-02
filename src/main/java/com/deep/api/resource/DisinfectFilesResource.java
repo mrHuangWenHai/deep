@@ -182,23 +182,48 @@ public class DisinfectFilesResource {
      * @return 查询结果/查询结果条数
      */
     @GetMapping(value = "/{id}")
-    public Response findShow(@PathVariable(value = "id")int id,
+    public Response findShow(@PathVariable(value = "id")long id,
                              DisinfectRequest disinfectRequest,
                              HttpServletRequest httpServletRequest) {
         logger.info("invoke get /{} {}",id,disinfectRequest);
 
+        Map<Long, List<Long>> factoryMap = null;
         Byte role = Byte.parseByte(TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION)));
         if (role == 0) {
-          disinfectRequest.setId(id);
-        } else if(role == 1) {
-          List<int> factoryList = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
+          disinfectRequest.setFactoryNum(id);
+        } else if (role == 1) {
+          factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
+          List<Long> factoryList = new ArrayList<>();
+          factoryList.addAll(factoryMap.get(-1));
+          factoryList.addAll(factoryMap.get(0));
           disinfectRequest.setFactoryList(factoryList);
         } else {
           return Responses.errorResponse("你没有权限");
         }
+
         List<DisinfectFilesModel> disinfectFilesModels = disinfectFilesService.getDisinfectFilesModel(disinfectRequest,
             new RowBounds(disinfectRequest.getPage() * disinfectRequest.getSize(),disinfectRequest.getSize()));
-        return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
+
+        if (role == 1) {
+          Map<String,Object> data = new HashMap<>();
+          List<DisinfectFilesModel> direct = new ArrayList<>();
+          List<DisinfectFilesModel> others = new ArrayList<>();
+          List<Long> directId = factoryMap.get(-1);
+          for (DisinfectFilesModel disinfectFilesModel : disinfectFilesModels) {
+            if (directId.contains(disinfectFilesModel.getFactoryNum())) {
+              direct.add(disinfectFilesModel);
+            } else {
+              others.add(disinfectFilesModel);
+            }
+          }
+          data.put("direct", direct);
+          data.put("others", others);
+          Response response = Responses.successResponse();
+          response.setData(data);
+          return response;
+        } else {
+          return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
+        }
     }
 
 //    /**

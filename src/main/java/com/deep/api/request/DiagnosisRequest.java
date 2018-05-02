@@ -1,5 +1,8 @@
 package com.deep.api.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.util.List;
+
 /**
  * Created by huangwenhai on 2018/4/30.
  */
@@ -12,7 +15,7 @@ public class DiagnosisRequest {
   private String gmtModified;
   @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
   private String gmtSup;
-  private Integer factoryNum;
+  private Long factoryNum;
   private String factoryName;
   private Integer operatorId;
   private String operatorName;
@@ -28,6 +31,7 @@ public class DiagnosisRequest {
   private String earTag;
   private Integer page = 0;
   private Integer size = 10;
+  private List<Long> factoryList;
 
   public int getId() {
     return id;
@@ -85,11 +89,11 @@ public class DiagnosisRequest {
     this.gmtSup = gmtSup;
   }
 
-  public Integer getFactoryNum() {
+  public Long getFactoryNum() {
     return factoryNum;
   }
 
-  public void setFactoryNum(Integer factoryNum) {
+  public void setFactoryNum(Long factoryNum) {
     this.factoryNum = factoryNum;
   }
 
@@ -203,6 +207,14 @@ public class DiagnosisRequest {
 
   public void setSize(Integer size) {
     this.size = size;
+  }
+
+  public List<Long> getFactoryList() {
+    return factoryList;
+  }
+
+  public void setFactoryList(List<Long> factoryList) {
+    this.factoryList = factoryList;
   }
 
   @Override

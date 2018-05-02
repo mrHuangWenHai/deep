@@ -10,7 +10,7 @@ public class DisinfectRequest {
 
     int id;
     private String disinfectEartag;
-    private BigInteger factoryNum;     //工厂号
+    private Long factoryNum;     //工厂号
     private String factoryName;
     private String disinfectTime;     //消毒时间
     private String disinfectName;     //消毒药品名称
@@ -33,7 +33,7 @@ public class DisinfectRequest {
     private String disinfectTimeEnd;
     private int page = 0;
     private int size = 10;
-    private List<int>factoryList;
+    private List<Long>factoryList;
 
     public String getDisinfectEartag() {
         return disinfectEartag;
@@ -43,16 +43,15 @@ public class DisinfectRequest {
         this.disinfectEartag = disinfectEartag;
     }
 
-    public BigInteger getFactoryNum() {
-        return factoryNum;
-    }
+  public Long getFactoryNum() {
+    return factoryNum;
+  }
 
-    public void setFactoryNum(BigInteger factoryNum) {
-        this.factoryNum = factoryNum;
-    }
+  public void setFactoryNum(Long factoryNum) {
+    this.factoryNum = factoryNum;
+  }
 
-
-    public String getFactoryName() {
+  public String getFactoryName() {
         return factoryName;
     }
 
@@ -229,6 +228,14 @@ public class DisinfectRequest {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public List<Long> getFactoryList() {
+        return factoryList;
+    }
+
+    public void setFactoryList(List<Long> factoryList) {
+        this.factoryList = factoryList;
     }
 
   @Override

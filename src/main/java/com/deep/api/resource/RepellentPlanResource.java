@@ -3,9 +3,12 @@ package com.deep.api.resource;
 
 
 import com.deep.api.Utils.AgentUtil;
+import com.deep.api.Utils.TokenAnalysis;
+import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.RepellentRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
+import com.deep.domain.model.ImmunePlanModel;
 import com.deep.domain.model.RepellentPlanModel;
 import com.deep.domain.service.FactoryService;
 import com.deep.domain.service.RepellentPlanService;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -186,15 +190,49 @@ public class RepellentPlanResource {
      * @param repellentRequest 驱虫请求类
      * @return  查询结果
      */
-    @RequestMapping(value = "/{id}")
+    @GetMapping(value = "/{id}")
     public Response findShow(@PathVariable(value = "id")long id,
-                             RepellentRequest repellentRequest) {
+                             RepellentRequest repellentRequest,
+                             HttpServletRequest httpServletRequest) {
         logger.info("invoke finsShow {}", repellentRequest);
+
+      Map<Long, List<Long>> factoryMap = null;
+      Byte role = Byte.parseByte(TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION)));
+      if (role == 0) {
+        repellentRequest.setFactoryNum(id);
+      } else if (role == 1) {
+        factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
+        List<Long> factoryList = new ArrayList<>();
+        factoryList.addAll(factoryMap.get(-1));
+        factoryList.addAll(factoryMap.get(0));
+        repellentRequest.setFactoryList(factoryList);
+      } else {
+        return Responses.errorResponse("你没有权限");
+      }
 
         List<RepellentPlanModel> repellentPlanModels = repellentPlanService.getRepellentPlanModel(repellentRequest,
                 new RowBounds(repellentRequest.getPage() * repellentRequest.getSize() ,repellentRequest.getSize()));
 
+      if (role == 1) {
+        Map<String,Object> data = new HashMap<>();
+        List<RepellentPlanModel> direct = new ArrayList<>();
+        List<RepellentPlanModel> others = new ArrayList<>();
+        List<Long> directId = factoryMap.get(-1);
+        for (RepellentPlanModel repellentPlanModel : repellentPlanModels) {
+          if (directId.contains(repellentPlanModel.getFactoryNum())) {
+            direct.add(repellentPlanModel);
+          } else {
+            others.add(repellentPlanModel);
+          }
+        }
+        data.put("direct", direct);
+        data.put("others", others);
+        Response response = Responses.successResponse();
+        response.setData(data);
+        return response;
+      } else {
         return JudgeUtil.JudgeFind(repellentPlanModels,repellentPlanModels.size());
+      }
 
     }
 

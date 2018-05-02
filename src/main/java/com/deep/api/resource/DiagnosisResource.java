@@ -1,11 +1,15 @@
 package com.deep.api.resource;
 
 
+import com.deep.api.Utils.AgentUtil;
+import com.deep.api.Utils.TokenAnalysis;
+import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.DiagnosisRequest;
 import com.deep.domain.model.DiagnosisPlanModel;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 
+import com.deep.domain.model.ImmunePlanModel;
 import com.deep.domain.service.DiagnosisPlanService;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
@@ -13,8 +17,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +46,8 @@ public class DiagnosisResource {
      * 参数类型为：Long factoryNum;Date diagnosisT;String building;String etB;String operator;String remark;String diagnosisC;String diagnosisM;String drugQ;
      */
     @PostMapping(value = "")
-    public Response addPlan(@RequestBody @Valid DiagnosisPlanModel diagnosisPlanModel, BindingResult bindingResult) throws ParseException {
+    public Response addPlan(@RequestBody @Valid DiagnosisPlanModel diagnosisPlanModel,
+                            BindingResult bindingResult) throws ParseException {
 
         logger.info("invoke diagnosis/insert {}", diagnosisPlanModel);
         if (bindingResult.hasErrors()) {
@@ -162,7 +169,6 @@ public class DiagnosisResource {
      * 监督者使用按主键修改的接口：/diagnosisUpdateBySupervisor
      * 监督者使用按主键修改的方法名：changePlanBySupervisor()
      * 监督者使用接收参数：整个表单信息（整型id必填，各参数选填）
-
      * @return response
      */
     @RequestMapping(value = "/s/{id}",method = RequestMethod.PATCH)
@@ -214,24 +220,60 @@ public class DiagnosisResource {
     }
 
     /**
-
      * 按条件查询接口：/
      * 按条件查询方法名：findPlanSelective()
      * @param diagnosisRequest
      * @return Response
      */
-    @GetMapping(value = "")
-    public Response findPlanSelective(DiagnosisRequest diagnosisRequest) {
+    @GetMapping(value = "/{id}")
+    public Response findPlanSelective(@PathVariable(value = "id")long id,
+                                      DiagnosisRequest diagnosisRequest,
+                                      HttpServletRequest httpServletRequest) {
         logger.info("invoke Get diagnosis {}", diagnosisRequest);
+
+        Map<Long, List<Long>> factoryMap = null;
+        Byte role = Byte.parseByte(TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION)));
+        if (role == 0) {
+            diagnosisRequest.setFactoryNum(id);
+        } else if (role == 1) {
+            factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
+            List<Long> factoryList = new ArrayList<>();
+            factoryList.addAll(factoryMap.get(-1));
+            factoryList.addAll(factoryMap.get(0));
+            diagnosisRequest.setFactoryList(factoryList);
+        } else {
+            return Responses.errorResponse("你没有权限");
+        }
+
         RowBounds rowBounds = new RowBounds(diagnosisRequest.getPage() * diagnosisRequest.getSize(),diagnosisRequest.getSize());
         List<DiagnosisPlanModel> diagnosisPlanModels = diagnosisPlanService.selectDiagnosisPlanModelByDiagnosisRequest(diagnosisRequest, rowBounds);
-        System.out.println(diagnosisPlanModels);
-        Response response = Responses.successResponse();
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("List", diagnosisPlanModels);
-        data.put("size", diagnosisPlanModels.size());
-        response.setData(data);
-        return response;
+
+        if (role == 1) {
+            Map<String,Object> data = new HashMap<>();
+            List<DiagnosisPlanModel> direct = new ArrayList<>();
+            List<DiagnosisPlanModel> others = new ArrayList<>();
+            List<Long> directId = factoryMap.get(-1);
+            for (DiagnosisPlanModel diagnosisPlanModel : diagnosisPlanModels) {
+                if (directId.contains(diagnosisPlanModel.getFactoryNum())) {
+                    direct.add(diagnosisPlanModel);
+                } else {
+                    others.add(diagnosisPlanModel);
+                }
+            }
+            data.put("direct", direct);
+            data.put("others", others);
+            Response response = Responses.successResponse();
+            response.setData(data);
+            return response;
+        } else {
+            Response response = Responses.successResponse();
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("List", diagnosisPlanModels);
+            data.put("size", diagnosisPlanModels.size());
+            response.setData(data);
+            return response;
+        }
+
     }
 
 //    @GetMapping(value = "professor/select")

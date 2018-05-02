@@ -4,9 +4,12 @@ package com.deep.api.resource;
 
 import com.deep.api.Utils.AgentUtil;
 
+import com.deep.api.Utils.TokenAnalysis;
+import com.deep.api.authorization.tools.Constants;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.api.response.ValidResponse;
+import com.deep.domain.model.GenealogicalFilesModel;
 import com.deep.domain.model.ImmunePlanModel;
 import com.deep.domain.service.FactoryService;
 import com.deep.domain.service.ImmunePlanService;
@@ -191,14 +194,51 @@ public class ImmunePlanResource {
      * @param immuneRequest 免疫请求类
      * @return 查询结果
      */
-    @RequestMapping(value = "/{id}")
-    public Response findShow(@PathVariable(value = "id")int id,
-                             @RequestBody ImmuneRequest immuneRequest) {
+    @GetMapping(value = "/{id}")
+    public Response findShow(@PathVariable(value = "id")long id,
+                             ImmuneRequest immuneRequest,
+                             HttpServletRequest httpServletRequest) {
         logger.info("invoke  /ip/{} {}", id,immuneRequest);
         //前台传参数
-        List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModel(immuneRequest,
+
+      Map<Long, List<Long>> factoryMap = null;
+      Byte role = Byte.parseByte(TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION)));
+      if (role == 0) {
+        immuneRequest.setFactoryNum(id);
+      } else if (role == 1) {
+        factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
+        List<Long> factoryList = new ArrayList<>();
+        factoryList.addAll(factoryMap.get(-1));
+        factoryList.addAll(factoryMap.get(0));
+        immuneRequest.setFactoryList(factoryList);
+      } else {
+        return Responses.errorResponse("你没有权限");
+      }
+
+      List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModel(immuneRequest,
                 new RowBounds(immuneRequest.getPage() * immuneRequest.getSize(),immuneRequest.getSize()));
+
+      if (role == 1) {
+        Map<String,Object> data = new HashMap<>();
+        List<ImmunePlanModel> direct = new ArrayList<>();
+        List<ImmunePlanModel> others = new ArrayList<>();
+        List<Long> directId = factoryMap.get(-1);
+        for (ImmunePlanModel immunePlanModel : immunePlanModels) {
+          if (directId.contains(immunePlanModel.getFactoryNum())) {
+            direct.add(immunePlanModel);
+          } else {
+            others.add(immunePlanModel);
+          }
+        }
+        data.put("direct", direct);
+        data.put("others", others);
+        Response response = Responses.successResponse();
+        response.setData(data);
+        return response;
+      } else {
         return JudgeUtil.JudgeFind(immunePlanModels,immunePlanModels.size());
+      }
+
     }
 //
 //    /**

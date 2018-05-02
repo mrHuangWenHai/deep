@@ -13,7 +13,7 @@ public class ImmuneRequest {
 
     private Long id;
 
-    private BigInteger factoryNum;
+    private Long factoryNum;
     private String factoryName;
     private String crowdNum;
     private String immuneEartag;
@@ -39,13 +39,13 @@ public class ImmuneRequest {
     private String immuneTimeEnd;
     private int page = 0;
     private int size = 10;
-    private List<Integer> factoryList;
+    private List<Long> factoryList;
 
-    public BigInteger getFactoryNum() {
+    public Long getFactoryNum() {
         return factoryNum;
     }
 
-    public void setFactoryNum(BigInteger factoryNum) {
+    public void setFactoryNum(Long factoryNum) {
         this.factoryNum = factoryNum;
     }
 
@@ -249,11 +249,11 @@ public class ImmuneRequest {
         this.id = id;
     }
 
-    public List<Integer> getFactoryList() {
+    public List<Long> getFactoryList() {
         return factoryList;
     }
 
-    public void setFactoryList(List<Integer> factoryList) {
+    public void setFactoryList(List<Long> factoryList) {
         this.factoryList = factoryList;
     }
 

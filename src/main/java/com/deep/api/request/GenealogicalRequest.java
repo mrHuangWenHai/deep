@@ -8,7 +8,7 @@ import java.util.List;
 public class GenealogicalRequest {
 
     private Long id;
-    private String factoryNum;  //工厂号
+    private Long factoryNum;  //工厂号
     private String nativeEartag;  //原耳牌
     private String immuneEartag;  //免疫耳牌
     private String tradeMarkEartag;  //商标耳牌
@@ -43,7 +43,7 @@ public class GenealogicalRequest {
     private int page = 0;
     private int size = 10;
 
-    private List<Integer> factoryList;
+    private List<Long> factoryList;
 
     public Long getId() {
         return id;
@@ -57,14 +57,13 @@ public class GenealogicalRequest {
         this.birthWeight = birthWeight;
     }
 
-    public String getFactoryNum() {
+    public Long getFactoryNum() {
         return factoryNum;
     }
 
-    public void setFactoryNum(String factoryNum) {
+    public void setFactoryNum(Long factoryNum) {
         this.factoryNum = factoryNum;
     }
-
 
     public String getNativeEartag() {
         return nativeEartag;
@@ -282,11 +281,11 @@ public class GenealogicalRequest {
         this.size = size;
     }
 
-    public List<Integer> getFactoryList() {
+    public List<Long> getFactoryList() {
         return factoryList;
     }
 
-    public void setFactoryList(List<Integer> factoryList) {
+    public void setFactoryList(List<Long> factoryList) {
         this.factoryList = factoryList;
     }
 

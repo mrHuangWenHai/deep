@@ -11,7 +11,7 @@ import java.util.List;
 public class RepellentRequest {
 
     private Long id;
-    private BigInteger factoryNum;
+    private Long factoryNum;
     private String factoryName;
     private String crowdNum;
     private String repellentEartag;
@@ -36,7 +36,7 @@ public class RepellentRequest {
     private String repellentTimeEnd;
     private int page = 0;
     private int size = 10;
-    private List<Integer> factoryList;
+    private List<Long> factoryList;
 
     public Long getId() {
         return id;
@@ -46,11 +46,11 @@ public class RepellentRequest {
         this.id = id;
     }
 
-    public BigInteger getFactoryNum() {
+    public Long getFactoryNum() {
         return factoryNum;
     }
 
-    public void setFactoryNum(BigInteger factoryNum) {
+    public void setFactoryNum(Long factoryNum) {
         this.factoryNum = factoryNum;
     }
 
@@ -240,11 +240,11 @@ public class RepellentRequest {
         this.professor = professor;
     }
 
-    public List<Integer> getFactoryList() {
+    public List<Long> getFactoryList() {
         return factoryList;
     }
 
-    public void setFactoryList(List<Integer> factoryList) {
+    public void setFactoryList(List<Long> factoryList) {
         this.factoryList = factoryList;
     }
 

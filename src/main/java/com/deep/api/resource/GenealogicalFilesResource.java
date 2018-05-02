@@ -1,9 +1,13 @@
 package com.deep.api.resource;
 
+import com.deep.api.Utils.AgentUtil;
+import com.deep.api.Utils.TokenAnalysis;
+import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.GenealogicalRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.api.response.ValidResponse;
+import com.deep.domain.model.DisinfectFilesModel;
 import com.deep.domain.model.GenealogicalFilesModel;
 import com.deep.domain.model.TypeBriefModel;
 import com.deep.domain.service.GenealogicalFilesService;
@@ -16,10 +20,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -139,22 +145,55 @@ public class GenealogicalFilesResource {
      */
     //bound为必传参数
     @GetMapping(value = "/{id}")
-    public Response findShow(@PathVariable(value = "id")int id,
-                             GenealogicalRequest genealogicalRequest) {
+    public Response findShow(@PathVariable(value = "id")long id,
+                             GenealogicalRequest genealogicalRequest,
+                             HttpServletRequest httpServletRequest) {
 
         logger.info("invoke findShow {}",genealogicalRequest);
 
-
-        if ( genealogicalRequest.getSize() == 0 ) {
-            genealogicalRequest.setSize(10);
-        }
+      Map<Long, List<Long>> factoryMap = null;
+      Byte role = Byte.parseByte(TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION)));
+      if (role == 0) {
+        genealogicalRequest.setFactoryNum(id);
+      } else if (role == 1) {
+        factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
+        List<Long> factoryList = new ArrayList<>();
+        factoryList.addAll(factoryMap.get(-1));
+        factoryList.addAll(factoryMap.get(0));
+        genealogicalRequest.setFactoryList(factoryList);
+      } else {
+        return Responses.errorResponse("你没有权限");
+      }
 
         List<GenealogicalFilesModel> genealogicalFilesModels = genealogicalFilesService.getGenealogicalFilesModel(genealogicalRequest,new RowBounds(genealogicalRequest.getPage() * genealogicalRequest.getSize() ,genealogicalRequest.getSize()));
         for (GenealogicalFilesModel genealogicalFilesModel : genealogicalFilesModels) {
             String brief = this.typeBriefService.getTypeBrief(genealogicalFilesModel.getTypeName()).getBrief();
             genealogicalFilesModel.setBrief(brief);
         }
+
+      if (role == 1) {
+
+        Map<String,Object> data = new HashMap<>();
+        List<GenealogicalFilesModel> direct = new ArrayList<>();
+        List<GenealogicalFilesModel> others = new ArrayList<>();
+        List<Long> directId = factoryMap.get(-1);
+        for (GenealogicalFilesModel genealogicalFilesModel : genealogicalFilesModels) {
+          if (directId.contains(genealogicalFilesModel.getFactoryNum())) {
+            direct.add(genealogicalFilesModel);
+          } else {
+            others.add(genealogicalFilesModel);
+          }
+        }
+        data.put("direct", direct);
+        data.put("others", others);
+        Response response = Responses.successResponse();
+        response.setData(data);
+        return response;
+
+      } else {
         return JudgeUtil.JudgeFind(genealogicalFilesModels,genealogicalFilesModels.size());
+      }
+
     }
 
 //    /**
