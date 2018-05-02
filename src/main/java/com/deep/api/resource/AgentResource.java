@@ -2,11 +2,11 @@ package com.deep.api.resource;
 
 import com.deep.api.Utils.StringToLongUtil;
 import com.deep.api.authorization.annotation.Permit;
+import com.deep.api.request.AgentRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.AgentModel;
 import com.deep.domain.service.AgentService;
-import org.apache.ibatis.annotations.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
@@ -28,6 +28,19 @@ public class AgentResource {
     @Resource
     private AgentService agentService;
 
+    private static Map<Byte, String> agentRankMap = new HashMap<>();
+
+    private static Map<String, Byte> agentMapRank = new HashMap<>();
+
+    static {
+        agentRankMap.put((byte)1, "省级代理");
+        agentRankMap.put((byte)2, "市级代理");
+        agentRankMap.put((byte)3, "县级代理");
+
+        agentMapRank.put("省级代理", (byte)1);
+        agentMapRank.put("市级代理", (byte)2);
+        agentMapRank.put("县级代理", (byte)3);
+    }
     /**
      * 查找所有代理
      * @return
@@ -81,9 +94,17 @@ public class AgentResource {
         if (agentModel == null) {
             return Responses.errorResponse("短代理不存在");
         }
+        AgentRequest agentRequest = new AgentRequest();
+        agentRequest.setAgentRank(agentRankMap.get(agentModel.getAgentRank()));
+        agentRequest.setAgentArea(agentModel.getAgentArea());
+        agentRequest.setAgentFather(agentModel.getAgentFather());
+        agentRequest.setAgentName(agentModel.getAgentName());
+        agentRequest.setResponsibleId(agentModel.getResponsibleId());
+        agentRequest.setResponsibleName(agentModel.getResponsibleName());
+
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
-        data.put("model", agentModel);
+        data.put("model", agentRequest);
         response.setData(data);
         return response;
     }
@@ -113,19 +134,36 @@ public class AgentResource {
 
     /**
      * 添加一个代理
-     * @param agentModel
      * @param bindingResult
      * @return
      */
     @Permit(authorities = "add_agent")
     @PostMapping(value = "")
-    public Response addOne(@Valid @RequestBody AgentModel agentModel, BindingResult bindingResult) {
-        logger.info("invoke addOne{}, url is agent/add", agentModel);
+    public Response addOne(@Valid @RequestBody AgentRequest agentRequest, BindingResult bindingResult) {
+        logger.info("invoke addOne{}, url is agent/add", agentRequest);
         if (bindingResult.hasErrors())  {
-            return Responses.errorResponse("添加代理失败, 验证错误!");
+            Response response = Responses.errorResponse("添加代理失败, 验证错误!");
+            Map<String, Object> data = new HashMap<>();
+            data.put("errorMessage", bindingResult.getAllErrors());
+            response.setData(data);
+            return response;
         } else {
+            AgentModel agentModel = new AgentModel();
             agentModel.setGmtCreate(new Timestamp(System.currentTimeMillis()));
             agentModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
+
+            Byte agentRank = agentMapRank.get(agentRequest.getAgentRank());
+            if (agentRank == null) {
+                return Responses.errorResponse("代理等级不合法");
+            }
+
+            agentModel.setAgentRank(agentMapRank.get(agentRequest.getAgentRank()));
+            agentModel.setAgentArea(agentRequest.getAgentArea());
+            agentModel.setAgentFather(agentRequest.getAgentFather());
+            agentModel.setAgentName(agentRequest.getAgentName());
+            agentModel.setResponsibleId(agentRequest.getResponsibleId());
+            agentModel.setResponsibleName(agentRequest.getResponsibleName());
+
             Long addID = agentService.addAgent(agentModel);
             if (addID <= 0) {
                 return Responses.errorResponse("添加用户信息失败");
@@ -140,15 +178,14 @@ public class AgentResource {
 
     /**
      * 修改一个代理
-     * @param agentModel 代理实体
      * @param bindingResult 错误信息提示
      * @param id 代理主键
      * @return
      */
     @Permit(authorities = "modify_the_proxy")
     @PutMapping("/{id}")
-    public Response agentUpdate(@Valid @RequestBody AgentModel agentModel, @PathVariable("id") String id, BindingResult bindingResult) {
-        logger.info("invoke agentUpdate{}, url is agent/{id}", agentModel, id);
+    public Response agentUpdate(@Valid @RequestBody AgentRequest agentRequest, @PathVariable("id") String id, BindingResult bindingResult) {
+        logger.info("invoke agentUpdate{}, url is agent/{id}", agentRequest, id);
         int uid = StringToLongUtil.stringToInt(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -156,11 +193,18 @@ public class AgentResource {
         if (bindingResult.hasErrors())  {
             return Responses.errorResponse("修改代理失败");
         } else {
+
+            AgentModel agentModel = new AgentModel();
             agentModel.setId(uid);
-
             agentModel.setGmtCreate(agentService.getOneAgent((long)uid).getGmtCreate());
-
             agentModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
+            agentModel.setAgentRank(agentMapRank.get(agentRequest.getAgentRank()));
+            agentModel.setAgentArea(agentRequest.getAgentArea());
+            agentModel.setAgentFather(agentRequest.getAgentFather());
+            agentModel.setAgentName(agentRequest.getAgentName());
+            agentModel.setResponsibleId(agentRequest.getResponsibleId());
+            agentModel.setResponsibleName(agentRequest.getResponsibleName());
+
             Long updateID = agentService.updateAgent(agentModel);
             if (updateID <= 0) {
                 return Responses.errorResponse("修改代理失败");

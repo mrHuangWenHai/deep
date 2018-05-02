@@ -41,7 +41,8 @@ public interface UserMapper {
             @Result(property = "msn", column = "msn"),
             @Result(property = "qq", column = "qq"),
             @Result(property = "officialPhone", column = "official_phone"),
-            @Result(property = "familyPhone", column = "family_phone")
+            @Result(property = "familyPhone", column = "family_phone"),
+            @Result(property = "factoryName", column = "factory_name")
     })
     List<UserModel> queryAllUser(long roleID);
 
@@ -73,7 +74,8 @@ public interface UserMapper {
             @Result(property = "msn", column = "msn"),
             @Result(property = "qq", column = "qq"),
             @Result(property = "officialPhone", column = "official_phone"),
-            @Result(property = "familyPhone", column = "family_phone")
+            @Result(property = "familyPhone", column = "family_phone"),
+            @Result(property = "factoryName", column = "factory_name")
     })
     List<UserModel> queryAllUserNoCondition();
 
@@ -110,7 +112,8 @@ public interface UserMapper {
             @Result(property = "msn", column = "msn"),
             @Result(property = "qq", column = "qq"),
             @Result(property = "officialPhone", column = "official_phone"),
-            @Result(property = "familyPhone", column = "family_phone")
+            @Result(property = "familyPhone", column = "family_phone"),
+            @Result(property = "factoryName", column = "factory_name")
     })
     UserModel queryUserById(Long userId);
 
@@ -191,7 +194,8 @@ public interface UserMapper {
             @Result(property = "msn", column = "msn"),
             @Result(property = "qq", column = "qq"),
             @Result(property = "officialPhone", column = "official_phone"),
-            @Result(property = "familyPhone", column = "family_phone")
+            @Result(property = "familyPhone", column = "family_phone"),
+            @Result(property = "factoryName", column = "factory_name")
     })
     UserModel queryUserByPkuserID(String pkUserid);
 
@@ -228,7 +232,8 @@ public interface UserMapper {
             @Result(property = "msn", column = "msn"),
             @Result(property = "qq", column = "qq"),
             @Result(property = "officialPhone", column = "official_phone"),
-            @Result(property = "familyPhone", column = "family_phone")
+            @Result(property = "familyPhone", column = "family_phone"),
+            @Result(property = "factoryName", column = "factory_name")
     })
     UserModel queryUserByRealnameLike(String userRealname);
 
@@ -263,7 +268,8 @@ public interface UserMapper {
             "msn," +
             "qq," +
             "official_phone," +
-            "family_phone)" +
+            "family_phone," +
+            "factory_name)" +
             "values(" +
             "#{gmtCreate}," +
             "#{gmtModified}," +
@@ -290,7 +296,8 @@ public interface UserMapper {
             "#{msn}," +
             "#{qq}," +
             "#{officialPhone}," +
-            "#{familyPhone}" +
+            "#{familyPhone}," +
+            "#{factoryName}" +
             ")")
     Long insertUser(UserModel userModel);
 
@@ -325,7 +332,8 @@ public interface UserMapper {
             "msn = #{msn}," +
             "qq = #{qq}," +
             "official_phone = #{officialPhone}," +
-            "family_phone = #{familyPhone}" +
+            "family_phone = #{familyPhone}," +
+            "factory_name = #{factoryName}" +
             " where id=#{id}")
     Long updateUser(UserModel userModel);
 
@@ -408,7 +416,8 @@ public interface UserMapper {
             @Result(property = "msn", column = "msn"),
             @Result(property = "qq", column = "qq"),
             @Result(property = "officialPhone", column = "official_phone"),
-            @Result(property = "familyPhone", column = "family_phone")
+            @Result(property = "familyPhone", column = "family_phone"),
+            @Result(property = "factoryName", column = "factory_name")
     })
     List<UserModel> getAllUsersOfOneFactoryOrOneAgent(Long userFactory);
 }

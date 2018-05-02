@@ -106,4 +106,22 @@ public class ExampleResource {
   public Response getResponse() {
     return Responses.errorResponse("错误");
   }
+
+  @GetMapping("test/getFactory/{id}")
+  public Response getHaHaHa(@PathVariable("id") String id) {
+    Response response = Responses.successResponse();
+    HashMap<String, Object> data = new HashMap<>();
+    data.put("List", AgentUtil.getAllSubordinateFactory(id));
+    response.setData(data);
+    return response;
+  }
+
+  @GetMapping("test/getAgent/{id}")
+  public Response getWaWaWa(@PathVariable("id") String id) {
+    Response response = Responses.successResponse();
+    HashMap<String, Object> data = new HashMap<>();
+    data.put("List", AgentUtil.getAllSubordinateAgent(id));
+    response.setData(data);
+    return response;
+  }
 }

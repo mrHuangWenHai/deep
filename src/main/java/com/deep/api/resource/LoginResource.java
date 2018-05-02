@@ -110,7 +110,7 @@ public class LoginResource {
               String defaultPermit = roleService.findRoleDefaultPermits(userModel.getUserRole());
               defaultPermit = roleService.findExtendPermit(defaultPermit, userModel.getUserPermit());
 
-              TokenModel tokenModel = new TokenModel(userModel.getId(), String.valueOf(roleInt));
+              TokenModel tokenModel = new TokenModel(userModel.getId(), String.valueOf(roleInt), String.valueOf(userModel.getIsFactory()));
               JedisUtil.setValue(String.valueOf(userModel.getId()), tokenModel.getToken());
               JedisUtil.doExpire(String.valueOf(userModel.getId()));
 

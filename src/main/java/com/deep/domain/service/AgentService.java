@@ -23,6 +23,10 @@ public class AgentService {
         return agentMapper.queryCount();
     }
 
+    public List queryAgentWithoutResponsiblePersonId() {
+        return agentMapper.queryAgentWithoutResponsiblePersonId();
+    }
+
     /**
      * 获取所有的代理信息
      * @return

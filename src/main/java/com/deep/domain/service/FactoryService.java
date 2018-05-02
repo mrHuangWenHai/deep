@@ -26,6 +26,14 @@ public class FactoryService {
     }
 
     /**
+     * 获取所有的没有负责人的羊场信息, 主要是羊场的编号和羊场的名称
+     * @return
+     */
+    public List<FactoryModel> findAllNoResponsibleFactory() {
+        return factoryMapper.getAllNoResponsibleFactory();
+    }
+
+    /**
      * 根据羊场的ID单个查询羊场的信息
      * @param id
      * @return

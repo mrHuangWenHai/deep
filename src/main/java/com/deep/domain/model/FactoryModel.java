@@ -9,32 +9,21 @@ public class FactoryModel {
     private Long id;
     private Timestamp gmtCreate;
     private Timestamp gmtModified;
-
     @NotBlank(message = "羊场号码不能为空")
     private String pkNumber;
-
     @NotBlank(message = "不能为空")
     private String breedName;
-
     @NotBlank(message = "不能为空")
     private String breedLocation;
-
     @NotBlank(message = "不能为空")
     private String breedLocationDetail;
-
     private Timestamp createTime;
-
     @Min(value = -1, message = "负责人错误")
     private Long responsiblePersonId;
-
     private String responsiblePersonName;
-
     private String remark;
-
     @NotBlank(message = "不能为空")
     private String disinfectP;
-
-
     @Min(value = -1, message = "代理号错误")
     private Short agent;
 
