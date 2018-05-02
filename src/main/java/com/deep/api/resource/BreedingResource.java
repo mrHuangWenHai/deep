@@ -22,10 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * author: Created  By  Caojiawei
@@ -254,17 +251,21 @@ public class BreedingResource {
             }
             // It's agent message
             // find his all subordinate factory
-//            List<Long> factories = AgentUtil.getAllSubordinateFactory(String.valueOf(factoryOrAgentID));
-//            List<BreedingPlan> plans = new ArrayList<>();
-//            for (Long factory : factories) {
-//                criteria.andFactoryNumEqualTo(factory);
-//                plans.addAll(breedingPlanService.findPlanSelective(breedingPlanExample, new RowBounds(upage, usize)));
-//            }
-//            Response response = Responses.successResponse();
-//            HashMap<String, Object> data = new HashMap<>();
-//            data.put("List",plans);
-//            data.put("size", plans.size());
-//            response.setData(data);
+            Map<Long, List<Long> > factories = AgentUtil.getAllSubordinateFactory(String.valueOf(factoryOrAgentID));
+            if (factories == null) {
+                return Responses.errorResponse("request error!");
+            }
+            List<Long> allFactories = factories.get((long) 0);
+            List<BreedingPlan> plans = new ArrayList<>();
+            for (Long allFactory : allFactories) {
+                criteria.andFactoryNumEqualTo(allFactory);
+                plans.addAll(breedingPlanService.findPlanSelective(breedingPlanExample, new RowBounds(upage, usize)));
+            }
+            Response response = Responses.successResponse();
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("List",plans);
+            data.put("size", plans.size());
+            response.setData(data);
         }
         return Responses.errorResponse("request error!");
     }
