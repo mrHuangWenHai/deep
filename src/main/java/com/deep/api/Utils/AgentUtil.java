@@ -23,11 +23,11 @@ public class AgentUtil {
     @Resource
     private FactoryService factoryService;
 
-    private Map<Long, Object> allFactory;
+    private Map<Long, List<Long> > allFactory;
 
     private List<Long> allFactoryList;
 
-    private Map<Long, Object> allAgent;
+    private Map<Long, List<Long> > allAgent;
 
     private List<Long>  allAgentList;
 
@@ -161,7 +161,7 @@ public class AgentUtil {
      * @param id
      * @return
      */
-    public static Map<Long, Object> getAllSubordinateFactory(String id) {
+    public static Map<Long, List<Long> > getAllSubordinateFactory(String id) {
         int uid = StringToLongUtil.stringToInt(id);
         if (uid == -1) {
             return null;
@@ -169,7 +169,11 @@ public class AgentUtil {
         agentUtil.allFactory = new HashMap<>();
         agentUtil.allFactoryList = new ArrayList<>();
         long[] factoryIDByAgentIDs = agentUtil.factoryService.queryFactoryIDByAgentID((long)uid);
-        agentUtil.allFactory.put((long) -1, factoryIDByAgentIDs);
+        List<Long> tempLong = new ArrayList<>();
+        for (long factoryIDByAgentID : factoryIDByAgentIDs) {
+            tempLong.add(factoryIDByAgentID);
+        }
+        agentUtil.allFactory.put((long) -1, tempLong);
         getSubordinateAllFactory(id);
         agentUtil.allFactory.put((long) 0, agentUtil.allFactoryList);
         return agentUtil.allFactory;
