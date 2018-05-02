@@ -120,7 +120,7 @@ public class ExampleResource {
   public Response getWaWaWa(@PathVariable("id") String id) {
     Response response = Responses.successResponse();
     HashMap<String, Object> data = new HashMap<>();
-    data.put("List", AgentUtil.getAllSubordinateAgent(id));
+//    data.put("List", AgentUtil.getAllSubordinateAgent(id));
     response.setData(data);
     return response;
   }
