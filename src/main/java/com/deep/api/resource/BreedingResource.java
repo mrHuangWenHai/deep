@@ -1,6 +1,9 @@
 package com.deep.api.resource;
 
+import com.deep.api.Utils.AgentUtil;
 import com.deep.api.Utils.StringToLongUtil;
+import com.deep.api.Utils.TokenAnalysis;
+import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.BreedingPlanModel;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
@@ -15,12 +18,16 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import static jdk.internal.jline.internal.Log.info;
 
 /**
  * author: Created  By  Caojiawei
@@ -29,13 +36,10 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/breeding")
 public class BreedingResource {
-
     @Resource
     private BreedingPlanService breedingPlanService;
 
-
     private final Logger logger = LoggerFactory.getLogger(BreedingResource.class);
-
 
     /**
      * 添加一条记录信息
@@ -48,9 +52,7 @@ public class BreedingResource {
      */
     @PostMapping(value = "")
     public Response addPlan(@RequestBody @Valid BreedingPlanModel planModel, BindingResult bindingResult) throws ParseException {
-
         logger.info("invoke addPlan {}, url = /breeding/insert", planModel);
-
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案录入失败");
         }else {
@@ -63,9 +65,7 @@ public class BreedingResource {
             insert.setfEtI(planModel.getfEtI());
             insert.setfEtB(planModel.getfEtB());
             insert.setQuantity(planModel.getQuantity());
-
             insert.setFactoryName(planModel.getFactoryName());
-
             insert.setOperatorName(planModel.getOperatorName());
             insert.setOperatorId(planModel.getOperatorId());
 
@@ -211,45 +211,64 @@ public class BreedingResource {
 
     /**
      * 获取该羊场的所有数据
-     * @param factoryNum
      * @param size
      * @param page
      * @return
      */
-    @GetMapping(value = "")
-    public Response findAllOfOneFactory(@RequestParam(value = "factoryNum") Long factoryNum,
+    @GetMapping(value = "/factoryAgent/{id}")
+    public Response findAllOfOneFactory(@PathVariable("id") String id,
                                         @RequestParam(value = "size", defaultValue = "10") String size,
                                         @RequestParam(value = "page", defaultValue = "0") String page,
                                         @RequestParam(value = "factoryName", defaultValue = "") String factoryName,
-                                        @RequestParam(value = "ispassCheck", defaultValue = "-1") String ispassCheck) {
-        if (factoryNum == null || size == null || page == null) {
+                                        @RequestParam(value = "ispassCheck", defaultValue = "-1") String ispassCheck, HttpServletRequest request) {
+        if (size == null || page == null) {
             return Responses.errorResponse("失败");
         }
-
         int usize = StringToLongUtil.stringToInt(size);
         int upage = StringToLongUtil.stringToInt(page);
         byte pass = StringToLongUtil.stringToByte(ispassCheck);
-
-        System.out.println("usize = " + usize);
-        System.out.println("upage = " + upage);
-        System.out.println("pass = " + pass);
-
-        BreedingPlanExample breedingPlanExample = new BreedingPlanExample();
-        BreedingPlanExample.Criteria criteria = breedingPlanExample.createCriteria();
-
-        criteria.andFactoryNumEqualTo(factoryNum);
-
-        if (pass != -1) {
-            criteria.andIspassCheckEqualTo(pass);
+        Long factoryOrAgentID = StringToLongUtil.stringToLong(id);
+        Byte which = StringToLongUtil.stringToByte(TokenAnalysis.getFlag(request.getHeader(Constants.AUTHORIZATION)));
+        if (which == 0) {
+            // user is a factory user
+            BreedingPlanExample breedingPlanExample = new BreedingPlanExample();
+            BreedingPlanExample.Criteria criteria = breedingPlanExample.createCriteria();
+            criteria.andFactoryNumEqualTo(factoryOrAgentID);
+            if (pass != -1) {
+                criteria.andIspassCheckEqualTo(pass);
+            }
+            List<BreedingPlan> select = breedingPlanService.findPlanSelective(breedingPlanExample,new RowBounds(upage, usize));
+            Response response = Responses.successResponse();
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("List",select);
+            data.put("size", select.size());
+            response.setData(data);
+            return response;
+        } else if (which == 2) {
+            // user is a ordinary user
+            return Responses.errorResponse("permit error, user can not get factory's message");
+        } else if (which == 1) {
+            // user is a agent user
+            BreedingPlanExample breedingPlanExample = new BreedingPlanExample();
+            BreedingPlanExample.Criteria criteria = breedingPlanExample.createCriteria();
+            if (pass != -1) {
+                criteria.andIspassCheckEqualTo(pass);
+            }
+            // It's agent message
+            // find his all subordinate factory
+            List<Long> factories = AgentUtil.getAllSubordinateFactory(String.valueOf(factoryOrAgentID));
+            List<BreedingPlan> plans = new ArrayList<>();
+            for (Long factory : factories) {
+                criteria.andFactoryNumEqualTo(factory);
+                plans.addAll(breedingPlanService.findPlanSelective(breedingPlanExample, new RowBounds(upage, usize)));
+            }
+            Response response = Responses.successResponse();
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("List",plans);
+            data.put("size", plans.size());
+            response.setData(data);
         }
-
-        List<BreedingPlan> select = breedingPlanService.findPlanSelective(breedingPlanExample,new RowBounds(upage, usize));
-        Response response = Responses.successResponse();
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("List",select);
-        data.put("size", select.size());
-        response.setData(data);
-        return response;
+        return Responses.errorResponse("request error!");
     }
 
     /**
@@ -261,9 +280,7 @@ public class BreedingResource {
      */
     @PatchMapping(value = "/professor")
     public Response changePlanByProfessor(@RequestBody @Valid BreedingPlan professor, BindingResult bindingResult) {
-
         logger.info("invoke changePlanByProfessor {}, url is breeding/professor", professor);
-
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案(专家页面)修改失败");
         }else{
@@ -294,9 +311,7 @@ public class BreedingResource {
      */
     @PatchMapping(value = "/supervisor")
     public Response changePlanBySupervisor(@RequestBody @Valid BreedingPlan supervisor, BindingResult bindingResult) {
-
         logger.info("invoke changePlanBySupervisor {}, url is breeding/supervisor", supervisor);
-
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案(监督页面)修改失败");
         }else{
@@ -486,9 +501,7 @@ public class BreedingResource {
 
     @GetMapping(value = "/professor/select")
     public Response findPlanSelectByProfessor(BreedingPlanModel planModel, BindingResult bindingResult){
-
         logger.info("invoke findPlanSelectByProfessor {}, url is breeding/professor/select", planModel);
-
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案(监督页面)修改失败");
         }else {

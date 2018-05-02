@@ -61,19 +61,16 @@ public class LoginResource {
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
         UserModel userModel = userService.getUserByPkuserID(username);
-
-        if( userModel == null) {
-
+        if(userModel == null) {
             //数据库中未查到用户名
             Response response = Responses.errorResponse("用户名或者密码错误");
             HashMap<String, Object> data = new HashMap<>();
             data.put("errorMessage", "error");
             response.setData(data);
             return response;
-
         } else {
-            // 验证密码信息, 忽略大小写
-            if( userModel.getUserPwd().equalsIgnoreCase(password)) {
+            // 验证密码信息, 忽略CASE OR case
+            if (userModel.getUserPwd().equalsIgnoreCase(password)) {
                 Response response = Responses.successResponse();
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("successMessage", "登录成功!");
