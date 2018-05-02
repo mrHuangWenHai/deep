@@ -27,6 +27,8 @@ public class AgentUtil {
 
     private List<Long> allFactoryList;
 
+    private Long count;
+
     private Map<Long, List<Long> > allAgent;
 
     private List<Long>  allAgentList;
@@ -144,13 +146,20 @@ public class AgentUtil {
         if (uid == -1) {
             return;
         }
-        long[] factoryIDByAgentIDs = agentUtil.factoryService.queryFactoryIDByAgentID((long)uid);
-        for (long factoryIDByAgentID : factoryIDByAgentIDs) {
-            agentUtil.allFactoryList.add(factoryIDByAgentID);
+        System.out.println("count = " + agentUtil.count);
+        if (agentUtil.count != 0) {
+            long[] factoryIDByAgentIDs = agentUtil.factoryService.queryFactoryIDByAgentID((long)uid);
+            for (long factoryIDByAgentID : factoryIDByAgentIDs) {
+                agentUtil.allFactoryList.add(factoryIDByAgentID);
+            }
+            System.out.println(agentUtil.count);
+        } else {
+            agentUtil.count++;
         }
         List<AgentModel> agentModels = agentUtil.agentService.getSons(uid);
         if (agentModels != null) {
             for (AgentModel agentModel : agentModels) {
+                System.out.println("agentModle.getId() = " + agentModel.getId());
                 getSubordinateAllFactory("" + agentModel.getId());
             }
         }
@@ -166,6 +175,7 @@ public class AgentUtil {
         if (uid == -1) {
             return null;
         }
+        agentUtil.count = (long) 0;
         agentUtil.allFactory = new HashMap<>();
         agentUtil.allFactoryList = new ArrayList<>();
         long[] factoryIDByAgentIDs = agentUtil.factoryService.queryFactoryIDByAgentID((long)uid);
