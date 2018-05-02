@@ -27,8 +27,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import static jdk.internal.jline.internal.Log.info;
-
 /**
  * author: Created  By  Caojiawei
  * date: 2018/2/2  12:52
@@ -256,17 +254,17 @@ public class BreedingResource {
             }
             // It's agent message
             // find his all subordinate factory
-            List<Long> factories = AgentUtil.getAllSubordinateFactory(String.valueOf(factoryOrAgentID));
-            List<BreedingPlan> plans = new ArrayList<>();
-            for (Long factory : factories) {
-                criteria.andFactoryNumEqualTo(factory);
-                plans.addAll(breedingPlanService.findPlanSelective(breedingPlanExample, new RowBounds(upage, usize)));
-            }
-            Response response = Responses.successResponse();
-            HashMap<String, Object> data = new HashMap<>();
-            data.put("List",plans);
-            data.put("size", plans.size());
-            response.setData(data);
+//            List<Long> factories = AgentUtil.getAllSubordinateFactory(String.valueOf(factoryOrAgentID));
+//            List<BreedingPlan> plans = new ArrayList<>();
+//            for (Long factory : factories) {
+//                criteria.andFactoryNumEqualTo(factory);
+//                plans.addAll(breedingPlanService.findPlanSelective(breedingPlanExample, new RowBounds(upage, usize)));
+//            }
+//            Response response = Responses.successResponse();
+//            HashMap<String, Object> data = new HashMap<>();
+//            data.put("List",plans);
+//            data.put("size", plans.size());
+//            response.setData(data);
         }
         return Responses.errorResponse("request error!");
     }
