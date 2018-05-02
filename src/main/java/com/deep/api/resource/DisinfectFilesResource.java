@@ -1,6 +1,8 @@
 package com.deep.api.resource;
 
 import com.deep.api.Utils.AgentUtil;
+import com.deep.api.Utils.TokenAnalysis;
+import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.DisinfectRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
@@ -12,8 +14,10 @@ import com.deep.domain.util.*;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpRequest;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
@@ -179,13 +183,19 @@ public class DisinfectFilesResource {
      */
     @GetMapping(value = "/{id}")
     public Response findShow(@PathVariable(value = "id")int id,
-                             DisinfectRequest disinfectRequest) {
+                             DisinfectRequest disinfectRequest,
+                             HttpServletRequest httpServletRequest) {
         logger.info("invoke get /{} {}",id,disinfectRequest);
-        List<Integer> factorys = new ArrayList<Integer>();
-        factorys.add(2);
-        factorys.add(3);
-        factorys.add(4);
-        disinfectRequest.setFactoryList(factorys);
+
+        Byte role = Byte.parseByte(TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION)));
+        if (role == 0) {
+          disinfectRequest.setId(id);
+        } else if(role == 1) {
+          List<int> factoryList = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
+          disinfectRequest.setFactoryList(factoryList);
+        } else {
+          return Responses.errorResponse("你没有权限");
+        }
         List<DisinfectFilesModel> disinfectFilesModels = disinfectFilesService.getDisinfectFilesModel(disinfectRequest,
             new RowBounds(disinfectRequest.getPage() * disinfectRequest.getSize(),disinfectRequest.getSize()));
         return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
@@ -292,9 +302,11 @@ public class DisinfectFilesResource {
      */
     @RequestMapping(value = "/p/{id}",method = RequestMethod.PATCH)
     public Response professorUpdate(@PathVariable(value = "id") int id,
-                                    @RequestBody DisinfectRequest disinfectRequest) {
+                                    @RequestBody DisinfectRequest disinfectRequest,
+                                    HttpServletRequest httpServletRequest) {
         disinfectRequest.setId(id);
         logger.info("invoke gf/p/{} {}",id, disinfectRequest);
+
         if( disinfectRequest.getIspassCheck() == null
             || disinfectRequest.getUnpassReason() == null) {
             return Responses.errorResponse("Lack Item");

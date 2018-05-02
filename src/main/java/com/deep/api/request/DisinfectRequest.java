@@ -33,7 +33,7 @@ public class DisinfectRequest {
     private String disinfectTimeEnd;
     private int page = 0;
     private int size = 10;
-    private List<Integer>factoryList;
+    private List<int>factoryList;
 
     public String getDisinfectEartag() {
         return disinfectEartag;
@@ -205,14 +205,6 @@ public class DisinfectRequest {
 
     public void setSize(int size) {
         this.size = size;
-    }
-
-    public List<Integer> getFactoryList() {
-        return factoryList;
-    }
-
-    public void setFactoryList(List<Integer> factoryList) {
-        this.factoryList = factoryList;
     }
 
     public Integer getIspassCheck() {
