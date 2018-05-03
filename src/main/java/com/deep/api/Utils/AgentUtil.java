@@ -146,20 +146,17 @@ public class AgentUtil {
         if (uid == -1) {
             return;
         }
-        System.out.println("count = " + agentUtil.count);
         if (agentUtil.count != 0) {
             long[] factoryIDByAgentIDs = agentUtil.factoryService.queryFactoryIDByAgentID((long)uid);
             for (long factoryIDByAgentID : factoryIDByAgentIDs) {
                 agentUtil.allFactoryList.add(factoryIDByAgentID);
             }
-            System.out.println(agentUtil.count);
         } else {
             agentUtil.count++;
         }
         List<AgentModel> agentModels = agentUtil.agentService.getSons(uid);
         if (agentModels != null) {
             for (AgentModel agentModel : agentModels) {
-                System.out.println("agentModle.getId() = " + agentModel.getId());
                 getSubordinateAllFactory("" + agentModel.getId());
             }
         }
