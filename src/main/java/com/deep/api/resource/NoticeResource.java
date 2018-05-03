@@ -119,10 +119,8 @@ public class NoticeResource {
             if (uid == -1) {
                 return Responses.errorResponse("查询错误");
             }
-
             update.setId(uid);
             update.setGmtModified(new Date());
-
             // 首先需要获取数据库中该条记录的信息
             NoticePlan oldPlan = noticePlanService.getOneNotice(uid);
             if (oldPlan == null) {

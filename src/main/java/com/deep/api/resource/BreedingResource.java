@@ -47,46 +47,74 @@ public class BreedingResource {
      */
     @PostMapping(value = "")
     public Response addPlan(@RequestBody @Valid BreedingPlanModel planModel, BindingResult bindingResult) throws ParseException {
-        logger.info("invoke addPlan {}, url = /breeding/insert", planModel);
+        logger.info("invoke addPlan {}, url = /breeding", planModel);
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案录入失败");
         }else {
             //将planModel部分变量拆分传递给对象insert
+//            BreedingPlan insert = new BreedingPlan();
+//            insert.setFactoryNum(planModel.getFactoryNum());
+//            insert.setFactoryName(planModel.getFactoryName());
+//            insert.setBuilding(planModel.getBuilding());
+//            insert.setQuantity(planModel.getQuantity());
+//
+//            insert.setBreedingT(planModel.getBreedingT());
+//            insert.setGestationT(planModel.getGestationT());
+//            insert.setPrenatalIT(planModel.getPrenatalIT());
+//            insert.setCubT(planModel.getCubT());
+//
+//            insert.setRemark(planModel.getRemark());
+//
+//            insert.setmEtI(planModel.getmEtI());
+//            insert.setmEtB(planModel.getmEtB());
+//            insert.setfEtI(planModel.getfEtI());
+//            insert.setfEtB(planModel.getfEtB());
+//
+//            insert.setOperatorName(planModel.getOperatorName());
+//            insert.setOperatorId(planModel.getOperatorId());
+
             BreedingPlan insert = new BreedingPlan();
+            insert.setId(planModel.getId());
+            insert.setGmtModified(planModel.getGmtModified());
+
             insert.setFactoryNum(planModel.getFactoryNum());
             insert.setFactoryName(planModel.getFactoryName());
             insert.setBuilding(planModel.getBuilding());
-            insert.setQuantity(planModel.getQuantity());
-
-            insert.setBreedingT(planModel.getBreedingT());
-            insert.setGestationT(planModel.getGestationT());
-            insert.setPrenatalIT(planModel.getPrenatalIT());
-            insert.setCubT(planModel.getCubT());
-
-            insert.setRemark(planModel.getRemark());
 
             insert.setmEtI(planModel.getmEtI());
             insert.setmEtB(planModel.getmEtB());
             insert.setfEtI(planModel.getfEtI());
             insert.setfEtB(planModel.getfEtB());
 
-            insert.setOperatorName(planModel.getOperatorName());
+            insert.setBreedingT(planModel.getBreedingT());
+            insert.setGestationT(planModel.getGestationT());
+            insert.setPrenatalIT(planModel.getPrenatalIT());
+            insert.setCubT(planModel.getCubT());
+            insert.setQuantity(planModel.getQuantity());
+
             insert.setOperatorId(planModel.getOperatorId());
+            insert.setOperatorName(planModel.getOperatorName());
+            insert.setProfessorId(planModel.getProfessorId());
+            insert.setProfessorName(planModel.getProfessorName());
+            insert.setSupervisorName(planModel.getSupervisorName());
+            insert.setSupervisorId(planModel.getSupervisorId());
+
+            insert.setRemark(planModel.getRemark());
+            insert.setUpassReason(planModel.getUpassReason());
 
             Byte flag = 2;
 
             insert.setGmtCreate(new Date());
-
             insert.setIsPassCheck(flag);
             insert.setIsPassSup(flag);
 
-            int addID = breedingPlanService.addPlan(insert);
-            if (addID <= 0) {
+            int success = breedingPlanService.addPlan(insert);
+            if (success <= 0) {
                 return Responses.errorResponse("error!");
             }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("breeding_plan",addID);
+            data.put("success",success);
             response.setData(data);
             return response;
         }

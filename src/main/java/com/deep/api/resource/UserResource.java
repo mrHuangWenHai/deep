@@ -20,7 +20,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.ws.rs.Path;
 import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -73,7 +72,6 @@ public class UserResource {
     @GetMapping(value = "user/{id}")
     public Response getUserOne(@PathVariable("id")String id) {
         logger.info("invoke getUserOne{}, url is user/{id}", id);
-
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
