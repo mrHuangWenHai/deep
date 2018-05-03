@@ -1,12 +1,14 @@
 package com.deep.api.request;
 
+import java.util.List;
+
 /**
  * create by zhongrui on 18-4-18.
  */
 public class GenealogicalRequest {
 
     private Long id;
-    private String factoryNum;  //工厂号
+    private Long factoryNum;  //工厂号
     private String nativeEartag;  //原耳牌
     private String immuneEartag;  //免疫耳牌
     private String tradeMarkEartag;  //商标耳牌
@@ -38,9 +40,10 @@ public class GenealogicalRequest {
     private String birthTimeEnd;
     private String birthWeightStart;
     private String birthWeightEnd;
-    private int page;
-    private int size;
+    private int page = 0;
+    private int size = 10;
 
+    private List<Long> factoryList;
 
     public Long getId() {
         return id;
@@ -54,14 +57,13 @@ public class GenealogicalRequest {
         this.birthWeight = birthWeight;
     }
 
-    public String getFactoryNum() {
+    public Long getFactoryNum() {
         return factoryNum;
     }
 
-    public void setFactoryNum(String factoryNum) {
+    public void setFactoryNum(Long factoryNum) {
         this.factoryNum = factoryNum;
     }
-
 
     public String getNativeEartag() {
         return nativeEartag;
@@ -277,5 +279,49 @@ public class GenealogicalRequest {
 
     public void setSize(int size) {
         this.size = size;
+    }
+
+    public List<Long> getFactoryList() {
+        return factoryList;
+    }
+
+    public void setFactoryList(List<Long> factoryList) {
+        this.factoryList = factoryList;
+    }
+
+    @Override
+    public String toString() {
+        return "GenealogicalRequest{" +
+            "id=" + id +
+            ", factoryNum='" + factoryNum + '\'' +
+            ", nativeEartag='" + nativeEartag + '\'' +
+            ", immuneEartag='" + immuneEartag + '\'' +
+            ", tradeMarkEartag='" + tradeMarkEartag + '\'' +
+            ", type='" + type + '\'' +
+            ", brief='" + brief + '\'' +
+            ", breedingSheepBase='" + breedingSheepBase + '\'' +
+            ", birthTime='" + birthTime + '\'' +
+            ", birthWeight=" + birthWeight +
+            ", color='" + color + '\'' +
+            ", sex='" + sex + '\'' +
+            ", eartagOfFather='" + eartagOfFather + '\'' +
+            ", eartagOfMother='" + eartagOfMother + '\'' +
+            ", eartagOfFathersFather='" + eartagOfFathersFather + '\'' +
+            ", eartagOfFathersMother='" + eartagOfFathersMother + '\'' +
+            ", eartagOfMothersFather='" + eartagOfMothersFather + '\'' +
+            ", eartagOfMothersMother='" + eartagOfMothersMother + '\'' +
+            ", remark='" + remark + '\'' +
+            ", gmtCreate='" + gmtCreate + '\'' +
+            ", gmtModified='" + gmtModified + '\'' +
+            ", operatorId=" + operatorId +
+            ", operatorName='" + operatorName + '\'' +
+            ", birthTimeStart='" + birthTimeStart + '\'' +
+            ", birthTimeEnd='" + birthTimeEnd + '\'' +
+            ", birthWeightStart='" + birthWeightStart + '\'' +
+            ", birthWeightEnd='" + birthWeightEnd + '\'' +
+            ", page=" + page +
+            ", size=" + size +
+            ", factoryList=" + factoryList +
+            '}';
     }
 }

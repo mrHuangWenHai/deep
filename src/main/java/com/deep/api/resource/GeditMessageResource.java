@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
  * 用于编辑发送短信条数
  * create by zhongrui on 18-3-25.
  */
-
 @RestController
 public class GeditMessageResource {
 
@@ -30,23 +29,20 @@ public class GeditMessageResource {
                           @RequestParam(value = "expireTime",defaultValue = "") String expireTime,
                           @RequestParam(value = "pressureTips",defaultValue = "") String pressureTips){
         //message未设置
-        if ("".equals(message)){
+        if ("".equals(message)) {
             //redis中一定存在Message字段
             System.out.println(JedisUtil.getCertainKeyValue("Message"));
-
-        }else {
+        } else {
             JedisUtil.setCertainKeyValue("Message",message);
         }
-
-        if ("".equals(expireTime)){
+        if ("".equals(expireTime)) {
             System.out.println(JedisUtil.getCertainKeyValue("ExpireTime"));
-        }else {
+        } else {
             JedisUtil.setCertainKeyValue("ExpireTime",expireTime);
         }
-
-        if ("".equals(pressureTips)){
+        if ("".equals(pressureTips)) {
             System.out.println(JedisUtil.getCertainKeyValue("PressureTips"));
-        }else {
+        } else {
             JedisUtil.setCertainKeyValue("PressureTips",pressureTips);
         }
         return JudgeUtil.JudgeSuccess("setting","success");

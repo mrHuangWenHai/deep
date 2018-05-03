@@ -4,9 +4,12 @@ package com.deep.api.resource;
 
 import com.deep.api.Utils.AgentUtil;
 
+import com.deep.api.Utils.TokenAnalysis;
+import com.deep.api.authorization.tools.Constants;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.api.response.ValidResponse;
+import com.deep.domain.model.GenealogicalFilesModel;
 import com.deep.domain.model.ImmunePlanModel;
 import com.deep.domain.service.FactoryService;
 import com.deep.domain.service.ImmunePlanService;
@@ -72,11 +75,10 @@ public class ImmunePlanResource {
      * @param immuneEartagFile  耳牌文件
      * @return 插入结果
      */
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @RequestMapping(value = "", method = RequestMethod.POST)
     public Response saveShow(@Valid ImmunePlanModel immunePlanModel,
                              BindingResult bindingResult,
                              @RequestParam("immuneEartagFile") MultipartFile immuneEartagFile)  {
-
         if (bindingResult.hasErrors()) {
             Response response = Responses.successResponse();
             Map<String, Object> data = new HashMap<String, Object>();
@@ -187,91 +189,123 @@ public class ImmunePlanResource {
 
     /**
      * 返回查询结果
-     * 以json格式返回前端
      * 分页查询
      * METHOD:POST
      * @param immuneRequest 免疫请求类
      * @return 查询结果
      */
-    @RequestMapping(value = "/findshow",method = RequestMethod.POST)
-    public Response findShow(@RequestBody ImmuneRequest immuneRequest) {
-
-        logger.info("invoke findShow {}", immuneRequest);
-
-        if (immuneRequest.getSize() == 0) {
-            immuneRequest.setSize(10);
-        }
+    @GetMapping(value = "/{id}")
+    public Response findShow(@PathVariable(value = "id")long id,
+                             ImmuneRequest immuneRequest,
+                             HttpServletRequest httpServletRequest) {
+        logger.info("invoke  /ip/{} {}", id,immuneRequest);
         //前台传参数
-        List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModel(immuneRequest,
+
+      Map<Long, List<Long>> factoryMap = null;
+      Byte role = Byte.parseByte(TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION)));
+      if (role == 0) {
+        immuneRequest.setFactoryNum(id);
+      } else if (role == 1) {
+        factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
+        List<Long> factoryList = new ArrayList<>();
+        factoryList.addAll(factoryMap.get(-1));
+        factoryList.addAll(factoryMap.get(0));
+        immuneRequest.setFactoryList(factoryList);
+      } else {
+        return Responses.errorResponse("你没有权限");
+      }
+
+      List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModel(immuneRequest,
                 new RowBounds(immuneRequest.getPage() * immuneRequest.getSize(),immuneRequest.getSize()));
-        return JudgeUtil.JudgeFind(immunePlanModels,immunePlanModels.size());
-    }
 
-    /**
-     * 用于id查询
-     * @param id id
-     * @return 查询结果
-     */
-    @RequestMapping(value = "/find/{id}",method = RequestMethod.GET)
-    public Response find(@PathVariable("id") long id){
-
-        logger.info(" invoke find{id} {}" , id);
-        ImmunePlanModel immunePlanModel = this.immunePlanService.getImmunePlanModelById(id);
-        return JudgeUtil.JudgeFind(immunePlanModel);
-    }
-
-    /**
-     * 查看某专家负责的工厂
-     * @param agentId 代理ID
-     * @param factoryNum 工厂号
-     * @param page 页号
-     * @param size 页数
-     * @return 查询结果
-     */
-    @RequestMapping(value = "/professor",method = RequestMethod.GET)
-    public Response pFind(@RequestParam("agentId") Long agentId,
-                          @RequestParam(value = "factoryNum",required = false)BigInteger factoryNum,
-                          @RequestParam(value = "ispassCheck",required = false)String ispassCheck,
-                          @RequestParam(value = "page" , defaultValue = "0") int page,
-                          @RequestParam(value = "size" , defaultValue = "10") int size){
-        logger.info(" invoke pFind{agentId, factoryNum, ispassCheck ,page ,size} {}" , agentId, factoryNum, ispassCheck, page ,size);
-        List<ImmunePlanModel> list = new ArrayList<>();
-        if (factoryNum == null){
-            //未指定factoryNum 查询出负责的所有的factoryID
-            long[] factoryId = AgentUtil.getFactory(agentId.toString());
-            if (factoryId == null){
-                return Responses.errorResponse("find no factory");
-            }
-
-            for (long factory : factoryId){
-                list.addAll(this.immunePlanService.getImmunePlanModelByFactoryNumAndIsPassCheck(BigInteger.valueOf(factory), ispassCheck, new RowBounds(page * size ,size)));
-            }
-            return JudgeUtil.JudgeFind(list , list.size());
-            //指定查询的factoryNum
-        } else {
-            list.addAll(this.immunePlanService.getImmunePlanModelByFactoryNumAndIsPassCheck(factoryNum, ispassCheck, new RowBounds(page * size ,size)));
-            return JudgeUtil.JudgeFind(list , list.size());
+      if (role == 1) {
+        Map<String,Object> data = new HashMap<>();
+        List<ImmunePlanModel> direct = new ArrayList<>();
+        List<ImmunePlanModel> others = new ArrayList<>();
+        List<Long> directId = factoryMap.get(-1);
+        for (ImmunePlanModel immunePlanModel : immunePlanModels) {
+          if (directId.contains(immunePlanModel.getFactoryNum())) {
+            direct.add(immunePlanModel);
+          } else {
+            others.add(immunePlanModel);
+          }
         }
+        data.put("direct", direct);
+        data.put("others", others);
+        Response response = Responses.successResponse();
+        response.setData(data);
+        return response;
+      } else {
+        return JudgeUtil.JudgeFind(immunePlanModels,immunePlanModels.size());
+      }
 
     }
+//
+//    /**
+//     * 用于id查询
+//     * @param id id
+//     * @return 查询结果
+//     */
+//    @RequestMapping(value = "/find/{id}",method = RequestMethod.GET)
+//    public Response find(@PathVariable("id") long id){
+//
+//        logger.info(" invoke find{id} {}" , id);
+//        ImmunePlanModel immunePlanModel = this.immunePlanService.getImmunePlanModelById(id);
+//        return JudgeUtil.JudgeFind(immunePlanModel);
+//    }
 
-    /**
-     * 查看某监督员负责的工厂
-     * @param factoryNum 工厂号
-     * @param ispassSup  审核
-     * @param page  页
-     * @param size  条
-     * @return  查询结果
-     */
-    @RequestMapping(value = "/supervisor",method = RequestMethod.GET)
-    public Response sFind(@RequestParam(value = "factoryNum")BigInteger factoryNum,
-                          @RequestParam(value = "ispassSup",required = false)String ispassSup,
-                          @RequestParam(value = "page" , defaultValue = "0") int page,
-                          @RequestParam(value = "size" , defaultValue = "10") int size){
-        logger.info(" invoke sFind{supervisorId, factoryNum, ispassSup, page, size } {}" ,factoryNum, ispassSup, page ,size);
-        List<ImmunePlanModel> list = this.immunePlanService.getImmunePlanModelByFactoryNumAndIsPassSup(factoryNum, ispassSup, new RowBounds(page * size , size));
-        return JudgeUtil.JudgeFind(list, list.size());
-    }
+//    /**
+//     * 查看某专家负责的工厂
+//     * @param agentId 代理ID
+//     * @param factoryNum 工厂号
+//     * @param page 页号
+//     * @param size 页数
+//     * @return 查询结果
+//     */
+//    @RequestMapping(value = "/professor",method = RequestMethod.GET)
+//    public Response pFind(@RequestParam("agentId") Long agentId,
+//                          @RequestParam(value = "factoryNum",required = false)BigInteger factoryNum,
+//                          @RequestParam(value = "ispassCheck",required = false)String ispassCheck,
+//                          @RequestParam(value = "page" , defaultValue = "0") int page,
+//                          @RequestParam(value = "size" , defaultValue = "10") int size){
+//        logger.info(" invoke pFind{agentId, factoryNum, ispassCheck ,page ,size} {}" , agentId, factoryNum, ispassCheck, page ,size);
+//        List<ImmunePlanModel> list = new ArrayList<>();
+//        if (factoryNum == null){
+//            //未指定factoryNum 查询出负责的所有的factoryID
+//            long[] factoryId = AgentUtil.getFactory(agentId.toString());
+//            if (factoryId == null){
+//                return Responses.errorResponse("find no factory");
+//            }
+//
+//            for (long factory : factoryId){
+//                list.addAll(this.immunePlanService.getImmunePlanModelByFactoryNumAndIsPassCheck(BigInteger.valueOf(factory), ispassCheck, new RowBounds(page * size ,size)));
+//            }
+//            return JudgeUtil.JudgeFind(list , list.size());
+//            //指定查询的factoryNum
+//        } else {
+//            list.addAll(this.immunePlanService.getImmunePlanModelByFactoryNumAndIsPassCheck(factoryNum, ispassCheck, new RowBounds(page * size ,size)));
+//            return JudgeUtil.JudgeFind(list , list.size());
+//        }
+//
+//    }
+
+//    /**
+//     * 查看某监督员负责的工厂
+//     * @param factoryNum 工厂号
+//     * @param ispassSup  审核
+//     * @param page  页
+//     * @param size  条
+//     * @return  查询结果
+//     */
+//    @RequestMapping(value = "/supervisor",method = RequestMethod.GET)
+//    public Response sFind(@RequestParam(value = "factoryNum")BigInteger factoryNum,
+//                          @RequestParam(value = "ispassSup",required = false)String ispassSup,
+//                          @RequestParam(value = "page" , defaultValue = "0") int page,
+//                          @RequestParam(value = "size" , defaultValue = "10") int size){
+//        logger.info(" invoke sFind{supervisorId, factoryNum, ispassSup, page, size } {}" ,factoryNum, ispassSup, page ,size);
+//        List<ImmunePlanModel> list = this.immunePlanService.getImmunePlanModelByFactoryNumAndIsPassSup(factoryNum, ispassSup, new RowBounds(page * size , size));
+//        return JudgeUtil.JudgeFind(list, list.size());
+//    }
     /**
      * 下载文件 并保存到自定义路径
      * @param response  HttpServletResponse
@@ -304,18 +338,17 @@ public class ImmunePlanResource {
      * @return 更新结果
      */
 
-    @RequestMapping(value = "/professor/select",method = RequestMethod.PATCH)
-    public Response professorUpdate(@RequestBody ImmunePlanModel immunePlanModel) {
+    @RequestMapping(value = "/p/{id}",method = RequestMethod.PATCH)
+    public Response professorUpdate(@PathVariable(value = "id") long id,
+                                    @RequestBody ImmunePlanModel immunePlanModel) {
 
-        logger.info("invoke professorUpdate {}", immunePlanModel);
-        if(immunePlanModel.getId() == null ||
-                immunePlanModel.getFactoryNum() == null ||
-                immunePlanModel.getProfessor() == null ||
-                immunePlanModel.getIspassCheck() == null ||
-
-                immunePlanModel.getUnpassReason() == null) {
+        logger.info("invoke PATCH /p/{id} {} {}",id, immunePlanModel);
+        if( immunePlanModel.getIspassCheck() == null
+            || immunePlanModel.getProfessor() == null
+            || immunePlanModel.getUnpassReason() == null) {
             return Responses.errorResponse("Lack Item");
         } else {
+          immunePlanModel.setId(id);
           int row = immunePlanService.updateImmunePlanModelByProfessor(immunePlanModel);
           if (row == 1) {
             String professorKey = this.factoryService.getAgentIDByFactoryNumber(immunePlanModel.getFactoryNum().toString()) + "_professor";
@@ -336,17 +369,15 @@ public class ImmunePlanResource {
      * METHOD:PATCH
      * @return 审核结果
      */
-    @RequestMapping(value = "/supervisor/select",method = RequestMethod.PATCH)
-    public Response supervisorUpdate(@RequestBody ImmunePlanModel immunePlanModel){
+    @RequestMapping(value = "/s/{id}",method = RequestMethod.PATCH)
+    public Response supervisorUpdate(@PathVariable(value = "id")long id,
+                                     @RequestBody ImmunePlanModel immunePlanModel){
         logger.info("invoke supervisorUpdate {}", immunePlanModel);
-        if(immunePlanModel.getId() == null ||
-                immunePlanModel.getFactoryNum() == null ||
-                immunePlanModel.getSupervisor() == null ||
-
-                immunePlanModel.getIspassSup() == null){
+        if( immunePlanModel.getSupervisor() == null
+            || immunePlanModel.getIspassSup() == null) {
             return Responses.errorResponse("Lack Item");
-
         } else {
+          immunePlanModel.setId(id);
           int row = immunePlanService.updateImmunePlanModelBySupervisor(immunePlanModel);
           if (row == 1) {
             String supervisorKey = immunePlanModel.getFactoryNum().toString() + "_supervisor";
@@ -369,8 +400,8 @@ public class ImmunePlanResource {
      */
 
 
-    @RequestMapping(value = "update",method = RequestMethod.POST)
-    public Response operatorUpdate(@Validated ImmunePlanModel immunePlanModel,
+    @RequestMapping(value = "/{id}",method = RequestMethod.PUT)
+    public Response operatorUpdate(@PathVariable(value = "id") long id,@Validated ImmunePlanModel immunePlanModel,
                                    BindingResult bindingResult,
                                    @RequestParam(value = "immuneEartagFile", required = false) MultipartFile immuneEartagFile) {
           logger.info("invoke operatorUpdate {}", immunePlanModel);
@@ -381,10 +412,8 @@ public class ImmunePlanResource {
              response.setData(data);
              return response;
            }
-      if (immunePlanModel.getId() == null) {
-        return Responses.errorResponse("Operate wrong");
-      }
 
+      immunePlanModel.setId(id);
       if (immuneEartagFile != null) {
 
         String filePath = pathPre + immunePlanModel.getFactoryNum().toString() + "/immuneEartag/";
@@ -422,7 +451,7 @@ public class ImmunePlanResource {
      * @return 删除结果
      */
 
-    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
     public Response delete(@Min(0) @PathVariable(value = "id") Long id) {
 
         logger.info("invoke delete {}", id);

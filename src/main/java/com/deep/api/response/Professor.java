@@ -14,7 +14,7 @@ public class Professor {
 
     private String userEmail;
 
-    private String QQ;
+    private String qq;
 
     private String officialPhone;
 
@@ -58,12 +58,12 @@ public class Professor {
         this.userEmail = userEmail;
     }
 
-    public String getQQ() {
-        return QQ;
+    public String getQq() {
+        return qq;
     }
 
-    public void setQQ(String QQ) {
-        this.QQ = QQ;
+    public void setQq(String qq) {
+        this.qq = qq;
     }
 
     public String getOfficialPhone() {

@@ -3,9 +3,12 @@ package com.deep.api.resource;
 
 
 import com.deep.api.Utils.AgentUtil;
+import com.deep.api.Utils.TokenAnalysis;
+import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.RepellentRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
+import com.deep.domain.model.ImmunePlanModel;
 import com.deep.domain.model.RepellentPlanModel;
 import com.deep.domain.service.FactoryService;
 import com.deep.domain.service.RepellentPlanService;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -63,7 +67,7 @@ public class RepellentPlanResource {
      * @return  保存结果
      */
 
-    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    @RequestMapping(value = "",method = RequestMethod.POST)
     public Response save(@Valid RepellentPlanModel repellentPlanModel,
                          BindingResult bindingResult,
                          @RequestParam("repellentEartagFile") MultipartFile repellentEartagFile) {
@@ -186,84 +190,116 @@ public class RepellentPlanResource {
      * @param repellentRequest 驱虫请求类
      * @return  查询结果
      */
-    @RequestMapping(value = "/findshow",method = RequestMethod.POST)
-    public Response findShow(@RequestBody RepellentRequest repellentRequest) {
+    @GetMapping(value = "/{id}")
+    public Response findShow(@PathVariable(value = "id")long id,
+                             RepellentRequest repellentRequest,
+                             HttpServletRequest httpServletRequest) {
         logger.info("invoke finsShow {}", repellentRequest);
-        if (repellentRequest.getSize() == 0) {
-            repellentRequest.setSize(10);
-        }
+
+      Map<Long, List<Long>> factoryMap = null;
+      Byte role = Byte.parseByte(TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION)));
+      if (role == 0) {
+        repellentRequest.setFactoryNum(id);
+      } else if (role == 1) {
+        factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
+        List<Long> factoryList = new ArrayList<>();
+        factoryList.addAll(factoryMap.get(-1));
+        factoryList.addAll(factoryMap.get(0));
+        repellentRequest.setFactoryList(factoryList);
+      } else {
+        return Responses.errorResponse("你没有权限");
+      }
 
         List<RepellentPlanModel> repellentPlanModels = repellentPlanService.getRepellentPlanModel(repellentRequest,
                 new RowBounds(repellentRequest.getPage() * repellentRequest.getSize() ,repellentRequest.getSize()));
 
-        return JudgeUtil.JudgeFind(repellentPlanModels,repellentPlanModels.size());
-
-    }
-
-    /**
-     * 用于id查询
-     * @param id id
-     * @return 查询结果
-     */
-    @RequestMapping(value = "/find/{id}", method = RequestMethod.GET)
-    public Response find(@PathVariable("id") long id){
-        logger.info("invoke find{id} {}" , id);
-        RepellentPlanModel repellentPlanModel = this.repellentPlanService.getRepellentPlanModelById(id);
-        return JudgeUtil.JudgeFind(repellentPlanModel);
-    }
-
-    /**
-     * 查看某专家负责的工厂
-     * @param agentId 代理ID
-     * @param factoryNum 工厂号
-     * @param page 页号
-     * @param size 页数
-     * @return 查询结果
-     */
-    @RequestMapping(value = "/professor",method = RequestMethod.GET)
-    public Response pFind(@RequestParam("agentId") Long agentId,
-                          @RequestParam(value = "factoryNum",required = false)BigInteger factoryNum,
-                          @RequestParam(value = "ispassCheck",required = false)String ispassCheck,
-                          @RequestParam(value = "page" , defaultValue = "0") int page,
-                          @RequestParam(value = "size" , defaultValue = "10") int size){
-        logger.info(" invoke pFind{agentId, factoryNum, ispassCheck ,page ,size} {}" , agentId, factoryNum, ispassCheck, page ,size);
-        List<RepellentPlanModel> list = new ArrayList<>();
-        if (factoryNum == null){
-            //未指定factoryNum 查询出负责的所有的factoryID
-            long[] factoryId = AgentUtil.getFactory(agentId.toString());
-            if (factoryId == null){
-                return Responses.errorResponse("find no factory");
-            }
-
-            for (long factory : factoryId){
-                list.addAll(this.repellentPlanService.getRepellentPlanModelByFactoryNumAndIsPassCheck(BigInteger.valueOf(factory), ispassCheck, new RowBounds(page * size ,size)));
-            }
-            return JudgeUtil.JudgeFind(list , list.size());
-            //指定查询的factoryNum
-        } else {
-            list.addAll(this.repellentPlanService.getRepellentPlanModelByFactoryNumAndIsPassSup(factoryNum, ispassCheck, new RowBounds(page * size ,size)));
-            return JudgeUtil.JudgeFind(list , list.size());
+      if (role == 1) {
+        Map<String,Object> data = new HashMap<>();
+        List<RepellentPlanModel> direct = new ArrayList<>();
+        List<RepellentPlanModel> others = new ArrayList<>();
+        List<Long> directId = factoryMap.get(-1);
+        for (RepellentPlanModel repellentPlanModel : repellentPlanModels) {
+          if (directId.contains(repellentPlanModel.getFactoryNum())) {
+            direct.add(repellentPlanModel);
+          } else {
+            others.add(repellentPlanModel);
+          }
         }
+        data.put("direct", direct);
+        data.put("others", others);
+        Response response = Responses.successResponse();
+        response.setData(data);
+        return response;
+      } else {
+        return JudgeUtil.JudgeFind(repellentPlanModels,repellentPlanModels.size());
+      }
 
     }
 
-    /**
-     * 查看某监督员负责的工厂
-     * @param factoryNum 工厂号
-     * @param ispassSup  审核
-     * @param page  页
-     * @param size  条
-     * @return  查询结果
-     */
-    @RequestMapping(value = "/supervisor",method = RequestMethod.GET)
-    public Response sFind(@RequestParam(value = "factoryNum")BigInteger factoryNum,
-                          @RequestParam(value = "ispassSup",required = false)String ispassSup,
-                          @RequestParam(value = "page" , defaultValue = "0") int page,
-                          @RequestParam(value = "size" , defaultValue = "10") int size){
-        logger.info(" invoke sFind{ factoryNum, ispassSup, page, size } {}" ,  factoryNum, ispassSup, page ,size);
-        List<RepellentPlanModel> list = this.repellentPlanService.getRepellentPlanModelByFactoryNumAndIsPassSup(factoryNum, ispassSup, new RowBounds(page * size , size));
-        return JudgeUtil.JudgeFind(list, list.size());
-    }
+//    /**
+//     * 用于id查询
+//     * @param id id
+//     * @return 查询结果
+//     */
+//    @RequestMapping(value = "/find/{id}", method = RequestMethod.GET)
+//    public Response find(@PathVariable("id") long id){
+//        logger.info("invoke find{id} {}" , id);
+//        RepellentPlanModel repellentPlanModel = this.repellentPlanService.getRepellentPlanModelById(id);
+//        return JudgeUtil.JudgeFind(repellentPlanModel);
+//    }
+
+//    /**
+//     * 查看某专家负责的工厂
+//     * @param agentId 代理ID
+//     * @param factoryNum 工厂号
+//     * @param page 页号
+//     * @param size 页数
+//     * @return 查询结果
+//     */
+//    @RequestMapping(value = "/professor",method = RequestMethod.GET)
+//    public Response pFind(@RequestParam("agentId") Long agentId,
+//                          @RequestParam(value = "factoryNum",required = false)BigInteger factoryNum,
+//                          @RequestParam(value = "ispassCheck",required = false)String ispassCheck,
+//                          @RequestParam(value = "page" , defaultValue = "0") int page,
+//                          @RequestParam(value = "size" , defaultValue = "10") int size){
+//        logger.info(" invoke pFind{agentId, factoryNum, ispassCheck ,page ,size} {}" , agentId, factoryNum, ispassCheck, page ,size);
+//        List<RepellentPlanModel> list = new ArrayList<>();
+//        if (factoryNum == null){
+//            //未指定factoryNum 查询出负责的所有的factoryID
+//            long[] factoryId = AgentUtil.getFactory(agentId.toString());
+//            if (factoryId == null){
+//                return Responses.errorResponse("find no factory");
+//            }
+//
+//            for (long factory : factoryId){
+//                list.addAll(this.repellentPlanService.getRepellentPlanModelByFactoryNumAndIsPassCheck(BigInteger.valueOf(factory), ispassCheck, new RowBounds(page * size ,size)));
+//            }
+//            return JudgeUtil.JudgeFind(list , list.size());
+//            //指定查询的factoryNum
+//        } else {
+//            list.addAll(this.repellentPlanService.getRepellentPlanModelByFactoryNumAndIsPassSup(factoryNum, ispassCheck, new RowBounds(page * size ,size)));
+//            return JudgeUtil.JudgeFind(list , list.size());
+//        }
+//
+//    }
+//
+//    /**
+//     * 查看某监督员负责的工厂
+//     * @param factoryNum 工厂号
+//     * @param ispassSup  审核
+//     * @param page  页
+//     * @param size  条
+//     * @return  查询结果
+//     */
+//    @RequestMapping(value = "/supervisor",method = RequestMethod.GET)
+//    public Response sFind(@RequestParam(value = "factoryNum")BigInteger factoryNum,
+//                          @RequestParam(value = "ispassSup",required = false)String ispassSup,
+//                          @RequestParam(value = "page" , defaultValue = "0") int page,
+//                          @RequestParam(value = "size" , defaultValue = "10") int size){
+//        logger.info(" invoke sFind{ factoryNum, ispassSup, page, size } {}" ,  factoryNum, ispassSup, page ,size);
+//        List<RepellentPlanModel> list = this.repellentPlanService.getRepellentPlanModelByFactoryNumAndIsPassSup(factoryNum, ispassSup, new RowBounds(page * size , size));
+//        return JudgeUtil.JudgeFind(list, list.size());
+//    }
 
     /**
      * 下载文件 并保存到自定义路径
@@ -296,19 +332,15 @@ public class RepellentPlanResource {
      * @param repellentPlanModel 驱虫类
      * @return 更新结果
      */
-    @RequestMapping(value = "/professor/select",method = RequestMethod.PATCH)
+    @RequestMapping(value = "/p/{id}",method = RequestMethod.PATCH)
+    public Response professorUpdate(@PathVariable(value = "id") long id,
+                                    @RequestBody RepellentPlanModel repellentPlanModel) {
 
-    public Response professorUpdate(@RequestBody RepellentPlanModel repellentPlanModel) {
-
-        logger.info("invoke pupdate {}", repellentPlanModel);
-
-        if (repellentPlanModel.getId() == null ||
-
-                repellentPlanModel.getFactoryNum() == null ||
-
-                repellentPlanModel.getProfessor() == null ||
-                repellentPlanModel.getIspassCheck() == null ||
-                repellentPlanModel.getUnpassReason() == null) {
+        logger.info("invoke /rp/p/id {} {}",id, repellentPlanModel);
+        repellentPlanModel.setId(id);
+        if (repellentPlanModel.getProfessor() == null ||
+            repellentPlanModel.getIspassCheck() == null ||
+            repellentPlanModel.getUnpassReason() == null) {
             return Responses.errorResponse("Lack param");
         } else {
           int row = repellentPlanService.updateRepellentPlanModelByProfessor(repellentPlanModel);
@@ -335,15 +367,13 @@ public class RepellentPlanResource {
 
 
 
-    @RequestMapping(value = "/supervisor/select",method = RequestMethod.PATCH)
-    public Response SupervisorUpdate(@RequestBody RepellentPlanModel repellentPlanModel) {
-        logger.info("invoke supervisorUpdate {}", repellentPlanModel);
-
-        if( repellentPlanModel.getId() == null ||
-                repellentPlanModel.getFactoryNum() == null ||
-                repellentPlanModel.getSupervisor() == null ||
-                repellentPlanModel.getIspassSup() == null) {
-
+    @RequestMapping(value = "/s/{id}",method = RequestMethod.PATCH)
+    public Response supervisorUpdate(@PathVariable(value = "id") long id,
+                                     @RequestBody RepellentPlanModel repellentPlanModel) {
+        logger.info("invoke /rp/s/{} {}",id, repellentPlanModel);
+        repellentPlanModel.setId(id);
+        if( repellentPlanModel.getSupervisor() == null ||
+            repellentPlanModel.getIspassSup() == null) {
             return Responses.errorResponse("Lack Item");
         } else {
           int row = repellentPlanService.updateRepellentPlanModelBySupervisor(repellentPlanModel);
@@ -367,13 +397,13 @@ public class RepellentPlanResource {
      * @param repellentPlanModel 驱虫类
      * @return  更新结果
      */
-    @RequestMapping(value = "update",method = RequestMethod.POST)
-    public Response operatorUpdate(RepellentPlanModel repellentPlanModel,
-
-
+    @RequestMapping(value = "/{id}",method = RequestMethod.PUT)
+    public Response operatorUpdate(@PathVariable(value = "id")long id ,
+                                   RepellentPlanModel repellentPlanModel,
                                    @RequestParam(value = "repellentEartag", required = false) MultipartFile repellentEartag) {
 
         logger.info("invoke operatorUpdate {}", repellentPlanModel);
+        repellentPlanModel.setId(id);
         if (repellentPlanModel.getId() == null) {
             return Responses.errorResponse("Operate wrong");
 
@@ -418,7 +448,7 @@ public class RepellentPlanResource {
      * @return  删除结果
      */
 
-    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
     public Response delete(@Min(0) @PathVariable(value = "id") Long id) {
         logger.info("invoke delete {}", id);
         if ("0".equals(id.toString())) {

@@ -1,15 +1,16 @@
 package com.deep.api.request;
 
 import java.math.BigInteger;
+import java.util.List;
 
 /**
  * create by zhongrui on 18-4-18.
  */
 public class DisinfectRequest {
 
-    private Long id;      //id
+    int id;
     private String disinfectEartag;
-    private BigInteger factoryNum;     //工厂号
+    private Long factoryNum;     //工厂号
     private String factoryName;
     private String disinfectTime;     //消毒时间
     private String disinfectName;     //消毒药品名称
@@ -20,9 +21,9 @@ public class DisinfectRequest {
     private String professor;       //技术审核(审核表人员 专家) 可空
     private String supervisor;       //监督员(监督操作员人员) 可空
     private String remark;        //备注
-    private String ispassCheck;       //是否通过审核 可空 默认为 0
+    private Integer ispassCheck;       //是否通过审核 可空 默认为 0
     private String unpassReason;   //未通过审核原因 可空 默认未 无
-    private String ispassSup;       //是否通过审核 可空 默认为 0
+    private Integer ispassSup;       //是否通过审核 可空 默认为 0
     private String gmtCreate;   //创建时间
     private String gmtModified;     //修改时间
     private String gmtProfessor;     //审核时间 可空
@@ -30,16 +31,9 @@ public class DisinfectRequest {
 
     private String disinfectTimeStart;
     private String disinfectTimeEnd;
-    private int page;
-    private int size;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private int page = 0;
+    private int size = 10;
+    private List<Long>factoryList;
 
     public String getDisinfectEartag() {
         return disinfectEartag;
@@ -49,16 +43,15 @@ public class DisinfectRequest {
         this.disinfectEartag = disinfectEartag;
     }
 
-    public BigInteger getFactoryNum() {
-        return factoryNum;
-    }
+  public Long getFactoryNum() {
+    return factoryNum;
+  }
 
-    public void setFactoryNum(BigInteger factoryNum) {
-        this.factoryNum = factoryNum;
-    }
+  public void setFactoryNum(Long factoryNum) {
+    this.factoryNum = factoryNum;
+  }
 
-
-    public String getFactoryName() {
+  public String getFactoryName() {
         return factoryName;
     }
 
@@ -141,28 +134,12 @@ public class DisinfectRequest {
         this.remark = remark;
     }
 
-    public String getIspassCheck() {
-        return ispassCheck;
-    }
-
-    public void setIspassCheck(String ispassCheck) {
-        this.ispassCheck = ispassCheck;
-    }
-
     public String getUnpassReason() {
         return unpassReason;
     }
 
     public void setUnpassReason(String unpassReason) {
         this.unpassReason = unpassReason;
-    }
-
-    public String getIspassSup() {
-        return ispassSup;
-    }
-
-    public void setIspassSup(String ispassSup) {
-        this.ispassSup = ispassSup;
     }
 
     public String getGmtCreate() {
@@ -229,15 +206,42 @@ public class DisinfectRequest {
         this.size = size;
     }
 
+    public Integer getIspassCheck() {
+        return ispassCheck;
+    }
 
+    public void setIspassCheck(Integer ispassCheck) {
+        this.ispassCheck = ispassCheck;
+    }
 
+    public Integer getIspassSup() {
+        return ispassSup;
+    }
 
+    public void setIspassSup(Integer ispassSup) {
+        this.ispassSup = ispassSup;
+    }
 
-    @Override
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public List<Long> getFactoryList() {
+        return factoryList;
+    }
+
+    public void setFactoryList(List<Long> factoryList) {
+        this.factoryList = factoryList;
+    }
+
+  @Override
     public String toString() {
         return "DisinfectRequest{" +
-            "id=" + id +
-            ", disinfectEartag='" + disinfectEartag + '\'' +
+            "disinfectEartag='" + disinfectEartag + '\'' +
             ", factoryNum=" + factoryNum +
             ", factoryName='" + factoryName + '\'' +
             ", disinfectTime='" + disinfectTime + '\'' +
@@ -260,6 +264,7 @@ public class DisinfectRequest {
             ", disinfectTimeEnd='" + disinfectTimeEnd + '\'' +
             ", page=" + page +
             ", size=" + size +
+            ", factoryList=" + factoryList +
             '}';
     }
 }

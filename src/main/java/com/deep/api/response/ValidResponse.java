@@ -15,17 +15,17 @@ import java.util.HashMap;
 @ControllerAdvice
 public class ValidResponse {
 
-    @ExceptionHandler(BindException.class)
-    public static Response bindExceptionHandler() {
-
-        return Responses.errorResponse("inject failure");
-    }
-
-//    @ResponseBody
-//    @ExceptionHandler(Exception.class)
-//    public static Response exceptionHandler(Exception e) {
-//        System.out.println(e);
-//        Response response = Responses.errorResponse(e.getMessage());
-//        return response;
+//    @ExceptionHandler(BindException.class)
+//    public static Response bindExceptionHandler() {
+//
+//        return Responses.errorResponse("inject failure");
 //    }
+
+    @ResponseBody
+    @ExceptionHandler(Exception.class)
+    public static Response exceptionHandler(Exception e) {
+        System.out.println(e);
+        Response response = Responses.errorResponse(e.getMessage());
+        return response;
+    }
 }
