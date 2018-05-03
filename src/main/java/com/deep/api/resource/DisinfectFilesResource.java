@@ -14,19 +14,15 @@ import com.deep.domain.util.*;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpRequest;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Path;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +30,7 @@ import java.util.Map;
 import java.io.File;
 
 @RestController
-@RequestMapping(value = "/df",method = RequestMethod.GET)
+@RequestMapping(value = "/df")
 public class DisinfectFilesResource {
     private final Logger logger = LoggerFactory.getLogger(DisinfectFilesResource.class);
     private final String pathPre = "../EartagDocument/";
@@ -64,7 +60,7 @@ public class DisinfectFilesResource {
     @PostMapping(value = "")
     public Response saveShow(@Valid DisinfectFilesModel disinfectFilesModel,
                              BindingResult bindingResult,
-                             @RequestParam(value = "disinfectEartagFile") MultipartFile disinfectEartagFile,
+                             @RequestParam(value = "eartagFile") MultipartFile disinfectEartagFile,
                              HttpServletRequest request) {
 
         if (bindingResult.hasErrors()) {
@@ -96,8 +92,6 @@ public class DisinfectFilesResource {
 
                 //System.out.println("pppppppppppppppppppppppppppp  "+ disinfectFilesModel.getId());
                 //数据插入redis
-
-
                 //professor字段为 代理ID + _professor
                 //supervisor字段为 工厂号 + _supervisor
                 short agentID = this.factoryService.getAgentIDByFactoryNumber(disinfectFilesModel.getFactoryNum().toString());
@@ -193,9 +187,10 @@ public class DisinfectFilesResource {
           disinfectRequest.setFactoryNum(id);
         } else if (role == 1) {
           factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
+          System.out.println(factoryMap);
           List<Long> factoryList = new ArrayList<>();
-          factoryList.addAll(factoryMap.get(-1));
-          factoryList.addAll(factoryMap.get(0));
+          factoryList.addAll(factoryMap.get(new Long(-1)));
+          factoryList.addAll(factoryMap.get(new Long(0)));
           disinfectRequest.setFactoryList(factoryList);
         } else {
           return Responses.errorResponse("你没有权限");
@@ -206,9 +201,10 @@ public class DisinfectFilesResource {
 
         if (role == 1) {
           Map<String,Object> data = new HashMap<>();
+          List<DisinfectFilesModel> factorylist = new ArrayList<>();
           List<DisinfectFilesModel> direct = new ArrayList<>();
           List<DisinfectFilesModel> others = new ArrayList<>();
-          List<Long> directId = factoryMap.get(-1);
+          List<Long> directId = factoryMap.get(new Long(-1));
           for (DisinfectFilesModel disinfectFilesModel : disinfectFilesModels) {
             if (directId.contains(disinfectFilesModel.getFactoryNum())) {
               direct.add(disinfectFilesModel);
@@ -216,8 +212,11 @@ public class DisinfectFilesResource {
               others.add(disinfectFilesModel);
             }
           }
-          data.put("direct", direct);
-          data.put("others", others);
+          factorylist.addAll(direct);
+          factorylist.addAll(others);
+          data.put("List", factorylist);
+          data.put("size", factorylist.size());
+          data.put("directSize",direct.size());
           Response response = Responses.successResponse();
           response.setData(data);
           return response;
@@ -226,19 +225,17 @@ public class DisinfectFilesResource {
         }
     }
 
-//    /**
-//     * 用于id查询
-//     * @param id id
-//     * @return 查询结果
-//     */
-//    @RequestMapping(value = "/find/{id}",method = RequestMethod.GET)
-//    public Response find(@PathVariable("id") long id) {
-//
-//        logger.info(" invoke find{id} {}" , id);
-//        DisinfectFilesModel disinfectFilesModel = this.disinfectFilesService.getDisinfectFilesModelById(id);
-//        return JudgeUtil.JudgeFind(disinfectFilesModel);
-//    }
-
+    /**
+     * 用于id查询
+     * @param id id
+     * @return 查询结果
+     */
+    @RequestMapping(value = "/find/{id}",method = RequestMethod.GET)
+    public Response find(@PathVariable("id") long id) {
+        logger.info(" invoke find/{id} {}" , id);
+        DisinfectFilesModel disinfectFilesModel = this.disinfectFilesService.getDisinfectFilesModelById(id);
+        return JudgeUtil.JudgeFind(disinfectFilesModel);
+    }
 
 //    /**
 //     * 查看某专家负责的工厂
@@ -305,7 +302,7 @@ public class DisinfectFilesResource {
      * @param locate  目的地址
      * @return  下载结果
      */
-    @RequestMapping(value = "/down/{num}/{file}/{locate}",method = RequestMethod.GET)
+    @RequestMapping(value = "/down/{num}/{file}",method = RequestMethod.GET)
     public Response download(HttpServletResponse response,
                              @PathVariable("num") String factoryNum,
                              @PathVariable("file") String file,
@@ -361,7 +358,7 @@ public class DisinfectFilesResource {
 
         disinfectRequest.setId(id);
         logger.info("invoke supervisorUpdate {}", disinfectRequest);
-        if(disinfectRequest.getFactoryNum() == null
+        if ( disinfectRequest.getFactoryNum() == null
             || disinfectRequest.getSupervisor() == null
             || disinfectRequest.getIspassSup() == null) {
             return Responses.errorResponse("Lack Item");
@@ -386,24 +383,23 @@ public class DisinfectFilesResource {
      * @param disinfectFilesModel 消毒类
      * @return 更新结果
      */
-    @PutMapping(value = "/{id}")
+    @PostMapping(value = "/{id}")
     public Response operatorUpdate(@PathVariable(value = "id")long id,
-                                   @Validated DisinfectFilesModel disinfectFilesModel,
+                                   @Valid DisinfectFilesModel disinfectFilesModel,
                                    BindingResult bindingResult,
-                                   @RequestParam(value = "disinfectEartagFile", required = false) MultipartFile disinfectEartagFile) {
+                                   @RequestParam(value = "eartagFile", required = false) MultipartFile disinfectEartagFile) {
 
         if (bindingResult.hasErrors()) {
-            Response response = Responses.successResponse();
+            Response response = Responses.errorResponse("param is valid");
             Map<String, Object> data = new HashMap<String, Object>();
-            data.put("error",bindingResult.getAllErrors());
+            data.put("param",bindingResult.getAllErrors());
             response.setData(data);
             return response;
         }
-        logger.info("invoke operatorUpdate {}", disinfectFilesModel);
 
+        logger.info("invoke operatorUpdate {}", disinfectFilesModel);
         disinfectFilesModel.setId(id);
         if (disinfectEartagFile != null) {
-
             String filePath = pathPre + disinfectFilesModel.getFactoryNum().toString() + "/disinfectEartag/";
             String fileName = disinfectEartagFile.getOriginalFilename();
             try {

@@ -8,7 +8,6 @@ import com.deep.api.request.DiagnosisRequest;
 import com.deep.domain.model.DiagnosisPlanModel;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
-
 import com.deep.domain.model.ImmunePlanModel;
 import com.deep.domain.service.DiagnosisPlanService;
 import org.apache.ibatis.session.RowBounds;
@@ -193,31 +192,31 @@ public class DiagnosisResource {
         return response;
     }
 
-    /**
-     * 按主键查询的接口：/{id}
-     * 接收参数：整型的主键号（保留接口查询，前端不调用此接口）
-     * @return Response
-     */
-    @GetMapping(value = "/{id}")
-    public Response findPlanById(@PathVariable("id") int id) {
-        logger.info("invoke Get diagnosis/{}", id);
-        if (id < 0) {
-            return Responses.errorResponse("id 无效");
-        }
-
-        //查询语句的写法：一定要在声明对象时把值直接赋进去
-        DiagnosisPlanModel diagnosisPlanModel = diagnosisPlanService.findPlanById(id);
-        if (diagnosisPlanModel == null) {
-            return Responses.errorResponse("查询失败");
-        }
-
-        Response response = Responses.successResponse();
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("model", diagnosisPlanModel);
-
-        response.setData(data);
-        return response;
-    }
+//    /**
+//     * 按主键查询的接口：/{id}
+//     * 接收参数：整型的主键号（保留接口查询，前端不调用此接口）
+//     * @return Response
+//     */
+//    @GetMapping(value = "/{id}")
+//    public Response findPlanById(@PathVariable("id") int id) {
+//        logger.info("invoke Get diagnosis/{}", id);
+//        if (id < 0) {
+//            return Responses.errorResponse("id 无效");
+//        }
+//
+//        //查询语句的写法：一定要在声明对象时把值直接赋进去
+//        DiagnosisPlanModel diagnosisPlanModel = diagnosisPlanService.findPlanById(id);
+//        if (diagnosisPlanModel == null) {
+//            return Responses.errorResponse("查询失败");
+//        }
+//
+//        Response response = Responses.successResponse();
+//        HashMap<String, Object> data = new HashMap<>();
+//        data.put("model", diagnosisPlanModel);
+//
+//        response.setData(data);
+//        return response;
+//    }
 
     /**
      * 按条件查询接口：/

@@ -20,7 +20,6 @@ public class DisinfectFilesModel {
     private String factoryName;
     private String disinfectEartag;
     @NotBlank
-
     private String disinfectTime;     //消毒时间
     @NotBlank
     private String disinfectName;     //消毒药品名称

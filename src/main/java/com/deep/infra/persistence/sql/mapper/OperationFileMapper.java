@@ -16,8 +16,14 @@ public interface OperationFileMapper {
 
   List<OperationFile> getOperationFile(@Param("operationCoditionRequest")OperationCoditionRequest operationCoditionRequest);
 
+  OperationFile getOperationFileById(@Param("id")int id);
+
   int addOperationFile(@Param("operationFile")OperationFile operationFile);
 
-  int updateOperationFile(@Param("id")int id, @Param("checkStatus") short checkStatus);
+  int updateCheckStatus(@Param("id")int id, @Param("checkStatus") short checkStatus);
+
+  int updateSupStatus(@Param("id")int id, @Param("supStatus") short supStatus);
+
+  int updateOperationFileByOperationFile(@Param("operationFile")OperationFile operationFile);
 
 }

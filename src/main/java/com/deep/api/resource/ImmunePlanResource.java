@@ -9,6 +9,7 @@ import com.deep.api.authorization.tools.Constants;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.api.response.ValidResponse;
+import com.deep.domain.model.DisinfectFilesModel;
 import com.deep.domain.model.GenealogicalFilesModel;
 import com.deep.domain.model.ImmunePlanModel;
 import com.deep.domain.service.FactoryService;
@@ -78,7 +79,7 @@ public class ImmunePlanResource {
     @RequestMapping(value = "", method = RequestMethod.POST)
     public Response saveShow(@Valid ImmunePlanModel immunePlanModel,
                              BindingResult bindingResult,
-                             @RequestParam("immuneEartagFile") MultipartFile immuneEartagFile)  {
+                             @RequestParam("eartagFile") MultipartFile immuneEartagFile)  {
         if (bindingResult.hasErrors()) {
             Response response = Responses.successResponse();
             Map<String, Object> data = new HashMap<String, Object>();
@@ -220,6 +221,7 @@ public class ImmunePlanResource {
 
       if (role == 1) {
         Map<String,Object> data = new HashMap<>();
+        List<ImmunePlanModel> factorylist = new ArrayList<>();
         List<ImmunePlanModel> direct = new ArrayList<>();
         List<ImmunePlanModel> others = new ArrayList<>();
         List<Long> directId = factoryMap.get(-1);
@@ -230,8 +232,12 @@ public class ImmunePlanResource {
             others.add(immunePlanModel);
           }
         }
-        data.put("direct", direct);
-        data.put("others", others);
+
+        factorylist.addAll(direct);
+        factorylist.addAll(others);
+        data.put("List", factorylist);
+        data.put("size", factorylist.size());
+        data.put("directSize",direct.size());
         Response response = Responses.successResponse();
         response.setData(data);
         return response;
@@ -240,19 +246,18 @@ public class ImmunePlanResource {
       }
 
     }
-//
-//    /**
-//     * 用于id查询
-//     * @param id id
-//     * @return 查询结果
-//     */
-//    @RequestMapping(value = "/find/{id}",method = RequestMethod.GET)
-//    public Response find(@PathVariable("id") long id){
-//
-//        logger.info(" invoke find{id} {}" , id);
-//        ImmunePlanModel immunePlanModel = this.immunePlanService.getImmunePlanModelById(id);
-//        return JudgeUtil.JudgeFind(immunePlanModel);
-//    }
+
+    /**
+     * 用于id查询
+     * @param id id
+     * @return 查询结果
+     */
+    @RequestMapping(value = "/find/{id}",method = RequestMethod.GET)
+    public Response find(@PathVariable("id") long id) {
+        logger.info(" invoke find{id} {}" , id);
+        ImmunePlanModel immunePlanModel = this.immunePlanService.getImmunePlanModelById(id);
+        return JudgeUtil.JudgeFind(immunePlanModel);
+    }
 
 //    /**
 //     * 查看某专家负责的工厂
@@ -352,7 +357,7 @@ public class ImmunePlanResource {
           int row = immunePlanService.updateImmunePlanModelByProfessor(immunePlanModel);
           if (row == 1) {
             String professorKey = this.factoryService.getAgentIDByFactoryNumber(immunePlanModel.getFactoryNum().toString()) + "_professor";
-            if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)){
+            if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
                 return Responses.errorResponse("cancel error");
             }
 
@@ -400,10 +405,12 @@ public class ImmunePlanResource {
      */
 
 
-    @RequestMapping(value = "/{id}",method = RequestMethod.PUT)
-    public Response operatorUpdate(@PathVariable(value = "id") long id,@Validated ImmunePlanModel immunePlanModel,
+    @RequestMapping(value = "/{id}",method = RequestMethod.POST)
+    public Response operatorUpdate(@PathVariable(value = "id") long id,
+                                   @Validated ImmunePlanModel immunePlanModel,
                                    BindingResult bindingResult,
                                    @RequestParam(value = "immuneEartagFile", required = false) MultipartFile immuneEartagFile) {
+
           logger.info("invoke operatorUpdate {}", immunePlanModel);
           if (bindingResult.hasErrors()) {
              Response response = Responses.successResponse();
@@ -412,7 +419,6 @@ public class ImmunePlanResource {
              response.setData(data);
              return response;
            }
-
       immunePlanModel.setId(id);
       if (immuneEartagFile != null) {
 

@@ -6,8 +6,6 @@ import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.GenealogicalRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
-import com.deep.api.response.ValidResponse;
-import com.deep.domain.model.DisinfectFilesModel;
 import com.deep.domain.model.GenealogicalFilesModel;
 import com.deep.domain.model.TypeBriefModel;
 import com.deep.domain.service.GenealogicalFilesService;
@@ -24,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,7 +67,6 @@ public class GenealogicalFilesResource {
                 return Responses.errorResponse("add error");
             }
         }
-
     }
 
     /**
@@ -101,21 +97,17 @@ public class GenealogicalFilesResource {
 
       logger.info("invoke save {}",genealogicalFilesModel);
       //查看数据库中是否有这种羊的品种信息
-
       List<TypeBriefModel> list = this.typeBriefService.getAllType();
       int i = 0;
       for (TypeBriefModel tempType : list) {
           if (tempType.getTypename().equals(genealogicalFilesModel.getTypeName())) {
-
               i = 1;
               break;
           }
       }
-
       if (i == 0) {
           return Responses.errorResponse("No this type before");
       }
-
       SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
       String time = simpleDateFormat.format(new Timestamp(System.currentTimeMillis()));
       genealogicalFilesModel.setGmtCreate(time);
@@ -149,7 +141,7 @@ public class GenealogicalFilesResource {
                              GenealogicalRequest genealogicalRequest,
                              HttpServletRequest httpServletRequest) {
 
-        logger.info("invoke findShow {}",genealogicalRequest);
+      logger.info("invoke findShow {}",genealogicalRequest);
 
       Map<Long, List<Long>> factoryMap = null;
       Byte role = Byte.parseByte(TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION)));
@@ -158,8 +150,8 @@ public class GenealogicalFilesResource {
       } else if (role == 1) {
         factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
         List<Long> factoryList = new ArrayList<>();
-        factoryList.addAll(factoryMap.get(-1));
-        factoryList.addAll(factoryMap.get(0));
+        factoryList.addAll(factoryMap.get(new Long(-1)));
+        factoryList.addAll(factoryMap.get(new Long(0)));
         genealogicalRequest.setFactoryList(factoryList);
       } else {
         return Responses.errorResponse("你没有权限");
@@ -172,11 +164,11 @@ public class GenealogicalFilesResource {
         }
 
       if (role == 1) {
-
         Map<String,Object> data = new HashMap<>();
+        List<GenealogicalFilesModel> factorylist = new ArrayList<>();
         List<GenealogicalFilesModel> direct = new ArrayList<>();
         List<GenealogicalFilesModel> others = new ArrayList<>();
-        List<Long> directId = factoryMap.get(-1);
+        List<Long> directId = factoryMap.get(new Long(-1));
         for (GenealogicalFilesModel genealogicalFilesModel : genealogicalFilesModels) {
           if (directId.contains(genealogicalFilesModel.getFactoryNum())) {
             direct.add(genealogicalFilesModel);
@@ -184,8 +176,11 @@ public class GenealogicalFilesResource {
             others.add(genealogicalFilesModel);
           }
         }
-        data.put("direct", direct);
-        data.put("others", others);
+        factorylist.addAll(direct);
+        factorylist.addAll(others);
+        data.put("List", factorylist);
+        data.put("size", factorylist.size());
+        data.put("directSize",direct.size());
         Response response = Responses.successResponse();
         response.setData(data);
         return response;
@@ -224,29 +219,29 @@ public class GenealogicalFilesResource {
 //         return response;
 //     }
 
-//    /**
-//     * 根据查询id进行操作
-//     * METHOD:GET
-//     * @param id id
-//     * @return 查询结果
-//     */
-//    @ResponseBody
-//
-//    @RequestMapping(value = "/find/{id}",method = RequestMethod.GET)
-//    public Response find(@NotNull @PathVariable("id") long id ) {
-//
-//        logger.info("invoke find{id} {}", id);
-//
-//        GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesService.getGenealogicalFilesModelById(id);
-//
-//        return JudgeUtil.JudgeFind(genealogicalFilesModel);
-//    }
+    /**
+     * 根据查询id进行操作
+     * METHOD:GET
+     * @param id id
+     * @return 查询结果
+     */
+    @ResponseBody
+
+    @RequestMapping(value = "/find/{id}",method = RequestMethod.GET)
+    public Response find(@NotNull @PathVariable("id") long id ) {
+
+        logger.info("invoke find{id} {}", id);
+
+        GenealogicalFilesModel genealogicalFilesModel = genealogicalFilesService.getGenealogicalFilesModelById(id);
+
+        return JudgeUtil.JudgeFind(genealogicalFilesModel);
+    }
 
     //update
 
     /**
      * 更新操作 输入数据替代原数据
-     * METHOD:PATCH
+     * METHOD:PUT
      * @param genealogicalFilesModel 系谱类
      * @return  更新结果
      */

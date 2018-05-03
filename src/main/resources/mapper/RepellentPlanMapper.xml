@@ -80,11 +80,15 @@
         WHERE
         1=1
 
-        <if test="repellentPlanModel.id != null and repellentPlanModel.id != ''">
-
-            AND id = #{repellentPlanModel.id}
+        <if test="repellentPlanModel.factoryList != null">
+            AND factory_num in (
+            <foreach collection="repellentPlanModel.factoryList" separator="," index="index" item="factoryNum">
+                #{factoryNum}
+            </foreach>
+            )
         </if>
-        <if test="repellentPlanModel.factoryNum != null and repellentPlanModel.factoryNum != '' ">
+
+        <if test="repellentPlanModel.factoryNum != null">
             AND factory_num = #{repellentPlanModel.factoryNum}
         </if>
         <if test="repellentPlanModel.crowdNum != null and repellentPlanModel.crowdNum != '' ">
@@ -249,7 +253,6 @@
             </if>
 
             <if test="repellentPlanModel.remark != null and repellentPlanModel.remark != ''" >
-
                 remark = #{repellentPlanModel.remark}
             </if>
         </set>
