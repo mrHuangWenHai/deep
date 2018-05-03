@@ -5,6 +5,8 @@ import com.deep.api.Utils.StringToLongUtil;
 import com.deep.api.Utils.TokenAnalysis;
 import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.NutritionPlanModel;
+import com.deep.api.request.ProfessorRequest;
+import com.deep.api.request.SupervisorRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.*;
@@ -192,9 +194,9 @@ public class NutritionResource {
 
     /**
      * 获取该羊场的所有数据
-     * @param size
-     * @param page
-     * @return
+     * @param size size
+     * @param page page
+     * @return Response
      */
     @GetMapping(value = "/{id}")
     public Response findAllOfOneFactory(@PathVariable("id") String id,
@@ -202,7 +204,7 @@ public class NutritionResource {
                                         @RequestParam(value = "page", defaultValue = "0") String page,
                                         @RequestParam(value = "factoryName", defaultValue = "") String factoryName,
                                         @RequestParam(value = "ispassCheck", defaultValue = "-1") String ispassCheck, HttpServletRequest request) {
-        logger.info("invoke findAllOfOneFactory, url is nutrition");
+        logger.info("invoke findAllOfOneFactory, url is nutrition/{id} {}", id, size, page, factoryName, ispassCheck, request);
         if (size == null || page == null) {
             return Responses.errorResponse("失败");
         }
@@ -231,8 +233,11 @@ public class NutritionResource {
             // user is a agent user
             NutritionPlanExample nutritionPlanExample = new NutritionPlanExample();
             NutritionPlanExample.Criteria criteria = nutritionPlanExample.createCriteria();
+            NutritionPlanExample nutritionPlanExample1 = new NutritionPlanExample();
+            NutritionPlanExample.Criteria criteria1 = nutritionPlanExample1.createCriteria();
             if (pass != -1) {
                 criteria.andIsPassCheckEqualTo(pass);
+                criteria1.andIsPassCheckEqualTo(pass);
             }
             // It's agent message
             // find his all subordinate factory
@@ -243,25 +248,29 @@ public class NutritionResource {
             List<NutritionPlanWithBLOBs> plans = new ArrayList<>();
             // not direct people
             List<Long> allFactories = factories.get((long) 0);
+            List<NutritionPlanWithBLOBs> theOne = new ArrayList<>();
             if (allFactories != null) {
                 for (Long allFactory : allFactories) {
-                    System.out.println("allFactory = " + allFactory);
                     criteria.andFactoryNumEqualTo(allFactory);
-                    plans.addAll(nutritionPlanService.findPlanSelective(nutritionPlanExample, new RowBounds(upage, usize)));
+                    theOne.addAll(nutritionPlanService.findPlanSelective(nutritionPlanExample, new RowBounds(upage, usize)));
                 }
             }
+            // direct people
             List<Long> directFactories = factories.get((long) -1);
+            List<NutritionPlanWithBLOBs> theOther = new ArrayList<>();
             if (directFactories != null) {
                 for (Long directFactory : directFactories) {
-                    System.out.println("directFactory = " + directFactory);
-                    criteria.andFactoryNumEqualTo(directFactory);
-                    plans.addAll(nutritionPlanService.findPlanSelective(nutritionPlanExample, new RowBounds(upage, usize)));
+                    criteria1.andFactoryNumEqualTo(directFactory);
+                    theOther.addAll(nutritionPlanService.findPlanSelective(nutritionPlanExample1, new RowBounds(upage, usize)));
                 }
             }
+            plans.addAll(theOther);
+            plans.addAll(theOne);
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("List",plans);
             data.put("size", plans.size());
+            data.put("directSize", theOther.size());
             response.setData(data);
             return response;
         } else {
@@ -274,412 +283,58 @@ public class NutritionResource {
      * 按主键查询的接口：/nutritionSelectById
      * 按主键查询的方法名：findPlanById()
      * 接收参数：整型的主键号（保留接口查询，前端不调用此接口）
-
      * @return
      */
-//    @GetMapping(value = "/{id}")
-//    public Response findPlanById(@PathVariable("id") String id) {
-//        logger.info("invoke findPlanById {}, url is nutrition/{id}", id);
-//        int uid = StringToLongUtil.stringToInt(id);
-//        if (uid == -1) {
-//            return Responses.errorResponse("查询错误");
-//        }
-//        //查询语句的写法：一定要在声明对象时把值直接赋进去
-//        NutritionPlanWithBLOBs selectById = nutritionPlanService.findPlanById(uid);
-//        Response response = Responses.successResponse();
-//        HashMap<String, Object> data = new HashMap<>();
-//        data.put("model", selectById);
-//        response.setData(data);
-//        return response;
-//    }
-
-    /**
-     * 按条件查询接口：/nutritionSelective
-     * 按条件查询方法名：findPlanSelective()
-     * 接收的参数：前端的各参数，以及两个("s_nutritionT1")("s_nutritionT2")时间字符串（所有参数可以选填）
-     * @param planModel
-     * @param bindingResult
-     * @return
-     * @throws ParseException
-     */
-
-    @PostMapping(value = "/selective")
-    public Response findPlanSelective(@RequestBody @Valid NutritionPlanModel planModel, BindingResult bindingResult) throws ParseException {
-        logger.info("invoke findPlanSelective {}, url is nutrition/selective", planModel);
-
-        if (bindingResult.hasErrors()) {
-            return Responses.errorResponse("营养实施档案(根据条件)查询失败");
-        }else {
-            //将planModel部分变量拆分传递给对象nutritionPlanWithBLOBs
-            NutritionPlanWithBLOBs nutritionPlanWithBLOBs = new NutritionPlanWithBLOBs();
-            nutritionPlanWithBLOBs.setId(planModel.getId());
-            nutritionPlanWithBLOBs.setGmtCreate(planModel.getGmtCreate());
-            nutritionPlanWithBLOBs.setGmtModified(planModel.getGmtModified());
-            nutritionPlanWithBLOBs.setSupervisorName(planModel.getSupervisorName());
-            nutritionPlanWithBLOBs.setFactoryNum(planModel.getFactoryNum());
-            nutritionPlanWithBLOBs.setBuilding(planModel.getBuilding());
-            nutritionPlanWithBLOBs.setNutritionT(planModel.getNutritionT());
-            nutritionPlanWithBLOBs.setQuantity(planModel.getQuantity());
-            nutritionPlanWithBLOBs.setAverage(planModel.getAverage());
-            nutritionPlanWithBLOBs.setPeriod(planModel.getPeriod());
-            nutritionPlanWithBLOBs.setWater(planModel.getWater());
-            nutritionPlanWithBLOBs.setOperatorName(planModel.getOperatorName());
-            nutritionPlanWithBLOBs.setProfessorName(planModel.getProfessorName());
-            nutritionPlanWithBLOBs.setSupervisorName(planModel.getSupervisorName());
-            nutritionPlanWithBLOBs.setRemark(planModel.getRemark());
-            nutritionPlanWithBLOBs.setIspassCheck(planModel.getIspassCheck());
-            nutritionPlanWithBLOBs.setUpassReason(planModel.getUpassReason());
-            nutritionPlanWithBLOBs.setIspassSup(planModel.getIspassSup());
-            nutritionPlanWithBLOBs.setMaterialA(planModel.getMaterialA());
-            nutritionPlanWithBLOBs.setMaterialM(planModel.getMaterialM());
-            nutritionPlanWithBLOBs.setMaterialO(planModel.getMaterialO());
-            nutritionPlanWithBLOBs.setMaterialWM(planModel.getMaterialWM());
-            nutritionPlanWithBLOBs.setMaterialWO(planModel.getMaterialWO());
-            nutritionPlanWithBLOBs.setRoughageP(planModel.getRoughageP());
-            nutritionPlanWithBLOBs.setRoughageD(planModel.getRoughageD());
-            nutritionPlanWithBLOBs.setRoughageWP(planModel.getRoughageWP());
-            nutritionPlanWithBLOBs.setRoughageWD(planModel.getRoughageWD());
-            nutritionPlanWithBLOBs.setRoughageWO(planModel.getRoughageWO());
-            nutritionPlanWithBLOBs.setPickingM(planModel.getPickingM());
-            nutritionPlanWithBLOBs.setPickingR(planModel.getPickingR());
-            nutritionPlanWithBLOBs.setPickingO(planModel.getPickingO());
-
-            //将planModel部分变量拆分传递给对象otherTime
-            OtherTime otherTime = new OtherTime();
-            otherTime.setSearch_string(planModel.getSearch_string());
-            otherTime.setS_breedingT(planModel.getS_breedingT());
-            System.out.println(otherTime.getS_breedingT());
-            otherTime.setS_gestationT(planModel.getS_gestationT());
-            System.out.println(otherTime.getS_gestationT());
-            otherTime.setS_prenatalIT(planModel.getS_prenatalIT());
-            System.out.println(otherTime.getS_prenatalIT());
-            otherTime.setS_cubT(planModel.getS_cubT());
-            System.out.println(otherTime.getS_cubT());
-            otherTime.setS_diagnosisT(planModel.getS_diagnosisT());
-            otherTime.setS_nutritionT(planModel.getS_nutritionT());
-            otherTime.setS_gmtCreate1(planModel.getS_gmtCreate1());
-            otherTime.setS_gmtCreate2(planModel.getS_gmtCreate2());
-            otherTime.setS_gmtModified1(planModel.getS_gmtModified1());
-            otherTime.setS_gmtModified2(planModel.getS_gmtModified2());
-            otherTime.setS_breedingT1(planModel.getS_breedingT1());
-            otherTime.setS_breedingT2(planModel.getS_breedingT2());
-            otherTime.setS_prenatalIT1(planModel.getS_prenatalIT1());
-            otherTime.setS_prenatalIT2(planModel.getS_prenatalIT2());
-            otherTime.setS_gestationT1(planModel.getS_gestationT1());
-            otherTime.setS_gestationT2(planModel.getS_gestationT2());
-            otherTime.setS_cubT1(planModel.getS_cubT1());
-            otherTime.setS_cubT2(planModel.getS_cubT2());
-            otherTime.setS_diagnosisT1(planModel.getS_diagnosisT1());
-            otherTime.setS_diagnosisT2(planModel.getS_diagnosisT2());
-            otherTime.setS_nutritionT1(planModel.getS_nutritionT1());
-            otherTime.setS_nutritionT2(planModel.getS_nutritionT2());
-            otherTime.setDownloadPath(planModel.getDownloadPath());
-            otherTime.setPage(planModel.getPage());
-            otherTime.setSize(planModel.getSize());
-
-            Date nutritionT1 = null;
-            Date nutritionT2 = null;
-            SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd HH:mm:SS");
-            NutritionPlanExample nutritionPlanExample = new NutritionPlanExample();
-            NutritionPlanExample.Criteria criteria = nutritionPlanExample.createCriteria();
-
-            if (otherTime.getS_nutritionT1() != null && !otherTime.getS_nutritionT1().isEmpty() && otherTime.getS_nutritionT2() != null && !otherTime.getS_nutritionT2().isEmpty()){
-                nutritionT1 =  formatter.parse(otherTime.getS_nutritionT1());
-                nutritionT2 =  formatter.parse(otherTime.getS_nutritionT2());
-            }
-            if(nutritionT1 != null && nutritionT2 != null){
-                criteria.andNutritionTBetween(nutritionT1,nutritionT2);
-            }
-            if(nutritionPlanWithBLOBs.getId() != null && !nutritionPlanWithBLOBs.getId().toString().isEmpty()){
-                criteria.andIdEqualTo(nutritionPlanWithBLOBs.getId());
-            }
-            if(nutritionPlanWithBLOBs.getFactoryNum() != null && !nutritionPlanWithBLOBs.getFactoryNum().toString().isEmpty()){
-                criteria.andFactoryNumEqualTo(nutritionPlanWithBLOBs.getFactoryNum());
-            }
-            if(nutritionPlanWithBLOBs.getBuilding() != null && !nutritionPlanWithBLOBs.getBuilding().isEmpty()){
-                criteria.andBuildingEqualTo(nutritionPlanWithBLOBs.getBuilding());
-            }
-            if(nutritionPlanWithBLOBs.getQuantity() != null && !nutritionPlanWithBLOBs.getQuantity().toString().isEmpty()){
-                criteria.andQuantityEqualTo(nutritionPlanWithBLOBs.getQuantity());
-            }
-            if(nutritionPlanWithBLOBs.getAverage() != null && !nutritionPlanWithBLOBs.getAverage().isEmpty()){
-                criteria.andAverageGreaterThanOrEqualTo(nutritionPlanWithBLOBs.getAverage());
-            }
-            if (nutritionPlanWithBLOBs.getPeriod()!= null && !nutritionPlanWithBLOBs.getPeriod().isEmpty()){
-                criteria.andPeriodEqualTo(nutritionPlanWithBLOBs.getPeriod());
-            }
-            if (nutritionPlanWithBLOBs.getWater()!= null && !nutritionPlanWithBLOBs.getWater().isEmpty()){
-                criteria.andWaterEqualTo(nutritionPlanWithBLOBs.getWater());
-            }
-            if(nutritionPlanWithBLOBs.getOperatorName() != null && !nutritionPlanWithBLOBs.getOperatorName().isEmpty()){
-                criteria.andOperatorNameEqualTo(nutritionPlanWithBLOBs.getOperatorName());
-            }
-            if(nutritionPlanWithBLOBs.getProfessorName() != null && !nutritionPlanWithBLOBs.getProfessorName().isEmpty()){
-                criteria.andProfessorNameEqualTo(nutritionPlanWithBLOBs.getProfessorName());
-            }
-            if(nutritionPlanWithBLOBs.getSupervisorName() != null && !nutritionPlanWithBLOBs.getSupervisorName().isEmpty()){
-                criteria.andSupervisorNameEqualTo(nutritionPlanWithBLOBs.getSupervisorName());
-            }
-            if(nutritionPlanWithBLOBs.getIspassCheck() != null && !nutritionPlanWithBLOBs.getIspassCheck().toString().isEmpty()){
-                criteria.andIsPassCheckEqualTo(nutritionPlanWithBLOBs.getIspassCheck());
-            }
-            if(nutritionPlanWithBLOBs.getUpassReason() != null && !nutritionPlanWithBLOBs.getUpassReason().isEmpty()){
-                criteria.andUpassReasonLike(nutritionPlanWithBLOBs.getUpassReason());
-            }
-            if(nutritionPlanWithBLOBs.getIspassSup() != null && !nutritionPlanWithBLOBs.getIspassSup().toString().isEmpty()){
-                criteria.andIsPassSupEqualTo(nutritionPlanWithBLOBs.getIspassSup());
-            }
-            List<NutritionPlanWithBLOBs> select = nutritionPlanService.findPlanSelective(nutritionPlanExample,new RowBounds(otherTime.getPage(),otherTime.getSize()));
-
-            if (select == null) {
-                return Responses.errorResponse("错误");
-            }
-            Response response = Responses.successResponse();
-            HashMap<String, Object> data = new HashMap<>();
-            data.put("List", select);
-            data.put("size", select.size());
-
-            response.setData(data);
-            return response;
+    @GetMapping(value = "/find/{id}")
+    public Response findPlanById(@PathVariable("id") String id) {
+        logger.info("invoke findPlanById {}, url is nutrition/{id}", id);
+        int uid = StringToLongUtil.stringToInt(id);
+        if (uid == -1) {
+            return Responses.errorResponse("查询错误");
         }
-    }
-
-    /**
-     * 供技术审核查询信息: /nutritionSelectByProfessor
-     * 供技术审核查询方法名：findPlanSelectBySupervisor()
-     * 接收的参数：前端的各参数，（所有参数可以选填）
-     * @param planModel
-     * @param bindingResult
-     * @return
-     */
-
-    @PostMapping(value = "/professor/selective")
-    public Response findPlanSelectByProfessor(@RequestBody @Valid NutritionPlanModel planModel, BindingResult bindingResult) {
-        logger.info("invoke findPlanSelectByProfessor {}, url is nutrition/professor/selective", planModel);
-
-        if (bindingResult.hasErrors()) {
-            return Responses.errorResponse("营养实施档案(根据条件)查询失败");
-        }else {
-            //将planModel部分变量拆分传递给对象nutritionPlanWithBLOBs
-            NutritionPlanWithBLOBs nutritionPlanWithBLOBs = new NutritionPlanWithBLOBs();
-            nutritionPlanWithBLOBs.setId(planModel.getId());
-            nutritionPlanWithBLOBs.setGmtCreate(planModel.getGmtCreate());
-            nutritionPlanWithBLOBs.setGmtModified(planModel.getGmtModified());
-            nutritionPlanWithBLOBs.setSupervisorName(planModel.getSupervisorName());
-            nutritionPlanWithBLOBs.setFactoryNum(planModel.getFactoryNum());
-            nutritionPlanWithBLOBs.setBuilding(planModel.getBuilding());
-            nutritionPlanWithBLOBs.setNutritionT(planModel.getNutritionT());
-            nutritionPlanWithBLOBs.setQuantity(planModel.getQuantity());
-            nutritionPlanWithBLOBs.setAverage(planModel.getAverage());
-            nutritionPlanWithBLOBs.setPeriod(planModel.getPeriod());
-            nutritionPlanWithBLOBs.setWater(planModel.getWater());
-            nutritionPlanWithBLOBs.setOperatorName(planModel.getOperatorName());
-            nutritionPlanWithBLOBs.setProfessorName(planModel.getProfessorName());
-            nutritionPlanWithBLOBs.setSupervisorName(planModel.getSupervisorName());
-            nutritionPlanWithBLOBs.setRemark(planModel.getRemark());
-            nutritionPlanWithBLOBs.setIspassCheck(planModel.getIspassCheck());
-            nutritionPlanWithBLOBs.setUpassReason(planModel.getUpassReason());
-            nutritionPlanWithBLOBs.setIspassSup(planModel.getIspassSup());
-            nutritionPlanWithBLOBs.setMaterialA(planModel.getMaterialA());
-            nutritionPlanWithBLOBs.setMaterialM(planModel.getMaterialM());
-            nutritionPlanWithBLOBs.setMaterialO(planModel.getMaterialO());
-            nutritionPlanWithBLOBs.setMaterialWM(planModel.getMaterialWM());
-            nutritionPlanWithBLOBs.setMaterialWO(planModel.getMaterialWO());
-            nutritionPlanWithBLOBs.setRoughageP(planModel.getRoughageP());
-            nutritionPlanWithBLOBs.setRoughageD(planModel.getRoughageD());
-            nutritionPlanWithBLOBs.setRoughageWP(planModel.getRoughageWP());
-            nutritionPlanWithBLOBs.setRoughageWD(planModel.getRoughageWD());
-            nutritionPlanWithBLOBs.setRoughageWO(planModel.getRoughageWO());
-            nutritionPlanWithBLOBs.setPickingM(planModel.getPickingM());
-            nutritionPlanWithBLOBs.setPickingR(planModel.getPickingR());
-            nutritionPlanWithBLOBs.setPickingO(planModel.getPickingO());
-
-            //将planModel部分变量拆分传递给对象otherTime
-            OtherTime otherTime = new OtherTime();
-            otherTime.setSearch_string(planModel.getSearch_string());
-            otherTime.setS_breedingT(planModel.getS_breedingT());
-            System.out.println(otherTime.getS_breedingT());
-            otherTime.setS_gestationT(planModel.getS_gestationT());
-            System.out.println(otherTime.getS_gestationT());
-            otherTime.setS_prenatalIT(planModel.getS_prenatalIT());
-            System.out.println(otherTime.getS_prenatalIT());
-            otherTime.setS_cubT(planModel.getS_cubT());
-            System.out.println(otherTime.getS_cubT());
-            otherTime.setS_diagnosisT(planModel.getS_diagnosisT());
-            otherTime.setS_nutritionT(planModel.getS_nutritionT());
-            otherTime.setS_gmtCreate1(planModel.getS_gmtCreate1());
-            otherTime.setS_gmtCreate2(planModel.getS_gmtCreate2());
-            otherTime.setS_gmtModified1(planModel.getS_gmtModified1());
-            otherTime.setS_gmtModified2(planModel.getS_gmtModified2());
-            otherTime.setS_breedingT1(planModel.getS_breedingT1());
-            otherTime.setS_breedingT2(planModel.getS_breedingT2());
-            otherTime.setS_prenatalIT1(planModel.getS_prenatalIT1());
-            otherTime.setS_prenatalIT2(planModel.getS_prenatalIT2());
-            otherTime.setS_gestationT1(planModel.getS_gestationT1());
-            otherTime.setS_gestationT2(planModel.getS_gestationT2());
-            otherTime.setS_cubT1(planModel.getS_cubT1());
-            otherTime.setS_cubT2(planModel.getS_cubT2());
-            otherTime.setS_diagnosisT1(planModel.getS_diagnosisT1());
-            otherTime.setS_diagnosisT2(planModel.getS_diagnosisT2());
-            otherTime.setS_nutritionT1(planModel.getS_nutritionT1());
-            otherTime.setS_nutritionT2(planModel.getS_nutritionT2());
-            otherTime.setDownloadPath(planModel.getDownloadPath());
-            otherTime.setPage(planModel.getPage());
-            otherTime.setSize(planModel.getSize());
-
-            Byte notPassed = 0;
-            NutritionPlanExample nutritionPlanExample = new NutritionPlanExample();
-            NutritionPlanExample.Criteria criteria = nutritionPlanExample.createCriteria();
-
-            if(nutritionPlanWithBLOBs.getId() != null && !nutritionPlanWithBLOBs.getId().toString().isEmpty()){
-                criteria.andIdEqualTo(nutritionPlanWithBLOBs.getId());
-            }
-            if(nutritionPlanWithBLOBs.getProfessorName() != null && !nutritionPlanWithBLOBs.getProfessorName().isEmpty()){
-                criteria.andProfessorNameEqualTo(nutritionPlanWithBLOBs.getProfessorName());
-            }
-            if(nutritionPlanWithBLOBs.getUpassReason() != null && !nutritionPlanWithBLOBs.getUpassReason().isEmpty()){
-                criteria.andUpassReasonLike(nutritionPlanWithBLOBs.getUpassReason());
-            }
-            criteria.andIsPassCheckEqualTo(notPassed);
-            List<NutritionPlanWithBLOBs> select = nutritionPlanService.findPlanSelective(nutritionPlanExample,new RowBounds(otherTime.getPage(),otherTime.getSize()));
-
-            if (select == null) {
-                return Responses.errorResponse("错误");
-            }
-            Response response = Responses.successResponse();
-            HashMap<String, Object> data = new HashMap<>();
-            data.put("List", select);
-            data.put("size", select.size());
-
-            response.setData(data);
-            return response;
-        }
-    }
-
-    /**
-     * 供监督者查询信息:nutritionSelectBySupervisor
-     * 供监督者查询方法名：findPlanSelectBySupervisor()
-     * 接收的参数：前端的各参数，（所有参数可以选填）
-     * @param planModel
-     * @param bindingResult
-     * @return
-     */
-
-    @PostMapping(value = "/supervisor/selective")
-    public Response findPlanSelectBySupervisor(@RequestBody @Valid NutritionPlanModel planModel, BindingResult bindingResult) {
-        logger.info("invoke findPlanSelectBySupervisor {}, url is nutrition/supervisor/selective", planModel);
-
-        if (bindingResult.hasErrors()) {
-            return Responses.errorResponse("营养实施档案(根据条件)查询失败");
-        }else {
-            //将planModel部分变量拆分传递给对象nutritionPlanWithBLOBs
-            NutritionPlanWithBLOBs nutritionPlanWithBLOBs = new NutritionPlanWithBLOBs();
-            nutritionPlanWithBLOBs.setId(planModel.getId());
-            nutritionPlanWithBLOBs.setGmtCreate(planModel.getGmtCreate());
-            nutritionPlanWithBLOBs.setGmtModified(planModel.getGmtModified());
-            nutritionPlanWithBLOBs.setSupervisorName(planModel.getSupervisorName());
-            nutritionPlanWithBLOBs.setFactoryNum(planModel.getFactoryNum());
-            nutritionPlanWithBLOBs.setBuilding(planModel.getBuilding());
-            nutritionPlanWithBLOBs.setNutritionT(planModel.getNutritionT());
-            nutritionPlanWithBLOBs.setQuantity(planModel.getQuantity());
-            nutritionPlanWithBLOBs.setAverage(planModel.getAverage());
-            nutritionPlanWithBLOBs.setPeriod(planModel.getPeriod());
-            nutritionPlanWithBLOBs.setWater(planModel.getWater());
-            nutritionPlanWithBLOBs.setOperatorName(planModel.getOperatorName());
-            nutritionPlanWithBLOBs.setProfessorName(planModel.getProfessorName());
-            nutritionPlanWithBLOBs.setSupervisorName(planModel.getSupervisorName());
-            nutritionPlanWithBLOBs.setRemark(planModel.getRemark());
-            nutritionPlanWithBLOBs.setIspassCheck(planModel.getIspassCheck());
-            nutritionPlanWithBLOBs.setUpassReason(planModel.getUpassReason());
-            nutritionPlanWithBLOBs.setIspassSup(planModel.getIspassSup());
-            nutritionPlanWithBLOBs.setMaterialA(planModel.getMaterialA());
-            nutritionPlanWithBLOBs.setMaterialM(planModel.getMaterialM());
-            nutritionPlanWithBLOBs.setMaterialO(planModel.getMaterialO());
-            nutritionPlanWithBLOBs.setMaterialWM(planModel.getMaterialWM());
-            nutritionPlanWithBLOBs.setMaterialWO(planModel.getMaterialWO());
-            nutritionPlanWithBLOBs.setRoughageP(planModel.getRoughageP());
-            nutritionPlanWithBLOBs.setRoughageD(planModel.getRoughageD());
-            nutritionPlanWithBLOBs.setRoughageWP(planModel.getRoughageWP());
-            nutritionPlanWithBLOBs.setRoughageWD(planModel.getRoughageWD());
-            nutritionPlanWithBLOBs.setRoughageWO(planModel.getRoughageWO());
-            nutritionPlanWithBLOBs.setPickingM(planModel.getPickingM());
-            nutritionPlanWithBLOBs.setPickingR(planModel.getPickingR());
-            nutritionPlanWithBLOBs.setPickingO(planModel.getPickingO());
-
-            //将planModel部分变量拆分传递给对象otherTime
-            OtherTime otherTime = new OtherTime();
-            otherTime.setSearch_string(planModel.getSearch_string());
-            otherTime.setS_breedingT(planModel.getS_breedingT());
-            System.out.println(otherTime.getS_breedingT());
-            otherTime.setS_gestationT(planModel.getS_gestationT());
-            System.out.println(otherTime.getS_gestationT());
-            otherTime.setS_prenatalIT(planModel.getS_prenatalIT());
-            System.out.println(otherTime.getS_prenatalIT());
-            otherTime.setS_cubT(planModel.getS_cubT());
-            System.out.println(otherTime.getS_cubT());
-            otherTime.setS_diagnosisT(planModel.getS_diagnosisT());
-            otherTime.setS_nutritionT(planModel.getS_nutritionT());
-            otherTime.setS_gmtCreate1(planModel.getS_gmtCreate1());
-            otherTime.setS_gmtCreate2(planModel.getS_gmtCreate2());
-            otherTime.setS_gmtModified1(planModel.getS_gmtModified1());
-            otherTime.setS_gmtModified2(planModel.getS_gmtModified2());
-            otherTime.setS_breedingT1(planModel.getS_breedingT1());
-            otherTime.setS_breedingT2(planModel.getS_breedingT2());
-            otherTime.setS_prenatalIT1(planModel.getS_prenatalIT1());
-            otherTime.setS_prenatalIT2(planModel.getS_prenatalIT2());
-            otherTime.setS_gestationT1(planModel.getS_gestationT1());
-            otherTime.setS_gestationT2(planModel.getS_gestationT2());
-            otherTime.setS_cubT1(planModel.getS_cubT1());
-            otherTime.setS_cubT2(planModel.getS_cubT2());
-            otherTime.setS_diagnosisT1(planModel.getS_diagnosisT1());
-            otherTime.setS_diagnosisT2(planModel.getS_diagnosisT2());
-            otherTime.setS_nutritionT1(planModel.getS_nutritionT1());
-            otherTime.setS_nutritionT2(planModel.getS_nutritionT2());
-            otherTime.setDownloadPath(planModel.getDownloadPath());
-            otherTime.setPage(planModel.getPage());
-            otherTime.setSize(planModel.getSize());
-
-            Byte notPassed1 = 0;
-            NutritionPlanExample nutritionPlanExample = new NutritionPlanExample();
-            NutritionPlanExample.Criteria criteria = nutritionPlanExample.createCriteria();
-            if(nutritionPlanWithBLOBs.getId() != null && !nutritionPlanWithBLOBs.getId().toString().isEmpty()){
-                criteria.andIdEqualTo(nutritionPlanWithBLOBs.getId());
-            }
-            criteria.andIsPassCheckEqualTo(notPassed1);
-            List<NutritionPlanWithBLOBs> select = nutritionPlanService.findPlanSelective(nutritionPlanExample,new RowBounds(otherTime.getPage(),otherTime.getSize()));
-            Response response = Responses.successResponse();
-            HashMap<String, Object> data = new HashMap<>();
-            data.put("nutrition_plan",select);
-            response.setData(data);
-            return response;
-        }
+        //查询语句的写法：一定要在声明对象时把值直接赋进去
+        NutritionPlanWithBLOBs selectById = nutritionPlanService.findPlanById(uid);
+        Response response = Responses.successResponse();
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("model", selectById);
+        response.setData(data);
+        return response;
     }
 
     /**
      * 专家使用按主键修改的接口：/nutritionUpdateByProfessor
      * 专家使用按主键修改的方法名：changePlanByProfessor()
      * 专家使用接收参数：整个表单类型（整型id必填，各参数选填）
-     * @param professor
-     * @param bindingResult
+     * @param professorRequest request
+     * @param bindingResult other
      * @return
      */
-    @PostMapping(value = "/professor")
-    public Response changePlanByProfessor(@RequestBody @Valid NutritionPlanWithBLOBs professor, BindingResult bindingResult) {
-        logger.info("invoke changePlanByProfessor {}, url is nutrition/professor", professor);
+    @PatchMapping(value = "/p/{id}")
+    public Response changePlanByProfessor(@RequestBody @Valid ProfessorRequest professorRequest, @PathVariable("id") String id, BindingResult bindingResult) {
+        logger.info("invoke changePlanByProfessor {}, url is nutrition/professor", professorRequest, id);
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("营养实施档案更新(专家页面)失败");
         }else {
-            professor.setGmtModified(new Date());
-            if (professor.getIspassCheck() == 1){
-                professor.setUpassReason("操作员已经修改档案并通过技术审核");
+            int uid = StringToLongUtil.stringToInt(id);
+            if (uid == -1) {
+                return Responses.errorResponse("error!");
             }
-            int changeID = nutritionPlanService.changePlanSelective(professor);
-            if (changeID <= 0) {
+            NutritionPlanWithBLOBs professor = nutritionPlanService.findPlanById(uid);
+            // time of the professor modify
+            professor.setId(uid);
+            professor.setGmtModified(new Date());
+            professor.setProfessorId(professorRequest.getProfessorId().longValue());
+            professor.setProfessorName(professorRequest.getProfessorName());
+            professor.setUpassReason(professorRequest.getUpassReason());
+            professor.setIspassCheck(professorRequest.getIspassCheck());
+
+            int success = nutritionPlanService.changePlanSelective(professor);
+            if (success <= 0) {
                 return Responses.errorResponse("错误");
             }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("nutrition_plan",changeID);
+            data.put("success", success);
             response.setData(data);
             return response;
         }
@@ -689,26 +344,188 @@ public class NutritionResource {
      * 监督者使用按主键修改的接口：/nutritionUpdateBySupervisor
      * 监督者使用按主键修改的方法名：changePlanBySupervisor()
      * 监督者使用接收参数：整个表单信息（整型id必填，各参数选填）
-     * @param supervisor
-     * @param bindingResult
+     * @param supervisorRequest supervisor
+     * @param bindingResult bindingResult
      * @return
      */
-    @PostMapping(value = "/supervisor")
-    public Response changePlanBySupervisor(@RequestBody @Valid NutritionPlanWithBLOBs supervisor, BindingResult bindingResult){
-        logger.info("invoke changePlanBySupervisor {}, url is nutrition/supervisor", supervisor);
+    @PatchMapping(value = "/s/{id}")
+    public Response changePlanBySupervisor(@RequestBody @Valid SupervisorRequest supervisorRequest, @PathVariable("id") String id, BindingResult bindingResult){
+        logger.info("invoke changePlanBySupervisor {}, url is nutrition/supervisor", supervisorRequest);
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("营养实施档案更新(监督页面)失败");
         }else {
+            int uid = StringToLongUtil.stringToInt(id);
+            if (uid == -1) {
+                return Responses.errorResponse("error!");
+            }
+            NutritionPlanWithBLOBs supervisor = nutritionPlanService.findPlanById(uid);
+            // modify the time of the supervised
+            supervisor.setId(uid);
             supervisor.setGmtSupervised(new Date());
-            int changeID = nutritionPlanService.changePlanSelective(supervisor);
-            if (changeID <= 0) {
+            supervisor.setSupervisorId(supervisorRequest.getSupervisorId().longValue());
+            supervisor.setSupervisorName(supervisorRequest.getSupervisorName());
+            supervisor.setIspassSup(supervisorRequest.getIspassSup());
+
+            int success = nutritionPlanService.changePlanSelective(supervisor);
+            if (success <= 0) {
                 return Responses.errorResponse("失败");
             }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("nutrition_plan",changeID);
+            data.put("success", success);
             response.setData(data);
             return response;
         }
     }
+
+    //    /**
+//     * 按条件查询接口：/nutritionSelective
+//     * 按条件查询方法名：findPlanSelective()
+//     * 接收的参数：前端的各参数，以及两个("s_nutritionT1")("s_nutritionT2")时间字符串（所有参数可以选填）
+//     * @param planModel
+//     * @param bindingResult
+//     * @return
+//     * @throws ParseException
+//     */
+//
+//    @PostMapping(value = "/selective")
+//    public Response findPlanSelective(@RequestBody @Valid NutritionPlanModel planModel, BindingResult bindingResult) throws ParseException {
+//        logger.info("invoke findPlanSelective {}, url is nutrition/selective", planModel);
+//
+//        if (bindingResult.hasErrors()) {
+//            return Responses.errorResponse("营养实施档案(根据条件)查询失败");
+//        }else {
+//            //将planModel部分变量拆分传递给对象nutritionPlanWithBLOBs
+//            NutritionPlanWithBLOBs nutritionPlanWithBLOBs = new NutritionPlanWithBLOBs();
+//            nutritionPlanWithBLOBs.setId(planModel.getId());
+//            nutritionPlanWithBLOBs.setGmtCreate(planModel.getGmtCreate());
+//            nutritionPlanWithBLOBs.setGmtModified(planModel.getGmtModified());
+//            nutritionPlanWithBLOBs.setSupervisorName(planModel.getSupervisorName());
+//            nutritionPlanWithBLOBs.setFactoryNum(planModel.getFactoryNum());
+//            nutritionPlanWithBLOBs.setBuilding(planModel.getBuilding());
+//            nutritionPlanWithBLOBs.setNutritionT(planModel.getNutritionT());
+//            nutritionPlanWithBLOBs.setQuantity(planModel.getQuantity());
+//            nutritionPlanWithBLOBs.setAverage(planModel.getAverage());
+//            nutritionPlanWithBLOBs.setPeriod(planModel.getPeriod());
+//            nutritionPlanWithBLOBs.setWater(planModel.getWater());
+//            nutritionPlanWithBLOBs.setOperatorName(planModel.getOperatorName());
+//            nutritionPlanWithBLOBs.setProfessorName(planModel.getProfessorName());
+//            nutritionPlanWithBLOBs.setSupervisorName(planModel.getSupervisorName());
+//            nutritionPlanWithBLOBs.setRemark(planModel.getRemark());
+//            nutritionPlanWithBLOBs.setIspassCheck(planModel.getIspassCheck());
+//            nutritionPlanWithBLOBs.setUpassReason(planModel.getUpassReason());
+//            nutritionPlanWithBLOBs.setIspassSup(planModel.getIspassSup());
+//            nutritionPlanWithBLOBs.setMaterialA(planModel.getMaterialA());
+//            nutritionPlanWithBLOBs.setMaterialM(planModel.getMaterialM());
+//            nutritionPlanWithBLOBs.setMaterialO(planModel.getMaterialO());
+//            nutritionPlanWithBLOBs.setMaterialWM(planModel.getMaterialWM());
+//            nutritionPlanWithBLOBs.setMaterialWO(planModel.getMaterialWO());
+//            nutritionPlanWithBLOBs.setRoughageP(planModel.getRoughageP());
+//            nutritionPlanWithBLOBs.setRoughageD(planModel.getRoughageD());
+//            nutritionPlanWithBLOBs.setRoughageWP(planModel.getRoughageWP());
+//            nutritionPlanWithBLOBs.setRoughageWD(planModel.getRoughageWD());
+//            nutritionPlanWithBLOBs.setRoughageWO(planModel.getRoughageWO());
+//            nutritionPlanWithBLOBs.setPickingM(planModel.getPickingM());
+//            nutritionPlanWithBLOBs.setPickingR(planModel.getPickingR());
+//            nutritionPlanWithBLOBs.setPickingO(planModel.getPickingO());
+//
+//            //将planModel部分变量拆分传递给对象otherTime
+//            OtherTime otherTime = new OtherTime();
+//            otherTime.setSearch_string(planModel.getSearch_string());
+//            otherTime.setS_breedingT(planModel.getS_breedingT());
+//            System.out.println(otherTime.getS_breedingT());
+//            otherTime.setS_gestationT(planModel.getS_gestationT());
+//            System.out.println(otherTime.getS_gestationT());
+//            otherTime.setS_prenatalIT(planModel.getS_prenatalIT());
+//            System.out.println(otherTime.getS_prenatalIT());
+//            otherTime.setS_cubT(planModel.getS_cubT());
+//            System.out.println(otherTime.getS_cubT());
+//            otherTime.setS_diagnosisT(planModel.getS_diagnosisT());
+//            otherTime.setS_nutritionT(planModel.getS_nutritionT());
+//            otherTime.setS_gmtCreate1(planModel.getS_gmtCreate1());
+//            otherTime.setS_gmtCreate2(planModel.getS_gmtCreate2());
+//            otherTime.setS_gmtModified1(planModel.getS_gmtModified1());
+//            otherTime.setS_gmtModified2(planModel.getS_gmtModified2());
+//            otherTime.setS_breedingT1(planModel.getS_breedingT1());
+//            otherTime.setS_breedingT2(planModel.getS_breedingT2());
+//            otherTime.setS_prenatalIT1(planModel.getS_prenatalIT1());
+//            otherTime.setS_prenatalIT2(planModel.getS_prenatalIT2());
+//            otherTime.setS_gestationT1(planModel.getS_gestationT1());
+//            otherTime.setS_gestationT2(planModel.getS_gestationT2());
+//            otherTime.setS_cubT1(planModel.getS_cubT1());
+//            otherTime.setS_cubT2(planModel.getS_cubT2());
+//            otherTime.setS_diagnosisT1(planModel.getS_diagnosisT1());
+//            otherTime.setS_diagnosisT2(planModel.getS_diagnosisT2());
+//            otherTime.setS_nutritionT1(planModel.getS_nutritionT1());
+//            otherTime.setS_nutritionT2(planModel.getS_nutritionT2());
+//            otherTime.setDownloadPath(planModel.getDownloadPath());
+//            otherTime.setPage(planModel.getPage());
+//            otherTime.setSize(planModel.getSize());
+//
+//            Date nutritionT1 = null;
+//            Date nutritionT2 = null;
+//            SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd HH:mm:SS");
+//            NutritionPlanExample nutritionPlanExample = new NutritionPlanExample();
+//            NutritionPlanExample.Criteria criteria = nutritionPlanExample.createCriteria();
+//
+//            if (otherTime.getS_nutritionT1() != null && !otherTime.getS_nutritionT1().isEmpty() && otherTime.getS_nutritionT2() != null && !otherTime.getS_nutritionT2().isEmpty()){
+//                nutritionT1 =  formatter.parse(otherTime.getS_nutritionT1());
+//                nutritionT2 =  formatter.parse(otherTime.getS_nutritionT2());
+//            }
+//            if(nutritionT1 != null && nutritionT2 != null){
+//                criteria.andNutritionTBetween(nutritionT1,nutritionT2);
+//            }
+//            if(nutritionPlanWithBLOBs.getId() != null && !nutritionPlanWithBLOBs.getId().toString().isEmpty()){
+//                criteria.andIdEqualTo(nutritionPlanWithBLOBs.getId());
+//            }
+//            if(nutritionPlanWithBLOBs.getFactoryNum() != null && !nutritionPlanWithBLOBs.getFactoryNum().toString().isEmpty()){
+//                criteria.andFactoryNumEqualTo(nutritionPlanWithBLOBs.getFactoryNum());
+//            }
+//            if(nutritionPlanWithBLOBs.getBuilding() != null && !nutritionPlanWithBLOBs.getBuilding().isEmpty()){
+//                criteria.andBuildingEqualTo(nutritionPlanWithBLOBs.getBuilding());
+//            }
+//            if(nutritionPlanWithBLOBs.getQuantity() != null && !nutritionPlanWithBLOBs.getQuantity().toString().isEmpty()){
+//                criteria.andQuantityEqualTo(nutritionPlanWithBLOBs.getQuantity());
+//            }
+//            if(nutritionPlanWithBLOBs.getAverage() != null && !nutritionPlanWithBLOBs.getAverage().isEmpty()){
+//                criteria.andAverageGreaterThanOrEqualTo(nutritionPlanWithBLOBs.getAverage());
+//            }
+//            if (nutritionPlanWithBLOBs.getPeriod()!= null && !nutritionPlanWithBLOBs.getPeriod().isEmpty()){
+//                criteria.andPeriodEqualTo(nutritionPlanWithBLOBs.getPeriod());
+//            }
+//            if (nutritionPlanWithBLOBs.getWater()!= null && !nutritionPlanWithBLOBs.getWater().isEmpty()){
+//                criteria.andWaterEqualTo(nutritionPlanWithBLOBs.getWater());
+//            }
+//            if(nutritionPlanWithBLOBs.getOperatorName() != null && !nutritionPlanWithBLOBs.getOperatorName().isEmpty()){
+//                criteria.andOperatorNameEqualTo(nutritionPlanWithBLOBs.getOperatorName());
+//            }
+//            if(nutritionPlanWithBLOBs.getProfessorName() != null && !nutritionPlanWithBLOBs.getProfessorName().isEmpty()){
+//                criteria.andProfessorNameEqualTo(nutritionPlanWithBLOBs.getProfessorName());
+//            }
+//            if(nutritionPlanWithBLOBs.getSupervisorName() != null && !nutritionPlanWithBLOBs.getSupervisorName().isEmpty()){
+//                criteria.andSupervisorNameEqualTo(nutritionPlanWithBLOBs.getSupervisorName());
+//            }
+//            if(nutritionPlanWithBLOBs.getIspassCheck() != null && !nutritionPlanWithBLOBs.getIspassCheck().toString().isEmpty()){
+//                criteria.andIsPassCheckEqualTo(nutritionPlanWithBLOBs.getIspassCheck());
+//            }
+//            if(nutritionPlanWithBLOBs.getUpassReason() != null && !nutritionPlanWithBLOBs.getUpassReason().isEmpty()){
+//                criteria.andUpassReasonLike(nutritionPlanWithBLOBs.getUpassReason());
+//            }
+//            if(nutritionPlanWithBLOBs.getIspassSup() != null && !nutritionPlanWithBLOBs.getIspassSup().toString().isEmpty()){
+//                criteria.andIsPassSupEqualTo(nutritionPlanWithBLOBs.getIspassSup());
+//            }
+//            List<NutritionPlanWithBLOBs> select = nutritionPlanService.findPlanSelective(nutritionPlanExample,new RowBounds(otherTime.getPage(),otherTime.getSize()));
+//
+//            if (select == null) {
+//                return Responses.errorResponse("错误");
+//            }
+//            Response response = Responses.successResponse();
+//            HashMap<String, Object> data = new HashMap<>();
+//            data.put("List", select);
+//            data.put("size", select.size());
+//
+//            response.setData(data);
+//            return response;
+//        }
+//    }
 }

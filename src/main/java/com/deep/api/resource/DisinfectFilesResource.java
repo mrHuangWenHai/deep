@@ -34,7 +34,7 @@ import java.util.Map;
 import java.io.File;
 
 @RestController
-@RequestMapping(value = "/df",method = RequestMethod.GET)
+@RequestMapping(value = "/df")
 public class DisinfectFilesResource {
     private final Logger logger = LoggerFactory.getLogger(DisinfectFilesResource.class);
     private final String pathPre = "../EartagDocument/";

@@ -198,7 +198,7 @@ public class DiagnosisResource {
      * 接收参数：整型的主键号（保留接口查询，前端不调用此接口）
      * @return Response
      */
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/find/{id}")
     public Response findPlanById(@PathVariable("id") int id) {
         logger.info("invoke Get diagnosis/{}", id);
         if (id < 0) {
