@@ -1,7 +1,9 @@
 package com.deep.api.resource;
 
-
+import com.deep.api.Utils.AgentUtil;
 import com.deep.api.Utils.StringToLongUtil;
+import com.deep.api.Utils.TokenAnalysis;
+import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.NutritionPlanModel;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
@@ -13,12 +15,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * author: Created  By  Caojiawei
@@ -49,32 +50,22 @@ public class NutritionResource {
      */
     @PostMapping(value = "")
     public Response addPlan(@RequestBody @Valid NutritionPlanModel planModel, BindingResult bindingResult) throws ParseException {
-
         logger.info("invoke addPlan {}, url is nutrition", planModel);
-
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("营养实施档案录入失败");
         }else {
             //将planModel部分变量拆分传递给对象insert
             NutritionPlanWithBLOBs insert = new NutritionPlanWithBLOBs();
-
             insert.setFactoryNum(planModel.getFactoryNum());
             insert.setFactoryName(planModel.getFactoryName());
-
             insert.setBuilding(planModel.getBuilding());
-
             insert.setQuantity(planModel.getQuantity());
-
             // 羊只均重, 后来不使用, 以后需要等待换成耳牌号附件
             insert.setAverage(planModel.getAverage());
-
             insert.setPeriod(planModel.getPeriod());
             insert.setWater(planModel.getWater());
-
             insert.setOperatorName(planModel.getOperatorName());
             insert.setOperatorId(planModel.getOperatorId());
-
-
             insert.setMaterialA(planModel.getMaterialA());
             insert.setMaterialM(planModel.getMaterialM());
             insert.setMaterialO(planModel.getMaterialO());
@@ -90,7 +81,6 @@ public class NutritionResource {
             insert.setPickingR(planModel.getPickingR());
             insert.setPickingO(planModel.getPickingO());
             insert.setNutritionT(planModel.getNutritionT());
-
 
             Byte zero = 2;
             insert.setGmtCreate(new Date());
@@ -144,8 +134,7 @@ public class NutritionResource {
      * @return
      * @throws ParseException
      */
-
-    @PatchMapping(value = "/{id}")
+    @PutMapping(value = "/{id}")
     public Response changePlanByOperator(@RequestBody @Valid NutritionPlanModel planModel, @PathVariable("id") String id, BindingResult bindingResult) throws ParseException {
         logger.info("invoke changePlanByOperator {}, url is nutrition/{id}", planModel);
 
@@ -161,14 +150,12 @@ public class NutritionResource {
             operator.setId(uid);
             operator.setFactoryNum(planModel.getFactoryNum());
             operator.setFactoryName(planModel.getFactoryName());
-
             operator.setBuilding(planModel.getBuilding());
             operator.setNutritionT(planModel.getNutritionT());
             operator.setQuantity(planModel.getQuantity());
             operator.setAverage(planModel.getAverage());
             operator.setPeriod(planModel.getPeriod());
             operator.setWater(planModel.getWater());
-
             operator.setOperatorName(planModel.getOperatorName());
             operator.setOperatorId(planModel.getOperatorId());
 
@@ -204,72 +191,107 @@ public class NutritionResource {
     }
 
     /**
-     * 按主键查询的接口：/nutritionSelectById
-     * 按主键查询的方法名：findPlanById()
-     * 接收参数：整型的主键号（保留接口查询，前端不调用此接口）
-
-     * @return
-     */
-    @GetMapping(value = "/{id}")
-    public Response findPlanById(@PathVariable("id") String id) {
-        logger.info("invoke findPlanById {}, url is nutrition/{id}", id);
-        int uid = StringToLongUtil.stringToInt(id);
-        if (uid == -1) {
-            return Responses.errorResponse("查询错误");
-        }
-        //查询语句的写法：一定要在声明对象时把值直接赋进去
-        NutritionPlanWithBLOBs selectById = nutritionPlanService.findPlanById(uid);
-        Response response = Responses.successResponse();
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("model", selectById);
-        response.setData(data);
-        return response;
-    }
-
-    /**
      * 获取该羊场的所有数据
-     * @param factoryNum
      * @param size
      * @param page
      * @return
      */
-    @GetMapping(value = "")
-    public Response findAllOfOneFactory(@RequestParam(value = "factoryNum") Long factoryNum,
+    @GetMapping(value = "/{id}")
+    public Response findAllOfOneFactory(@PathVariable("id") String id,
                                         @RequestParam(value = "size", defaultValue = "10") String size,
                                         @RequestParam(value = "page", defaultValue = "0") String page,
                                         @RequestParam(value = "factoryName", defaultValue = "") String factoryName,
-                                        @RequestParam(value = "ispassCheck", defaultValue = "-1") String ispassCheck) {
+                                        @RequestParam(value = "ispassCheck", defaultValue = "-1") String ispassCheck, HttpServletRequest request) {
         logger.info("invoke findAllOfOneFactory, url is nutrition");
-        if (factoryNum == null || size == null || page == null) {
+        if (size == null || page == null) {
             return Responses.errorResponse("失败");
         }
 
         int usize = StringToLongUtil.stringToInt(size);
         int upage = StringToLongUtil.stringToInt(page);
         byte pass = StringToLongUtil.stringToByte(ispassCheck);
+        Long factoryOrAgentID = StringToLongUtil.stringToLong(id);
+        Byte which = StringToLongUtil.stringToByte(TokenAnalysis.getFlag(request.getHeader(Constants.AUTHORIZATION)));
 
-        System.out.println("usize = " + usize);
-        System.out.println("upage = " + upage);
-        System.out.println("pass = " + pass);
-
-        NutritionPlanExample nutritionPlanExample = new NutritionPlanExample();
-        NutritionPlanExample.Criteria criteria = nutritionPlanExample.createCriteria();
-
-        criteria.andFactoryNumEqualTo(factoryNum);
-
-        if (pass != -1) {
-            criteria.andIsPassCheckEqualTo(pass);
+        if (which == 0) {
+            NutritionPlanExample nutritionPlanExample = new NutritionPlanExample();
+            NutritionPlanExample.Criteria criteria = nutritionPlanExample.createCriteria();
+            criteria.andFactoryNumEqualTo(factoryOrAgentID);
+            if (pass != -1) {
+                criteria.andIsPassCheckEqualTo(pass);
+            }
+            List<NutritionPlanWithBLOBs> select = nutritionPlanService.findPlanSelective(nutritionPlanExample,new RowBounds(upage, usize));
+            Response response = Responses.successResponse();
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("List",select);
+            data.put("size", select.size());
+            response.setData(data);
+            return response;
+        } else if (which == 1) {
+            // user is a agent user
+            NutritionPlanExample nutritionPlanExample = new NutritionPlanExample();
+            NutritionPlanExample.Criteria criteria = nutritionPlanExample.createCriteria();
+            if (pass != -1) {
+                criteria.andIsPassCheckEqualTo(pass);
+            }
+            // It's agent message
+            // find his all subordinate factory
+            Map<Long, List<Long> > factories = AgentUtil.getAllSubordinateFactory(String.valueOf(factoryOrAgentID));
+            if (factories == null) {
+                return Responses.errorResponse("request error!");
+            }
+            List<NutritionPlanWithBLOBs> plans = new ArrayList<>();
+            // not direct people
+            List<Long> allFactories = factories.get((long) 0);
+            if (allFactories != null) {
+                for (Long allFactory : allFactories) {
+                    System.out.println("allFactory = " + allFactory);
+                    criteria.andFactoryNumEqualTo(allFactory);
+                    plans.addAll(nutritionPlanService.findPlanSelective(nutritionPlanExample, new RowBounds(upage, usize)));
+                }
+            }
+            List<Long> directFactories = factories.get((long) -1);
+            if (directFactories != null) {
+                for (Long directFactory : directFactories) {
+                    System.out.println("directFactory = " + directFactory);
+                    criteria.andFactoryNumEqualTo(directFactory);
+                    plans.addAll(nutritionPlanService.findPlanSelective(nutritionPlanExample, new RowBounds(upage, usize)));
+                }
+            }
+            Response response = Responses.successResponse();
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("List",plans);
+            data.put("size", plans.size());
+            response.setData(data);
+            return response;
+        } else {
+            return Responses.errorResponse("permit error, user can not get factory's message");
         }
-
-        List<NutritionPlanWithBLOBs> select = nutritionPlanService.findPlanSelective(nutritionPlanExample,new RowBounds(upage, usize));
-        Response response = Responses.successResponse();
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("List",select);
-        data.put("size", select.size());
-        response.setData(data);
-        return response;
-
     }
+
+
+    /**
+     * 按主键查询的接口：/nutritionSelectById
+     * 按主键查询的方法名：findPlanById()
+     * 接收参数：整型的主键号（保留接口查询，前端不调用此接口）
+
+     * @return
+     */
+//    @GetMapping(value = "/{id}")
+//    public Response findPlanById(@PathVariable("id") String id) {
+//        logger.info("invoke findPlanById {}, url is nutrition/{id}", id);
+//        int uid = StringToLongUtil.stringToInt(id);
+//        if (uid == -1) {
+//            return Responses.errorResponse("查询错误");
+//        }
+//        //查询语句的写法：一定要在声明对象时把值直接赋进去
+//        NutritionPlanWithBLOBs selectById = nutritionPlanService.findPlanById(uid);
+//        Response response = Responses.successResponse();
+//        HashMap<String, Object> data = new HashMap<>();
+//        data.put("model", selectById);
+//        response.setData(data);
+//        return response;
+//    }
 
     /**
      * 按条件查询接口：/nutritionSelective
