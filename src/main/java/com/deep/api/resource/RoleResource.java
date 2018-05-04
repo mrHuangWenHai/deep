@@ -2,11 +2,11 @@ package com.deep.api.resource;
 
 import com.deep.api.Utils.StringToLongUtil;
 import com.deep.api.authorization.annotation.Permit;
+import com.deep.api.request.RoleRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.RoleModel;
 import com.deep.domain.service.RoleService;
-import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import javax.ws.rs.HEAD;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -38,13 +37,11 @@ public class RoleResource {
             @RequestParam(value = "page", defaultValue = "0") String page
     ) {
         logger.info("invoke roleLists, url is role/");
-
         Long upage = StringToLongUtil.stringToLong(page);
         Byte usize = StringToLongUtil.stringToByte(size);
         if (usize < 0 || upage < 0) {
             return Responses.errorResponse("参数错误!");
         }
-
         List<RoleModel> roleModels = roleService.getAll(usize*upage, usize);
         if (roleModels.size() <= 0) {
             return Responses.errorResponse("获取角色信息失败");
@@ -52,7 +49,7 @@ public class RoleResource {
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
         data.put("List", roleModels);
-        data.put("size", roleModels.size());
+        data.put("size", roleService.findAllTheCount());
         response.setData(data);
         return response;
     }
@@ -65,8 +62,8 @@ public class RoleResource {
      */
     @Permit(authorities = "add_role")
     @PostMapping(value = "")
-    public Response addRole(@Valid @RequestBody RoleModel roleModel, BindingResult bindingResult) {
-        logger.info("invoke addRole{}, url is role", roleModel, bindingResult);
+    public Response addRole(@Valid @RequestBody RoleRequest roleRequest, BindingResult bindingResult) {
+        logger.info("invoke addRole{}, url is role", roleRequest, bindingResult);
         if (bindingResult.hasErrors()) {
             Response response =  Responses.errorResponse("数据校验失败, 请检查输入格式是否错误");
             HashMap<String, Object> data = new HashMap<>();
@@ -74,8 +71,13 @@ public class RoleResource {
             response.setData(data);
             return response;
         } else {
+            RoleModel roleModel = new RoleModel();
             roleModel.setGmtCreate(new Timestamp(System.currentTimeMillis()));
             roleModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
+            roleModel.setPkTypeid(String.valueOf(0));
+            roleModel.setRoleDescription(roleRequest.getRoleDescription());
+            roleModel.setTypeName(roleRequest.getTypeName());
+
             if (roleModel.getDefaultPermit().equals("")) {
                 // 默认权限的位数为64*3 = 192位, in database, it uses 192 Bytes
                 roleModel.setDefaultPermit("0000000000000000000000000000000000000000000000000000000000000000" +

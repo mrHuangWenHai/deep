@@ -6,6 +6,8 @@ import java.util.List;
 
 @Mapper
 public interface RoleMapper {
+    @Select("select count(*) from role_user")
+    Long queryCount();
 
     /**
      * 列出角色列表

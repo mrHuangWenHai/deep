@@ -117,4 +117,11 @@ public class RoleService {
         return String.valueOf(allPermits);
     }
 
+    /**
+     * 获取所有角色的数量
+     * @return
+     */
+    public Long findAllTheCount() {
+        return roleMapper.queryCount();
+    }
 }

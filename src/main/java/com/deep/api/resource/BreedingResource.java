@@ -51,28 +51,6 @@ public class BreedingResource {
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案录入失败");
         }else {
-            //将planModel部分变量拆分传递给对象insert
-//            BreedingPlan insert = new BreedingPlan();
-//            insert.setFactoryNum(planModel.getFactoryNum());
-//            insert.setFactoryName(planModel.getFactoryName());
-//            insert.setBuilding(planModel.getBuilding());
-//            insert.setQuantity(planModel.getQuantity());
-//
-//            insert.setBreedingT(planModel.getBreedingT());
-//            insert.setGestationT(planModel.getGestationT());
-//            insert.setPrenatalIT(planModel.getPrenatalIT());
-//            insert.setCubT(planModel.getCubT());
-//
-//            insert.setRemark(planModel.getRemark());
-//
-//            insert.setmEtI(planModel.getmEtI());
-//            insert.setmEtB(planModel.getmEtB());
-//            insert.setfEtI(planModel.getfEtI());
-//            insert.setfEtB(planModel.getfEtB());
-//
-//            insert.setOperatorName(planModel.getOperatorName());
-//            insert.setOperatorId(planModel.getOperatorId());
-
             BreedingPlan insert = new BreedingPlan();
             insert.setId(planModel.getId());
             insert.setGmtModified(planModel.getGmtModified());

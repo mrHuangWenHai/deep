@@ -65,6 +65,7 @@ public class RegisterResource {
             userModel.setUserPermit("000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
             userModel.setIsExtended((byte)0);
             userModel.setUserRole(0);
+            userModel.setUserFactory(-2);
 
             Long success = userService.addUser(userModel);
             if (success <= 0) {
