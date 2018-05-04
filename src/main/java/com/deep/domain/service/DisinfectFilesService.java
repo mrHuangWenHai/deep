@@ -30,7 +30,7 @@ public class DisinfectFilesService {
         return this.disinfectFilesMapper.getDisinfectFilesModelById(id);
     }
 
-    public List<DisinfectFilesModel> getDisinfectFilesModelByTradeMarkEarTag(List<String> disinfectEartag, RowBounds bounds){
+    public List<DisinfectFilesModel> getDisinfectFilesModelByTradeMarkEarTag(List<String[]> disinfectEartag, RowBounds bounds){
         return this.disinfectFilesMapper.getDisinfectFilesModelByTradeMarkEarTag(disinfectEartag,bounds);
     }
 

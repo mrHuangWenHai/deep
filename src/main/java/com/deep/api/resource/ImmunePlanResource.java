@@ -261,6 +261,23 @@ public class ImmunePlanResource {
         return JudgeUtil.JudgeFind(immunePlanModel);
     }
 
+    /**
+     * TODO： 根据需求 增加是否通过ispass查询
+     * 通过耳牌号模糊查找
+     * @param immuneEartag 耳牌
+     * @param page 页
+     * @param size 条
+     * @return 查询结果
+     */
+    @RequestMapping(value = "findet",method = RequestMethod.GET)
+    public Response findByEarTag(@RequestParam("eartag") List<String[]> immuneEartag,
+                                 @RequestParam(value = "page",defaultValue = "0") int page,
+                                 @RequestParam(value = "size",defaultValue = "10") int size){
+        logger.info("invoke findByEarTag {}" );
+        List<ImmunePlanModel> list = this.immunePlanService.getImmunePlanModelByTradeMarkEarTag(immuneEartag, new RowBounds(page * size , size));
+        return JudgeUtil.JudgeFind(list,list.size());
+    }
+
 //    /**
 //     * 查看某专家负责的工厂
 //     * @param agentId 代理ID

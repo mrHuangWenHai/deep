@@ -232,6 +232,7 @@ public class RepellentPlanResource {
 
     }
 
+
     /**
      * 用于id查询
      * @param id id
@@ -242,6 +243,30 @@ public class RepellentPlanResource {
         logger.info("invoke find{id} {}" , id);
         RepellentPlanModel repellentPlanModel = this.repellentPlanService.getRepellentPlanModelById(id);
         return JudgeUtil.JudgeFind(repellentPlanModel);
+    }
+
+    /**
+     * TODO： 根据需求 增加是否通过ispass查询
+     * 通过耳牌号模糊查找
+     * @param repellentEartag 耳牌
+     * @param page 页
+     * @param size 条
+     * @return 查询结果
+     */
+    @RequestMapping(value = "findet",method = RequestMethod.GET)
+    public Response findByEarTag(@RequestParam("eartag") List<String[]> repellentEartag,
+                                 @RequestParam(value = "page",defaultValue = "0") int page,
+                                 @RequestParam(value = "size",defaultValue = "10") int size){
+        logger.info("invoke findByEarTag {}" );
+        //System.out.println(repellentEartag);
+//        List<String[]> repellentEartag = new ArrayList<>();
+//        String[] s = {"201811"};
+//        String[] s1 = {"p"};
+//        repellentEartag.add(s);
+//        repellentEartag.add(s1);
+        List<RepellentPlanModel> list = this.repellentPlanService.getRepellentPlanModelByTradeMarkEarTag(repellentEartag, new RowBounds(page * size , size));
+        //list.get(0)
+        return JudgeUtil.JudgeFind(list,list.size());
     }
 
 //    /**
@@ -317,6 +342,7 @@ public class RepellentPlanResource {
             }
         };
         if (DownloadUtil.testDownload(response , filePath, fileName, outputStream)){
+
             return JudgeUtil.JudgeSuccess("download","Success");
         }else {
             return Responses.errorResponse("download Error");

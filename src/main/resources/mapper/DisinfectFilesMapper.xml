@@ -172,8 +172,10 @@
         FROM
         disinfect_files df
         WHERE
-        <foreach collection="disinfectEartag" item="disinfectEartag" open="(" close=")" separator="or">
-            df.disinfect_eartag LIKE '%${disinfectEartag}%'
+        <foreach collection="disinfectEartag" item="eartag" open="(" close=")" separator="or">
+            <foreach collection="eartag" item="item" open="(" close=")" separator="or">
+                df.disinfect_eartag LIKE '%${item}%'
+            </foreach>
         </foreach>
     </select>
 

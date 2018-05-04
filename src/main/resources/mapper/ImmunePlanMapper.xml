@@ -165,8 +165,10 @@
         FROM
         immune_plan ip
         WHERE
-        <foreach collection="immuneEartag" item="immuneEartag" open="(" close=")" separator="or">
-            ip.immune_et LIKE '%${immuneEartag}%'
+        <foreach collection="immuneEartag" item="eartag" open="(" close=")" separator="or">
+            <foreach collection="eartag" item="item" open="(" close=")" separator="or">
+                ip.immune_et LIKE '%${item}%'
+            </foreach>
         </foreach>
     </select>
 

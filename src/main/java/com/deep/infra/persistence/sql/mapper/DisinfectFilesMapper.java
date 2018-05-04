@@ -18,7 +18,7 @@ public interface DisinfectFilesMapper {
     List<DisinfectFilesModel> getDisinfectFilesModel(@Param("disinfectFilesModel") DisinfectRequest disinfectFilesModel,
                                                      RowBounds bounds);
 
-    List<DisinfectFilesModel> getDisinfectFilesModelByTradeMarkEarTag(@Param("disinfectEartag") List<String> disinfectFilesModel,
+    List<DisinfectFilesModel> getDisinfectFilesModelByTradeMarkEarTag(@Param("disinfectEartag") List<String[]> disinfectFilesModel,
                                                                       RowBounds bounds);
 
     DisinfectFilesModel getDisinfectFilesModelById(@Param("id") Long id);

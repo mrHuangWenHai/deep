@@ -30,7 +30,7 @@ public class RepellentPlanService {
         return this.repellentPlanMapper.getRepellentPlanModelById(id);
     }
 
-    public List<RepellentPlanModel> getRepellentPlanModelByTradeMarkEarTag(List<String> repellentEartag, RowBounds bounds){
+    public List<RepellentPlanModel> getRepellentPlanModelByTradeMarkEarTag(List<String[]> repellentEartag, RowBounds bounds){
         return this.repellentPlanMapper.getRepellentPlanModelByTradeMarkEarTag(repellentEartag,bounds);
     }
 

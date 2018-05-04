@@ -18,7 +18,7 @@ public interface ImmunePlanMapper {
     List<ImmunePlanModel> getImmunePlanModel(@Param("immunePlanModel") ImmuneRequest immunePlanModel,
                                              RowBounds bounds);
 
-    List<ImmunePlanModel> getImmunePlanModelByTradeMarkEarTag(@Param("immuneEartag")List<String> immuneEartag,
+    List<ImmunePlanModel> getImmunePlanModelByTradeMarkEarTag(@Param("immuneEartag")List<String[]> immuneEartag,
                                                               RowBounds bounds);
 
     ImmunePlanModel getImmunePlanModelById(@Param("id") Long id);

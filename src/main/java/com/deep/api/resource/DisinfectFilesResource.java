@@ -227,6 +227,7 @@ public class DisinfectFilesResource {
         }
     }
 
+
     /**
      * 用于id查询
      * @param id id
@@ -237,6 +238,24 @@ public class DisinfectFilesResource {
         logger.info(" invoke find/{id} {}" , id);
         DisinfectFilesModel disinfectFilesModel = this.disinfectFilesService.getDisinfectFilesModelById(id);
         return JudgeUtil.JudgeFind(disinfectFilesModel);
+    }
+
+    /**
+     * TODO： 根据需求 增加是否通过ispass查询
+     * 通过耳牌号模糊查找
+     * @param disinfectEartag 耳牌
+     * @param page 页
+     * @param size 条
+     * @return 查询结果
+     */
+    @RequestMapping(value = "findet",method = RequestMethod.GET)
+    public Response findByEarTag(@RequestParam("eartag") List<String[]> disinfectEartag,
+                                 @RequestParam(value = "page",defaultValue = "0") int page,
+                                 @RequestParam(value = "size",defaultValue = "10") int size){
+        logger.info("invoke findByEarTag {}" );
+        //System.out.println(disinfectEartag);
+        List<DisinfectFilesModel> list = this.disinfectFilesService.getDisinfectFilesModelByTradeMarkEarTag(disinfectEartag, new RowBounds(page * size , size));
+        return JudgeUtil.JudgeFind(list,list.size());
     }
 
 //    /**
