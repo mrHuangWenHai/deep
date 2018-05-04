@@ -24,17 +24,25 @@
         <result property="exerciseDaylighting" column="exercise_daylighting" />
         <result property="carDisinfect" column="car_disinfect" />
         <result property="operatorId" column="operator_id" />
-        <result property="techCheck" column="tech_check" />
-        <result property="techSupervision" column="tech_supervision"/>
+        <result property="ispassCheck" column="ispass_check" />
+        <result property="ispassSup" column="ispass_sup"/>
+        <result property="factoryName" column="factory_name"/>
+        <result property="factoryNum" column="factory_num"/>
     </resultMap>
 
     <select id="getOperationFile" resultMap="OperationFile" parameterType="com.deep.api.request.OperationCoditionRequest">
         select *
         from operation_file
         where 1 = 1
-        <if test="operationCoditionRequest.id != null">
-            AND id = #{operationCoditionRequest.id}
+
+        <if test="operationCoditionRequest.factoryList != null">
+            AND factory_num in (
+            <foreach collection="operationCoditionRequest.factoryList" separator="," index="index" item="factoryNum">
+                #{factoryNum}
+            </foreach>
+            )
         </if>
+
         <if test="operationCoditionRequest.operationId != null">
             AND operator_id = #{operationCoditionRequest.operationId}
         </if>
@@ -43,9 +51,15 @@
             AND check_time &gt;= #{operationCoditionRequest.checkTime}
         </if>
 
-        <if test="operationCoditionRequest.techCheckStatus != null">
+        <if test="operationCoditionRequest.techCheckSt != null">
             AND tech_check = #{operationCoditionRequest.techCheckStatus}
         </if>
+    </select>
+
+    <select id = "getOperationFileById" resultMap="OperationFile">
+        select *
+        from operation_file
+        where id = #{id}
     </select>
 
     <insert id="addOperationFile" useGeneratedKeys="true" keyColumn="id" keyProperty="operationFile.id">
@@ -53,6 +67,8 @@
         id,
         check_time,
         colony_house,
+        factory_name,
+        factory_num,
         warehouse_workshop,
         kill_worm_deratization,
         sterilizing_room,
@@ -66,8 +82,8 @@
         exercise_daylighting,
         car_disinfect,
         operator_id,
-        tech_check,
-        tech_supervision,
+        ispass_check,
+        ispass_sup,
         gmt_create,
         gmt_modified
         )
@@ -75,6 +91,8 @@
         #{operationFile.id},
         #{operationFile.checkTime},
         #{operationFile.colonyHouse},
+        #{operationFile.factoryName},
+        #{operationFile.factoryNum},
         #{operationFile.warehouseWorkshop},
         #{operationFile.killWormDeratization},
         #{operationFile.sterilizingRoom},
@@ -88,21 +106,101 @@
         #{operationFile.exerciseDaylighting},
         #{operationFile.carDisinfect},
         #{operationFile.operatorId},
-        #{operationFile.techCheck},
-        #{operationFile.techSupervision},
+        #{operationFile.ispassCheck},
+        #{operationFile.ispassSup},
         now(),
         now()
         )
     </insert>
 
-    <update id="updateOperationFile" >
+
+
+    <update id="updateCheckStatus" >
         update
         operation_file
         <set>
-            tech_check = #{checkStatus},
+            ispass_check = #{ispassCheck},
             gmt_modified = now()
         </set>
-        where  id = #{id}
+        where  id = #{id} and ispass_check = 2
+    </update>
+
+    <update id="updateSupStatus">
+        update
+        operation_file
+        <set>
+            ispass_check = #{supStatus},
+            gmt_modified = now()
+        </set>
+        where  id = #{id} and ispass_sup = 2
+    </update>
+
+    <update id="updateOperationFileByOperationFile">
+        update
+        operation_file
+        <set>
+            <if test="operationFile.checkTime != null and operationFile.checkTime != ''">
+                check_time = #{operationFile.checkTime},
+            </if>
+
+            <if test="operationFile.colonyHouse !=null">
+                colony_house = #{operationFile.colonyHouse},
+            </if>
+
+            <if test="operationFile.warehouseWorkshop != null">
+                warehouse_workshop = #{operationFile.warehouseWorkshop},
+            </if>
+
+            <if test="operationFile.factoryName != null and operationFile.factoryName !=''">
+                factory_name = #{operationFile.factoryName},
+            </if>
+
+            <if test="operationFile.killWormDeratization != null">
+                kill_worm_deratization = #{operationFile.killWormDeratization},
+            </if>
+
+            <if test="operationFile.sterilizingRoom != null">
+                sterilizing_room = #{operationFile.sterilizingRoom},
+            </if>
+
+            <if test="operationFile.operation != null">
+                operation = #{operationFile.operation},
+            </if>
+
+            <if test="operationFile.needleSheep != null">
+                needle_sheep = #{operationFile.needleSheep},
+            </if>
+
+            <if test="operationFile.vaccine != null">
+                vaccine = #{operationFile.vaccine},
+            </if>
+
+            <if test="operationFile.safetyProtection != null">
+                safety_protection = #{operationFile.safetyProtection},
+            </if>
+
+            <if test="operationFile.rubbishWater != null">
+                rubbish_water = #{operationFile.rubbishWater},
+            </if>
+
+            <if test="operationFile.operationSpecification != null">
+                operation_specification = #{operationFile.operationSpecification},
+            </if>
+
+            <if test="operationFile.airTemperature != null">
+                air_temperature = #{operationFile.airTemperature},
+            </if>
+
+            <if test="operationFile.exerciseDaylighting != null">
+                exercise_daylighting = #{operationFile.exerciseDaylighting},
+            </if>
+
+            <if test="operationFile.carDisinfect != null">
+                car_disinfect = #{operationFile.carDisinfect},
+            </if>
+            gmt_modified = now()
+        </set>
+        where id = #{operationFile.id} and ispass_check = 2 and ispass_sup = 2
     </update>
 
 </mapper>

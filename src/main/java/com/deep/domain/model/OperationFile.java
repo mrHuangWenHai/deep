@@ -3,10 +3,7 @@ package com.deep.domain.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.sql.Timestamp;
 
 /**
@@ -19,44 +16,45 @@ public class OperationFile {
   private Timestamp gmtCreate;
   @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
   private Timestamp gmtModified;
-  @NotNull
+  @NotBlank
   @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
   private Timestamp checkTime;
-
-  @NotNull
+  @NotBlank
   private Boolean colonyHouse;
-  @NotNull
+  @NotBlank
   private Boolean warehouseWorkshop;
-  @NotNull
+  @NotBlank
   private Boolean killWormDeratization;
-  @NotNull
+  @NotBlank
   private Boolean sterilizingRoom;
-  @NotNull
+  @NotBlank
   private Boolean operation;
-  @NotNull
+  @NotBlank
   private Boolean needleSheep;
-  @NotNull
+  @NotBlank
   private Boolean vaccine;
-  @NotNull
+  @NotBlank
   private Boolean safetyProtection;
-  @NotNull
+  @NotBlank
   private Boolean rubbishWater;
-  @NotNull
+  @NotBlank
   private Boolean operationSpecification;
-  @NotNull
+  @NotBlank
   private Boolean airTemperature;
-  @NotNull
+  @NotBlank
   private Boolean exerciseDaylighting;
-  @NotNull
+  @NotBlank
   private Boolean carDisinfect;
   @Min(0)
   private int operatorId;
   @Min(0)
-  @Max(2)
-  private short techCheck;
-  @Min(0)
-  @Max(2)
-  private short techSupervision;
+  private int factoryNum;
+  @NotBlank
+  private String factoryName;
+
+  int ispassCheck;
+  int ispassSup;
+
 
   public int getId() {
     return id;
@@ -202,20 +200,36 @@ public class OperationFile {
     this.operatorId = operatorId;
   }
 
-  public short getTechCheck() {
-    return techCheck;
+  public int getFactoryNum() {
+    return factoryNum;
   }
 
-  public void setTechCheck(short techCheck) {
-    this.techCheck = techCheck;
+  public void setFactoryNum(int factoryNum) {
+    this.factoryNum = factoryNum;
   }
 
-  public short getTechSupervision() {
-    return techSupervision;
+  public String getFactoryName() {
+    return factoryName;
   }
 
-  public void setTechSupervision(short techSupervision) {
-    this.techSupervision = techSupervision;
+  public void setFactoryName(String factoryName) {
+    this.factoryName = factoryName;
+  }
+
+  public int getIspassCheck() {
+    return ispassCheck;
+  }
+
+  public void setIspassCheck(int ispassCheck) {
+    this.ispassCheck = ispassCheck;
+  }
+
+  public int getIspassSup() {
+    return ispassSup;
+  }
+
+  public void setIspassSup(int ispassSup) {
+    this.ispassSup = ispassSup;
   }
 
   @Override
@@ -239,8 +253,10 @@ public class OperationFile {
         ", exerciseDaylighting=" + exerciseDaylighting +
         ", carDisinfect=" + carDisinfect +
         ", operatorId=" + operatorId +
-        ", techCheck=" + techCheck +
-        ", techSupervision=" + techSupervision +
+        ", factoryNum=" + factoryNum +
+        ", factoryName='" + factoryName + '\'' +
+        ", ispassCheck=" + ispassCheck +
+        ", ispassSup=" + ispassSup +
         '}';
   }
 }

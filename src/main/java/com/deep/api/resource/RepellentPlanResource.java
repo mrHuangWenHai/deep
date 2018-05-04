@@ -1,20 +1,16 @@
 package com.deep.api.resource;
 
-
-
 import com.deep.api.Utils.AgentUtil;
 import com.deep.api.Utils.TokenAnalysis;
 import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.RepellentRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
-import com.deep.domain.model.ImmunePlanModel;
 import com.deep.domain.model.RepellentPlanModel;
 import com.deep.domain.service.FactoryService;
 import com.deep.domain.service.RepellentPlanService;
 import com.deep.domain.service.UserService;
 import com.deep.domain.util.*;
-
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,15 +18,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.io.File;
-import java.math.BigInteger;
 import java.util.ArrayList;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,11 +59,10 @@ public class RepellentPlanResource {
      * @param repellentEartagFile   耳牌文件
      * @return  保存结果
      */
-
     @RequestMapping(value = "",method = RequestMethod.POST)
     public Response save(@Valid RepellentPlanModel repellentPlanModel,
                          BindingResult bindingResult,
-                         @RequestParam("repellentEartagFile") MultipartFile repellentEartagFile) {
+                         @RequestParam("eartagFile") MultipartFile repellentEartagFile) {
 
         if (bindingResult.hasErrors()) {
           Response response = Responses.errorResponse("param is invalid");
@@ -96,8 +88,6 @@ public class RepellentPlanResource {
                     if (issuccess == 0) {
                       return Responses.errorResponse("add error");
                     }
-
-
                     short agentID = this.factoryService.getAgentIDByFactoryNumber(repellentPlanModel.getFactoryNum().toString());
                     String professorKey = agentID + "_professor";
                     String supervisorKey = repellentPlanModel.getFactoryNum().toString() + "_supervisor";
@@ -179,7 +169,6 @@ public class RepellentPlanResource {
                    return Responses.errorResponse("Exception");
                 }
 
-
     }
 
 
@@ -194,7 +183,6 @@ public class RepellentPlanResource {
     public Response findShow(@PathVariable(value = "id")long id,
                              RepellentRequest repellentRequest,
                              HttpServletRequest httpServletRequest) {
-        logger.info("invoke finsShow {}", repellentRequest);
 
       Map<Long, List<Long>> factoryMap = null;
       Byte role = Byte.parseByte(TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION)));
@@ -203,21 +191,24 @@ public class RepellentPlanResource {
       } else if (role == 1) {
         factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
         List<Long> factoryList = new ArrayList<>();
-        factoryList.addAll(factoryMap.get(-1));
-        factoryList.addAll(factoryMap.get(0));
+        factoryList.addAll(factoryMap.get(new Long(-1)));
+        factoryList.addAll(factoryMap.get(new Long(0)));
         repellentRequest.setFactoryList(factoryList);
       } else {
         return Responses.errorResponse("你没有权限");
       }
 
-        List<RepellentPlanModel> repellentPlanModels = repellentPlanService.getRepellentPlanModel(repellentRequest,
+      logger.info("invoke rp/{} {}",id, repellentRequest);
+
+      List<RepellentPlanModel> repellentPlanModels = repellentPlanService.getRepellentPlanModel(repellentRequest,
                 new RowBounds(repellentRequest.getPage() * repellentRequest.getSize() ,repellentRequest.getSize()));
 
       if (role == 1) {
         Map<String,Object> data = new HashMap<>();
+        List<RepellentPlanModel> factorylist = new ArrayList<>();
         List<RepellentPlanModel> direct = new ArrayList<>();
         List<RepellentPlanModel> others = new ArrayList<>();
-        List<Long> directId = factoryMap.get(-1);
+        List<Long> directId = factoryMap.get(new Long(-1));
         for (RepellentPlanModel repellentPlanModel : repellentPlanModels) {
           if (directId.contains(repellentPlanModel.getFactoryNum())) {
             direct.add(repellentPlanModel);
@@ -225,8 +216,11 @@ public class RepellentPlanResource {
             others.add(repellentPlanModel);
           }
         }
-        data.put("direct", direct);
-        data.put("others", others);
+        factorylist.addAll(direct);
+        factorylist.addAll(others);
+        data.put("List", factorylist);
+        data.put("size", factorylist.size());
+        data.put("directSize",direct.size());
         Response response = Responses.successResponse();
         response.setData(data);
         return response;
@@ -236,17 +230,17 @@ public class RepellentPlanResource {
 
     }
 
-//    /**
-//     * 用于id查询
-//     * @param id id
-//     * @return 查询结果
-//     */
-//    @RequestMapping(value = "/find/{id}", method = RequestMethod.GET)
-//    public Response find(@PathVariable("id") long id){
-//        logger.info("invoke find{id} {}" , id);
-//        RepellentPlanModel repellentPlanModel = this.repellentPlanService.getRepellentPlanModelById(id);
-//        return JudgeUtil.JudgeFind(repellentPlanModel);
-//    }
+    /**
+     * 用于id查询
+     * @param id id
+     * @return 查询结果
+     */
+    @RequestMapping(value = "/find/{id}", method = RequestMethod.GET)
+    public Response find(@PathVariable("id") long id) {
+        logger.info("invoke find{id} {}" , id);
+        RepellentPlanModel repellentPlanModel = this.repellentPlanService.getRepellentPlanModelById(id);
+        return JudgeUtil.JudgeFind(repellentPlanModel);
+    }
 
 //    /**
 //     * 查看某专家负责的工厂
@@ -397,7 +391,7 @@ public class RepellentPlanResource {
      * @param repellentPlanModel 驱虫类
      * @return  更新结果
      */
-    @RequestMapping(value = "/{id}",method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}",method = RequestMethod.POST)
     public Response operatorUpdate(@PathVariable(value = "id")long id ,
                                    RepellentPlanModel repellentPlanModel,
                                    @RequestParam(value = "repellentEartag", required = false) MultipartFile repellentEartag) {
@@ -439,7 +433,6 @@ public class RepellentPlanResource {
           }
         }
     }
-
 
     /**
      * 删除id = certain 的数据

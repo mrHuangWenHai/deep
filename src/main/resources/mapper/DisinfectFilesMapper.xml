@@ -141,10 +141,8 @@
         <if test="disinfectFilesModel.remark != null and disinfectFilesModel.remark != '' ">
             AND remark = #{disinfectFilesModel.remark}
         </if>
-        <if test="disinfectFilesModel.ispassCheck != null and disinfectFilesModel.ispassCheck != '' ">
-
+        <if test="disinfectFilesModel.ispassCheck != null">
             AND ispass_check = #{disinfectFilesModel.ispassCheck}
-
         </if>
         <if test="disinfectFilesModel.unpassReason != null and disinfectFilesModel.unpassReason != '' ">
             AND upass_reason = #{disinfectFilesModel.unpassReason}
@@ -269,7 +267,6 @@
             <if test="disinfectFilesModel.remark != null">
                 remark = #{disinfectFilesModel.remark},
             </if>
-
 
         </set>
         WHERE

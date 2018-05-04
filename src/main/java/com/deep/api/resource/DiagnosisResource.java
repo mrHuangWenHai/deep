@@ -8,7 +8,6 @@ import com.deep.api.request.DiagnosisRequest;
 import com.deep.domain.model.DiagnosisPlanModel;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
-
 import com.deep.domain.model.ImmunePlanModel;
 import com.deep.domain.service.DiagnosisPlanService;
 import org.apache.ibatis.session.RowBounds;
@@ -198,7 +197,7 @@ public class DiagnosisResource {
      * 接收参数：整型的主键号（保留接口查询，前端不调用此接口）
      * @return Response
      */
-    @GetMapping(value = "/find/{id}")
+    @GetMapping(value = "find/{id}")
     public Response findPlanById(@PathVariable("id") int id) {
         logger.info("invoke Get diagnosis/{}", id);
         if (id < 0) {

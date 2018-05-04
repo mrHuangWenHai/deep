@@ -22,12 +22,24 @@ public class OperationFileService {
     return operationFileMapper.getOperationFile(operationCoditionRequest);
   }
 
+  public OperationFile getOperationFileById(int id) {
+    return operationFileMapper.getOperationFileById(id);
+  }
+
   public int addOperationFile(OperationFile operationFile) {
     return operationFileMapper.addOperationFile(operationFile);
   }
 
-  public int updateOperationFile(int id, short checkStatus) {
-    return operationFileMapper.updateOperationFile(id, checkStatus);
+  public int updateCheckStatus(int id, short checkStatus) {
+    return operationFileMapper.updateCheckStatus(id, checkStatus);
+  }
+
+  public int updateSupStatus(int id, short supStatus) {
+    return operationFileMapper.updateSupStatus(id, supStatus);
+  }
+
+  public int updateOperationFileByOperationFile(OperationFile operationFile) {
+    return operationFileMapper.updateOperationFileByOperationFile(operationFile);
   }
 
 
