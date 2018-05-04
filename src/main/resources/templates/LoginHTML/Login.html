@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Login</title>
+</head>
+<body>
+<form action="/loginresult" method="post">
+    <table>
+        <tr>
+            <td><label>用户名</label></td>
+            <td><input type="text" id="username" name="username"/></td>
+        </tr>
+        <tr>
+            <td><label>密码</label></td>
+            <td><input type="password" id="password" name="password"/></td>
+        </tr>
+        <tr>
+            <td><input type="submit" id="submitlogin" value="登录"/></td>
+        </tr>
+    </table>
+</form>
+<form action="/register" method="post">
+
+    <table>
+        <tr>
+            <td><input type="submit" id="submitregister" value="注册"/></td>
+        </tr>
+    </table>
+</form>
+
+<form action="/allfunction" method="post">
+    <table>
+        <tr>
+            <td><input type="submit" id="submitvisitor" value="游客浏览"/></td>
+        </tr>
+    </table>
+</form>
+
+<form action="/findpassword" method="post">
+    <table>
+        <tr>
+            <td><input type="submit" id="submitfindpassword" value="找回密码"/></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

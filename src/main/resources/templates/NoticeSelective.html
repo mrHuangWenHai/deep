@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>查找档案</title>
+</head>
+<body>
+<a>按照条件查找信息 ：</a>
+<form action="/NoticeSelective/show" method="get">
+    <table>
+        <tr>
+            <td><label>记录号</label></td>
+            <td><input type="text" id="id" name="id" /></td>
+        </tr>
+        <tr>
+            <td><label>技术审核</label></td>
+            <td><input type="text" id="professor" name="professor" /></td>
+        </tr>
+        <tr>
+            <td><label>类型</label></td>
+            <td><input type="text" id="type" name="type" /></td>
+        </tr>
+        <tr>
+            <td><label>标题</label></td>
+            <td><input type="text" id="title" name="title" /></td>
+        </tr>
+        <tr>
+            <td><label>发布时间1---发布时间2</label></td>
+            <td><input type="text" id="s_gmtCreate1" name="s_gmtCreate1" /></td>
+            <td><label>------</label></td>
+            <td><input type="text" id="s_gmtCreate2" name="s_gmtCreate2" /></td>
+        </tr>
+        <tr>
+            <td><label>审核时间1---审核时间2</label></td>
+            <td><input type="text" id="s_gmtModified1" name="s_gmtModified1" /></td>
+            <td><label>------</label></td>
+            <td><input type="text" id="s_gmtModified2" name="s_gmtModified2" /></td>
+        </tr>
+        <tr>
+            <td><input type="submit" id="submit" value="查询"/></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

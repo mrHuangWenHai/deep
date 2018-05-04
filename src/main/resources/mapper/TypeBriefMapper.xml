@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.deep.infra.persistence.sql.mapper.TypeBriefMapper">
+
+    <resultMap id="TypeBrief" type="com.deep.domain.model.TypeBriefModel">
+        <id property="id" column="id"/>
+        <result property="typeName" column="type_name"/>
+        <result property="brief" column="brief"/>
+    </resultMap>
+    <insert id="setTypeBrief">
+        INSERT INTO type_brief(
+        type_name,
+        brief
+        ) VALUE (
+        #{typeBriefModel.typeName},
+        #{typeBriefModel.brief}
+        )
+    </insert>
+
+    <select id="getAllType" resultMap="TypeBrief">
+        SELECT
+        *
+        FROM
+        type_brief
+    </select>
+
+
+    <select id="getAll" resultMap="TypeBrief">
+        SELECT
+        *
+        FROM
+        type_brief
+    </select>
+
+
+    <select id="getTypeBrief" resultMap="TypeBrief">
+        SELECT
+        *
+        FROM
+        type_brief
+        WHERE
+        type_name = #{type}
+    </select>
+
+    <update id="updateTypeBrief" >
+        UPDATE type_brief
+        SET
+        type_name = #{typeBriefModel.typeName},
+        brief = #{typeBriefModel.brief}
+        WHERE
+        type_name = #{typeBriefModel.typeName}
+    </update>
+
+</mapper>

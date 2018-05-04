@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.deep.infra.persistence.sql.mapper.DiagnosisPlanMapper" >
+
+
+  <resultMap id="BaseResultMap" type="com.deep.domain.model.DiagnosisPlanModel" >
+    <id column="id" property="id" />
+    <result column="gmt_create" property="gmtCreate"  />
+    <result column="gmt_modified" property="gmtModified" />
+    <result column="gmt_supervised" property="gmtSup" jdbcType="TIMESTAMP" />
+    <result column="factory_num" property="factoryNum" jdbcType="BIGINT" />
+    <result column="factory_name" property="factoryName" jdbcType="BIGINT" />
+    <result column="diagnosis_t" property="diagnosisTime" jdbcType="TIMESTAMP" />
+    <result column="building_num" property="buildingNum" />
+    <result column="ear_tag" property="earTag" jdbcType="VARCHAR" />
+    <result column="diagnosis_r" property="diagnosisResult" jdbcType="VARCHAR" />
+    <result column="diagnosis_m" property="diagnosisMethod" jdbcType="VARCHAR" />
+    <result column="operator_id" property="operatorId"  />
+    <result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
+    <result column="dose" property="dose" jdbcType="VARCHAR" />
+    <result column="professor_id" property="professorId" />
+    <result column="supervisor_id" property="supervisorId" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="ispass_check" property="ispassCheck" jdbcType="TINYINT" />
+    <result column="upass_reason" property="upassReason" jdbcType="VARCHAR" />
+    <result column="ispass_sup" property="ispassSup" jdbcType="TINYINT" />
+    <result column="tre_eff" property="treatEffect" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id,
+    gmt_create,
+    gmt_modified,
+    gmt_supervised,
+    factory_num,
+    factory_name,
+    diagnosis_t,
+    building_num,
+    ear_tag,
+    diagnosis_r,
+    diagnosis_m,
+    dose,
+    operator_id,
+    operator_name,
+    professor_id,
+    supervisor_id,
+    remark,
+    ispass_check,
+    upass_reason,
+    ispass_sup,
+    tre_eff
+  </sql>
+
+  <sql id="Blob_Column_List" >
+    diagnosis_c, diagnosis_m, drug_q
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from diagnosis_plan
+    where id = #{id}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from diagnosis_plan
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+
+  <insert id="insert" parameterType="com.deep.domain.model.DiagnosisPlanModel"
+          useGeneratedKeys="true" keyProperty="diagnosisPlanModel.id">
+    insert into diagnosis_plan (
+    gmt_create,
+    gmt_modified,
+      gmt_supervised,
+    factory_num,
+    factory_name,
+    diagnosis_t,
+    building_num,
+    ear_tag,
+    operator_id,
+    operator_name,
+    remark,
+    ispass_check,
+    upass_reason,
+    ispass_sup,
+    diagnosis_r,
+    diagnosis_m,
+    dose,
+    tre_eff
+    )
+    values (
+    now(),
+    now(),
+      #{diagnosisPlanModel.gmtSup},
+    #{diagnosisPlanModel.factoryNum},
+    #{diagnosisPlanModel.factoryName},
+    #{diagnosisPlanModel.diagnosisTime},
+    #{diagnosisPlanModel.buildingNum},
+    #{diagnosisPlanModel.earTag},
+    #{diagnosisPlanModel.operatorId},
+    #{diagnosisPlanModel.operatorName},
+    #{diagnosisPlanModel.remark},
+    2,
+    #{diagnosisPlanModel.upassReason},
+    2,
+    #{diagnosisPlanModel.diagnosisResult},
+    #{diagnosisPlanModel.diagnosisMethod},
+    #{diagnosisPlanModel.dose},
+    #{diagnosisPlanModel.treatEffect}
+    )
+  </insert>
+
+
+  <update id="updateDiagnosisPlanModel" parameterType="com.deep.domain.model.DiagnosisPlanModel" >
+    update diagnosis_plan
+    <set>
+      gmt_modified = now(),
+      <if test="diagnosisPlanModel.factoryNum != null" >
+        factory_num = #{diagnosisPlanModel.factoryNum,jdbcType=BIGINT},
+      </if>
+      <if test="diagnosisPlanModel.factoryName != null and diagnosisPlanModel.factoryName != ''">
+        factory_name = #{diagnosisPlanModel.factoryName},
+      </if>
+      <if test="diagnosisPlanModel.diagnosisTime != null and diagnosisPlanModel.diagnosisTime != ''" >
+        diagnosis_t = #{diagnosisPlanModel.diagnosisTime},
+      </if>
+      <if test="diagnosisPlanModel.buildingNum != null" >
+        building_num = #{diagnosisPlanModel.buildingNum},
+      </if>
+      <if test="diagnosisPlanModel.earTag != null and diagnosisPlanModel.earTag != ''" >
+        ear_tag = #{diagnosisPlanModel.earTag},
+      </if>
+
+      <if test="diagnosisPlanModel.operatorId != null and diagnosisPlanModel.operatorId != ''" >
+        operator_id = #{diagnosisPlanModel.operatorId},
+      </if>
+
+      <if test="diagnosisPlanModel.operatorName!= null and diagnosisPlanModel.operatorName != ''" >
+        operator_name = #{diagnosisPlanModel.operatorName},
+      </if>
+
+      <if test="diagnosisPlanModel.professorId != null" >
+        professor_id = #{diagnosisPlanModel.professorId},
+      </if>
+
+      <if test="diagnosisPlanModel.supervisorId != null">
+        supervisor_id = #{diagnosisPlanModel.supervisorId},
+      </if>
+
+      <if test="diagnosisPlanModel.remark != null and remark != ''" >
+        remark = #{diagnosisPlanModel.remark},
+      </if>
+
+      <if test="diagnosisPlanModel.diagnosisResult != null and diagnosisPlanModel.diagnosisResult != ''" >
+        diagnosis_r = #{diagnosisPlanModel.diagnosisResult},
+      </if>
+
+      <if test="diagnosisPlanModel.diagnosisMethod != null and diagnosisPlanModel.diagnosisMethod != ''" >
+        diagnosis_m = #{diagnosisPlanModel.diagnosisMethod},
+      </if>
+
+      <if test="dose != null and dose != ''" >
+        dose = #{diagnosisPlanModel.dose}
+      </if>
+
+    </set>
+    where id = #{diagnosisPlanModel.id} and ispass_check != 2
+  </update>
+
+  <update id="checkDiagnosisPlanModelById" >
+    update diagnosis_plan
+    <set>
+      gmt_modified = now(),
+      ispass_check = #{ispassCheck},
+        professor_id = #{professorId}
+    </set>
+    where id = #{id} and ispass_check = 2
+  </update>
+
+  <update id="supCheckDiagnosisPlanModelById" >
+    update diagnosis_plan
+    <set>
+      gmt_modified = now(),
+      ispass_sup = #{ispassSup},
+      upass_reason = #{upassReason},
+        supervisor_id = #{supervisorId}
+    </set>
+    where id = #{id} and ispass_sup = 2
+  </update>
+
+
+
+  <select resultMap="BaseResultMap" parameterType="com.deep.api.request.DiagnosisRequest" id="selectDiagnosisPlanModelByDiagnosisRequest" >
+    select
+    <include refid="Base_Column_List" />
+    from diagnosis_plan
+    where
+    1 = 1
+    <if test="diagnosisRequest.gmtCreate != null and diagnosisRequest.gmtCreate != ''" >
+      AND gmt_create = #{diagnosisRequest.gmtCreate}
+    </if>
+
+    <if test="diagnosisRequest.gmtSup != null and diagnosisRequest.gmtSup != ''">
+      AND gmt_supervised = #{diagnosisRequest.gmtSup}
+    </if>
+
+    <if test="diagnosisRequest.factoryNum != null">
+      AND factory_num = #{diagnosisRequest.factoryNum}
+    </if>
+
+    <if test="diagnosisRequest.factoryName != null">
+      AND factory_name = #{diagnosisRequest.factoryName}
+    </if>
+
+    <if test="diagnosisRequest.operatorId != null">
+      AND operator_id = #{diagnosisRequest.operatorId}
+    </if>
+
+    <if test="diagnosisRequest.operatorName != null">
+      AND operator_name = #{diagnosisRequest.operatorName}
+    </if>
+
+    <if test="diagnosisRequest.professorId != null">
+      AND professor_id = #{diagnosisRequest.professorId}
+    </if>
+
+    <if test="diagnosisRequest.supervisorId != null">
+      AND supervisor_id = #{diagnosisRequest.supervisorId}
+    </if>
+
+    <if test="diagnosisRequest.ispassCheck != null">
+      AND ispass_check = #{diagnosisRequest.ispassCheck}
+    </if>
+
+    <if test="diagnosisRequest.ispassSup != null">
+      AND ispass_sup = #{diagnosisRequest.ispassSup}
+    </if>
+  </select>
+
+</mapper>

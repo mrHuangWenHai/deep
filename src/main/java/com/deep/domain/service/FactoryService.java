@@ -1,0 +1,124 @@
+package com.deep.domain.service;
+
+
+import com.deep.domain.model.FactoryModel;
+import com.deep.infra.persistence.sql.mapper.FactoryMapper;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+
+import java.util.List;
+
+
+@Service
+public class FactoryService {
+    @Resource
+    private FactoryMapper factoryMapper;
+
+    /**
+     * 获取所有的羊场信息
+     * @return
+     */
+    public List<FactoryModel> getAll(Long start, Byte size) {
+        System.out.println(start);
+        System.out.println(size);
+        return factoryMapper.queryAllFactory(start, size);
+    }
+
+    /**
+     * 获取所有的没有负责人的羊场信息, 主要是羊场的编号和羊场的名称
+     * @return
+     */
+    public List<FactoryModel> findAllNoResponsibleFactory() {
+        return factoryMapper.getAllNoResponsibleFactory();
+    }
+
+    /**
+     * 根据羊场的ID单个查询羊场的信息
+     * @param id
+     * @return
+     */
+    public FactoryModel getOneFactory(Long id) {
+        return factoryMapper.queryFactoryByID(id);
+    }
+
+    /**
+     * 根据代理号查询所有的羊场(包括分页)
+     * @param id 代理号
+     * @return
+     */
+    public List<FactoryModel> getAllFactoryOfOneAgent(Long id) {
+        return factoryMapper.queryFactoryByAgentID(id);
+    }
+
+    /**
+     * 根据代理号查询所有的羊场(包括分页)
+     * @param id 代理号
+     * @return
+     */
+    public List<FactoryModel> getAllFactoryOfOneAgentPage(Long id, Long start, Byte page) {
+        return factoryMapper.queryFactoryByAgentIDPage(id, start, page);
+    }
+
+    /**
+     * 根据羊场编号查询羊场的代理
+
+     * @param factoryNumber 羊场编号
+     * @return
+     */
+    public Short getAgentIDByFactoryNumber(String factoryNumber) {
+        return factoryMapper.queryOneAgentByFactoryID(factoryNumber);
+
+    }
+
+    /**
+     * 根据代理ID查找所有羊场的ID
+
+     * @param id 代理号
+
+     * @return
+     */
+    public long[] queryFactoryIDByAgentID(Long id) {
+        return factoryMapper.queryFactoryIDByAgentID(id);
+    }
+
+    /**
+     * 根据羊场的地理位置查询
+     * @param location
+     * @return
+     */
+    public List<FactoryModel> getAgentByBreadLocation(String location) {
+        return factoryMapper.queryFactoryByLocation(location);
+    }
+
+    /**
+     * 删除一个羊场的信息
+     * @param factoryModel
+     * @return
+     */
+
+    public int addFactory(FactoryModel factoryModel) {
+
+        return factoryMapper.insertFactory(factoryModel);
+    }
+
+    /**
+     * 修改单个羊场的信息
+     * @param factoryModel
+     * @return
+     */
+    public Long updateFactory(FactoryModel factoryModel) {
+        return factoryMapper.updateFactory(factoryModel);
+    }
+
+    /**
+     * 删除羊场的信息
+     * @param id
+     * @return
+     */
+    public Long deleteFactory(Long id) {
+        return factoryMapper.deleteFactory(id);
+    }
+
+}
+
