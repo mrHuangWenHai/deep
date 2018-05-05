@@ -1,12 +1,11 @@
 package com.deep.api.resource;
 
-import com.deep.api.Utils.ExcelData;
-import com.deep.api.Utils.ExportExcelUtil;
-import com.deep.api.Utils.JedisUtil;
-import com.deep.api.Utils.StringToLongUtil;
+import com.deep.api.Utils.*;
 import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.authorization.token.TokenManagerRealization;
+import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.PasswordRequest;
+import com.deep.api.request.UserRequest;
 import com.deep.api.response.Professor;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
@@ -45,22 +44,35 @@ public class UserResource {
      * @return 返回所有的用户信息
      */
     @Permit(authorities = "query_user")
-//    @GetMapping(value = "user/subordinate/{roleID}")
-    @GetMapping(value = "user")
-//    @PathVariable("roleID") long roleID
-    public Response userList() {
-        logger.info("invoke userList, url is user/");
-//        List<UserModel> userLists = userService.getAll(roleID);
-        List<UserModel> userLists = userService.getAllWithNoCondition();
-        if (userLists == null) {
-                return Responses.errorResponse("系统中暂时没有下级用户");
+    @GetMapping(value = "user/{id}")
+    public Response userList(
+            @PathVariable("id") String id,
+            @RequestParam(value = "page", defaultValue = "0") String page,
+            @RequestParam(value = "size", defaultValue = "10") String size, HttpServletRequest request
+    ) {
+        logger.info("invoke userList, url is user/{id} {}", id);
+        Long uid = StringToLongUtil.stringToLong(id);
+        Long upage = StringToLongUtil.stringToLong(page);
+        Byte usize = StringToLongUtil.stringToByte(size);
+        Byte which = StringToLongUtil.stringToByte(TokenAnalysis.getFlag(request.getHeader(Constants.AUTHORIZATION)));
+        if (uid < 0 || upage < 0 || usize < 0) {
+            return Responses.errorResponse("错误");
         }
-        Response response = Responses.successResponse();
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("List", userLists);
-        data.put("size", userLists.size());
-        response.setData(data);
-        return response;
+        if (which == 0 || which == 1 || which == 2) {
+            List<UserModel> userLists = userService.getAllUserOfFactoryOrAgent(uid, which, upage, usize);
+            if (userLists == null) {
+                return Responses.errorResponse("error");
+            } else {
+                Response response = Responses.successResponse();
+                Map<String, Object> data = new HashMap<>();
+                data.put("List", userLists);
+                data.put("size", userService.getCountsOfOneFactoryOrOneAgent(uid, which));
+                response.setData(data);
+                return response;
+            }
+        } else {
+            return Responses.errorResponse("error");
+        }
     }
 
     /**
@@ -69,7 +81,7 @@ public class UserResource {
      * @return
      */
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
-    @GetMapping(value = "user/{id}")
+    @GetMapping(value = "user/find/{id}")
     public Response getUserOne(@PathVariable("id")String id) {
         logger.info("invoke getUserOne{}, url is user/{id}", id);
         long uid = StringToLongUtil.stringToLong(id);
@@ -175,15 +187,15 @@ public class UserResource {
 
     /**
      * 增加一个用户
-     * @param userModel
-     * @param bindingResult
+     * @param userRequest request
+     * @param bindingResult bindingResult
      * @return
      */
-    @PostMapping("user/add")
-    public Response addUser(@RequestBody @Valid UserModel userModel,  BindingResult bindingResult) {
-        logger.info("invoke addUser{}, url is register", userModel, bindingResult);
+    @PostMapping("user")
+    public Response addUser(@RequestBody @Valid UserRequest userRequest, BindingResult bindingResult) {
+        logger.info("invoke addUser{}, url is register", userRequest, bindingResult);
 
-        if (bindingResult.hasErrors() || userModel.getPkUserid() == null) {
+        if (bindingResult.hasErrors() || userRequest.getUsername() == null) {
             Response response = Responses.errorResponse("验证失败");
             HashMap<String, Object> data = new HashMap<>();
             data.put("errorMessage", bindingResult.getAllErrors());
@@ -191,26 +203,33 @@ public class UserResource {
             return response;
         } else {
             // 添加用户的校验信息
-            if (!userService.verifyOnlyOnePkUserid(userModel.getPkUserid())) {
+            if (!userService.verifyOnlyOnePkUserid(userRequest.getUsername())) {
                 Response response = Responses.errorResponse("添加用户信息失败");
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("errorMessage", "用户名已经被使用过");
                 response.setData(data);
                 return response;
             }
+            UserModel userModel = new UserModel();
             userModel.setGmtCreate(new Timestamp(System.currentTimeMillis()));
             userModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
 
-
+            if (userRequest.getFlag() == 2) {
+                userModel.setIsFactory((byte) -2);
+            }
+            userModel.setUserFactory(userRequest.getFactoryId());
+            userModel.setIsFactory(userRequest.getFlag());
+            userModel.setPkUserid(userRequest.getUsername());
+            userModel.setUserPwd(userRequest.getPassword());
+            userModel.setUserTelephone(userRequest.getTelephone());
+            userModel.setFactoryName(userRequest.getFactoryName());
+            userModel.setUserRealname(userRequest.getRealname());
 
             if (userModel.getUserPermit() == null || userModel.getUserPermit().equals("")) {
-
                 userModel.setUserPermit("000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
             }
-
             userModel.setIsExtended((byte)0);
             userModel.setUserRole(0);
-
             Long success = userService.addUser(userModel);
             if (success <= 0) {
                 return Responses.errorResponse("用户信息增加失败,请检查网络后重试");
@@ -325,7 +344,6 @@ public class UserResource {
      */
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @GetMapping(value = "/user/excel/{roleID}")
-
     public Response exportExcel(@PathVariable("roleID") long roleID, HttpServletResponse httpServletResponse) throws Exception {
 
         logger.info("invoke exportExcel{}, url is /user/excel", httpServletResponse);
@@ -400,28 +418,28 @@ public class UserResource {
      * @param id
      * @return
      */
-    @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
-    @GetMapping(value = "/user/factory/lists/{factoryAgentID}")
-    public Response getFactoryLists(@PathVariable("factoryAgentID") String id) {
-        logger.info("invoke getFactoryLists {}, url is /user/factory/lists/{factoryAgentID}", id);
-        long uid = StringToLongUtil.stringToLong(id);
-        if (uid == -1) {
-            return Responses.errorResponse("error");
-        } else {
-            Response response;
-            List<UserModel> userLists = userService.getAllUserOfFactoryOrAgent(uid);
-            if (userLists == null) {
-                return Responses.errorResponse("error");
-            } else {
-                response = Responses.successResponse();
-                Map<String, Object> data = new HashMap<>();
-                data.put("List", userLists);
-                data.put("size", userLists.size());
-                response.setData(data);
-                return response;
-            }
-        }
-    }
+//    @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
+//    @GetMapping(value = "/user/factory/lists/{factoryAgentID}")
+//    public Response getFactoryLists(@PathVariable("factoryAgentID") String id) {
+//        logger.info("invoke getFactoryLists {}, url is /user/factory/lists/{factoryAgentID}", id);
+//        long uid = StringToLongUtil.stringToLong(id);
+//        if (uid == -1) {
+//            return Responses.errorResponse("error");
+//        } else {
+//            Response response;
+//            List<UserModel> userLists = userService.getAllUserOfFactoryOrAgent(uid);
+//            if (userLists == null) {
+//                return Responses.errorResponse("error");
+//            } else {
+//                response = Responses.successResponse();
+//                Map<String, Object> data = new HashMap<>();
+//                data.put("List", userLists);
+//                data.put("size", userLists.size());
+//                response.setData(data);
+//                return response;
+//            }
+//        }
+//    }
 
     /**
      * 判断专家是否在线

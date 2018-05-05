@@ -48,6 +48,7 @@ public class AgentResource {
         agentMapRank.put("市级代理", (byte)2);
         agentMapRank.put("县级代理", (byte)3);
     }
+
     /**
      * 查找所有代理
      * @return response
@@ -137,11 +138,17 @@ public class AgentResource {
         return response;
     }
 
+    /**
+     * select un responsible agent
+     * @return
+     */
     @GetMapping(value = "/fr")
     public Response queryAgentWithoutResponsiblePersonId() {
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
-        data.put("List", agentService.queryAgentWithoutResponsiblePersonId());
+        List<AgentModel> agentModels = agentService.queryAgentWithoutResponsiblePersonId();
+        data.put("List", agentModels);
+        data.put("size", agentModels.size());
         response.setData(data);
         return response;
     }

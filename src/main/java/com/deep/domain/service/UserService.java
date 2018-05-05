@@ -380,11 +380,12 @@ public class UserService {
 
     /**
      * 查询某个羊场下的所有用户
-     * @param factoryOrAgentID  羊场或者代理的ID
+     * @param factory  羊场或者代理的ID
+     * @param  which  which
      * @return 手机号
      */
-    public List<UserModel> getAllUserOfFactoryOrAgent(Long factoryOrAgentID) {
-        return userMapper.getAllUsersOfOneFactoryOrOneAgent(factoryOrAgentID);
+    public List<UserModel> getAllUserOfFactoryOrAgent(Long factory, Byte which, Long page, Byte size) {
+        return userMapper.getAllUsersOfOneFactoryOrOneAgent(factory, which, page, size);
     }
 
     /**
@@ -443,5 +444,9 @@ public class UserService {
         }
         int random = (int) (Math.random()*users.size());
         return users.get(random);
+    }
+
+    public Long getCountsOfOneFactoryOrOneAgent(Long factory, Byte which) {
+        return userMapper.getCountsOfOneFactoryOrOneAgent(factory, which);
     }
 }
