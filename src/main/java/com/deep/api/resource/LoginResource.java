@@ -82,15 +82,16 @@ public class LoginResource {
                 // 如果是羊场
                 FactoryModel factoryModel = factoryService.getOneFactory(userModel.getUserFactory());
                 data.put("factoryId", userModel.getUserFactory());
-        //        data.put("agentId", factoryModel.getAgent());
+                data.put("agentId", factoryModel.getAgent());
                 data.put("departmentName", factoryModel.getBreedName());
-                data.put("agentRank", null);
+                // 如果是羊场, 代理等级默认为-1
+                data.put("agentRank", -1);
               } else if (userModel.getIsFactory() == 1) {
                   data.put("flag", 1);
                   // 如果是代理
                   AgentModel agentModel = agentService.getOneAgent(userModel.getUserFactory());
 //                data.put("agent_id", userModel.getUserFactory());
-//                  data.put("factoryId", userModel.getUserFactory());
+                  data.put("factoryId", userModel.getUserFactory());
                   data.put("agentId", agentModel.getAgentFather());
                   data.put("departmentName", agentModel.getAgentName());
                   data.put("agentRank", agentModel.getAgentRank());

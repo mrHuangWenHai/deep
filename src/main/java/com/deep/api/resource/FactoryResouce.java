@@ -146,9 +146,7 @@ public class FactoryResouce {
     }
     /**
      * 根据工厂的主键删除一个羊场
-
      * @param id 羊场主键
-
      */
     @Permit(authorities = "delete_customer")
     @DeleteMapping(value = "/{id}")
@@ -205,12 +203,11 @@ public class FactoryResouce {
 
     /**
      * 增加一个工厂实体
-     * @param factoryModel
-     * @param bindingResult
-     * @return
+     * @param factoryModel factoryModel
+     * @param bindingResult bindingResult
+     * @return response
      */
     @Permit(authorities = "increase_customer")
-
     @PostMapping(value = "")
     public Response addFactory(@Valid @RequestBody FactoryModel factoryModel, BindingResult bindingResult) {
         logger.info("invoke addFactory{}, url is factory/add", factoryModel);
@@ -231,5 +228,20 @@ public class FactoryResouce {
             response.setData(data);
             return response;
         }
+    }
+
+    /**
+     * get no responsibleFactory
+     * @return response
+     */
+    @GetMapping(value = "/fr")
+    public Response findAllNoResponsibleFactory() {
+        Response response = Responses.successResponse();
+        HashMap<String, Object> data = new HashMap<>();
+        List<FactoryModel> factoryModels = factoryService.findAllNoResponsibleFactory();
+        data.put("List", factoryModels);
+        data.put("size", factoryModels.size());
+        response.setData(data);
+        return response;
     }
 }

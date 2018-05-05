@@ -23,8 +23,16 @@ public class AgentService {
         return agentMapper.queryCount();
     }
 
-    public List queryAgentWithoutResponsiblePersonId() {
+    /**
+     * find MinusSign
+     * @return agentModel's List
+     */
+    public List<AgentModel> queryAgentWithoutResponsiblePersonId() {
         return agentMapper.queryAgentWithoutResponsiblePersonId();
+    }
+
+    public int[] getSonsId(int id) {
+        return agentMapper.getSonsId(id);
     }
 
     /**

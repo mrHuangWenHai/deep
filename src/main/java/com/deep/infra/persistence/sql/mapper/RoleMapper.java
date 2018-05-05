@@ -13,7 +13,7 @@ public interface RoleMapper {
      * 列出角色列表
      * @return
      */
-    @Select("select * from role_user limit #{start}, #{size}")
+    @Select("select * from role_user where id >= #{rank} limit #{start}, #{size}")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "gmtCreate", column = "gmt_create"),
@@ -23,7 +23,7 @@ public interface RoleMapper {
             @Result(property = "roleDescription", column = "role_description"),
             @Result(property = "defaultPermit", column = "default_permit")
     })
-    List<RoleModel> queryAllRole(@Param("start") Long start, @Param("size") Byte size);
+    List<RoleModel> queryAllRole(@Param("start") Long start, @Param("size") Byte size, @Param("rank")Byte rank);
 
     /**
      * 根据ID获取单个角色

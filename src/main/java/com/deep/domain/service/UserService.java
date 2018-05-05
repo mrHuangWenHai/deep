@@ -412,16 +412,16 @@ public class UserService {
         long fatherID = agentID;
         //　首先查询上级代理有木有在线的专家
         models = userMapper.getProfessor(agentID);
-        for (int i = 0; i < models.size(); i++) {
-            if (JedisUtil.getValue(String.valueOf(models.get(i).getId())) != null) {
-                users.add(models.get(i));
+        for (Professor model : models) {
+            if (JedisUtil.getValue(String.valueOf(model.getId())) != null) {
+                users.add(model);
             }
         }
         while (users.size() <= 0) {
             // 找到所有在线的上级
-            for (int i = 0; i < models.size(); i++) {
-                if (JedisUtil.getValue(String.valueOf(models.get(i).getId())) != null) {
-                    users.add(models.get(i));
+            for (Professor model : models) {
+                if (JedisUtil.getValue(String.valueOf(model.getId())) != null) {
+                    users.add(model);
                 }
             }
             if (users.size() > 0) {

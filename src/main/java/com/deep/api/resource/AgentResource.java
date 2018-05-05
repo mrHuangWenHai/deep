@@ -1,20 +1,27 @@
 package com.deep.api.resource;
 
+import com.deep.api.Utils.AgentUtil;
 import com.deep.api.Utils.StringToLongUtil;
+import com.deep.api.Utils.TokenAnalysis;
 import com.deep.api.authorization.annotation.Permit;
+import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.AgentRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.AgentModel;
+import com.deep.domain.model.BreedingPlan;
 import com.deep.domain.service.AgentService;
+import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,38 +50,59 @@ public class AgentResource {
     }
     /**
      * 查找所有代理
-     * @return
+     * @return response
      */
     @Permit(authorities = "query_agent")
-    @GetMapping(value = "")
+    @GetMapping(value = "/{id}")
     public Response agentLists(
             @RequestParam(value = "page", defaultValue = "0") String page,
             @RequestParam(value = "size", defaultValue = "10") String size,
-            @RequestParam(value = "flag", defaultValue = "2") Byte flag,
-            @RequestParam(value = "factoryId", defaultValue = "0") String factoryId
+            @PathVariable("id") String id, HttpServletRequest request
     ) {
         logger.info("invoke agentLists, url is agent/");
-//        if (flag  == 2 || flag == 0) {
-//            return Responses.errorResponse("无权限, 您不能查看不属于您管辖的代理");
-//        }
-//        Integer ufactoryId = StringToLongUtil.stringToInt(factoryId);
+        Integer uid = StringToLongUtil.stringToInt(id);
         Long upage = StringToLongUtil.stringToLong(page);
         Byte usize = StringToLongUtil.stringToByte(size);
-        Long start = upage*usize;
-        if (upage < 0 || usize < 0) {
+        Byte which = StringToLongUtil.stringToByte(TokenAnalysis.getFlag(request.getHeader(Constants.AUTHORIZATION)));
+        if (uid < 0 || upage < 0 || usize < 0) {
             return Responses.errorResponse("错误");
         }
-//        List<AgentModel> agents = agentService.getSons(ufactoryId);
-        List<AgentModel> agents = agentService.getAll(start, usize);
-        if (agents == null) {
-            return Responses.errorResponse("系统中暂时没有代理");
+        if (which == 0 || which == 2) {
+            return Responses.errorResponse("error, have no permit");
+        } else if (which == 1) {
+            Map<Long, List<Integer>> agents = AgentUtil.getAllSubordinateAgent(id);
+            if (agents == null) {
+                return Responses.errorResponse("error request!");
+            }
+            List<AgentModel> models = new ArrayList<>();
+            // direct people
+            List<Integer> directAgents = agents.get((long) -1);
+            List<AgentModel> theOther = new ArrayList<>();
+            if (directAgents != null) {
+                for (Integer directFactory : directAgents) {
+                    System.out.println("directFactory = " + directFactory);
+                    theOther.add(agentService.getOneAgent(Long.parseLong(directFactory.toString())));
+                }
+            }
+            // un direct people
+            List<Integer> undirectAgents = agents.get((long) 0);
+            List<AgentModel> other = new ArrayList<>();
+            if (undirectAgents != null) {
+                for (Integer undirectFactory : undirectAgents) {
+                    other.add(agentService.getOneAgent(Long.parseLong(undirectFactory.toString())));
+                }
+            }
+            models.addAll(theOther);
+            models.addAll(other);
+
+            Response response = Responses.successResponse();
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("List", models);
+            data.put("size", theOther.size());
+            response.setData(data);
+            return response;
         }
-        Response response = Responses.successResponse();
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("List", agents);
-        data.put("size", agentService.queryCount());
-        response.setData(data);
-        return response;
+        return Responses.errorResponse("error, have no permit");
     }
 
     /**
@@ -83,7 +111,7 @@ public class AgentResource {
      * @return
      */
     @Permit(authorities = "query_agent")
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/find/{id}")
     public Response findOne(@PathVariable("id") String id) {
         logger.info("invoke findOne{}, url is agent/{id}", id);
         long uid = StringToLongUtil.stringToLong(id);
@@ -105,6 +133,15 @@ public class AgentResource {
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
         data.put("model", agentRequest);
+        response.setData(data);
+        return response;
+    }
+
+    @GetMapping(value = "/fr")
+    public Response queryAgentWithoutResponsiblePersonId() {
+        Response response = Responses.successResponse();
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("List", agentService.queryAgentWithoutResponsiblePersonId());
         response.setData(data);
         return response;
     }

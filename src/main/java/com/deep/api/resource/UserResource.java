@@ -453,6 +453,7 @@ public class UserResource {
             return Responses.errorResponse("error");
         } else {
             Professor agent = userService.getFatherProfessors(agentID);
+            System.out.println(agent);
             if (agent != null) {
                 Response response = Responses.successResponse();
                 Map<String, Object> data = new HashMap<>();
