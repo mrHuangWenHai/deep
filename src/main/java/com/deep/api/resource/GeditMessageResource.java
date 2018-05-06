@@ -46,7 +46,5 @@ public class GeditMessageResource {
             JedisUtil.setCertainKeyValue("PressureTips",pressureTips);
         }
         return JudgeUtil.JudgeSuccess("setting","success");
-
     }
-
 }

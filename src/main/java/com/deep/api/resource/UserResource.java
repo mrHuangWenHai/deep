@@ -80,7 +80,7 @@ public class UserResource {
     /**
      * 通过用户的主键查找单个用户
      * @param id 获取用户的信息(简略信息)
-     * @return
+     * @return response
      */
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @GetMapping(value = "user/find/{id}")
@@ -104,7 +104,7 @@ public class UserResource {
     /**
      * 通过用户的主键查找单个用户
      * @param id 获取用户的信息(简略信息)
-     * @return
+     * @return response
      */
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @GetMapping(value = "user/detail/{username}")
@@ -133,8 +133,8 @@ public class UserResource {
 
     /**
      * 根据用户的真实姓名查找单个用户
-     * @param realname
-     * @return
+     * @param realname realname
+     * @return response
      */
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @PostMapping(value = "user/name")
@@ -142,7 +142,10 @@ public class UserResource {
         logger.info("invoke getUserByUserRealname{}, url is user/name", realname);
         System.out.println(realname.get("realname"));
         UserModel userModel = userService.getUserByUserRealnameLike(realname.get("realname"));
-        if (realname.equals("")) {
+        if (realname.get("realname") == null) {
+            return Responses.errorResponse("error!");
+        }
+        if (realname.get("realname").equals("")) {
             return Responses.errorResponse("用户名格式错误");
         }
         if (userModel == null) {
@@ -157,8 +160,8 @@ public class UserResource {
 
     /**
      * 根据用户名获取单个用户的信息
-     * @param pkUserid
-     * @return
+     * @param pkUserid username
+     * @return response
      */
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @GetMapping(value = "user/id/{pkUserid}")
@@ -191,8 +194,9 @@ public class UserResource {
      * 增加一个用户
      * @param userRequest request
      * @param bindingResult bindingResult
-     * @return
+     * @return response
      */
+    @Permit(authorities = "add_user")
     @PostMapping("user")
     public Response addUser(@RequestBody @Valid UserRequest userRequest, BindingResult bindingResult) {
         logger.info("invoke addUser{}, url is register", userRequest, bindingResult);
@@ -245,10 +249,10 @@ public class UserResource {
 
     /**
      * 修改一个用户
-     * @param userModel
-     * @param id
-     * @param bindingResult
-     * @return
+     * @param userModel userModel
+     * @param id ID
+     * @param bindingResult bindingResult
+     * @return response
      */
     @Permit(authorities = {"modify_user", "modify_expert", "modify_technician", "modify_administrator"})
     @PutMapping(value = "user/{id}")
@@ -289,6 +293,7 @@ public class UserResource {
         return response;
     }
 
+    @Permit(authorities = "modify_user")
     @PatchMapping(value = "/user/password/{id}")
     public Response modifyUserPassword(@PathVariable("id") String id, @RequestBody @Valid PasswordRequest passwordRequest) {
         long uid = StringToLongUtil.stringToLong(id);
@@ -315,8 +320,8 @@ public class UserResource {
 
     /**
      * 删除单个用户
-     * @param id
-     * @return
+     * @param id userID
+     * @return response
      */
     @Permit(authorities = {"delete_users", "delete_expert", "remove_technician", "remove_administrator"})
     @DeleteMapping("user/{id}")
@@ -339,14 +344,13 @@ public class UserResource {
 
     /**
      * 导出Excel表格
-     * @param httpServletResponse
-     * @return
-     * @throws Exception
+     * @param httpServletResponse httpServletResponse
+     * @return response
+     * @throws Exception exception
      */
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @GetMapping(value = "/user/excel/{roleID}")
     public Response exportExcel(@PathVariable("roleID") long roleID, HttpServletResponse httpServletResponse) throws Exception {
-
         logger.info("invoke exportExcel{}, url is /user/excel", httpServletResponse);
         ExcelData data = new ExcelData();
         data.setName("user");
@@ -373,8 +377,8 @@ public class UserResource {
 
     /**
      * 获取某一类专家接口
-     * @param id
-     * @return
+     * @param id id
+     * @return response
      */
     @Permit(authorities = "query_expert")
     @GetMapping(value = "/user/high/{id}")
@@ -398,15 +402,15 @@ public class UserResource {
 
     /**
      * 测试类, 获取其上级专家的手机号
-     * @param id
-     * @return
+     * @param id id
+     * @return response
      */
     @Permit(authorities = "query_expert")
     @GetMapping(value = "/user/test/{id}")
     public Response getTest(@PathVariable("id") String id) {
         logger.info("invoke getRolesOfProfessor {}, url is /user/high/{id}", id);
         Response response = Responses.successResponse();
-        Map data = new HashMap<>();
+        Map<String, Object> data = new HashMap<>();
 
         data.put("data", userService.getProfessorTelephoneByFactoryNum(new BigInteger(id)));
 
@@ -414,11 +418,11 @@ public class UserResource {
         return response;
     }
 
-    /**
-     * 获取某个羊场或者某个代理的所有用户
-     * @param id
-     * @return
-     */
+//    /**
+//     * 获取某个羊场或者某个代理的所有用户
+//     * @param id
+//     * @return
+//     */
 //    @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
 //    @GetMapping(value = "/user/factory/lists/{factoryAgentID}")
 //    public Response getFactoryLists(@PathVariable("factoryAgentID") String id) {
@@ -444,8 +448,8 @@ public class UserResource {
 
     /**
      * 判断专家是否在线
-     * @param id
-     * @return
+     * @param id id
+     * @return response
      */
     @Permit(authorities = "query_expert")
     @GetMapping(value = "/user/online/{id}")
@@ -485,6 +489,7 @@ public class UserResource {
         }
     }
 
+    @Permit(authorities = "query_user")
     @GetMapping(value = "check/username/{username}")
     public Integer checkUsername (@PathVariable("username") String username) {
         // find all username

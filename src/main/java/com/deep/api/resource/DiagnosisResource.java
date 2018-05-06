@@ -1,14 +1,13 @@
 package com.deep.api.resource;
 
-
 import com.deep.api.Utils.AgentUtil;
 import com.deep.api.Utils.TokenAnalysis;
+import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.DiagnosisRequest;
 import com.deep.domain.model.DiagnosisPlanModel;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
-import com.deep.domain.model.ImmunePlanModel;
 import com.deep.domain.service.DiagnosisPlanService;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
@@ -44,6 +43,7 @@ public class DiagnosisResource {
      * 接收参数：整个表单信息（所有参数必填）
      * 参数类型为：Long factoryNum;Date diagnosisT;String building;String etB;String operator;String remark;String diagnosisC;String diagnosisM;String drugQ;
      */
+    @Permit(authorities = "increase_disease_prevention_files")
     @PostMapping(value = "")
     public Response addPlan(@RequestBody @Valid DiagnosisPlanModel diagnosisPlanModel,
                             BindingResult bindingResult) throws ParseException {
@@ -74,8 +74,8 @@ public class DiagnosisResource {
      * @param id
      * @return
      */
+    @Permit(authorities = "delete_disease_prevention_files")
     @DeleteMapping(value = "/{id}")
-
     public Response dropPlan(@PathVariable("id") int id) {
 
         logger.info("invoke diagnosis/{}", id);
@@ -97,12 +97,11 @@ public class DiagnosisResource {
      * @return
      * @throws ParseException
      */
-
+    @Permit(authorities = "increase_disease_prevention_files")
     @PatchMapping(value = "/{id}")
     public Response changePlanByOperator(@PathVariable(value = "id") int id,
                                          @RequestBody @Valid DiagnosisPlanModel diagnosisPlanModel,
                                          BindingResult bindingResult) throws ParseException {
-
         if (id < 0) {
           return Responses.errorResponse("id is invalide");
         }
@@ -139,6 +138,7 @@ public class DiagnosisResource {
      * 监督者使用接收参数：整个表单信息（整型id必填，各参数选填）
      * @return Response
      */
+    @Permit(authorities = "experts_review_disease_prevention_files")
     @RequestMapping(value = "/p/{id}",method = RequestMethod.PATCH)
     public Response changePlanByProfessor(@PathVariable(value = "id") int id,
                                           @RequestBody Map<String, Integer> json) {
@@ -170,6 +170,7 @@ public class DiagnosisResource {
      * 监督者使用接收参数：整个表单信息（整型id必填，各参数选填）
      * @return response
      */
+    @Permit(authorities = "supervise_and_verify_disease_prevention_files")
     @RequestMapping(value = "/s/{id}",method = RequestMethod.PATCH)
     public Response changePlanBySupervisor(@PathVariable(value = "id") int id,
                                            @RequestBody Map<String, Object> json) {
@@ -197,6 +198,7 @@ public class DiagnosisResource {
      * 接收参数：整型的主键号（保留接口查询，前端不调用此接口）
      * @return Response
      */
+    @Permit(authorities = "check_disease_prevention_files")
     @GetMapping(value = "find/{id}")
     public Response findPlanById(@PathVariable("id") int id) {
         logger.info("invoke Get diagnosis/{}", id);
@@ -224,6 +226,7 @@ public class DiagnosisResource {
      * @param diagnosisRequest
      * @return Response
      */
+    @Permit(authorities = "check_disease_prevention_files")
     @GetMapping(value = "/{id}")
     public Response findPlanSelective(@PathVariable(value = "id")long id,
                                       DiagnosisRequest diagnosisRequest,

@@ -131,7 +131,7 @@ public class RoleResource {
     /**
      * 根据权限的主键查找一个角色
      * @param id 主键
-     * @return
+     * @return response
      */
     @Permit(authorities = "query_role")
     @GetMapping(value = "/find/{id}")
@@ -161,7 +161,7 @@ public class RoleResource {
 
     /**
      * 删除一个角色
-     * @param id
+     * @param id ID
      */
     @Permit(authorities = "remove_role")
     @DeleteMapping(value = "/{id}")
@@ -186,8 +186,8 @@ public class RoleResource {
 
     /**
      * 修改权限方法
-     * @param roleRequest
-     * @return
+     * @param roleRequest roleRequest
+     * @return response
      */
     @Permit(authorities = "modify_role")
     @PutMapping(value = "/{id}")

@@ -7,7 +7,6 @@ import com.deep.domain.model.EnvironmentTraceModel;
 import com.deep.domain.model.EnvironmentTraceReturnModel;
 import com.deep.domain.service.EnvironmentTraceService;
 import com.deep.domain.util.BackupUtil;
-import com.deep.domain.util.DownloadUtil;
 
 import com.deep.domain.util.JudgeUtil;
 
@@ -21,7 +20,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.ws.rs.HEAD;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;

@@ -34,9 +34,9 @@ public class FactoryResouce {
 
     /**
      * 查看所有羊场(超级管理员可见)
-     * @return
+     * @return response相关信息
      */
-    @Permit(authorities = "customer_inquiry")
+    @Permit(authorities = "increase_customer")
     @GetMapping(value = "/{id}")
     public Response factoryLists(
             @RequestParam(value = "page", defaultValue = "0") String page,
@@ -104,6 +104,7 @@ public class FactoryResouce {
      * @param id
      * @return
      */
+    @Permit(authorities = "customer_inquiry")
     @GetMapping(value = "/agent/{id}")
     public Response factoryByAgent(
             @PathVariable("id") String id,
@@ -139,8 +140,8 @@ public class FactoryResouce {
 
     /**
      * 根据羊场的地理位置查询(模糊查询)
-     * @param location
-     * @return
+     * @param location 羊场地理位置信息
+     * @return response 相关信息
      */
     @Permit(authorities = "customer_inquiry")
     @GetMapping(value = "/location")
@@ -208,7 +209,6 @@ public class FactoryResouce {
      * @param id 羊场主键
      * @param bindingResult 错误对象
      * @return Response响应
-
      */
     @Permit(authorities = "modify_customer")
     @PutMapping(value = "/{id}")
@@ -269,6 +269,7 @@ public class FactoryResouce {
      * get no responsibleFactory
      * @return response
      */
+    @Permit(authorities = "customer_inquiry")
     @GetMapping(value = "/fr")
     public Response findAllNoResponsibleFactory() {
         Response response = Responses.successResponse();

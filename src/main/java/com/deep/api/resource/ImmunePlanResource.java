@@ -2,6 +2,7 @@ package com.deep.api.resource;
 
 import com.deep.api.Utils.AgentUtil;
 import com.deep.api.Utils.TokenAnalysis;
+import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.authorization.tools.Constants;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
@@ -72,6 +73,7 @@ public class ImmunePlanResource {
      * @param immuneEartagFile  耳牌文件
      * @return 插入结果
      */
+    @Permit(authorities = "increase_the_immunization_implementation_file")
     @RequestMapping(value = "", method = RequestMethod.POST)
     public Response saveShow(@Valid ImmunePlanModel immunePlanModel,
                              BindingResult bindingResult,
@@ -191,6 +193,7 @@ public class ImmunePlanResource {
      * @param immuneRequest 免疫请求类
      * @return 查询结果
      */
+    @Permit(authorities = "query_the_immunization_implementation_file")
     @GetMapping(value = "/{id}")
     public Response findShow(@PathVariable(value = "id")long id,
                              ImmuneRequest immuneRequest,
@@ -248,6 +251,7 @@ public class ImmunePlanResource {
      * @param id id
      * @return 查询结果
      */
+    @Permit(authorities = "query_the_immunization_implementation_file")
     @RequestMapping(value = "/find/{id}",method = RequestMethod.GET)
     public Response find(@PathVariable("id") long id) {
         logger.info(" invoke find{id} {}" , id);
@@ -263,6 +267,7 @@ public class ImmunePlanResource {
      * @param size 条
      * @return 查询结果
      */
+    @Permit(authorities = "query_the_immunization_implementation_file")
     @RequestMapping(value = "findet",method = RequestMethod.GET)
     public Response findByEarTag(@RequestParam("eartag") List<String[]> immuneEartag,
                                  @RequestParam(value = "page",defaultValue = "0") int page,
@@ -331,6 +336,7 @@ public class ImmunePlanResource {
      * @param fileName 文件名
      * @return  下载结果
      */
+    @Permit(authorities = "download_product_file_action")
     @RequestMapping(value = "/down/{factoryNum}/{fileName}",method = RequestMethod.GET)
     public Response download(HttpServletResponse response,
                              @PathVariable("factoryNum") String factoryNum,
@@ -359,7 +365,7 @@ public class ImmunePlanResource {
      * @param immunePlanModel 免疫类
      * @return 更新结果
      */
-
+    @Permit(authorities = "experts_review_immune_implementation_files")
     @RequestMapping(value = "/p/{id}",method = RequestMethod.PATCH)
     public Response professorUpdate(@PathVariable(value = "id") long id,
                                     @RequestBody ImmunePlanModel immunePlanModel) {
@@ -391,6 +397,7 @@ public class ImmunePlanResource {
      * METHOD:PATCH
      * @return 审核结果
      */
+    @Permit(authorities = "surveillance_audit_of_immunization_implementation_files")
     @RequestMapping(value = "/s/{id}",method = RequestMethod.PATCH)
     public Response supervisorUpdate(@PathVariable(value = "id")long id,
                                      @RequestBody ImmunePlanModel immunePlanModel){
@@ -421,7 +428,7 @@ public class ImmunePlanResource {
      * @return 更新结果
      */
 
-
+    @Permit(authorities = "modify_the_immunization_implementation_file")
     @RequestMapping(value = "/{id}",method = RequestMethod.POST)
     public Response operatorUpdate(@PathVariable(value = "id") long id,
                                    @Validated ImmunePlanModel immunePlanModel,
@@ -473,7 +480,7 @@ public class ImmunePlanResource {
      * @param id id
      * @return 删除结果
      */
-
+    @Permit(authorities = "delete_the_immunization_implementation_file")
     @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
     public Response delete(@Min(0) @PathVariable(value = "id") Long id) {
 

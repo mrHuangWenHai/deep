@@ -140,3 +140,13 @@ front       realId      权限
             114         @删除羊品种 _______________delete_sheep_type
             115         @查询羊品种________________select_sheep_type
             116         @修改羊品种________________modify_sheep_type
+            117         @下载文件_________________download_product_file_action
+
+            118         @查看留言_________________check_message_of_all_user
+
+            119        @增加驱虫实施防治档案_________increase_pest_repellent_implementation_control_files
+            120        @删除驱虫实施防治档案_________deworming_implementation_control_files
+            121        @查询驱虫实施防治档案_________check_insecticide_implementation_control_files
+            122        @修改驱虫实施防治档案_________modify_the_insect_repellent_implementation_control_file
+            123        @监督审核驱虫实施防治档案_________supervise_and_verify_the_implementation_of_pest_control_files
+            124        @专家审核驱虫实施防治档案_________experts_review deworming_implementation_control_files
