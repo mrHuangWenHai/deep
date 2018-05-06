@@ -182,8 +182,8 @@ public class UserService {
      * 获取所有的用户信息
      * @return
      */
-    public List<UserModel> getAllWithNoCondition() {
-        return userMapper.queryAllUserNoCondition();
+    public List<String> getAllWithNoCondition() {
+        return userMapper.queryAllUsernameNoCondition();
     }
 
     /**

@@ -40,46 +40,57 @@ front       realId      权限
 7-1          38          删除方案________________delete_the_plan
 7-2          39          查询方案________________query_plan
 7-3          40          修改方案________________amendment
+
 8-0          41          增加代理________________add_agent
 8-1          42          删除代理________________deleting_an_agent
 8-2          43          查询代理________________query_agent
 8-3          44          修改代理________________modify_the_proxy
+
 9-0          45          增加客户(羊场)___________increase_customer
 9-1          46          删除客户(羊场)___________delete_customer
 9-2          47          查询客户(羊场)___________customer_inquiry
 9-3          48          修改客户(羊场)___________modify_customer
+
 6-0          49          增加专家评价_____________increase_expert_evaluation
 6-1          50          删除专家评价_____________delete_expert_evaluation
 6-2          51          查询专家评价_____________query_expert_evaluation
 6-3          52          修改专家评价_____________modify_expert_evaluation
 6-4          53          查看总评分(专家)_________view_overall_rating_
+
             54          前端查看有机环境_________front_view_organic_environment
             55          后端查看有机环境_________rear_view_organic_environment
             56          发送短信________________send_messages   53, 54, 55
+
 10-0            57          添加直播________________add_live
 10-1            58          删除直播________________delete_live
 10-2            59          查看直播________________view_live
 10-3            60          禁止直播________________ban_live
+
 11-0           61          添加社区活动____________add_community_activities
 11-1           62          删除社区活动____________delete_community_activity
 11-2           63          查询社区活动____________check_community_activities
 11-3           64          修改社区活动____________modify_community_activities
+
 12-0            65          添加发布________________add_release
 12-1            66          删除发布________________delete_release
 12-2            67          查询发布________________query_publishing
 12-3            68          修改发布________________modify_release
+
 13-0            69          添加系谱档案____________add_pedigree_files
 13-1            70          删除系谱档案____________delete_pedigree_files
 13-2            71          查询系谱档案____________query_pedigree_files
 13-3            72          修改系谱档案____________modify_pedigree_files
+
 14-0            73          添加视频________________add_video
 14-1            74          删除视频________________delete_video
 14-2            75          查看视频________________see_video
 14-3            76          修改视频________________edit_video
+
 15-0            77          添加图片________________add_pictures
 15-1            78          删除图片________________delete_picture
 15-2            79          查看图片________________view_image
 15-3            80          修改图片________________edit_picture
+
             81          添加拓展模块_____________add_expansion_module
             82          删除拓展模块_____________delete_extension_module
             83          修改拓展模块_____________modify_the_extension_module
@@ -88,26 +99,32 @@ front       realId      权限
             86          删除拓展模块信息_________delete_extension_module_information
             87          修改拓展模块信息_________modify_the_extension_module_information
             88          查询拓展模块信息_________query_expansion_module_information
+
 16-0            89          添加用户________________add_user
 16-1            90          删除用户________________delete_users
 16-2            91          查询用户________________query_user
 16-3            92          修改用户________________modify_user
+
 17-0            93          添加专家 ________________add_expert
 17-1            94          删除专家 ________________delete_expert
 17-2            95          查询专家 ________________query_expert
 17-3            96          修改专家 ________________modify_expert
+
 18-0            97          添加技术员 _______________add_technician
 18-1            98          删除技术员 _______________remove_technician
 18-2            99          查询技术员 _______________query_technician
 18-3            100         修改技术员 _______________modify_technician
+
 19-0            101         添加管理员 _______________add_an_administrator
 19-1            102         删除管理员 _______________remove_administrator
 19-2            103         查询管理员 _______________query_administrator
 19-3            104         修改管理员 _______________modify_administrator
+
 20-0            105         添加角色 _________________add_role
 20-1            106         删除角色 _________________remove_role
 20-2            107         查询角色 _________________query_role
 20-3            108         修改角色 _________________modify_role
+
             109         查看权限 _________________query_permit
 
 

@@ -9,9 +9,8 @@ import com.deep.api.request.AgentRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.AgentModel;
-import com.deep.domain.model.BreedingPlan;
 import com.deep.domain.service.AgentService;
-import org.apache.ibatis.session.RowBounds;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
@@ -108,8 +107,8 @@ public class AgentResource {
 
     /**
      * 查找一个代理
-     * @param id
-     * @return
+     * @param id agentId
+     * @return response
      */
     @Permit(authorities = "query_agent")
     @GetMapping(value = "/find/{id}")
@@ -140,8 +139,9 @@ public class AgentResource {
 
     /**
      * select un responsible agent
-     * @return
+     * @return response
      */
+    @Permit(authorities = "query_agent")
     @GetMapping(value = "/fr")
     public Response queryAgentWithoutResponsiblePersonId() {
         Response response = Responses.successResponse();
@@ -155,7 +155,7 @@ public class AgentResource {
 
     /**
      * 删除一个代理
-     * @param id
+     * @param id agentId
      */
     @Permit(authorities = "deleting_an_agent")
     @DeleteMapping(value = "/{id}")
@@ -178,8 +178,8 @@ public class AgentResource {
 
     /**
      * 添加一个代理
-     * @param bindingResult
-     * @return
+     * @param bindingResult binding
+     * @return  response
      */
     @Permit(authorities = "add_agent")
     @PostMapping(value = "")
@@ -224,7 +224,7 @@ public class AgentResource {
      * 修改一个代理
      * @param bindingResult 错误信息提示
      * @param id 代理主键
-     * @return
+     * @return response
      */
     @Permit(authorities = "modify_the_proxy")
     @PutMapping("/{id}")
@@ -264,8 +264,8 @@ public class AgentResource {
 
     /**
      * 根据代理的主键获取其所有的直属子代理
-     * @param id
-     * @return
+     * @param id agentId
+     * @return response
      */
     @Permit(authorities = "query_agent")
     @GetMapping(value = "/sons/{id}")
@@ -290,8 +290,8 @@ public class AgentResource {
 
     /**
      * 根据代理的主键查询所有的子代理
-     * @param id
-     * @return
+     * @param id agentId
+     * @return response
      */
     @Permit(authorities = "query_agent")
     @GetMapping(value = "/allson/{id}")
@@ -312,8 +312,8 @@ public class AgentResource {
 
     /**
      * 获取上级代理操作
-     * @param id
-     * @return
+     * @param id agentId
+     * @return response
      */
     @Permit(authorities = "query_agent")
     @GetMapping(value = "/father/{id}")
@@ -337,8 +337,8 @@ public class AgentResource {
 
     /**
      * 获取所有的上级操作
-     * @param id
-     * @return
+     * @param id agentId
+     * @return response
      */
     @Permit(authorities = "query_agent")
     @GetMapping(value = "ancestors/{id}")
@@ -362,8 +362,8 @@ public class AgentResource {
 
     /**
      * 获取上级对应的所有专家
-     * @param id
-     * @return
+     * @param id agentId
+     * @return response
      */
     @Permit(authorities = "query_expert")
     @GetMapping(value = "ancestors/professor/{id}")

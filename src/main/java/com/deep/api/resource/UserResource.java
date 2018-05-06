@@ -194,7 +194,6 @@ public class UserResource {
     @PostMapping("user")
     public Response addUser(@RequestBody @Valid UserRequest userRequest, BindingResult bindingResult) {
         logger.info("invoke addUser{}, url is register", userRequest, bindingResult);
-
         if (bindingResult.hasErrors() || userRequest.getUsername() == null) {
             Response response = Responses.errorResponse("验证失败");
             HashMap<String, Object> data = new HashMap<>();
@@ -481,6 +480,19 @@ public class UserResource {
                 return response;
             }
             return Responses.errorResponse("there is no online father agents");
+        }
+    }
+
+    @GetMapping(value = "check/username/{username}")
+    public Integer checkUsername (@PathVariable("username") String username) {
+        // find all username
+        List<String> allUser = userService.getAllWithNoCondition();
+        if (allUser == null) {
+            return 0;
+        } else if (allUser.indexOf(username) == -1) {
+            return 1;
+        } else {
+            return 0;
         }
     }
 }
