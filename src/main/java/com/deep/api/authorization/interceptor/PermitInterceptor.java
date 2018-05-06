@@ -141,6 +141,13 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
         permitMap.put(107, "query_role");
         permitMap.put(108, "modify_role");
         permitMap.put(109, "query_permit");
+        permitMap.put(110, "download_database");
+        permitMap.put(111, "send_messages");
+        permitMap.put(112, "edit_messages");
+        permitMap.put(113, "add_sheep_type");
+        permitMap.put(114, "delete_sheep_type");
+        permitMap.put(115, "select_sheep_type");
+        permitMap.put(116, "modify_sheep_type");
     }
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

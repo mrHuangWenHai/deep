@@ -2,6 +2,7 @@ package com.deep.api.resource;
 
 import com.deep.api.Utils.AgentUtil;
 import com.deep.api.Utils.TokenAnalysis;
+import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.GenealogicalRequest;
 import com.deep.api.response.Response;
@@ -47,6 +48,7 @@ public class GenealogicalFilesResource {
      * @param bindingResult   异常抛出类
      * @return  插入/更新结果
      */
+    @Permit(authorities = "add_sheep_type")
     @RequestMapping(value = "/type",method = RequestMethod.POST)
     public Response type(@RequestBody @Validated TypeBriefModel typeBriefModel,
 
@@ -69,12 +71,16 @@ public class GenealogicalFilesResource {
         }
     }
 
+//    @Permit(authorities = "delete_sheep_type")
+//    @Permit(authorities = "select_sheep_type")
+//    @Permit(authorities = "modify_sheep_type")
+
     /**
      * 查询之前 需要返回给前端的数据
      * 山羊品种对应的特征
      * @return 种类
      */
-
+    @Permit(authorities = "select_sheep_type")
     @RequestMapping(value = "/types",method = RequestMethod.GET)
     public Response beforeSave() {
         logger.info("/gf/types");
@@ -85,13 +91,13 @@ public class GenealogicalFilesResource {
      * 返回插入结果
      * 成功：success
      * 失败：返回对应失败错误
-     *
      * color:棕色 0  暗红 1  杂色 2
      * sex:公 0 母 1
      * METHOD:POST
      * @param genealogicalFilesModel 系谱类
      * @return 插入结果
      */
+    @Permit(authorities = "add_pedigree_files")
     @RequestMapping(value = "",method = RequestMethod.POST)
     public Response saveShow(@RequestBody @Validated GenealogicalFilesModel genealogicalFilesModel) {
 
@@ -136,6 +142,7 @@ public class GenealogicalFilesResource {
      * @return 查询结果/查询结果条数
      */
     //bound为必传参数
+    @Permit(authorities = "query_pedigree_files")
     @GetMapping(value = "/{id}")
     public Response findShow(@PathVariable(value = "id")long id,
                              GenealogicalRequest genealogicalRequest,
@@ -225,8 +232,7 @@ public class GenealogicalFilesResource {
      * @param id id
      * @return 查询结果
      */
-    @ResponseBody
-
+    @Permit(authorities = "query_pedigree_files")
     @RequestMapping(value = "/find/{id}",method = RequestMethod.GET)
     public Response find(@NotNull @PathVariable("id") long id ) {
 
@@ -245,7 +251,7 @@ public class GenealogicalFilesResource {
      * @param genealogicalFilesModel 系谱类
      * @return  更新结果
      */
-    @ResponseBody
+    @Permit(authorities = "modify_pedigree_files")
     @RequestMapping(value = "/{id}",method = RequestMethod.PUT)
     public Response update(@Validated @RequestBody GenealogicalFilesModel genealogicalFilesModel,
                            @NotNull @PathVariable(value = "id") int id) {
@@ -265,6 +271,7 @@ public class GenealogicalFilesResource {
      * @param id id
      * @return  删除结果
      */
+    @Permit(authorities = "delete_pedigree_files")
     @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
     public Response delete(@NotNull @PathVariable(value = "id") long id) {
         logger.info("invoke delete {}", id);
