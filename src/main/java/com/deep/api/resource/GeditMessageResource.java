@@ -25,13 +25,14 @@ public class GeditMessageResource {
     private final Logger logger = LoggerFactory.getLogger(GeditMessageResource.class);
 
     @RequestMapping(value = "/gedit",method = RequestMethod.GET)
-    public Response Gedit(@RequestParam(value = "message",defaultValue = "") String message,
-                          @RequestParam(value = "expireTime",defaultValue = "") String expireTime,
-                          @RequestParam(value = "pressureTips",defaultValue = "") String pressureTips){
+    public Response Gedit(@RequestParam(value = "message", defaultValue = "") String message,
+                          @RequestParam(value = "expireTime", defaultValue = "") String expireTime,
+                          @RequestParam(value = "pressureTips", defaultValue = "") String pressureTips){
+        logger.info("invoke Gedit {}", message, expireTime, pressureTips);
         //message未设置
         if ("".equals(message)) {
             //redis中一定存在Message字段
-            System.out.println(JedisUtil.getCertainKeyValue("Message"));
+            //System.out.printl n(JedisUtil.getCertainKeyValue("Message"));
         } else {
             JedisUtil.setCertainKeyValue("Message",message);
         }

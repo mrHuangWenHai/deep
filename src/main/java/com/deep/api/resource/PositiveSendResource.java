@@ -46,7 +46,7 @@ public class PositiveSendResource {
      * @param message  短信信息
      * @return  短信发送结果
      */
-    @RequestMapping(value = "/psendw",method = RequestMethod.GET)
+    @RequestMapping(value = "/psend",method = RequestMethod.GET)
     public Response PositiveSend(@RequestParam(value = "mobile" ,defaultValue= "") String mobile,
                                  @RequestParam(value = "message",defaultValue = "") String message){
 
@@ -62,36 +62,36 @@ public class PositiveSendResource {
         }
     }
 
-    /**
-     * 手机号为文件上传
-     * @param mobile 手机号
-     * @param message  短信信息
-     * @return  短信发送结果
-     */
-    @RequestMapping(value = "/psendf",method = RequestMethod.POST)
-    public Response PositiveSend(@RequestParam("mobile") MultipartFile mobile,
-                                 @RequestParam(value = "message",defaultValue = "") String message) {
-        logger.info("invoke positiveSend {}", mobile, message);
-        if (mobile.isEmpty()|| "".equals(message)){
-            return Responses.errorResponse("Lack Item");
-        }
-        try {
-            //将文件内容转为字符串
-            String mobile_list = convertStreamToString(mobile.getInputStream());
-            System.out.println(mobile_list);
-            MobileAnnouncementModel mobileAnnouncementModel = new MobileAnnouncementModel(mobile_list,message);
-            if(JedisUtil.manyMessageSendResult(mobileAnnouncementModel)){
-                return JudgeUtil.JudgeSuccess("Send","Success");
-            }else {
-                return Responses.errorResponse("Send Error");
-            }
-            //System.out.println(""+oo);
-            //System.out.println(""+oo.length());
-        } catch (IOException e) {
-            e.printStackTrace();
-            return Responses.errorResponse("Send Error");
-        }
-    }
+//    /**
+//     * 手机号为文件上传
+//     * @param mobile 手机号
+//     * @param message  短信信息
+//     * @return  短信发送结果
+//     */
+//    @RequestMapping(value = "/psendf",method = RequestMethod.POST)
+//    public Response PositiveSend(@RequestParam("mobile") MultipartFile mobile,
+//                                 @RequestParam(value = "message",defaultValue = "") String message) {
+//        logger.info("invoke positiveSend {}", mobile, message);
+//        if (mobile.isEmpty()|| "".equals(message)){
+//            return Responses.errorResponse("Lack Item");
+//        }
+//        try {
+//            //将文件内容转为字符串
+//            String mobile_list = convertStreamToString(mobile.getInputStream());
+//            System.out.println(mobile_list);
+//            MobileAnnouncementModel mobileAnnouncementModel = new MobileAnnouncementModel(mobile_list,message);
+//            if(JedisUtil.manyMessageSendResult(mobileAnnouncementModel)){
+//                return JudgeUtil.JudgeSuccess("Send","Success");
+//            }else {
+//                return Responses.errorResponse("Send Error");
+//            }
+//            //System.out.println(""+oo);
+//            //System.out.println(""+oo.length());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return Responses.errorResponse("Send Error");
+//        }
+//    }
 
 
 }

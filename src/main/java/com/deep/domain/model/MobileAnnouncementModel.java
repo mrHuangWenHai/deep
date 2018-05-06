@@ -94,7 +94,7 @@ public class MobileAnnouncementModel {
             temp = temp.append(random.nextInt(10));
         }
         identityCode = temp.toString();
-        message = message+temp+"【东翔验证】";
+        message = message+temp+"【贵州东骏】";
 
         Client client = Client.create();
         client.addFilter(new HTTPBasicAuthFilter(
@@ -120,7 +120,7 @@ public class MobileAnnouncementModel {
      */
     public String testSendMany(){
         // just replace key here
-        this.message = message+"【东翔验证】";
+        this.message = message+"【贵州东骏】";
         Client client = Client.create();
         client.addFilter(new HTTPBasicAuthFilter(
                 "api","key-c4e35f50b45ba853c3d6eff6633f42a7"));
