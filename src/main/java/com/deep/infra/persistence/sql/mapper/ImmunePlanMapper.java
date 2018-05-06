@@ -23,7 +23,7 @@ public interface ImmunePlanMapper {
 
     ImmunePlanModel getImmunePlanModelById(@Param("id") Long id);
 
-    List<ImmunePlanModel> getImmunePlanModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum , RowBounds bounds);
+    List<ImmunePlanModel> getImmunePlanModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum);
 
     List<ImmunePlanModel> getImmunePlanModelByFactoryNumAndIsPassCheck(@Param("factoryNum")BigInteger factoryNum ,
                                                                        @Param("ispassCheck")String ispassCheck,

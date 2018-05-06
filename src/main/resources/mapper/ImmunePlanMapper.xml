@@ -191,8 +191,6 @@
         FROM
         immune_plan
         WHERE
-
-
         factory_num = #{factoryNum}
     </select>
 

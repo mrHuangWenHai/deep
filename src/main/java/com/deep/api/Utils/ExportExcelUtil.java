@@ -23,10 +23,11 @@ public class ExportExcelUtil {
      * @throws Exception
      */
     public static void exportExcel(HttpServletResponse response, String fileName, ExcelData data) throws Exception {
+        String file = new String(fileName.getBytes("utf-8"), "ISO_8859_1");
         // 告诉浏览器用什么软件可以打开此文件
         response.setHeader("content-Type", "application/vnd.ms-excel");
         // 下载文件的默认名称
-        response.setHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode(fileName, "utf-8"));
+        response.setHeader("Content-Disposition", "attachment;filename="+ file);
         exportExcel(data, response.getOutputStream());
     }
 

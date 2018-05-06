@@ -23,7 +23,7 @@ public interface DisinfectFilesMapper {
 
     DisinfectFilesModel getDisinfectFilesModelById(@Param("id") Long id);
 
-    List<DisinfectFilesModel> getDisinfectFilesModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum , RowBounds bounds);
+    List<DisinfectFilesModel> getDisinfectFilesModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum);
 
     List<DisinfectFilesModel> getDisinfectFilesModelByFactoryNumAndIsPassCheck(@Param("factoryNum")BigInteger factoryNum,
                                                                                @Param("ispassCheck")String ispassCheck,

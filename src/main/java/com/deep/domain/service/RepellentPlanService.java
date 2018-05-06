@@ -34,8 +34,8 @@ public class RepellentPlanService {
         return this.repellentPlanMapper.getRepellentPlanModelByTradeMarkEarTag(repellentEartag,bounds);
     }
 
-    public List<RepellentPlanModel> getRepellentPlanModelByFactoryNum(BigInteger factoryNum , RowBounds bounds){
-        return this.repellentPlanMapper.getRepellentPlanModelByFactoryNum(factoryNum , bounds);
+    public List<RepellentPlanModel> getRepellentPlanModelByFactoryNum(BigInteger factoryNum){
+        return this.repellentPlanMapper.getRepellentPlanModelByFactoryNum(factoryNum );
     }
 
 

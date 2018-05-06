@@ -24,7 +24,7 @@ public interface RepellentPlanMapper {
 
     RepellentPlanModel getRepellentPlanModelById(@Param("id") Long id);
 
-    List<RepellentPlanModel> getRepellentPlanModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum , RowBounds bounds);
+    List<RepellentPlanModel> getRepellentPlanModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum );
 
     List<RepellentPlanModel> getRepellentPlanModelByFactoryNumAndIsPassCheck(@Param("factoryNum")BigInteger factoryNum ,
                                                                              @Param("ispassCheck")String ispassCheck,

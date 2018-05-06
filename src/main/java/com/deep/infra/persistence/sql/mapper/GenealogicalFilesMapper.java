@@ -22,8 +22,7 @@ public interface GenealogicalFilesMapper {
 
                                                            RowBounds rowBounds);
 
-    List<GenealogicalFilesModel> getGenealogicalFilesModelByFactoryNum (@Param("factoryNum") Long factoryNum,
-                                                                        RowBounds rowBounds);
+    List<GenealogicalFilesModel> getGenealogicalFilesModelByFactoryNum(@Param("factoryNum") Long factoryNum);
 
     GenealogicalFilesModel getGenealogicalFilesModelByImmuneEartag(@Param("immuneEartag") String immuneEartag);
 

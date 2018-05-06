@@ -75,18 +75,14 @@ public class EnvironmentDBResource {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhMMss");
         if (BackupUtil.sqlBackup(savePath+"EnvironmentTrace/",hostIP,username,password,database,"env_trace_",simpleDateFormat.format(new Timestamp(System.currentTimeMillis())))){
-
-            //删除数据
-//            if (co2DataMapper.deleteCO2Data() == 1
-//                    && humDataMapper.deleteHumData() == 1
-//                    && tempDataMapper.deleteTempData() == 1
-//                    && nh3DataMapper.deleteNH3Data() == 1){
+//数据备份
+//            if (environmentTraceService.deleteEnvironmentTraceModel() == 1){
+//
 //                System.out.println("Success");
+//
+//            }else {
+//                System.out.println("Fail");
 //            }
-            System.out.println("Success");
-
-        }else {
-            System.out.println("Fail");
         }
     }
 

@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.lang.reflect.Field;
@@ -66,7 +65,7 @@ public class UserResource {
     /**
      * 通过用户的主键查找单个用户
      * @param id 获取用户的信息(简略信息)
-     * @return
+     * @return 查询结果
      */
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @GetMapping(value = "user/{id}")
@@ -90,7 +89,7 @@ public class UserResource {
     /**
      * 通过用户的主键查找单个用户
      * @param id 获取用户的信息(简略信息)
-     * @return
+     * @return 查询结果
      */
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @GetMapping(value = "user/detail/{username}")
@@ -119,16 +118,16 @@ public class UserResource {
 
     /**
      * 根据用户的真实姓名查找单个用户
-     * @param realname
-     * @return
+     * @param realName 真实姓名
+     * @return 查询结果
      */
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @PostMapping(value = "user/name")
-    public Response getUserByUserRealname(@RequestBody Map<String, String> realname) {
-        logger.info("invoke getUserByUserRealname{}, url is user/name", realname);
-        System.out.println(realname.get("realname"));
-        UserModel userModel = userService.getUserByUserRealnameLike(realname.get("realname"));
-        if (realname.equals("")) {
+    public Response getUserByUserRealName(@RequestBody Map<String, String> realName) {
+        logger.info("invoke getUserByUserRealName{}, url is user/name", realName);
+        System.out.println(realName.get("realName"));
+        UserModel userModel = userService.getUserByUserRealnameLike(realName.get("realName"));
+        if ("".equals(realName)) {
             return Responses.errorResponse("用户名格式错误");
         }
         if (userModel == null) {
@@ -143,20 +142,20 @@ public class UserResource {
 
     /**
      * 根据用户名获取单个用户的信息
-     * @param pkUserid
-     * @return
+     * @param pkUserId userName
+     * @return 查询信息
      */
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
-    @GetMapping(value = "user/id/{pkUserid}")
-    public Response getUserByUserID(@PathVariable("pkUserid") String pkUserid) {
+    @GetMapping(value = "user/id/{pkUserId}")
+    public Response getUserByUserID(@PathVariable("pkUserId") String pkUserId) {
 
-        logger.info("invoke getUserByUserID{}, url is user/id/{pkUserid}", pkUserid);
+        logger.info("invoke getUserByUserID{}, url is user/id/{pkUserId}", pkUserId);
 
         // 检查用户名输入的是否合法
-        if (!Pattern.matches("^[0-9a-z]+$", pkUserid)) {
+        if (!Pattern.matches("^[0-9a-z]+$", pkUserId)) {
             return Responses.errorResponse("请输入正确的用户名");
         }
-        UserModel userModel = userService.getUserByPkuserID(pkUserid);
+        UserModel userModel = userService.getUserByPkuserID(pkUserId);
         if (userModel == null) {
             return Responses.errorResponse("系统中不存在该用户");
         }
@@ -175,9 +174,9 @@ public class UserResource {
 
     /**
      * 增加一个用户
-     * @param userModel
-     * @param bindingResult
-     * @return
+     * @param userModel 用户类
+     * @param bindingResult  异常类型
+     * @return 插入结果
      */
     @PostMapping("user/add")
     public Response addUser(@RequestBody @Valid UserModel userModel,  BindingResult bindingResult) {
@@ -225,14 +224,14 @@ public class UserResource {
 
     /**
      * 修改一个用户
-     * @param userModel
-     * @param id
-     * @param bindingResult
-     * @return
+     * @param userModel 用户类
+     * @param id id
+     * @param bindingResult 异常类型
+     * @return 修改结果
      */
     @Permit(authorities = {"modify_user", "modify_expert", "modify_technician", "modify_administrator"})
     @PutMapping(value = "user/{id}")
-    public Response modifyUser(@RequestBody @Valid UserModel userModel, @PathVariable("id") String id, BindingResult bindingResult, HttpServletRequest request) {
+    public Response modifyUser(@RequestBody @Valid UserModel userModel, @PathVariable("id") String id, BindingResult bindingResult) {
         logger.info("invoke modifyUser{}, url is user/{username}", userModel, id, bindingResult);
         Response response;
         if (bindingResult.hasErrors()) {
@@ -295,8 +294,8 @@ public class UserResource {
 
     /**
      * 删除单个用户
-     * @param id
-     * @return
+     * @param id 用户ID
+     * @return 删除结果
      */
     @Permit(authorities = {"delete_users", "delete_expert", "remove_technician", "remove_administrator"})
     @DeleteMapping("user/{id}")
@@ -319,9 +318,9 @@ public class UserResource {
 
     /**
      * 导出Excel表格
-     * @param httpServletResponse
-     * @return
-     * @throws Exception
+     * @param httpServletResponse  HttpServletResponse
+     * @return 到处结果
+     * @throws Exception 异常
      */
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @GetMapping(value = "/user/excel/{roleID}")
@@ -333,11 +332,11 @@ public class UserResource {
         data.setName("user");
         List<UserModel> userModels = userService.getAll(roleID);
         UserModel userModel;
-        List<List<Object>> rows = new ArrayList();
-        List<String> titles = new ArrayList();
-        for(int i = 0 ; i < userModels.size(); i++) {
-            List<Object> row = new ArrayList();
-            userModel = userModels.get(i);
+        List<List<Object>> rows = new ArrayList<>();
+        List<String> titles = new ArrayList<>();
+        for (UserModel userModel1 : userModels) {
+            List<Object> row = new ArrayList<>();
+            userModel = userModel1;
             for (Field field : userModel.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
                 row.add(field.get(userModel));
@@ -354,8 +353,8 @@ public class UserResource {
 
     /**
      * 获取某一类专家接口
-     * @param id
-     * @return
+     * @param id 专家
+     * @return 查询结果
      */
     @Permit(authorities = "query_expert")
     @GetMapping(value = "/user/high/{id}")
@@ -379,8 +378,8 @@ public class UserResource {
 
     /**
      * 测试类, 获取其上级专家的手机号
-     * @param id
-     * @return
+     * @param id  id
+     * @return 手机号
      */
     @Permit(authorities = "query_expert")
     @GetMapping(value = "/user/test/{id}")
@@ -397,8 +396,8 @@ public class UserResource {
 
     /**
      * 获取某个羊场或者某个代理的所有用户
-     * @param id
-     * @return
+     * @param id id
+     * @return 查询结果
      */
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @GetMapping(value = "/user/factory/lists/{factoryAgentID}")
@@ -425,8 +424,8 @@ public class UserResource {
 
     /**
      * 判断专家是否在线
-     * @param id
-     * @return
+     * @param id id
+     * @return 是否在线
      */
     @Permit(authorities = "query_expert")
     @GetMapping(value = "/user/online/{id}")
@@ -441,8 +440,8 @@ public class UserResource {
 
     /**
      * 获取已发展羊场的直属上级所有在线的专家, 如果没有, 则返回直属上级的上级的专家
-     * @param id
-     * @return
+     * @param id id
+     * @return 查询结果
      */
     @Permit(authorities = "query_expert")
     @GetMapping(value = "getExpert/{agent_id}")
