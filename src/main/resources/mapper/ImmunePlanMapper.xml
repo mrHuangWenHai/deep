@@ -158,6 +158,19 @@
         </if>
     </select>
 
+    <select id="getImmunePlanModelByTradeMarkEarTag" resultMap="ImmunePlan">
+
+        SELECT
+        *
+        FROM
+        immune_plan ip
+        WHERE
+        <foreach collection="immuneEartag" item="eartag" open="(" close=")" separator="or">
+            <foreach collection="eartag" item="item" open="(" close=")" separator="or">
+                ip.immune_et LIKE '%${item}%'
+            </foreach>
+        </foreach>
+    </select>
 
     <select id="getImmunePlanModelById" resultMap="ImmunePlan">
 
@@ -177,8 +190,6 @@
         FROM
         immune_plan
         WHERE
-
-
         factory_num = #{factoryNum}
     </select>
 
@@ -203,6 +214,7 @@
         FROM
         immune_plan
         WHERE
+
         factory_num = #{factoryNum}
         <if test="ispassSup != null and ispassSup != ''">
             AND ispass_sup = #{ispassSup}

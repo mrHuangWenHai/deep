@@ -62,6 +62,12 @@
         where id = #{id}
     </select>
 
+    <select id = "getOperationFileByFactoryNum" resultMap="OperationFile">
+        select *
+        from operation_file
+        where factory_num = #{factoryNum}
+    </select>
+
     <insert id="addOperationFile" useGeneratedKeys="true" keyColumn="id" keyProperty="operationFile.id">
         insert into operation_file(
         id,

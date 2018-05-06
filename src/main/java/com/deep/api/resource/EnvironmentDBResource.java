@@ -1,12 +1,14 @@
 package com.deep.api.resource;
 
 import com.deep.api.authorization.annotation.Permit;
+
 import com.deep.api.response.Response;
 import com.deep.domain.model.EnvironmentTraceModel;
 import com.deep.domain.model.EnvironmentTraceReturnModel;
 import com.deep.domain.service.EnvironmentTraceService;
 import com.deep.domain.util.BackupUtil;
 import com.deep.domain.util.DownloadUtil;
+
 import com.deep.domain.util.JudgeUtil;
 
 import org.slf4j.Logger;
@@ -15,9 +17,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.ws.rs.HEAD;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -30,6 +34,7 @@ import java.text.SimpleDateFormat;
 @RestController
 @RequestMapping(value = "/envir")
 public class EnvironmentDBResource {
+
     private final Logger logger = LoggerFactory.getLogger(EnvironmentDBResource.class);
 
     @Resource
@@ -48,6 +53,7 @@ public class EnvironmentDBResource {
         EnvironmentTraceReturnModel environmentTraceReturnModel = new EnvironmentTraceReturnModel(environmentTraceModel);
         return JudgeUtil.JudgeFind(environmentTraceReturnModel , environmentTraceModel );
     }
+
 
     /**
      * 定时任务
@@ -83,5 +89,4 @@ public class EnvironmentDBResource {
     public Response download(){
         return null;
     }
-
 }

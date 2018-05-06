@@ -18,10 +18,12 @@ public interface DisinfectFilesMapper {
     List<DisinfectFilesModel> getDisinfectFilesModel(@Param("disinfectFilesModel") DisinfectRequest disinfectFilesModel,
                                                      RowBounds bounds);
 
+    List<DisinfectFilesModel> getDisinfectFilesModelByTradeMarkEarTag(@Param("disinfectEartag") List<String[]> disinfectFilesModel,
+                                                                      RowBounds bounds);
 
     DisinfectFilesModel getDisinfectFilesModelById(@Param("id") Long id);
 
-    List<DisinfectFilesModel> getDisinfectFilesModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum , RowBounds bounds);
+    List<DisinfectFilesModel> getDisinfectFilesModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum);
 
     List<DisinfectFilesModel> getDisinfectFilesModelByFactoryNumAndIsPassCheck(@Param("factoryNum")BigInteger factoryNum,
                                                                                @Param("ispassCheck")String ispassCheck,

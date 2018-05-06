@@ -25,4 +25,20 @@
         factory_num = #{factoryNum}
         ORDER BY id DESC limit 1
     </select>
+
+    <select id="getEnvironmentTraceModelByFactoryNum" resultMap="EnvironmentTrace">
+        SELECT
+        *
+        FROM
+        env_trace
+        WHERE
+        factory_num = #{factoryNum}
+    </select>
+
+    <delete id="deleteEnvironmentTraceModel">
+        DELETE
+        *
+        FROM
+        env_trace
+    </delete>
 </mapper>

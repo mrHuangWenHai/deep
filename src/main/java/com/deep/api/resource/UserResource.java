@@ -6,6 +6,7 @@ import com.deep.api.authorization.token.TokenManagerRealization;
 import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.PasswordRequest;
 import com.deep.api.request.UserRequest;
+
 import com.deep.api.response.Professor;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
@@ -17,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.lang.reflect.Field;
@@ -350,11 +352,11 @@ public class UserResource {
         data.setName("user");
         List<UserModel> userModels = userService.getAll(roleID);
         UserModel userModel;
-        List<List<Object>> rows = new ArrayList();
-        List<String> titles = new ArrayList();
-        for(int i = 0 ; i < userModels.size(); i++) {
-            List<Object> row = new ArrayList();
-            userModel = userModels.get(i);
+        ArrayList<List<Object>> rows = new ArrayList<>();
+        ArrayList<String> titles = new ArrayList<String>();
+        for (UserModel userModel1 : userModels) {
+            ArrayList<Object> row = new ArrayList<>();
+            userModel = userModel1;
             for (Field field : userModel.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
                 row.add(field.get(userModel));
@@ -458,8 +460,8 @@ public class UserResource {
 
     /**
      * 获取已发展羊场的直属上级所有在线的专家, 如果没有, 则返回直属上级的上级的专家
-     * @param id
-     * @return
+     * @param id id
+     * @return 查询结果
      */
     @Permit(authorities = "query_expert")
     @GetMapping(value = "getExpert/{agent_id}")

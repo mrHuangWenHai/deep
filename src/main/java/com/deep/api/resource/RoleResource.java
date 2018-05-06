@@ -4,10 +4,12 @@ import com.deep.api.Utils.PermitUtil;
 import com.deep.api.Utils.StringToLongUtil;
 import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.request.RoleRequest;
+
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.RoleModel;
 import com.deep.domain.service.RoleService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
@@ -17,6 +19,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 

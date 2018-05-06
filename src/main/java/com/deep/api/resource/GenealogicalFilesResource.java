@@ -3,6 +3,7 @@ package com.deep.api.resource;
 import com.deep.api.Utils.AgentUtil;
 import com.deep.api.Utils.TokenAnalysis;
 import com.deep.api.authorization.annotation.Permit;
+
 import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.GenealogicalRequest;
 import com.deep.api.response.Response;

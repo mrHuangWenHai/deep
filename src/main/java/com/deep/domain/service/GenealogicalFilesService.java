@@ -33,9 +33,8 @@ public class  GenealogicalFilesService {
         return this.genealogicalFilesMapper.getGenealogicalFilesModel(genealogicalFilesModel,bounds);
     }
 
-    public List<GenealogicalFilesModel> getGenealogicalFilesModelByFactoryNum(long factoryNum,
-                                                                              RowBounds bounds) {
-        return this.genealogicalFilesMapper.getGenealogicalFilesModelByFactoryNum(factoryNum, bounds);
+    public List<GenealogicalFilesModel> getGenealogicalFilesModelByFactoryNum(long factoryNum) {
+        return this.genealogicalFilesMapper.getGenealogicalFilesModelByFactoryNum(factoryNum);
     }
 
     public int allGenealogicalFilesCounts() {

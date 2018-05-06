@@ -3,9 +3,11 @@ package com.deep.domain.service;
 import com.deep.api.request.OperationCoditionRequest;
 import com.deep.domain.model.OperationFile;
 import com.deep.infra.persistence.sql.mapper.OperationFileMapper;
+
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -26,6 +28,10 @@ public class OperationFileService {
     return operationFileMapper.getOperationFileById(id);
   }
 
+  public List<OperationFile> getOperationFileByFactoryNum(BigInteger factoryNum){
+    return operationFileMapper.getOperationFileByFactoryNum(factoryNum);
+  }
+
   public int addOperationFile(OperationFile operationFile) {
     return operationFileMapper.addOperationFile(operationFile);
   }
@@ -41,7 +47,4 @@ public class OperationFileService {
   public int updateOperationFileByOperationFile(OperationFile operationFile) {
     return operationFileMapper.updateOperationFileByOperationFile(operationFile);
   }
-
-
-
 }

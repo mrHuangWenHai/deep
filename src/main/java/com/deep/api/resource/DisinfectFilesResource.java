@@ -15,7 +15,6 @@ import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
@@ -23,6 +22,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -237,6 +239,24 @@ public class DisinfectFilesResource {
         return JudgeUtil.JudgeFind(disinfectFilesModel);
     }
 
+    /**
+     * TODO： 根据需求 增加是否通过ispass查询
+     * 通过耳牌号模糊查找
+     * @param disinfectEartag 耳牌
+     * @param page 页
+     * @param size 条
+     * @return 查询结果
+     */
+    @RequestMapping(value = "findet",method = RequestMethod.GET)
+    public Response findByEarTag(@RequestParam("eartag") List<String[]> disinfectEartag,
+                                 @RequestParam(value = "page",defaultValue = "0") int page,
+                                 @RequestParam(value = "size",defaultValue = "10") int size){
+        logger.info("invoke findByEarTag {}" );
+        //System.out.println(disinfectEartag);
+        List<DisinfectFilesModel> list = this.disinfectFilesService.getDisinfectFilesModelByTradeMarkEarTag(disinfectEartag, new RowBounds(page * size , size));
+        return JudgeUtil.JudgeFind(list,list.size());
+    }
+
 //    /**
 //     * 查看某专家负责的工厂
 //     * @param agentId 代理ID
@@ -298,18 +318,23 @@ public class DisinfectFilesResource {
      * 下载文件 并保存到自定义路径
      * @param response  HttpServletResponse
      * @param factoryNum  下载文件所属工厂号
-     * @param file  文件名
-     * @param locate  目的地址
+     * @param fileName 文件名
      * @return  下载结果
      */
-    @RequestMapping(value = "/down/{num}/{file}",method = RequestMethod.GET)
+    @RequestMapping(value = "/down/{factoryNum}/{fileName}",method = RequestMethod.GET)
     public Response download(HttpServletResponse response,
-                             @PathVariable("num") String factoryNum,
-                             @PathVariable("file") String file,
-                             @PathVariable("locate") String locate) {
-        logger.info("invoke download {}", response, file, locate);
-        String filePath = "../EartagDocument" + factoryNum + "/disinfectEartag/";
-        if (DownloadUtil.downloadFile(response , file, filePath, locate)) {
+                             @PathVariable("factoryNum") String factoryNum,
+                             @PathVariable("fileName") String fileName) throws Exception {
+        logger.info("invoke download {}", response, factoryNum, fileName);
+        String filePath = pathPre + factoryNum + "/disinfectEartag/";
+        OutputStream outputStream = new OutputStream() {
+            @Override
+            public void write(int b) throws IOException {
+
+            }
+        };
+        if (DownloadUtil.testDownload(response, filePath, fileName, outputStream)) {
+            outputStream.close();
             return JudgeUtil.JudgeSuccess("download","Success");
         } else {
             return Responses.errorResponse("download Error");

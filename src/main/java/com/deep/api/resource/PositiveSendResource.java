@@ -1,6 +1,7 @@
 package com.deep.api.resource;
 
 import com.deep.api.authorization.annotation.Permit;
+
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.MobileAnnouncementModel;
@@ -9,7 +10,6 @@ import com.deep.domain.util.JudgeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 
 /**
@@ -48,7 +48,7 @@ public class PositiveSendResource {
      * @return  短信发送结果
      */
     @Permit(authorities = "send_messages")
-    @RequestMapping(value = "/psendw",method = RequestMethod.GET)
+    @RequestMapping(value = "/psend",method = RequestMethod.GET)
     public Response PositiveSend(@RequestParam(value = "mobile" ,defaultValue= "") String mobile,
                                  @RequestParam(value = "message",defaultValue = "") String message){
 

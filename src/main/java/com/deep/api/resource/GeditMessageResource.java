@@ -27,6 +27,7 @@ public class GeditMessageResource {
     public Response Gedit(@RequestParam(value = "message",defaultValue = "") String message,
                           @RequestParam(value = "expireTime",defaultValue = "") String expireTime,
                           @RequestParam(value = "pressureTips",defaultValue = "") String pressureTips){
+        logger.info("invoke Gedit {}", message, expireTime, pressureTips);
         //message未设置
         if ("".equals(message)) {
             //redis中一定存在Message字段

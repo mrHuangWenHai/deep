@@ -30,8 +30,12 @@ public class DisinfectFilesService {
         return this.disinfectFilesMapper.getDisinfectFilesModelById(id);
     }
 
-    public List<DisinfectFilesModel> getDisinfectFilesModelByFactoryNum(BigInteger factoryNum , RowBounds bounds) {
-        return this.disinfectFilesMapper.getDisinfectFilesModelByFactoryNum(factoryNum,bounds);
+    public List<DisinfectFilesModel> getDisinfectFilesModelByTradeMarkEarTag(List<String[]> disinfectEartag, RowBounds bounds){
+        return this.disinfectFilesMapper.getDisinfectFilesModelByTradeMarkEarTag(disinfectEartag,bounds);
+    }
+
+    public List<DisinfectFilesModel> getDisinfectFilesModelByFactoryNum(BigInteger factoryNum ) {
+        return this.disinfectFilesMapper.getDisinfectFilesModelByFactoryNum(factoryNum);
     }
 
     public List<DisinfectFilesModel> getDisinfectFilesModelByFactoryNumAndIsPassCheck(BigInteger factoryNum, String ispassCheck, RowBounds bounds) {

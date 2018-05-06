@@ -7,7 +7,7 @@ import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.authorization.tools.Constants;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
-import com.deep.domain.model.AgentModel;
+
 import com.deep.domain.model.FactoryModel;
 import com.deep.domain.service.FactoryService;
 import org.slf4j.Logger;

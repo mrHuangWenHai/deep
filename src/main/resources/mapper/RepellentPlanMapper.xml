@@ -95,7 +95,6 @@
             AND crowd_num = #{repellentPlanModel.crowdNum}
         </if>
         <if test="repellentPlanModel.repellentTimeStart != null and repellentPlanModel.repellentTimeStart != '' and
-
                   (repellentPlanModel.repellentTimeEnd == null or repellentPlanModel.repellentTimeEnd == '') ">
             AND repellent_t &gt;= #{repellentPlanModel.repellentTimeStart}
         </if>
@@ -148,7 +147,19 @@
             AND ispass_sup = #{repellentPlanModel.ispassSup}
         </if>
     </select>
+    <select id="getRepellentPlanModelByTradeMarkEarTag" resultMap="RepellentPlan">
 
+        SELECT
+        *
+        FROM
+        repellent_plan rp
+        WHERE
+        <foreach collection="repellentEartag" item="eartag" open="(" close=")" separator="or">
+            <foreach collection="eartag" item="item" open="(" close=")" separator="or">
+                rp.repellent_et LIKE '%${item}%'
+            </foreach>
+        </foreach>
+    </select>
 
     <select id="getRepellentPlanModelById" resultMap="RepellentPlan">
 

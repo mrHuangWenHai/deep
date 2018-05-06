@@ -9,36 +9,40 @@ import java.io.*;
  */
 public class DownloadUtil {
 
-    public static boolean downloadFile(HttpServletResponse response, String fileName , String filePath,String fileLocation) {
-        //文件原路径 文件下载到的路径 文件名
+    /**
+     * 下载文件
+     * @param response HttpServletResponse
+     * @param filePath 文件路径
+     * @param fileName 文件名
+     * @return 下载结果
+     */
+    public static boolean testDownload(HttpServletResponse response,String filePath, String fileName, OutputStream outputStream) throws UnsupportedEncodingException{
+        File file = new File(filePath + fileName);
+        if (file.exists()) {
+            response.setContentType("application/octet-stream");
+            response.addHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes("UTF-8"),"iso-8859-1"));
+            byte[] buffer = new byte[1024];
+            FileInputStream fis = null;
+            BufferedInputStream bis = null;
+            try {
+                fis = new FileInputStream(file);
+                bis = new BufferedInputStream(fis);
+                outputStream = response.getOutputStream();
+                int i = bis.read(buffer);
+                while (i != -1) {
+                    outputStream.write(buffer, 0, i);
+                    i = bis.read(buffer);
+                }
+                fis.close();
+                bis.close();
 
-        response.setHeader("content-type", "application/octet-stream");
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
-
-        try {
-            InputStream in = new FileInputStream(filePath + fileName);
-
-            //OutputStream out = response.getOutputStream();
-            OutputStream out = new FileOutputStream(fileLocation + fileName);
-            byte[] buff = new byte[1024];
-            int len;
-            File targetFile = new File(fileLocation);
-            if (!targetFile.exists()) {
-                targetFile.mkdirs();
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            while ((len = in.read(buff)) > 0) {
-                out.write(buff, 0, len);
-            }
-            in.close();
-
-        }catch (Exception e){
-            e.printStackTrace();
-            return false;
         }
-        return true;
+        return false;
     }
-
 
 
 
