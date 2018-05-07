@@ -7,7 +7,7 @@ public class MsgBean {
   private String talk_id;
   private String message;
   private String user_id;
-  private String[] to;
+  private Long[] to;
   private String name;
   private String isExpert;
   private String mode;
@@ -36,11 +36,11 @@ public class MsgBean {
     this.user_id = user_id;
   }
 
-  public String[] getTo() {
+  public Long[] getTo() {
     return to;
   }
 
-  public void setTo(String[] to) {
+  public void setTo(Long[] to) {
     this.to = to;
   }
 

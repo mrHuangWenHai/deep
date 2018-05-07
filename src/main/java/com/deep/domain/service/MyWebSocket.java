@@ -115,7 +115,7 @@ public class MyWebSocket {
      * @param mode     0:服务器转发信息 1：发起建立群聊的信号 2：群聊 3:退出群聊
      * @param talk_id  会话id
      */
-    private void sendMessage(String message, Boolean isExpert, Long user_id, String name, String[] tos, String mode, String talk_id) {
+    private void sendMessage(String message, Boolean isExpert, Long user_id, String name, Long[] tos, String mode, String talk_id) {
         switch (mode) {
             case "0": {
                 //获取聊天对象的会话session
@@ -141,14 +141,19 @@ public class MyWebSocket {
             }
             case "1": {
                 //给当前群聊生成一个聊天id,并记录群聊id与群成员,用户id与群聊id的映射关系,并绑定定时任务
-                Long[] to = (Long[]) ConvertUtils.convert(tos, Long.class);
-                List<Long> members = new ArrayList<>(Arrays.asList(to));
+                logger.info("ok1");
+                List<Long> members = new ArrayList<>(Arrays.asList(tos));
+                logger.info("ok2");
                 talk_id = initGroupState(user_id, talk_id, members);
+                logger.info("ok");
                 for (Long member : members) {
                     MyWebSocket account = WebSocketUtil.get(member);
-                    addAccount(talk_id, member, null);
+                    if (!member.equals(Long.valueOf(user_id)))
+                        addAccount(talk_id, member, false);
+                    else
+                        addAccount(talk_id, member, true);
                     if (account != null)
-                        account.getSession().getAsyncRemote().sendText(JSON.toJSONString(new ResponseBean(null, "fresh", talk_id, name)));
+                        account.getSession().getAsyncRemote().sendText(JSON.toJSONString(new ResponseBean(null, "fresh", talk_id, null)));
                 }
                 System.out.println(accountMap);
                 System.out.println(chatMap);
