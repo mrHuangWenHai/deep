@@ -106,8 +106,8 @@
         #{operationFile.exerciseDaylighting},
         #{operationFile.carDisinfect},
         #{operationFile.operatorId},
-        #{operationFile.ispassCheck},
-        #{operationFile.ispassSup},
+        2,
+        2,
         now(),
         now()
         )

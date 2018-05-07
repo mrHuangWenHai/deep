@@ -110,10 +110,8 @@ public class LoginResource {
               TokenModel tokenModel = new TokenModel(userModel.getId(), String.valueOf(roleInt), String.valueOf(userModel.getIsFactory()));
               JedisUtil.setValue(String.valueOf(userModel.getId()), tokenModel.getToken());
               JedisUtil.doExpire(String.valueOf(userModel.getId()));
-
               JedisUtil.setValue("defaultPermit" + userModel.getId(), defaultPermit);
               JedisUtil.doExpire("defaultPermit" + userModel.getId());
-
               httpServletResponse.setHeader("Authorization", userModel.getId() + ":" + tokenModel.getToken());
               return response;
             } else {
