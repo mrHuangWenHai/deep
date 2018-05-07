@@ -92,7 +92,6 @@ public class LoginResource {
                   AgentModel agentModel = agentService.getOneAgent(userModel.getUserFactory());
 //                data.put("agent_id", userModel.getUserFactory());
                   data.put("factoryId", userModel.getUserFactory());
-
                   data.put("agentId", agentModel.getAgentFather());
                   data.put("departmentName", agentModel.getAgentName());
                   data.put("agentRank", agentModel.getAgentRank());

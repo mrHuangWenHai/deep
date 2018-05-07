@@ -377,7 +377,7 @@ public interface UserMapper {
     })
     List<Professor> getOneRoles(long roleID);
 
-    @Select("select id, pk_userid, user_telephone, user_role, user_email, official_phone, qq from user_manage where user_role in (4, 8, 12, 16) and user_factory = #{agentID} and is_factory = 1")
+    @Select("select id, pk_userid, user_telephone, user_role, user_email, official_phone, qq, user_realname from user_manage where user_role in (4, 8, 12, 16) and user_factory = #{agentID} and is_factory = 1")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "pkUserid", column = "pk_userid"),
@@ -385,7 +385,8 @@ public interface UserMapper {
             @Result(property = "userTelephone", column = "user_telephone"),
             @Result(property = "userEmail", column = "user_email"),
             @Result(property = "officialPhone", column = "official_phone"),
-            @Result(property = "qq", column = "qq")
+            @Result(property = "qq", column = "qq"),
+            @Result(property = "userRealname", column = "user_realname")
     })
     List<Professor> getProfessor(Long agentID);
 

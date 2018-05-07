@@ -18,6 +18,16 @@ public class Professor {
 
     private String officialPhone;
 
+    private String userRealname;
+
+    public String getUserRealname() {
+        return userRealname;
+    }
+
+    public void setUserRealname(String userRealname) {
+        this.userRealname = userRealname;
+    }
+
     public long getId() {
         return id;
     }
