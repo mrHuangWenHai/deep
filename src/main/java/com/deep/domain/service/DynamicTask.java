@@ -40,7 +40,7 @@ public class DynamicTask {
 
     void startGroupChat(String conversation_id) {
         reset(conversation_id);
-        logger.info(conversation_id + " start");
+        logger.info(conversation_id + " fresh");
         Runnable runnable = new GroupRunnable(conversation_id);
         Trigger trigger = new PeriodicTrigger(0);
         ((PeriodicTrigger) trigger).setInitialDelay(43200000);
@@ -50,7 +50,7 @@ public class DynamicTask {
 
     void startPrivateChat(Long target_id, String conversation_id) {
         reset(conversation_id);
-        logger.info(conversation_id + " start");
+        logger.info(conversation_id + " fresh");
         Runnable runnable = new PrivateRunnable(target_id, conversation_id);
         Trigger trigger = new PeriodicTrigger(0);
         ((PeriodicTrigger) trigger).setInitialDelay(600000);
@@ -60,7 +60,6 @@ public class DynamicTask {
 
     private void reset(String conversation_id) {
         if (con_fuMap.get(conversation_id) != null) {
-            logger.info("fresh");
             con_fuMap.get(conversation_id).cancel(true);
         }
     }
@@ -74,7 +73,6 @@ public class DynamicTask {
 
         @Override
         public void run() {
-            logger.info("stop group " + conversation_id);
             Map<String, List<Long>> chatMap = MyWebSocket.getChatMap();
             Map<Long, Set<String>> accountMap = MyWebSocket.getAccountMap();
             Map<Long, MyWebSocket> socketMap = WebSocketUtil.getMap();
@@ -107,7 +105,6 @@ public class DynamicTask {
 
         @Override
         public void run() {
-            logger.info("stop private " + conversation_id);
             Map<Long, String> personalMap = MyWebSocket.getPersonalMap();
             personalMap.remove(target_id);
             System.out.println("单聊结束");

@@ -148,8 +148,15 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
         permitMap.put(114, "delete_sheep_type");
         permitMap.put(115, "select_sheep_type");
         permitMap.put(116, "modify_sheep_type");
-        permitMap.put(117, "increase_pest_repellent_implementation_control_files");
-        permitMap.put(118, "check_insecticide_implementation_control_files");
+        permitMap.put(117, " download_product_file_action");
+        permitMap.put(118, " check_message_of_all_user");
+        permitMap.put(119, " increase_pest_repellent_implementation_control_files");
+        permitMap.put(120, " deworming_implementation_control_files");
+        permitMap.put(121, " check_insecticide_implementation_control_files");
+        permitMap.put(122, " modify_the_insect_repellent_implementation_control_file");
+        permitMap.put(123, " supervise_and_verify_the_implementation_of_pest_control_files");
+        permitMap.put(124, " experts_review_deworming_implementation_control_files");
+
     }
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -210,6 +217,7 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
 
                 // 获取Redis数据库的用户权限信息
                 String allPermits = JedisUtil.getValue("defaultPermit"+tokenModel.getUserId());
+                assert allPermits != null;
                 System.out.println("allPermits.length() = " + allPermits.length());
 
                 for (int i = 0; i < allPermits.length(); i++) {

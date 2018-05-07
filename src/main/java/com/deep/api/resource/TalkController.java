@@ -41,8 +41,8 @@ public class TalkController {
 
     @PostMapping("/talk/upload")
     @ResponseBody
-    public Response fileUpload(@RequestParam("file") MultipartFile file, String user_id, String user_name, String talk_id, String role_id, String mode) {
-        logger.info("fileUpload --- user_id:" + user_id + " user_name:" + user_name + " talk_id:" + talk_id + " role_id:" + role_id + " mode:" + mode);
+    public Response fileUpload(@RequestParam("file") MultipartFile file, String user_id, String user_name, String talk_id, boolean isExpert, String mode) {
+        logger.info("fileUpload --- user_id:" + user_id + " user_name:" + user_name + " talk_id:" + talk_id + " isExpert:" + isExpert + " mode:" + mode);
         if (!TalkFileUtil.isSafeFile(file)) {
             logger.info("The file does not conform to the format.");
             return Responses.errorResponse("The file does not conform to the format.");
@@ -70,16 +70,16 @@ public class TalkController {
                     out.close();
                     if (mode.equals("0")) {
                         logger.info("private file transport");
-                        Long target_id = MyWebSocket.initPrivateState(Long.valueOf(user_id), Long.valueOf(talk_id), Long.valueOf(role_id));
+                        Long target_id = MyWebSocket.initPrivateState(Long.valueOf(user_id), Long.valueOf(talk_id), isExpert);
                         MyWebSocket role1 = WebSocketUtil.get(Long.valueOf(user_id));
                         MyWebSocket role2 = WebSocketUtil.get(Long.valueOf(talk_id));
                         if (role1 != null) {
-                            role1.getSession().getAsyncRemote().sendText(com.alibaba.fastjson.JSON.toJSONString(new ResponseBean(realPath + ":" + realName, "link", talk_id, null)));
+                            role1.getSession().getAsyncRemote().sendText(JSON.toJSONString(new ResponseBean(realPath + ":" + realName, "link", talk_id, null)));
                             MyWebSocket.record(MyWebSocket.getPersonalMap().get(target_id), user_name, Long.valueOf(user_id), Long.valueOf(talk_id), filePath, date, true, true);
                         } else
                             MyWebSocket.record(MyWebSocket.getPersonalMap().get(target_id), user_name, Long.valueOf(user_id), Long.valueOf(talk_id), filePath, date, true, false);
                         if (role2 != null)
-                            role2.getSession().getAsyncRemote().sendText(com.alibaba.fastjson.JSON.toJSONString(new ResponseBean(realPath + ":" + realName, "link", user_id, null)));
+                            role2.getSession().getAsyncRemote().sendText(JSON.toJSONString(new ResponseBean(realPath + ":" + realName, "link", user_id, null)));
                     } else if (mode.equals("2")) {
                         logger.info("group file transport");
                         List<Long> members = new ArrayList<>(MyWebSocket.getChatMap().get(talk_id));
@@ -176,7 +176,16 @@ public class TalkController {
         return expressionService.expression_record(Long.valueOf(expression.getExpert_id()), expression.getExpression()) > 0 ? Responses.successResponse() : Responses.errorResponse("insert error");
     }
 
-    @GetMapping("/getTalkRecord")
+    @GetMapping("/getExpression")
+    @ResponseBody
+    //public Response expression(String expert_id, String expression) {
+    public Response getExpressions(String expert_id) {
+        HashMap<String, List<Expression>> map = new HashMap<>();
+        map.put("List", expressionService.getExpression(Long.valueOf(expert_id)));
+        return map.get("List") != null ? Responses.successResponse(map) : Responses.errorResponse("no expression");
+    }
+
+    @GetMapping("/getTalkRecords")
     @ResponseBody
     public Response summaryRecord(String user_id) {
         List<String> record_ids = talkService.getTalkRecordIDs(Long.valueOf(user_id));
@@ -184,16 +193,6 @@ public class TalkController {
         for (String record_id : record_ids) {
             List<Talk> talks = talkService.getSummaryTalkRecord(record_id);
             map.put(record_id, talks);
-//            String name = talkService.getExpertName(record_id, true);
-//            StringBuilder s = new StringBuilder();
-//            Date date = null;
-//            for (int i = 0; i < talks.size(); i++) {
-//                if (i == 0)
-//                    date = talks.get(i).getStart_time();
-//                s.append(talks.get(i).getContent()).append(";");
-//            }
-//            SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
-//            list.add(new Summary(record_id, s.toString(), name, format.format(date)));
         }
         return Responses.successResponse(map);
     }

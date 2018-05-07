@@ -13,13 +13,16 @@ public class WebSocketUtil {
         return map;
     }
 
-    public static void put(long user_id, MyWebSocket session) {
-        map.put(getKey(user_id), session);
+    public static MyWebSocket put(long user_id, MyWebSocket session) {
+        return map.put(getKey(user_id), session);
     }
 
     public static MyWebSocket get(long user_id) {
         return map.get(getKey(user_id));
+    }
 
+    public static int getSize() {
+        return map.size();
     }
 
     public static void remove(long user_id) {

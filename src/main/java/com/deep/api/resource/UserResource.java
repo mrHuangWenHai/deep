@@ -41,6 +41,15 @@ public class UserResource {
     @Resource
     private TokenManagerRealization tokenManagerRealization;
 
+    public static Map<Long, String> map = new HashMap<>();
+
+    static {
+        map.put((long) 4, "东翔总公司专家");
+        map.put((long) 8, "省专家");
+        map.put((long) 12, "市专家");
+        map.put((long) 16, "县专家");
+    }
+
     /**
      * 查找下级的所有用户列表
      * @return 返回所有的用户信息
@@ -482,6 +491,11 @@ public class UserResource {
                 Map<String, Object> data = new HashMap<>();
                 data.put("expert", agent.getPkUserid());
                 data.put("expert_id", agent.getId());
+                data.put("name", agent.getPkUserid());
+                data.put("realName", agent.getUserRealname());
+                data.put("email", agent.getUserEmail());
+                data.put("phone", agent.getUserTelephone());
+                data.put("type", map.get(agent.getUserRole()));
                 response.setData(data);
                 return response;
             }
