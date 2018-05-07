@@ -53,7 +53,7 @@ public class LoginResource {
     /**
      * 用户登录验证并且返回结果, 登录有效期为3600s, 1小时
      * @param loginRequest 用户登录加的模型
-     * @return0
+     * @return response
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Response LoginResult(@RequestBody LoginRequest loginRequest, HttpServletResponse httpServletResponse){
@@ -82,15 +82,17 @@ public class LoginResource {
                 // 如果是羊场
                 FactoryModel factoryModel = factoryService.getOneFactory(userModel.getUserFactory());
                 data.put("factoryId", userModel.getUserFactory());
-        //        data.put("agentId", factoryModel.getAgent());
+                data.put("agentId", factoryModel.getAgent());
                 data.put("departmentName", factoryModel.getBreedName());
-                data.put("agentRank", null);
+                // 如果是羊场, 代理等级默认为-1
+                data.put("agentRank", -1);
               } else if (userModel.getIsFactory() == 1) {
                   data.put("flag", 1);
                   // 如果是代理
                   AgentModel agentModel = agentService.getOneAgent(userModel.getUserFactory());
 //                data.put("agent_id", userModel.getUserFactory());
-//                  data.put("factoryId", userModel.getUserFactory());
+                  data.put("factoryId", userModel.getUserFactory());
+
                   data.put("agentId", agentModel.getAgentFather());
                   data.put("departmentName", agentModel.getAgentName());
                   data.put("agentRank", agentModel.getAgentRank());
@@ -128,7 +130,7 @@ public class LoginResource {
      *  通过电话号码找回并且返回相关的数据
 
      * @param usernameP 用户名
-     * @return
+     * @return response
      */
     @RequestMapping(value = "/phonefind")
     public Response PhoneFind(@RequestParam("usernameP") String usernameP){
@@ -194,7 +196,7 @@ public class LoginResource {
     /**
      * 验证短信验证码信息
      * @param verifyCode 验证码
-     * @return
+     * @return response
      */
     @GetMapping(value = "/ensureverify/{verifyCode}")
     public Response EnsureVerify(@PathVariable("verifyCode") String verifyCode, UserModel userModel){
@@ -222,7 +224,7 @@ public class LoginResource {
     /**
      * 找回密码接口
      * @param name 用户名:pkUserId
-     * @return
+     * @return response
      */
 
     @GetMapping(value = "/question")
@@ -281,7 +283,7 @@ public class LoginResource {
 
      * user logout for himself
      * @param id 用户名
-     * @return
+     * @return response
 
      */
     @GetMapping(value = "/logout/{id}")

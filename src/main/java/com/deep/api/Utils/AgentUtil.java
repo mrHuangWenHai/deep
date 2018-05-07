@@ -27,15 +27,13 @@ public class AgentUtil {
 
     private List<Long> allFactoryList;
 
-    private Long count;
+    private Long factoryCount;
 
-    private Map<Long, List<Long> > allAgent;
+    private Map<Long, List<Integer> > allAgent;
 
-    private List<Long>  allAgentList;
+    private List<Integer>  allAgentList;
 
-//    private List<Long> allFactory;
-
-//    private List<Long> allAgent;
+    private Long agentCount;
 
     private static AgentUtil agentUtil;
 
@@ -115,8 +113,8 @@ public class AgentUtil {
 
     /**
      * 查找下级的羊场和代理的ID号
-     * @param id
-     * @return
+     * @param id agentId
+     * @return Map<String, Object>
      */
     public static Map<String, Object> getSubordinateFactoryID(String id) {
         int uid = StringToLongUtil.stringToInt(id);
@@ -139,20 +137,20 @@ public class AgentUtil {
 
     /**
      * 查找工厂所有的ID, 存放到一个数组中
-     * @param id
+     * @param id agentId
      */
-    public static void getSubordinateAllFactory(String id) {
+    private static void getSubordinateAllFactory(String id) {
         int uid = StringToLongUtil.stringToInt(id);
         if (uid == -1) {
             return;
         }
-        if (agentUtil.count != 0) {
+        if (agentUtil.factoryCount != 0) {
             long[] factoryIDByAgentIDs = agentUtil.factoryService.queryFactoryIDByAgentID((long)uid);
             for (long factoryIDByAgentID : factoryIDByAgentIDs) {
                 agentUtil.allFactoryList.add(factoryIDByAgentID);
             }
         } else {
-            agentUtil.count++;
+            agentUtil.factoryCount++;
         }
         List<AgentModel> agentModels = agentUtil.agentService.getSons(uid);
         if (agentModels != null) {
@@ -164,15 +162,15 @@ public class AgentUtil {
 
     /**
      * 调用递归方法
-     * @param id
-     * @return
+     * @param id agentId
+     * @return Map<Long, List<Long> >
      */
     public static Map<Long, List<Long> > getAllSubordinateFactory(String id) {
         int uid = StringToLongUtil.stringToInt(id);
         if (uid == -1) {
             return null;
         }
-        agentUtil.count = (long) 0;
+        agentUtil.factoryCount = (long) 0;
         agentUtil.allFactory = new HashMap<>();
         agentUtil.allFactoryList = new ArrayList<>();
         long[] factoryIDByAgentIDs = agentUtil.factoryService.queryFactoryIDByAgentID((long)uid);
@@ -186,23 +184,54 @@ public class AgentUtil {
         return agentUtil.allFactory;
     }
 
-//    public static void getSubordinateAllAgent(String id) {
-//        int uid = StringToLongUtil.stringToInt(id);
-//        if (uid == -1) {
-//            return;
-//        }
-//        List<AgentModel> agentModels = agentUtil.agentService.getSons(uid);
-//        if (agentModels != null) {
-//            for (AgentModel agentModel : agentModels) {
-//                agentUtil.allAgent.add((long)agentModel.getId());
-//                getSubordinateAllAgent("" + agentModel.getId());
-//            }
-//        }
-//    }
-//
-//    public static List<Long> getAllSubordinateAgent(String id) {
-//        agentUtil.allAgent = new ArrayList<>();
-//        getSubordinateAllAgent(id);
-//        return agentUtil.allAgent;
-//    }
+    /**
+     * find all agentId of an agent
+     * @param id agent ID
+     */
+    private static void getSubordinateAllAgent(String id) {
+        int uid = StringToLongUtil.stringToInt(id);
+        if (uid == -1) {
+            return;
+        }
+
+        if (agentUtil.agentCount != 0) {
+            int[] agentIDS = agentUtil.agentService.getSonsId(uid);
+            for (int agentID : agentIDS) {
+                agentUtil.allAgentList.add(agentID);
+            }
+        } else {
+            agentUtil.agentCount++;
+        }
+
+        List<AgentModel> agentModels = agentUtil.agentService.getSons(uid);
+        if (agentModels != null) {
+            for (AgentModel agentModel : agentModels) {
+                getSubordinateAllAgent("" + agentModel.getId());
+            }
+        }
+    }
+
+    /**
+     * 调用递归方法
+     * @param id agentId
+     * @return Map<Long, List<Integer> >
+     */
+    public static Map<Long, List<Integer> > getAllSubordinateAgent(String id) {
+        int uid = StringToLongUtil.stringToInt(id);
+        if (uid == -1) {
+            return null;
+        }
+        agentUtil.agentCount = (long) 0;
+        agentUtil.allAgent = new HashMap<>();
+        agentUtil.allAgentList = new ArrayList<>();
+        int[] agentIDs = agentUtil.agentService.getSonsId(uid);
+        List<Integer> tempLong = new ArrayList<>();
+        for (int agentID : agentIDs) {
+            tempLong.add(agentID);
+        }
+        agentUtil.allAgent.put((long) -1, tempLong);
+        getSubordinateAllAgent(id);
+        agentUtil.allAgent.put((long) 0, agentUtil.allAgentList);
+        return agentUtil.allAgent;
+    }
 }

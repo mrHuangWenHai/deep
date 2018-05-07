@@ -182,8 +182,8 @@ public class UserService {
      * 获取所有的用户信息
      * @return
      */
-    public List<UserModel> getAllWithNoCondition() {
-        return userMapper.queryAllUserNoCondition();
+    public List<String> getAllWithNoCondition() {
+        return userMapper.queryAllUsernameNoCondition();
     }
 
     /**
@@ -380,11 +380,12 @@ public class UserService {
 
     /**
      * 查询某个羊场下的所有用户
-     * @param factoryOrAgentID  羊场或者代理的ID
+     * @param factory  羊场或者代理的ID
+     * @param  which  which
      * @return 手机号
      */
-    public List<UserModel> getAllUserOfFactoryOrAgent(Long factoryOrAgentID) {
-        return userMapper.getAllUsersOfOneFactoryOrOneAgent(factoryOrAgentID);
+    public List<UserModel> getAllUserOfFactoryOrAgent(Long factory, Byte which, Long page, Byte size) {
+        return userMapper.getAllUsersOfOneFactoryOrOneAgent(factory, which, page, size);
     }
 
     /**
@@ -412,16 +413,16 @@ public class UserService {
         long fatherID = agentID;
         //　首先查询上级代理有木有在线的专家
         models = userMapper.getProfessor(agentID);
-        for (int i = 0; i < models.size(); i++) {
-            if (JedisUtil.getValue(String.valueOf(models.get(i).getId())) != null) {
-                users.add(models.get(i));
+        for (Professor model : models) {
+            if (JedisUtil.getValue(String.valueOf(model.getId())) != null) {
+                users.add(model);
             }
         }
         while (users.size() <= 0) {
             // 找到所有在线的上级
-            for (int i = 0; i < models.size(); i++) {
-                if (JedisUtil.getValue(String.valueOf(models.get(i).getId())) != null) {
-                    users.add(models.get(i));
+            for (Professor model : models) {
+                if (JedisUtil.getValue(String.valueOf(model.getId())) != null) {
+                    users.add(model);
                 }
             }
             if (users.size() > 0) {
@@ -443,5 +444,9 @@ public class UserService {
         }
         int random = (int) (Math.random()*users.size());
         return users.get(random);
+    }
+
+    public Long getCountsOfOneFactoryOrOneAgent(Long factory, Byte which) {
+        return userMapper.getCountsOfOneFactoryOrOneAgent(factory, which);
     }
 }

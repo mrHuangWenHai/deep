@@ -1,12 +1,10 @@
 package com.deep.api.resource;
 
+import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.response.Response;
-import com.deep.api.response.Responses;
-import com.deep.domain.model.RedisDataModel;
 import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.JudgeUtil;
 
-import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,10 +22,12 @@ public class GeditMessageResource {
 
     private final Logger logger = LoggerFactory.getLogger(GeditMessageResource.class);
 
+    @Permit(authorities = "edit_messages")
     @RequestMapping(value = "/gedit",method = RequestMethod.GET)
     public Response Gedit(@RequestParam(value = "message",defaultValue = "") String message,
                           @RequestParam(value = "expireTime",defaultValue = "") String expireTime,
                           @RequestParam(value = "pressureTips",defaultValue = "") String pressureTips){
+        logger.info("invoke Gedit {}", message, expireTime, pressureTips);
         //message未设置
         if ("".equals(message)) {
             //redis中一定存在Message字段
@@ -46,7 +46,5 @@ public class GeditMessageResource {
             JedisUtil.setCertainKeyValue("PressureTips",pressureTips);
         }
         return JudgeUtil.JudgeSuccess("setting","success");
-
     }
-
 }

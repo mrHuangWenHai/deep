@@ -31,8 +31,11 @@ public class ImmunePlanService {
         return this.immunePlanMapper.getImmunePlanModelById(id);
     }
 
-    public List<ImmunePlanModel> getImmunePlanModelByFactoryNum(BigInteger factoryNum , RowBounds bounds){
-        return this.immunePlanMapper.getImmunePlanModelByFactoryNum(factoryNum , bounds);
+    public List<ImmunePlanModel> getImmunePlanModelByTradeMarkEarTag(List<String[]> immuneEartag, RowBounds bounds){
+        return this.immunePlanMapper.getImmunePlanModelByTradeMarkEarTag(immuneEartag, bounds);
+    }
+    public List<ImmunePlanModel> getImmunePlanModelByFactoryNum(BigInteger factoryNum ){
+        return this.immunePlanMapper.getImmunePlanModelByFactoryNum(factoryNum);
     }
 
     public List<ImmunePlanModel> getImmunePlanModelByFactoryNumAndIsPassCheck(BigInteger factoryNum , String ispassCheck, RowBounds bounds){

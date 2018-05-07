@@ -2,6 +2,7 @@ package com.deep.api.resource;
 
 import com.deep.api.Utils.AgentUtil;
 import com.deep.api.Utils.TokenAnalysis;
+import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.DisinfectRequest;
 import com.deep.api.response.Response;
@@ -15,7 +16,6 @@ import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
@@ -23,6 +23,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,6 +60,7 @@ public class DisinfectFilesResource {
      * @param disinfectFilesModel 消毒类
      * @return 插入结果
      */
+    @Permit(authorities = "increase_sanitation_files")
     @PostMapping(value = "")
     public Response saveShow(@Valid DisinfectFilesModel disinfectFilesModel,
                              BindingResult bindingResult,
@@ -175,6 +179,7 @@ public class DisinfectFilesResource {
      * @param disinfectRequest 消毒请求类
      * @return 查询结果/查询结果条数
      */
+    @Permit(authorities = "view_sanitation_files")
     @GetMapping(value = "/{id}")
     public Response findShow(@PathVariable(value = "id")long id,
                              DisinfectRequest disinfectRequest,
@@ -230,11 +235,31 @@ public class DisinfectFilesResource {
      * @param id id
      * @return 查询结果
      */
+    @Permit(authorities = "view_sanitation_files")
     @RequestMapping(value = "/find/{id}",method = RequestMethod.GET)
     public Response find(@PathVariable("id") long id) {
         logger.info(" invoke find/{id} {}" , id);
         DisinfectFilesModel disinfectFilesModel = this.disinfectFilesService.getDisinfectFilesModelById(id);
         return JudgeUtil.JudgeFind(disinfectFilesModel);
+    }
+
+    /**
+     * TODO： 根据需求 增加是否通过ispass查询
+     * 通过耳牌号模糊查找
+     * @param disinfectEartag 耳牌
+     * @param page 页
+     * @param size 条
+     * @return 查询结果
+     */
+    @Permit(authorities = "view_sanitation_files")
+    @RequestMapping(value = "findet",method = RequestMethod.GET)
+    public Response findByEarTag(@RequestParam("eartag") List<String[]> disinfectEartag,
+                                 @RequestParam(value = "page",defaultValue = "0") int page,
+                                 @RequestParam(value = "size",defaultValue = "10") int size){
+        logger.info("invoke findByEarTag {}" );
+        //System.out.println(disinfectEartag);
+        List<DisinfectFilesModel> list = this.disinfectFilesService.getDisinfectFilesModelByTradeMarkEarTag(disinfectEartag, new RowBounds(page * size , size));
+        return JudgeUtil.JudgeFind(list,list.size());
     }
 
 //    /**
@@ -298,18 +323,24 @@ public class DisinfectFilesResource {
      * 下载文件 并保存到自定义路径
      * @param response  HttpServletResponse
      * @param factoryNum  下载文件所属工厂号
-     * @param file  文件名
-     * @param locate  目的地址
+     * @param fileName 文件名
      * @return  下载结果
      */
-    @RequestMapping(value = "/down/{num}/{file}",method = RequestMethod.GET)
+    @Permit(authorities = "download_product_file_action")
+    @RequestMapping(value = "/down/{factoryNum}/{fileName}",method = RequestMethod.GET)
     public Response download(HttpServletResponse response,
-                             @PathVariable("num") String factoryNum,
-                             @PathVariable("file") String file,
-                             @PathVariable("locate") String locate) {
-        logger.info("invoke download {}", response, file, locate);
-        String filePath = "../EartagDocument" + factoryNum + "/disinfectEartag/";
-        if (DownloadUtil.downloadFile(response , file, filePath, locate)) {
+                             @PathVariable("factoryNum") String factoryNum,
+                             @PathVariable("fileName") String fileName) throws Exception {
+        logger.info("invoke download {}", response, factoryNum, fileName);
+        String filePath = pathPre + factoryNum + "/disinfectEartag/";
+        OutputStream outputStream = new OutputStream() {
+            @Override
+            public void write(int b) throws IOException {
+
+            }
+        };
+        if (DownloadUtil.testDownload(response, filePath, fileName, outputStream)) {
+            outputStream.close();
             return JudgeUtil.JudgeSuccess("download","Success");
         } else {
             return Responses.errorResponse("download Error");
@@ -322,6 +353,7 @@ public class DisinfectFilesResource {
      * @param disinfectRequest 消毒类
      * @return 更新结果
      */
+    @Permit(authorities = "experts_review_sanitation_files")
     @RequestMapping(value = "/p/{id}",method = RequestMethod.PATCH)
     public Response professorUpdate(@PathVariable(value = "id") int id,
                                     @RequestBody DisinfectRequest disinfectRequest,
@@ -352,6 +384,7 @@ public class DisinfectFilesResource {
      * METHOD:PATCH
      * @return 审核结果
      */
+    @Permit(authorities = "surveillance_audit_sanitation_files")
     @PatchMapping(value = "/s/{id}")
     public Response supervisorUpdate(@PathVariable(value = "id") int id,
                                      @RequestBody DisinfectRequest disinfectRequest) {
@@ -383,6 +416,7 @@ public class DisinfectFilesResource {
      * @param disinfectFilesModel 消毒类
      * @return 更新结果
      */
+    @Permit(authorities = "modify_sanitation_files")
     @PostMapping(value = "/{id}")
     public Response operatorUpdate(@PathVariable(value = "id")long id,
                                    @Valid DisinfectFilesModel disinfectFilesModel,
@@ -431,6 +465,7 @@ public class DisinfectFilesResource {
      * @param id id
      * @return 是否成功
      */
+    @Permit(authorities = "delete_sanitation_files")
     @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
     public Response delete(@Min(0) @PathVariable(value = "id") Long id) {
         logger.info("invoke delete {}", id);

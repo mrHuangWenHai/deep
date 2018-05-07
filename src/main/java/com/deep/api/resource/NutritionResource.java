@@ -3,6 +3,7 @@ package com.deep.api.resource;
 import com.deep.api.Utils.AgentUtil;
 import com.deep.api.Utils.StringToLongUtil;
 import com.deep.api.Utils.TokenAnalysis;
+import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.NutritionPlanModel;
 import com.deep.api.request.ProfessorRequest;
@@ -45,11 +46,12 @@ public class NutritionResource {
      * 参数类型为：
      * Long factoryNum; String building;Date nutritionT;Long quantity;String average;String period;String water;String operator;String remark;
      * String materialA;String materialM;String materialO;String materialWM;String materialWO;String roughageP;String roughageD;String roughageWP;String roughageWD;String roughageWO;String pickingM;String pickingR;String pickingO;
-     * @param planModel
-     * @param bindingResult
-     * @return
-     * @throws ParseException
+     * @param planModel planModel
+     * @param bindingResult bindingResult
+     * @return response
+     * @throws ParseException parseException
      */
+    @Permit(authorities = "increase_phase_nutritional_profile")
     @PostMapping(value = "")
     public Response addPlan(@RequestBody @Valid NutritionPlanModel planModel, BindingResult bindingResult) throws ParseException {
         logger.info("invoke addPlan {}, url is nutrition", planModel);
@@ -106,9 +108,9 @@ public class NutritionResource {
      * 按主键删除的接口：/nutritionDeleteById
      * 按主键删除的方法名：dropPlan()
      * 接收参数：整型id，根据主键号删除
-
-     * @return
+     * @return response
      */
+    @Permit(authorities = "delete_stage_nutrition_file")
     @DeleteMapping(value = "/{id}")
     public Response dropPlan(@PathVariable("id") String id){
         logger.info("invoke dropPlan {}, url is nutrition/{id}", id);
@@ -131,11 +133,12 @@ public class NutritionResource {
      * 操作员使用按主键修改的接口：/nutritionUpdateByOperator
      * 操作员使用按主键修改的方法名：changePlanByOperator()
      * 操作员使用接收参数：整个表单类型（整型id必填，各参数选填）
-     * @param planModel
-     * @param bindingResult
-     * @return
-     * @throws ParseException
+     * @param planModel planModel
+     * @param bindingResult bindingResult
+     * @return response
+     * @throws ParseException parseException
      */
+    @Permit(authorities = "modification_phase_nutrition_file")
     @PutMapping(value = "/{id}")
     public Response changePlanByOperator(@RequestBody @Valid NutritionPlanModel planModel, @PathVariable("id") String id, BindingResult bindingResult) throws ParseException {
         logger.info("invoke changePlanByOperator {}, url is nutrition/{id}", planModel);
@@ -198,6 +201,7 @@ public class NutritionResource {
      * @param page page
      * @return Response
      */
+    @Permit(authorities = "inquiry_phase_nutrition_file")
     @GetMapping(value = "/{id}")
     public Response findAllOfOneFactory(@PathVariable("id") String id,
                                         @RequestParam(value = "size", defaultValue = "10") String size,
@@ -283,8 +287,9 @@ public class NutritionResource {
      * 按主键查询的接口：/nutritionSelectById
      * 按主键查询的方法名：findPlanById()
      * 接收参数：整型的主键号（保留接口查询，前端不调用此接口）
-     * @return
+     * @return response
      */
+    @Permit(authorities = "inquiry_phase_nutrition_file")
     @GetMapping(value = "/find/{id}")
     public Response findPlanById(@PathVariable("id") String id) {
         logger.info("invoke findPlanById {}, url is nutrition/{id}", id);
@@ -307,8 +312,9 @@ public class NutritionResource {
      * 专家使用接收参数：整个表单类型（整型id必填，各参数选填）
      * @param professorRequest request
      * @param bindingResult other
-     * @return
+     * @return response
      */
+    @Permit(authorities = "expert_review_nutrition_file")
     @PatchMapping(value = "/p/{id}")
     public Response changePlanByProfessor(@RequestBody @Valid ProfessorRequest professorRequest, @PathVariable("id") String id, BindingResult bindingResult) {
         logger.info("invoke changePlanByProfessor {}, url is nutrition/professor", professorRequest, id);
@@ -346,8 +352,9 @@ public class NutritionResource {
      * 监督者使用接收参数：整个表单信息（整型id必填，各参数选填）
      * @param supervisorRequest supervisor
      * @param bindingResult bindingResult
-     * @return
+     * @return response
      */
+    @Permit(authorities = "supervision_review_phase_nutrition_answer")
     @PatchMapping(value = "/s/{id}")
     public Response changePlanBySupervisor(@RequestBody @Valid SupervisorRequest supervisorRequest, @PathVariable("id") String id, BindingResult bindingResult){
         logger.info("invoke changePlanBySupervisor {}, url is nutrition/supervisor", supervisorRequest);

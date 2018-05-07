@@ -1,191 +1,152 @@
-增加配种产子档案____________________increase_breeding_maternity_file
-删除配种产子档案____________________delete_breeding_child_files
-查询配种产子档案____________________search_for_breeding_child_files
-修改配种产子档案____________________modify_breeding_seed_file
-监督审核配种产子档案_________________supervise_auditing_breeding_child_files
-专家审核配种产子档案_____________experts_review_mating_and_childbirth_files
-增加疾病防治档案________________increase_disease_prevention_files
-删除疾病防治档案________________delete_disease_prevention_files
-查询疾病防治档案________________check_disease_prevention_files
-修改疾病防治档案________________modify_disease_prevention_files
-监督审核疾病防治档案__________________supervise_and_verify_disease_prevention_files
-专家审核疾病防治档案__________________experts_review_disease_prevention_files
-增加卫生消毒档案________________increase_sanitation_files
-删除卫生消毒档案________________delete_sanitation_files
-查看卫生消毒档案________________view_sanitation_files
-修改卫生消毒档案________________modify_sanitation_files
-监督审核卫生消毒档案__________________surveillance_audit_sanitation_files
-专家审核卫生消毒档案__________________experts_review_sanitation_files
-增加免疫实施档案________________increase_the_immunization_implementation_file
-删除免疫实施档案________________delete_the_immunization_implementation_file
-查询免疫实施档案________________query_the_immunization_implementation_file
-修改免疫实施档案________________modify_the_immunization_implementation_file
-监督审核免疫实施档案__________________surveillance_audit_of_immunization_implementation_files
-专家审核免疫实施档案__________________experts_review_immune_implementation_files
-增加阶段营养档案________________increase_phase_nutritional_profile
-删除阶段营养档案________________delete_stage_nutrition_file
-查询阶段营养档案________________inquiry_phase_nutrition_file
-修改阶段营养档案________________modification_phase_nutrition_file
-监督审核阶段营养答案______supervision_review_phase_nutrition_answer
-专家审核阶段营养档案______expert_review_nutrition_file
-增加卫生与动物福利________increase_health_and_animal_welfare
-删除卫生与动物福利________remove_health_and_animal_welfare
-查询卫生与动物福利________inquiries_on_hygiene_and_animal_welfare
-修改卫生与动物福利________modify_health_and_animal_welfare
-监督审核卫生与动物福利_____supervise_and_audit_health_and_animal_welfare
-专家审核卫生与动物福利_____experts_review_health_and_animal_welfare
-增加方案________________increase_plan
-修改方案________________amendment
-删除方案________________delete_the_plan
-查询方案________________query_plan
-增加代理________________add_agent
-删除代理________________deleting_an_agent
-修改代理________________modify_the_proxy
-查询代理________________query_agent
-增加客户(羊场)___________increase_customer
-删除客户(羊场)___________delete_customer
-修改客户(羊场)___________modify_customer
-查询客户(羊场)___________customer_inquiry
-增加专家评价_____________increase_expert_evaluation
-删除专家评价_____________delete_expert_evaluation
-修改专家评价_____________modify_expert_evaluation
-查询专家评价_____________query_expert_evaluation
-查看总评分(专家)_________view_overall_rating_
-前端查看有机环境_________front_view_organic_environment
-后端查看有机环境_________rear_view_organic_environment
-发送短信________________send_messages
-添加直播________________add_live
-删除直播________________delete_live
-查看直播________________view_live
-禁止直播________________ban_live
-添加社区活动____________add_community_activities
-删除社区活动____________delete_community_activity
-修改社区活动____________modify_community_activities
-查询社区活动____________check_community_activities
-添加发布________________add_release
-删除发布________________delete_release
-修改发布________________modify_release
-查询发布________________query_publishing
-添加系谱档案____________add_pedigree_files
-删除系谱档案____________delete_pedigree_files
-修改系谱档案____________modify_pedigree_files
-查询系谱档案____________query_pedigree_files
-添加视频________________add_video
-删除视频________________delete_video
-修改视频________________edit_video
-查看视频________________see_video
-添加图片________________add_pictures
-删除图片________________delete_picture
-修改图片________________edit_picture
-查看图片________________view_image
-添加拓展模块_____________add_expansion_module
-删除拓展模块_____________delete_extension_module
-修改拓展模块_____________modify_the_extension_module
-查询拓展模块_____________query_expansion_module
-添加拓展模块信息_________add_extension_module_information
-删除拓展模块信息_________delete_extension_module_information
-修改拓展模块信息_________modify_the_extension_module_information
-查询拓展模块信息_________query_expansion_module_information
-添加用户________________add_user
-删除用户________________delete_users
-修改用户________________modify_user
-查询用户________________query_user
-  添加专家 ________________add_expert
-  删除专家 ________________delete_expert
-  修改专家 ________________modify_expert
-  查询专家 ________________query_expert
-添加技术员 _______________add_technician
-删除技术员 _______________remove_technician
-修改技术员 _______________modify_technician
-查询技术员 _______________query_technician
-添加管理员 _______________add_an_administrator
-删除管理员 _______________remove_administrator
-修改管理员 _______________modify_administrator
-查询管理员 _______________query_administrator
-  添加角色 _________________add_role
-  删除角色 _________________remove_role
-  修改角色 _________________modify_role
-  查询角色 _________________query_role
-  查看权限 _________________query_permit
+front       realId      权限
 
+0-0          1           增加配种产子档案____________________increase_breeding_maternity_file
+0-1          2           删除配种产子档案____________________delete_breeding_child_files
+0-2          3           查询配种产子档案____________________search_for_breeding_child_files
+0-3          4           修改配种产子档案____________________modify_breeding_seed_file
+0-4          5           监督审核配种产子档案_________________supervise_auditing_breeding_child_files
+0-5          6           专家审核配种产子档案_____________experts_review_mating_and_childbirth_files
 
-  "materialA":
-  "materialM": 
-  "materialO": 
-  "materialWM": 
-  "materialWO": 
-  "roughageP": 
-  "roughageD": 
-  "roughageWP": 
-  "roughageWD": 
-  "roughageWO": 
-  "pickingM": 
-  "pickingR": 
-  "pickingO": 
-  "search_string": 
-  "s_breedingT": 
-  "s_gestationT": 
-  "s_prenatalIT": 
-  "s_cubT": 
-  "s_diagnosisT": 
-  "s_nutritionT": 
-  "s_gmtCreate1": 
-  "s_gmtCreate2": 
-  "s_gmtModified1": 
-  "s_gmtModified2": 
-  "s_breedingT1": 
-  "s_breedingT2": 
-  "s_gestationT1": 
-  "s_gestationT2": 
-  "s_prenatalIT1": 
-  "s_prenatalIT2": 
-  "s_cubT1": 
-  "s_cubT2": 
-  "s_diagnosisT1": 
-  "s_diagnosisT2": 
-  "s_nutritionT1": 
-  "s_nutritionT2": 
-  "downloadPath": 
-  "size": 
-  "page":
+1-0          7           增加疾病防治档案________________increase_disease_prevention_files
+1-1          8           删除疾病防治档案________________delete_disease_prevention_files
+1-2          9           查询疾病防治档案________________check_disease_prevention_files
+1-3          10          修改疾病防治档案________________modify_disease_prevention_files
+1-4          11          监督审核疾病防治档案__________________supervise_and_verify_disease_prevention_files
+1-5          12          专家审核疾病防治档案__________________experts_review_disease_prevention_files
 
+2-0          13          增加卫生消毒档案________________increase_sanitation_files
+2-1          14          删除卫生消毒档案________________delete_sanitation_files
+2-2          15          查看卫生消毒档案________________view_sanitation_files
+2-3          16          修改卫生消毒档案________________modify_sanitation_files
+2-4          17          监督审核卫生消毒档案__________________surveillance_audit_sanitation_files
+2-5          18          专家审核卫生消毒档案__________________experts_review_sanitation_files
 
-  String "materialA":
-  String "materialM":
-  String "materialO":
-  String "materialWM":
-  String "materialWO":
-  String "roughageP":
-  String "roughageD":
-  String "roughageWP":
-  String "roughageWD":
-  String "roughageWO":
-  String "pickingM":
-  String "pickingR":
-  String "pickingO":
-  String "search_string":
-  String "s_breedingT":
-  String "s_gestationT":
-  String "s_prenatalIT":
-  String "s_cubT":
-  String "s_diagnosisT":
-  String "s_nutritionT":
-  String "s_gmtCreate1":
-  String "s_gmtCreate2":
-  String "s_gmtModified1":
-  String "s_gmtModified2":
-  String "s_breedingT1":
-  String "s_breedingT2":
-  String "s_gestationT1":
-  String "s_gestationT2":
-  String "s_prenatalIT1":
-  String "s_prenatalIT2":
-  String "s_cubT1":
-  String "s_cubT2":
-  String "s_diagnosisT1":
-  String "s_diagnosisT2":
-  String "s_nutritionT1":
-  String "s_nutritionT2":
-  String "downloadPath":
-  int "size":
-  int "page":
+3-0          19          增加免疫实施档案________________increase_the_immunization_implementation_file
+3-1          20          删除免疫实施档案________________delete_the_immunization_implementation_file
+3-2          21          查询免疫实施档案________________query_the_immunization_implementation_file
+3-3          22          修改免疫实施档案________________modify_the_immunization_implementation_file
+3-4          23          监督审核免疫实施档案__________________surveillance_audit_of_immunization_implementation_files
+3-5          24          专家审核免疫实施档案__________________experts_review_immune_implementation_files
+
+4-0          25          增加阶段营养档案________________increase_phase_nutritional_profile
+4-1          26          删除阶段营养档案________________delete_stage_nutrition_file
+4-2          27          查询阶段营养档案________________inquiry_phase_nutrition_file
+4-3          28          修改阶段营养档案________________modification_phase_nutrition_file
+4-4          29          监督审核阶段营养答案______supervision_review_phase_nutrition_answer
+4-5          30          专家审核阶段营养档案______expert_review_nutrition_file
+
+5-0          31          增加卫生与动物福利________increase_health_and_animal_welfare
+5-1          32          删除卫生与动物福利________remove_health_and_animal_welfare
+5-2          33          查询卫生与动物福利________inquiries_on_hygiene_and_animal_welfare
+5-3          34          修改卫生与动物福利________modify_health_and_animal_welfare
+5-4          35          监督审核卫生与动物福利_____supervise_and_audit_health_and_animal_welfare
+5-5          36          专家审核卫生与动物福利_____experts_review_health_and_animal_welfare
+            
+7-0          37          增加方案________________increase_plan
+7-1          38          删除方案________________delete_the_plan
+7-2          39          查询方案________________query_plan
+7-3          40          修改方案________________amendment
+
+8-0          41          增加代理________________add_agent
+8-1          42          删除代理________________deleting_an_agent
+8-2          43          查询代理________________query_agent
+8-3          44          修改代理________________modify_the_proxy
+
+9-0          45          增加客户(羊场)___________increase_customer
+9-1          46          删除客户(羊场)___________delete_customer
+9-2          47          查询客户(羊场)___________customer_inquiry
+9-3          48          修改客户(羊场)___________modify_customer
+
+6-0          49          增加专家评价_____________increase_expert_evaluation
+6-1          50          删除专家评价_____________delete_expert_evaluation
+6-2          51          查询专家评价_____________query_expert_evaluation
+6-3          52          修改专家评价_____________modify_expert_evaluation
+6-4          53          查看总评分(专家)_________view_overall_rating_
+
+            54          @前端查看有机环境_________front_view_organic_environment
+            55          @后端查看有机环境_________rear_view_organic_environment
+            56
+
+10-0            57          添加直播________________add_live
+10-1            58          删除直播________________delete_live
+10-2            59          查看直播________________view_live
+10-3            60          禁止直播________________ban_live
+
+11-0           61          添加社区活动____________add_community_activities
+11-1           62          删除社区活动____________delete_community_activity
+11-2           63          查询社区活动____________check_community_activities
+11-3           64          修改社区活动____________modify_community_activities
+
+12-0            65          添加发布________________add_release
+12-1            66          删除发布________________delete_release
+12-2            67          查询发布________________query_publishing
+12-3            68          修改发布________________modify_release
+
+13-0            69          添加系谱档案____________add_pedigree_files
+13-1            70          删除系谱档案____________delete_pedigree_files
+13-2            71          查询系谱档案____________query_pedigree_files
+13-3            72          修改系谱档案____________modify_pedigree_files
+
+14-0            73          添加视频________________add_video
+14-1            74          删除视频________________delete_video
+14-2            75          查看视频________________see_video
+14-3            76          修改视频________________edit_video
+
+15-0            77          添加图片________________add_pictures
+15-1            78          删除图片________________delete_picture
+15-2            79          查看图片________________view_image
+15-3            80          修改图片________________edit_picture
+
+            81          添加拓展模块_____________add_expansion_module
+            82          删除拓展模块_____________delete_extension_module
+            83          修改拓展模块_____________modify_the_extension_module
+            84          查询拓展模块_____________query_expansion_module
+            85          添加拓展模块信息_________add_extension_module_information
+            86          删除拓展模块信息_________delete_extension_module_information
+            87          修改拓展模块信息_________modify_the_extension_module_information
+            88          查询拓展模块信息_________query_expansion_module_information
+
+16-0            89          添加用户________________add_user
+16-1            90          删除用户________________delete_users
+16-2            91          查询用户________________query_user
+16-3            92          修改用户________________modify_user
+
+17-0            93          添加专家 ________________add_expert
+17-1            94          删除专家 ________________delete_expert
+17-2            95          查询专家 ________________query_expert
+17-3            96          修改专家 ________________modify_expert
+
+18-0            97          添加技术员 _______________add_technician
+18-1            98          删除技术员 _______________remove_technician
+18-2            99          查询技术员 _______________query_technician
+18-3            100         修改技术员 _______________modify_technician
+
+19-0            101         添加管理员 _______________add_an_administrator
+19-1            102         删除管理员 _______________remove_administrator
+19-2            103         查询管理员 _______________query_administrator
+19-3            104         修改管理员 _______________modify_administrator
+
+20-0            105         添加角色 _________________add_role
+20-1            106         删除角色 _________________remove_role
+20-2            107         查询角色 _________________query_role
+20-3            108         修改角色 _________________modify_role
+
+            109         查看权限 _________________query_permit
+            110         @下载数据库表格权限__________download_database
+            111         @发送短信________________send_messages   53, 54, 55
+            112         @编辑短信________________edit_messages
+
+            113         @增加羊品种________________add_sheep_type
+            114         @删除羊品种 _______________delete_sheep_type
+            115         @查询羊品种________________select_sheep_type
+            116         @修改羊品种________________modify_sheep_type
+            117         @下载文件_________________download_product_file_action
+
+            118         @查看留言_________________check_message_of_all_user
+
+            119        @增加驱虫实施防治档案_________increase_pest_repellent_implementation_control_files
+            120        @删除驱虫实施防治档案_________deworming_implementation_control_files
+            121        @查询驱虫实施防治档案_________check_insecticide_implementation_control_files
+            122        @修改驱虫实施防治档案_________modify_the_insect_repellent_implementation_control_file
+            123        @监督审核驱虫实施防治档案_________supervise_and_verify_the_implementation_of_pest_control_files
+            124        @专家审核驱虫实施防治档案_________experts_review deworming_implementation_control_files

@@ -3,6 +3,7 @@ package com.deep.api.resource;
 import com.deep.api.Utils.AgentUtil;
 import com.deep.api.Utils.StringToLongUtil;
 import com.deep.api.Utils.TokenAnalysis;
+import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.BreedingPlanModel;
 import com.deep.api.request.ProfessorRequest;
@@ -45,34 +46,13 @@ public class BreedingResource {
      * @return
      * @throws ParseException
      */
+    @Permit(authorities = "increase_breeding_maternity_file")
     @PostMapping(value = "")
     public Response addPlan(@RequestBody @Valid BreedingPlanModel planModel, BindingResult bindingResult) throws ParseException {
         logger.info("invoke addPlan {}, url = /breeding", planModel);
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案录入失败");
         }else {
-            //将planModel部分变量拆分传递给对象insert
-//            BreedingPlan insert = new BreedingPlan();
-//            insert.setFactoryNum(planModel.getFactoryNum());
-//            insert.setFactoryName(planModel.getFactoryName());
-//            insert.setBuilding(planModel.getBuilding());
-//            insert.setQuantity(planModel.getQuantity());
-//
-//            insert.setBreedingT(planModel.getBreedingT());
-//            insert.setGestationT(planModel.getGestationT());
-//            insert.setPrenatalIT(planModel.getPrenatalIT());
-//            insert.setCubT(planModel.getCubT());
-//
-//            insert.setRemark(planModel.getRemark());
-//
-//            insert.setmEtI(planModel.getmEtI());
-//            insert.setmEtB(planModel.getmEtB());
-//            insert.setfEtI(planModel.getfEtI());
-//            insert.setfEtB(planModel.getfEtB());
-//
-//            insert.setOperatorName(planModel.getOperatorName());
-//            insert.setOperatorId(planModel.getOperatorId());
-
             BreedingPlan insert = new BreedingPlan();
             insert.setId(planModel.getId());
             insert.setGmtModified(planModel.getGmtModified());
@@ -128,6 +108,7 @@ public class BreedingResource {
      * @return
      * @throws ParseException
      */
+    @Permit(authorities = "modify_breeding_seed_file")
     @PutMapping(value = "/{id}")
     public Response changePlanByOperator(@RequestBody @Valid BreedingPlanModel planModel, @PathVariable("id") Integer id, BindingResult bindingResult) throws ParseException {
         logger.info("invoke changePlanByOperator {}, url is breeding/operator", planModel);
@@ -186,6 +167,7 @@ public class BreedingResource {
      * 按照主键删除一条记录
      * @return
      */
+    @Permit(authorities = "delete_breeding_child_files")
     @DeleteMapping(value = "/{id}")
     public Response dropPlan(@PathVariable("id") String id){
         logger.info("invoke dropPlan {}, url is breeding/{id}", id);
@@ -212,6 +194,7 @@ public class BreedingResource {
      * @param page
      * @return
      */
+    @Permit(authorities = "search_for_breeding_child_files")
     @GetMapping(value = "/{id}")
     public Response findAllOfOneFactory(@PathVariable("id") String id,
                                         @RequestParam(value = "size", defaultValue = "10") String size,
@@ -303,6 +286,7 @@ public class BreedingResource {
      * @param bindingResult
      * @return
      */
+    @Permit(authorities = "experts_review_mating_and_childbirth_files")
     @PatchMapping(value = "/p/{id}")
     public Response changePlanByProfessor(@RequestBody @Valid ProfessorRequest professorRequest, @PathVariable("id") String id, BindingResult bindingResult) {
         logger.info("invoke changePlanByProfessor {}, url is breeding/professor", professorRequest);
@@ -341,6 +325,7 @@ public class BreedingResource {
      * 监督者使用接收参数：整个表单信息（整型id必填，各参数选填）
      * @return
      */
+    @Permit(authorities = "supervise_auditing_breeding_child_files")
     @PatchMapping(value = "/s/{id}")
     public Response changePlanBySupervisor(@RequestBody @Valid SupervisorRequest supervisorRequest, @PathVariable("id") String id, BindingResult bindingResult) {
         logger.info("invoke changePlanBySupervisor {}, url is breeding/supervisor", supervisorRequest);
@@ -377,6 +362,7 @@ public class BreedingResource {
      * 接收参数：整型的主键号（保留接口查询，前端不调用此接口）
      * @return
      */
+    @Permit(authorities = "search_for_breeding_child_files")
     @GetMapping(value = "/find/{id}")
     public Response findPlanById(@PathVariable("id") String id){
         logger.info("invoke findPlanById {}, url is breeding/{id}", id);

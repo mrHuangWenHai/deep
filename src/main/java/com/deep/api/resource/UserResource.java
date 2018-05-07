@@ -1,12 +1,12 @@
 package com.deep.api.resource;
 
-import com.deep.api.Utils.ExcelData;
-import com.deep.api.Utils.ExportExcelUtil;
-import com.deep.api.Utils.JedisUtil;
-import com.deep.api.Utils.StringToLongUtil;
+import com.deep.api.Utils.*;
 import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.authorization.token.TokenManagerRealization;
+import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.PasswordRequest;
+import com.deep.api.request.UserRequest;
+
 import com.deep.api.response.Professor;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.lang.reflect.Field;
@@ -45,31 +46,44 @@ public class UserResource {
      * @return 返回所有的用户信息
      */
     @Permit(authorities = "query_user")
-//    @GetMapping(value = "user/subordinate/{roleID}")
-    @GetMapping(value = "user")
-//    @PathVariable("roleID") long roleID
-    public Response userList() {
-        logger.info("invoke userList, url is user/");
-//        List<UserModel> userLists = userService.getAll(roleID);
-        List<UserModel> userLists = userService.getAllWithNoCondition();
-        if (userLists == null) {
-                return Responses.errorResponse("系统中暂时没有下级用户");
+    @GetMapping(value = "user/{id}")
+    public Response userList(
+            @PathVariable("id") String id,
+            @RequestParam(value = "page", defaultValue = "0") String page,
+            @RequestParam(value = "size", defaultValue = "10") String size, HttpServletRequest request
+    ) {
+        logger.info("invoke userList, url is user/{id} {}", id);
+        Long uid = StringToLongUtil.stringToLong(id);
+        Long upage = StringToLongUtil.stringToLong(page);
+        Byte usize = StringToLongUtil.stringToByte(size);
+        Byte which = StringToLongUtil.stringToByte(TokenAnalysis.getFlag(request.getHeader(Constants.AUTHORIZATION)));
+        if (uid < 0 || upage < 0 || usize < 0) {
+            return Responses.errorResponse("错误");
         }
-        Response response = Responses.successResponse();
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("List", userLists);
-        data.put("size", userLists.size());
-        response.setData(data);
-        return response;
+        if (which == 0 || which == 1 || which == 2) {
+            List<UserModel> userLists = userService.getAllUserOfFactoryOrAgent(uid, which, upage, usize);
+            if (userLists == null) {
+                return Responses.errorResponse("error");
+            } else {
+                Response response = Responses.successResponse();
+                Map<String, Object> data = new HashMap<>();
+                data.put("List", userLists);
+                data.put("size", userService.getCountsOfOneFactoryOrOneAgent(uid, which));
+                response.setData(data);
+                return response;
+            }
+        } else {
+            return Responses.errorResponse("error");
+        }
     }
 
     /**
      * 通过用户的主键查找单个用户
      * @param id 获取用户的信息(简略信息)
-     * @return
+     * @return response
      */
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
-    @GetMapping(value = "user/{id}")
+    @GetMapping(value = "user/find/{id}")
     public Response getUserOne(@PathVariable("id")String id) {
         logger.info("invoke getUserOne{}, url is user/{id}", id);
         long uid = StringToLongUtil.stringToLong(id);
@@ -90,7 +104,7 @@ public class UserResource {
     /**
      * 通过用户的主键查找单个用户
      * @param id 获取用户的信息(简略信息)
-     * @return
+     * @return response
      */
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @GetMapping(value = "user/detail/{username}")
@@ -119,8 +133,8 @@ public class UserResource {
 
     /**
      * 根据用户的真实姓名查找单个用户
-     * @param realname
-     * @return
+     * @param realname realname
+     * @return response
      */
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @PostMapping(value = "user/name")
@@ -128,7 +142,10 @@ public class UserResource {
         logger.info("invoke getUserByUserRealname{}, url is user/name", realname);
         System.out.println(realname.get("realname"));
         UserModel userModel = userService.getUserByUserRealnameLike(realname.get("realname"));
-        if (realname.equals("")) {
+        if (realname.get("realname") == null) {
+            return Responses.errorResponse("error!");
+        }
+        if (realname.get("realname").equals("")) {
             return Responses.errorResponse("用户名格式错误");
         }
         if (userModel == null) {
@@ -143,8 +160,8 @@ public class UserResource {
 
     /**
      * 根据用户名获取单个用户的信息
-     * @param pkUserid
-     * @return
+     * @param pkUserid username
+     * @return response
      */
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @GetMapping(value = "user/id/{pkUserid}")
@@ -175,15 +192,15 @@ public class UserResource {
 
     /**
      * 增加一个用户
-     * @param userModel
-     * @param bindingResult
-     * @return
+     * @param userRequest request
+     * @param bindingResult bindingResult
+     * @return response
      */
-    @PostMapping("user/add")
-    public Response addUser(@RequestBody @Valid UserModel userModel,  BindingResult bindingResult) {
-        logger.info("invoke addUser{}, url is register", userModel, bindingResult);
-
-        if (bindingResult.hasErrors() || userModel.getPkUserid() == null) {
+    @Permit(authorities = "add_user")
+    @PostMapping("user")
+    public Response addUser(@RequestBody @Valid UserRequest userRequest, BindingResult bindingResult) {
+        logger.info("invoke addUser{}, url is register", userRequest, bindingResult);
+        if (bindingResult.hasErrors() || userRequest.getUsername() == null) {
             Response response = Responses.errorResponse("验证失败");
             HashMap<String, Object> data = new HashMap<>();
             data.put("errorMessage", bindingResult.getAllErrors());
@@ -191,26 +208,33 @@ public class UserResource {
             return response;
         } else {
             // 添加用户的校验信息
-            if (!userService.verifyOnlyOnePkUserid(userModel.getPkUserid())) {
+            if (!userService.verifyOnlyOnePkUserid(userRequest.getUsername())) {
                 Response response = Responses.errorResponse("添加用户信息失败");
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("errorMessage", "用户名已经被使用过");
                 response.setData(data);
                 return response;
             }
+            UserModel userModel = new UserModel();
             userModel.setGmtCreate(new Timestamp(System.currentTimeMillis()));
             userModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
 
-
+            if (userRequest.getFlag() == 2) {
+                userModel.setIsFactory((byte) -2);
+            }
+            userModel.setUserFactory(userRequest.getFactoryId());
+            userModel.setIsFactory(userRequest.getFlag());
+            userModel.setPkUserid(userRequest.getUsername());
+            userModel.setUserPwd(userRequest.getPassword());
+            userModel.setUserTelephone(userRequest.getTelephone());
+            userModel.setFactoryName(userRequest.getFactoryName());
+            userModel.setUserRealname(userRequest.getRealname());
 
             if (userModel.getUserPermit() == null || userModel.getUserPermit().equals("")) {
-
                 userModel.setUserPermit("000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
             }
-
             userModel.setIsExtended((byte)0);
             userModel.setUserRole(0);
-
             Long success = userService.addUser(userModel);
             if (success <= 0) {
                 return Responses.errorResponse("用户信息增加失败,请检查网络后重试");
@@ -225,10 +249,10 @@ public class UserResource {
 
     /**
      * 修改一个用户
-     * @param userModel
-     * @param id
-     * @param bindingResult
-     * @return
+     * @param userModel userModel
+     * @param id ID
+     * @param bindingResult bindingResult
+     * @return response
      */
     @Permit(authorities = {"modify_user", "modify_expert", "modify_technician", "modify_administrator"})
     @PutMapping(value = "user/{id}")
@@ -269,6 +293,7 @@ public class UserResource {
         return response;
     }
 
+    @Permit(authorities = "modify_user")
     @PatchMapping(value = "/user/password/{id}")
     public Response modifyUserPassword(@PathVariable("id") String id, @RequestBody @Valid PasswordRequest passwordRequest) {
         long uid = StringToLongUtil.stringToLong(id);
@@ -295,8 +320,8 @@ public class UserResource {
 
     /**
      * 删除单个用户
-     * @param id
-     * @return
+     * @param id userID
+     * @return response
      */
     @Permit(authorities = {"delete_users", "delete_expert", "remove_technician", "remove_administrator"})
     @DeleteMapping("user/{id}")
@@ -319,25 +344,23 @@ public class UserResource {
 
     /**
      * 导出Excel表格
-     * @param httpServletResponse
-     * @return
-     * @throws Exception
+     * @param httpServletResponse httpServletResponse
+     * @return response
+     * @throws Exception exception
      */
     @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @GetMapping(value = "/user/excel/{roleID}")
-
     public Response exportExcel(@PathVariable("roleID") long roleID, HttpServletResponse httpServletResponse) throws Exception {
-
         logger.info("invoke exportExcel{}, url is /user/excel", httpServletResponse);
         ExcelData data = new ExcelData();
         data.setName("user");
         List<UserModel> userModels = userService.getAll(roleID);
         UserModel userModel;
-        List<List<Object>> rows = new ArrayList();
-        List<String> titles = new ArrayList();
-        for(int i = 0 ; i < userModels.size(); i++) {
-            List<Object> row = new ArrayList();
-            userModel = userModels.get(i);
+        ArrayList<List<Object>> rows = new ArrayList<>();
+        ArrayList<String> titles = new ArrayList<String>();
+        for (UserModel userModel1 : userModels) {
+            ArrayList<Object> row = new ArrayList<>();
+            userModel = userModel1;
             for (Field field : userModel.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
                 row.add(field.get(userModel));
@@ -354,8 +377,8 @@ public class UserResource {
 
     /**
      * 获取某一类专家接口
-     * @param id
-     * @return
+     * @param id id
+     * @return response
      */
     @Permit(authorities = "query_expert")
     @GetMapping(value = "/user/high/{id}")
@@ -379,15 +402,15 @@ public class UserResource {
 
     /**
      * 测试类, 获取其上级专家的手机号
-     * @param id
-     * @return
+     * @param id id
+     * @return response
      */
     @Permit(authorities = "query_expert")
     @GetMapping(value = "/user/test/{id}")
     public Response getTest(@PathVariable("id") String id) {
         logger.info("invoke getRolesOfProfessor {}, url is /user/high/{id}", id);
         Response response = Responses.successResponse();
-        Map data = new HashMap<>();
+        Map<String, Object> data = new HashMap<>();
 
         data.put("data", userService.getProfessorTelephoneByFactoryNum(new BigInteger(id)));
 
@@ -395,38 +418,38 @@ public class UserResource {
         return response;
     }
 
-    /**
-     * 获取某个羊场或者某个代理的所有用户
-     * @param id
-     * @return
-     */
-    @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
-    @GetMapping(value = "/user/factory/lists/{factoryAgentID}")
-    public Response getFactoryLists(@PathVariable("factoryAgentID") String id) {
-        logger.info("invoke getFactoryLists {}, url is /user/factory/lists/{factoryAgentID}", id);
-        long uid = StringToLongUtil.stringToLong(id);
-        if (uid == -1) {
-            return Responses.errorResponse("error");
-        } else {
-            Response response;
-            List<UserModel> userLists = userService.getAllUserOfFactoryOrAgent(uid);
-            if (userLists == null) {
-                return Responses.errorResponse("error");
-            } else {
-                response = Responses.successResponse();
-                Map<String, Object> data = new HashMap<>();
-                data.put("List", userLists);
-                data.put("size", userLists.size());
-                response.setData(data);
-                return response;
-            }
-        }
-    }
+//    /**
+//     * 获取某个羊场或者某个代理的所有用户
+//     * @param id
+//     * @return
+//     */
+//    @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
+//    @GetMapping(value = "/user/factory/lists/{factoryAgentID}")
+//    public Response getFactoryLists(@PathVariable("factoryAgentID") String id) {
+//        logger.info("invoke getFactoryLists {}, url is /user/factory/lists/{factoryAgentID}", id);
+//        long uid = StringToLongUtil.stringToLong(id);
+//        if (uid == -1) {
+//            return Responses.errorResponse("error");
+//        } else {
+//            Response response;
+//            List<UserModel> userLists = userService.getAllUserOfFactoryOrAgent(uid);
+//            if (userLists == null) {
+//                return Responses.errorResponse("error");
+//            } else {
+//                response = Responses.successResponse();
+//                Map<String, Object> data = new HashMap<>();
+//                data.put("List", userLists);
+//                data.put("size", userLists.size());
+//                response.setData(data);
+//                return response;
+//            }
+//        }
+//    }
 
     /**
      * 判断专家是否在线
-     * @param id
-     * @return
+     * @param id id
+     * @return response
      */
     @Permit(authorities = "query_expert")
     @GetMapping(value = "/user/online/{id}")
@@ -441,8 +464,8 @@ public class UserResource {
 
     /**
      * 获取已发展羊场的直属上级所有在线的专家, 如果没有, 则返回直属上级的上级的专家
-     * @param id
-     * @return
+     * @param id id
+     * @return 查询结果
      */
     @Permit(authorities = "query_expert")
     @GetMapping(value = "getExpert/{agent_id}")
@@ -453,6 +476,7 @@ public class UserResource {
             return Responses.errorResponse("error");
         } else {
             Professor agent = userService.getFatherProfessors(agentID);
+            System.out.println(agent);
             if (agent != null) {
                 Response response = Responses.successResponse();
                 Map<String, Object> data = new HashMap<>();
@@ -462,6 +486,20 @@ public class UserResource {
                 return response;
             }
             return Responses.errorResponse("there is no online father agents");
+        }
+    }
+
+    @Permit(authorities = "query_user")
+    @GetMapping(value = "check/username/{username}")
+    public Integer checkUsername (@PathVariable("username") String username) {
+        // find all username
+        List<String> allUser = userService.getAllWithNoCondition();
+        if (allUser == null) {
+            return 0;
+        } else if (allUser.indexOf(username) == -1) {
+            return 1;
+        } else {
+            return 0;
         }
     }
 }

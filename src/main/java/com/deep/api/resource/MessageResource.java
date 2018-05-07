@@ -1,5 +1,6 @@
 package com.deep.api.resource;
 
+import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.Message;
@@ -7,21 +8,15 @@ import com.deep.domain.model.MessageExample;
 import com.deep.domain.service.MessageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
+
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class MessageResource {
@@ -43,8 +38,7 @@ public class MessageResource {
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            Response response = Responses.errorResponse(e.getMessage());
-            return response;
+            return Responses.errorResponse(e.getMessage());
         }
 
 
@@ -60,12 +54,11 @@ public class MessageResource {
             response.setData(data);
             return response;
         } else {
-            Response response = Responses.errorResponse("数据插入失败");
-            return  response;
+            return Responses.errorResponse("数据插入失败");
         }
     }
 
-
+    @Permit(authorities = "check_message_of_all_user")
     @RequestMapping(value = "/messageBoard/search",method = RequestMethod.POST)
     public Response searchByMessage(@RequestBody  Message message) {
 
@@ -94,12 +87,12 @@ public class MessageResource {
         return response;
     }
 
+    @Permit(authorities = "check_message_of_all_user")
     @RequestMapping(value = "/messageBoard/searchByUsername",method = RequestMethod.POST)
     public Response searchByUsername(@RequestBody  Message message) {
         logger.info("invoke /messageBoard/searchByUsername {}",message.getUsername());
         if(message.getUsername().isEmpty()) {
-            Response response = Responses.errorResponse("查询条件不能为空！");
-            return response;
+            return Responses.errorResponse("查询条件不能为空！");
         }
 
         MessageExample messageExample = new MessageExample();
@@ -114,6 +107,7 @@ public class MessageResource {
         return response;
     }
 
+    @Permit(authorities = "check_message_of_all_user")
     @RequestMapping(value = "/messageBoard/searchByTag",method = RequestMethod.POST)
     public Response searchByTag(@NotNull(message = "标签不能为空")  @RequestParam(value = "tag",required = false,defaultValue = "")String tag,
                               @RequestParam(value = "pageNumb",required = true)int pageNumb,
@@ -130,13 +124,13 @@ public class MessageResource {
         return response;
     }
 
+    @Permit(authorities = "check_message_of_all_user")
     @RequestMapping(value = "/messageBoard/searchByAttitude",method = RequestMethod.POST)
     public Response searchByAttitude(@RequestBody  Message message) {
 
         logger.info("invoke /messageBoard/searchByAttitude {}",message.getAttitude());
         if (message.getAttitude() == null || message.getAttitude().length() == 0) {
-            Response response = Responses.errorResponse("查询条件不能为空！");
-            return response;
+            return Responses.errorResponse("查询条件不能为空！");
         }
 
         if (message.getLimit() == 0) {
@@ -155,6 +149,7 @@ public class MessageResource {
         return response;
     }
 
+    @Permit(authorities = "check_message_of_all_user")
     @RequestMapping(value = "/messageBoard/searchByIntention",method = RequestMethod.POST)
     public Response searchByIntention(@NotNull(message = "购买意向不能为空")  @RequestParam(value = "intention",required = false,defaultValue = "")String intention,
                               @RequestParam(value = "pageNumb",required = false, defaultValue = "0")int pageNumb,

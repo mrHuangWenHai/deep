@@ -2,25 +2,21 @@ package com.deep.api.resource;
 
 import com.deep.api.Utils.FileUtil;
 import com.deep.api.Utils.StringToLongUtil;
+import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.NoticePlan;
 import com.deep.domain.service.NoticePlanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -45,10 +41,10 @@ public class NoticeResource {
 
     /**
      * @param insert 整个表单信息（所有参数必填）, 参数类型为：String professor;Byte type;String title;String content;
-
-     * @param bindingResult
-     * @return
+     * @param bindingResult bindingResult
+     * @return response
      */
+    @Permit(authorities = "add_community_activities")
     @PostMapping(value = "")
     public Response addPlan(@RequestBody @Valid NoticePlan insert, BindingResult bindingResult){
         logger.info("invoke addPlan {}, the url is notice", insert);
@@ -73,8 +69,9 @@ public class NoticeResource {
 
     /**
      * @param id 接收参数：id，根据主键号删除
-     * @return
+     * @return response
      */
+    @Permit(authorities = "check_community_activities")
     @DeleteMapping(value = "/{id}")
     public Response dropPlan(@PathVariable("id") String id) {
 
@@ -104,11 +101,11 @@ public class NoticeResource {
      * 按主键修改的接口：/noticeUpdate
      * 按主键修改的方法名：changePlan()
      * 接收参数：整个表单信息（整型id必填，各参数选填）
-     * @param update
-
-     * @param bindingResult
-     * @return
+     * @param update update
+     * @param bindingResult bindingResult
+     * @return response
      */
+    @Permit(authorities = "modify_community_activities")
     @PatchMapping(value = "/{id}")
     public Response changePlan(@RequestBody @Valid NoticePlan update, @PathVariable("id") String id, BindingResult bindingResult){
         logger.info("invoke changePlan {}, url is notice/{id}", id);
@@ -152,9 +149,9 @@ public class NoticeResource {
      * 按主键查询的接口：/noticeSelectById
      * 按主键查询的方法名：findPlanById()
      * 接收参数：整型的主键号（保留接口查询，前端不调用此接口）
-
-     * @return
+     * @return response
      */
+    @Permit(authorities = "check_community_activities")
     @GetMapping(value = "/{id}")
     public Response findPlanById(@PathVariable("id") String id){
         logger.info("invoke findPlanById {}, url is notice/{id}", id);
@@ -175,8 +172,9 @@ public class NoticeResource {
 
     /**
      * 查询所有的通告
-     * @return
+     * @return response
      */
+    @Permit(authorities = "check_community_activities")
     @GetMapping(value = "")
     public Response getAll() {
         logger.info("invoke geAll, url is notice");
@@ -193,9 +191,10 @@ public class NoticeResource {
 
     /**
      * 查找某种类型的通知公告
-     * @param type
-     * @return
+     * @param type 通知公告类型, 需要跟前端协商
+     * @return response
      */
+    @Permit(authorities = "check_community_activities")
     @GetMapping(value = "/type/{type}")
     public Response getAllOfOneType(@PathVariable("type") String type) {
         logger.info("invoke getAllOneType {}, url is notice/type/{type}", type);
@@ -215,15 +214,15 @@ public class NoticeResource {
         return response;
     }
 
-    /**
-     * 按条件查询接口：/noticeSelective
-     * 按条件查询方法名：findPlanSelective()
-     * 接收的参数：前端的各参数，以及四个时间字符串（所有参数可以选填）
-     * @param planModel
-     * @param bindingResult
-     * @return
-     * @throws ParseException
-     */
+//    /**
+//     * 按条件查询接口：/noticeSelective
+//     * 按条件查询方法名：findPlanSelective()
+//     * 接收的参数：前端的各参数，以及四个时间字符串（所有参数可以选填）
+//     * @param planModel
+//     * @param bindingResult
+//     * @return
+//     * @throws ParseException
+//     */
 
 //    @PostMapping(value = "/bySelective")
 //    public Response findPlanSelective(@RequestBody @Valid NoticePlanModel planModel, BindingResult bindingResult) throws ParseException{
@@ -324,9 +323,9 @@ public class NoticeResource {
      * 站内搜索接口：/inSite
      * 站内搜索方法名：searchInSite()
      * 接收的参数：用户在搜索栏输入的信息（字符串）
-
-     * @return
+     * @return response
      */
+    @Permit(authorities = "check_community_activities")
     @GetMapping(value = "/inSite")
     public Response searchInSite(@RequestParam(value = "content", defaultValue = "") String content){
         logger.info("invoke searchInSite {}, url is notice/inSite", content);
@@ -346,9 +345,10 @@ public class NoticeResource {
      * 上传接口：/upload
      * 上传方法名：uploadFile()
      * 接收的参数：用户浏览本地文件选择文件上传
-     * @param request
-     * @return
+     * @param request Request
+     * @return response
      */
+    @Permit(authorities = {"add_community_activities", "modify_community_activities"})
     @PostMapping(value = "/upload")
     public Response uploadFile(HttpServletRequest request){
 
@@ -356,10 +356,9 @@ public class NoticeResource {
 
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
         String filepath = "/home/doubibobo/picture/";
-        for (int i = 0; i < files.size(); i++) {
-            MultipartFile file = files.get(i);
+        for (MultipartFile file : files) {
             String filename = file.getOriginalFilename();
-            String path = System.currentTimeMillis()+filename;
+            String path = System.currentTimeMillis() + filename;
             System.out.println(path);
             try {
                 String Header = FileUtil.getFileHeader(file);
@@ -391,7 +390,7 @@ public class NoticeResource {
                         ) {
                     throw new Exception("文件格式错误,只允许上传图片！");
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.out.println(e.getMessage());
                 return Responses.errorResponse(e.getMessage());
             }
@@ -414,15 +413,15 @@ public class NoticeResource {
 
     }
 
-    /**
-     * 下载接口：/download
-     * 下载方法名：downloadFile()
-     * 接收的参数：文件在服务器的相对路径
-     * @param otherTime
-     * @param bindingResult
-     * @param response
-     * @return
-     */
+//    /**
+//     * 下载接口：/download
+//     * 下载方法名：downloadFile()
+//     * 接收的参数：文件在服务器的相对路径
+//     * @param otherTime
+//     * @param bindingResult
+//     * @param response
+//     * @return
+//     */
 
 //    @PostMapping(value = "/download")
 //    public String downloadFile(@RequestBody @Valid OtherTime otherTime, BindingResult bindingResult, HttpServletResponse response){

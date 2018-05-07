@@ -1,16 +1,12 @@
 package com.deep.api.resource;
 
-
-
 import com.deep.api.Utils.AgentUtil;
-
 import com.deep.api.Utils.TokenAnalysis;
+import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.authorization.tools.Constants;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
-import com.deep.api.response.ValidResponse;
-import com.deep.domain.model.DisinfectFilesModel;
-import com.deep.domain.model.GenealogicalFilesModel;
+
 import com.deep.domain.model.ImmunePlanModel;
 import com.deep.domain.service.FactoryService;
 import com.deep.domain.service.ImmunePlanService;
@@ -20,7 +16,7 @@ import com.deep.domain.util.JedisUtil;
 import com.deep.domain.util.JudgeUtil;
 import com.deep.domain.util.UploadUtil;
 import com.deep.domain.util.*;
-import org.apache.ibatis.annotations.Param;
+
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,9 +31,10 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.io.File;
-import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
+
+import java.io.IOException;
+import java.io.OutputStream;
+
 import java.util.*;
 
 
@@ -76,6 +73,7 @@ public class ImmunePlanResource {
      * @param immuneEartagFile  耳牌文件
      * @return 插入结果
      */
+    @Permit(authorities = "increase_the_immunization_implementation_file")
     @RequestMapping(value = "", method = RequestMethod.POST)
     public Response saveShow(@Valid ImmunePlanModel immunePlanModel,
                              BindingResult bindingResult,
@@ -195,6 +193,7 @@ public class ImmunePlanResource {
      * @param immuneRequest 免疫请求类
      * @return 查询结果
      */
+    @Permit(authorities = "query_the_immunization_implementation_file")
     @GetMapping(value = "/{id}")
     public Response findShow(@PathVariable(value = "id")long id,
                              ImmuneRequest immuneRequest,
@@ -252,11 +251,30 @@ public class ImmunePlanResource {
      * @param id id
      * @return 查询结果
      */
+    @Permit(authorities = "query_the_immunization_implementation_file")
     @RequestMapping(value = "/find/{id}",method = RequestMethod.GET)
     public Response find(@PathVariable("id") long id) {
         logger.info(" invoke find{id} {}" , id);
         ImmunePlanModel immunePlanModel = this.immunePlanService.getImmunePlanModelById(id);
         return JudgeUtil.JudgeFind(immunePlanModel);
+    }
+
+    /**
+     * TODO： 根据需求 增加是否通过ispass查询
+     * 通过耳牌号模糊查找
+     * @param immuneEartag 耳牌
+     * @param page 页
+     * @param size 条
+     * @return 查询结果
+     */
+    @Permit(authorities = "query_the_immunization_implementation_file")
+    @RequestMapping(value = "findet",method = RequestMethod.GET)
+    public Response findByEarTag(@RequestParam("eartag") List<String[]> immuneEartag,
+                                 @RequestParam(value = "page",defaultValue = "0") int page,
+                                 @RequestParam(value = "size",defaultValue = "10") int size){
+        logger.info("invoke findByEarTag {}" );
+        List<ImmunePlanModel> list = this.immunePlanService.getImmunePlanModelByTradeMarkEarTag(immuneEartag, new RowBounds(page * size , size));
+        return JudgeUtil.JudgeFind(list,list.size());
     }
 
 //    /**
@@ -315,19 +333,24 @@ public class ImmunePlanResource {
      * 下载文件 并保存到自定义路径
      * @param response  HttpServletResponse
      * @param factoryNum  下载文件所属工厂号
-     * @param file  文件名
-     * @param locate  目的地址
+     * @param fileName 文件名
      * @return  下载结果
      */
-    @RequestMapping(value = "/down/{num}/{file}/{locate}",method = RequestMethod.GET)
+    @Permit(authorities = "download_product_file_action")
+    @RequestMapping(value = "/down/{factoryNum}/{fileName}",method = RequestMethod.GET)
     public Response download(HttpServletResponse response,
-                             @PathVariable("num") String factoryNum,
-                             @PathVariable("file") String file,
-                             @PathVariable("locate") String locate) {
-        logger.info("invoke download {}", response, file, locate);
-        String filePath = "../EartagDocument" + factoryNum + "/immuneEartag/";
+                             @PathVariable("factoryNum") String factoryNum,
+                             @PathVariable("fileName") String fileName) throws Exception{
+        logger.info("invoke download {}", response, factoryNum, fileName);
+        String filePath = pathPre + factoryNum + "/immuneEartag/";
+        OutputStream outputStream = new OutputStream() {
+            @Override
+            public void write(int b) throws IOException {
 
-        if (DownloadUtil.downloadFile(response , file, filePath, locate)) {
+            }
+        };
+        if (DownloadUtil.testDownload(response , filePath, fileName, outputStream)) {
+            outputStream.close();
             return JudgeUtil.JudgeSuccess("download","Success");
         } else {
             return Responses.errorResponse("download Error");
@@ -342,7 +365,7 @@ public class ImmunePlanResource {
      * @param immunePlanModel 免疫类
      * @return 更新结果
      */
-
+    @Permit(authorities = "experts_review_immune_implementation_files")
     @RequestMapping(value = "/p/{id}",method = RequestMethod.PATCH)
     public Response professorUpdate(@PathVariable(value = "id") long id,
                                     @RequestBody ImmunePlanModel immunePlanModel) {
@@ -374,6 +397,7 @@ public class ImmunePlanResource {
      * METHOD:PATCH
      * @return 审核结果
      */
+    @Permit(authorities = "surveillance_audit_of_immunization_implementation_files")
     @RequestMapping(value = "/s/{id}",method = RequestMethod.PATCH)
     public Response supervisorUpdate(@PathVariable(value = "id")long id,
                                      @RequestBody ImmunePlanModel immunePlanModel){
@@ -404,7 +428,7 @@ public class ImmunePlanResource {
      * @return 更新结果
      */
 
-
+    @Permit(authorities = "modify_the_immunization_implementation_file")
     @RequestMapping(value = "/{id}",method = RequestMethod.POST)
     public Response operatorUpdate(@PathVariable(value = "id") long id,
                                    @Validated ImmunePlanModel immunePlanModel,
@@ -456,7 +480,7 @@ public class ImmunePlanResource {
      * @param id id
      * @return 删除结果
      */
-
+    @Permit(authorities = "delete_the_immunization_implementation_file")
     @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
     public Response delete(@Min(0) @PathVariable(value = "id") Long id) {
 

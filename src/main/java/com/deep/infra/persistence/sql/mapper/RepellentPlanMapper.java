@@ -19,9 +19,12 @@ public interface RepellentPlanMapper {
     List<RepellentPlanModel> getRepellentPlanModel(@Param("repellentPlanModel") RepellentRequest repellentPlanModel,
                                                    RowBounds bounds);
 
+    List<RepellentPlanModel> getRepellentPlanModelByTradeMarkEarTag(@Param("repellentEartag") List<String[]> repellentEartag,
+                                                                    RowBounds bounds);
+
     RepellentPlanModel getRepellentPlanModelById(@Param("id") Long id);
 
-    List<RepellentPlanModel> getRepellentPlanModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum , RowBounds bounds);
+    List<RepellentPlanModel> getRepellentPlanModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum );
 
     List<RepellentPlanModel> getRepellentPlanModelByFactoryNumAndIsPassCheck(@Param("factoryNum")BigInteger factoryNum ,
                                                                              @Param("ispassCheck")String ispassCheck,

@@ -8,8 +8,8 @@ import java.util.List;
 @Mapper
 public interface FactoryMapper {
 
-//    @Select("select count(*) from agent_factory where agent_rank != 0")
-//    Long queryCount();
+    @Select("select count(*) from agent_factory where agent_rank != 0")
+    Long queryCount();
 
     @Select("select * from factory_manage where responsible_person_id < 0")
     @Results({

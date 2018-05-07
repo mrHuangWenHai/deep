@@ -16,12 +16,14 @@ public interface ImmunePlanMapper {
 
 
     List<ImmunePlanModel> getImmunePlanModel(@Param("immunePlanModel") ImmuneRequest immunePlanModel,
-
                                              RowBounds bounds);
+
+    List<ImmunePlanModel> getImmunePlanModelByTradeMarkEarTag(@Param("immuneEartag")List<String[]> immuneEartag,
+                                                              RowBounds bounds);
 
     ImmunePlanModel getImmunePlanModelById(@Param("id") Long id);
 
-    List<ImmunePlanModel> getImmunePlanModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum , RowBounds bounds);
+    List<ImmunePlanModel> getImmunePlanModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum);
 
     List<ImmunePlanModel> getImmunePlanModelByFactoryNumAndIsPassCheck(@Param("factoryNum")BigInteger factoryNum ,
                                                                        @Param("ispassCheck")String ispassCheck,

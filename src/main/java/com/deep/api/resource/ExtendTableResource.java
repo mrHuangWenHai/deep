@@ -22,10 +22,9 @@ public class ExtendTableResource {
     private final Logger logger = LoggerFactory.getLogger(ExtendTableResource.class);
     /**
      * 方法功能: 创建数据表
-     * @param extendModel
-     * @return
+     * @param extendModel 拓展模块类型
+     * @return response数据类型
      */
-
     @Permit(authorities = "add_expansion_module")
     @PostMapping(value = "/add/")
     public Response createTable(@RequestBody ExtendModel extendModel) {
@@ -39,8 +38,8 @@ public class ExtendTableResource {
 
     /**
      * 方法功能:删除一个数据表
-     * @param tableName
-     * @return
+     * @param tableName 数据表格名称
+     * @return response相关信息
      */
     @Permit(authorities = "delete_extension_module")
     @DeleteMapping(value = "/delete/{tableName}")
@@ -55,7 +54,7 @@ public class ExtendTableResource {
 
     /**
      * 方法功能:获取用户自定义的表格信息
-     * @return
+     * @return response相关信息
      */
     @Permit(authorities = "query_expansion_module")
     @GetMapping(value = "/tableLists")

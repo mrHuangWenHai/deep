@@ -165,6 +165,20 @@
 
     <!--</select>-->
 
+    <select id="getDisinfectFilesModelByTradeMarkEarTag" resultMap="DisinfectFiles">
+
+        SELECT
+        *
+        FROM
+        disinfect_files df
+        WHERE
+        <foreach collection="disinfectEartag" item="eartag" open="(" close=")" separator="or">
+            <foreach collection="eartag" item="item" open="(" close=")" separator="or">
+                df.disinfect_eartag LIKE '%${item}%'
+            </foreach>
+        </foreach>
+    </select>
+
     <select id="getDisinfectFilesModelById" resultMap="DisinfectFiles">
 
         SELECT

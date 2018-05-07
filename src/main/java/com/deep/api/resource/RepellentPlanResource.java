@@ -2,6 +2,7 @@ package com.deep.api.resource;
 
 import com.deep.api.Utils.AgentUtil;
 import com.deep.api.Utils.TokenAnalysis;
+import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.RepellentRequest;
 import com.deep.api.response.Response;
@@ -23,6 +24,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.io.File;
+
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,6 +63,7 @@ public class RepellentPlanResource {
      * @param repellentEartagFile   耳牌文件
      * @return  保存结果
      */
+    @Permit(authorities = "increase_pest_repellent_implementation_control_files")
     @RequestMapping(value = "",method = RequestMethod.POST)
     public Response save(@Valid RepellentPlanModel repellentPlanModel,
                          BindingResult bindingResult,
@@ -179,6 +184,7 @@ public class RepellentPlanResource {
      * @param repellentRequest 驱虫请求类
      * @return  查询结果
      */
+    @Permit(authorities = "check_insecticide_implementation_control_files")
     @GetMapping(value = "/{id}")
     public Response findShow(@PathVariable(value = "id")long id,
                              RepellentRequest repellentRequest,
@@ -208,7 +214,7 @@ public class RepellentPlanResource {
         List<RepellentPlanModel> factorylist = new ArrayList<>();
         List<RepellentPlanModel> direct = new ArrayList<>();
         List<RepellentPlanModel> others = new ArrayList<>();
-        List<Long> directId = factoryMap.get(new Long(-1));
+        List<Long> directId = factoryMap.get((long) -1);
         for (RepellentPlanModel repellentPlanModel : repellentPlanModels) {
           if (directId.contains(repellentPlanModel.getFactoryNum())) {
             direct.add(repellentPlanModel);
@@ -235,11 +241,36 @@ public class RepellentPlanResource {
      * @param id id
      * @return 查询结果
      */
+    @Permit(authorities = "check_insecticide_implementation_control_files")
     @RequestMapping(value = "/find/{id}", method = RequestMethod.GET)
     public Response find(@PathVariable("id") long id) {
         logger.info("invoke find{id} {}" , id);
         RepellentPlanModel repellentPlanModel = this.repellentPlanService.getRepellentPlanModelById(id);
         return JudgeUtil.JudgeFind(repellentPlanModel);
+    }
+
+    /**
+     * TODO： 根据需求 增加是否通过ispass查询
+     * 通过耳牌号模糊查找
+     * @param repellentEartag 耳牌
+     * @param page 页
+     * @param size 条
+     * @return 查询结果
+     */
+    @RequestMapping(value = "findet",method = RequestMethod.GET)
+    public Response findByEarTag(@RequestParam("eartag") List<String[]> repellentEartag,
+                                 @RequestParam(value = "page",defaultValue = "0") int page,
+                                 @RequestParam(value = "size",defaultValue = "10") int size){
+        logger.info("invoke findByEarTag {}" );
+        //System.out.println(repellentEartag);
+//        List<String[]> repellentEartag = new ArrayList<>();
+//        String[] s = {"201811"};
+//        String[] s1 = {"p"};
+//        repellentEartag.add(s);
+//        repellentEartag.add(s1);
+        List<RepellentPlanModel> list = this.repellentPlanService.getRepellentPlanModelByTradeMarkEarTag(repellentEartag, new RowBounds(page * size , size));
+        //list.get(0)
+        return JudgeUtil.JudgeFind(list,list.size());
     }
 
 //    /**
@@ -299,19 +330,23 @@ public class RepellentPlanResource {
      * 下载文件 并保存到自定义路径
      * @param response  HttpServletResponse
      * @param factoryNum  下载文件所属工厂号
-     * @param file  文件名
-     * @param locate  目的地址
+     * @param fileName  文件名
      * @return  下载结果
      */
-    @RequestMapping(value = "/down/{num}/{file}/{locate}",method = RequestMethod.GET)
+    @Permit(authorities = "download_product_file_action")
+    @RequestMapping(value = "/down/{factoryNum}/{fileName}",method = RequestMethod.GET)
     public Response download(HttpServletResponse response,
-                             @PathVariable("num") String factoryNum,
-                             @PathVariable("file") String file,
-                             @PathVariable("locate") String locate){
-        logger.info("invoke download {}", response, file, locate);
-        String filePath = "../EartagDocument" +factoryNum + "/repellentEartag/";
+                             @PathVariable("factoryNum") String factoryNum,
+                             @PathVariable("fileName") String fileName) throws Exception{
+        logger.info("invoke download {}", response, factoryNum, fileName);
+        String filePath = pathPre +factoryNum + "/repellentEartag/";
+        OutputStream outputStream = new OutputStream() {
+            @Override
+            public void write(int b) throws IOException {
 
-        if (DownloadUtil.downloadFile(response , file, filePath, locate)){
+            }
+        };
+        if (DownloadUtil.testDownload(response , filePath, fileName, outputStream)){
             return JudgeUtil.JudgeSuccess("download","Success");
         }else {
             return Responses.errorResponse("download Error");
@@ -326,6 +361,7 @@ public class RepellentPlanResource {
      * @param repellentPlanModel 驱虫类
      * @return 更新结果
      */
+    @Permit(authorities = "experts_review deworming_implementation_control_files")
     @RequestMapping(value = "/p/{id}",method = RequestMethod.PATCH)
     public Response professorUpdate(@PathVariable(value = "id") long id,
                                     @RequestBody RepellentPlanModel repellentPlanModel) {
@@ -351,16 +387,13 @@ public class RepellentPlanResource {
 
 
     /**
-
      * 监督员入口 审核isPass1 = 0的数据
      * 审核要求:审核时要求条例写完整 审核后 isPass = 1时 无权限再修改
      * @param repellentPlanModel 驱虫类
      * METHOD:PATCH
      * @return 审核结果
      */
-
-
-
+    @Permit(authorities = "supervise_and_verify_the_implementation_of_pest_control_files")
     @RequestMapping(value = "/s/{id}",method = RequestMethod.PATCH)
     public Response supervisorUpdate(@PathVariable(value = "id") long id,
                                      @RequestBody RepellentPlanModel repellentPlanModel) {
@@ -385,12 +418,12 @@ public class RepellentPlanResource {
     /**
      * 操作员在审核前想修改数据的接口
      * 或处理被退回操作的接口
-     *
      * 行为1 与redis数据库无关
      * 行为2 redis对应数据字段+1
      * @param repellentPlanModel 驱虫类
      * @return  更新结果
      */
+    @Permit(authorities = "modify_the_insect_repellent_implementation_control_file")
     @RequestMapping(value = "/{id}",method = RequestMethod.POST)
     public Response operatorUpdate(@PathVariable(value = "id")long id ,
                                    RepellentPlanModel repellentPlanModel,
@@ -440,7 +473,7 @@ public class RepellentPlanResource {
      * @param id id
      * @return  删除结果
      */
-
+    @Permit(authorities = "deworming_implementation_control_files")
     @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
     public Response delete(@Min(0) @PathVariable(value = "id") Long id) {
         logger.info("invoke delete {}", id);

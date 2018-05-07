@@ -22,8 +22,8 @@ public class RoleService {
      * 获取所有的角色信息
      * @return
      */
-    public List<RoleModel> getAll(Long start, Byte size) {
-        return roleMapper.queryAllRole(start, size);
+    public List<RoleModel> getAll(Long start, Byte size, Byte rank) {
+        return roleMapper.queryAllRole(start, size, rank);
     }
 
     /**
@@ -117,4 +117,11 @@ public class RoleService {
         return String.valueOf(allPermits);
     }
 
+    /**
+     * 获取所有角色的数量
+     * @return
+     */
+    public Long findAllTheCount() {
+        return roleMapper.queryCount();
+    }
 }

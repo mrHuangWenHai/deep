@@ -10,7 +10,7 @@ public interface AgentMapper {
     @Select("select count(*) from agent_factory where agent_rank != 0")
     Long queryCount();
 
-    @Select("select * from agent_factory where agent_rank != 0 and responsibleId < 0")
+    @Select("select * from agent_factory where agent_rank != 0 and responsible_id < 0")
     @Results ({
             @Result(property = "id", column = "id"),
             @Result(property = "gmtCreate", column = "gmt_create"),
@@ -23,7 +23,6 @@ public interface AgentMapper {
             @Result(property = "responsibleName", column = "responsible_name")
     })
     List<AgentModel> queryAgentWithoutResponsiblePersonId();
-
 
     /**
      * 列出代理列表
@@ -61,6 +60,14 @@ public interface AgentMapper {
             @Result(property = "responsibleName", column = "responsible_name")
     })
     List<AgentModel> getSons(int id);
+
+    /**
+     * find all sons of agentID
+     * @param id agentID
+     * @return array of agentID
+     */
+    @Select("select * from agent_factory where agent_father = #{id} order by agent_rank asc")
+    int[] getSonsId(int id);
 
     /**
      * 获取上级代理

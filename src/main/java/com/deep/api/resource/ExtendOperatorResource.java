@@ -22,8 +22,8 @@ public class ExtendOperatorResource {
     private final Logger logger = LoggerFactory.getLogger(ExtendOperatorResource.class);
     /**
      * 获取某一个数据表中的所有记录
-     * @param tableName
-     * @return
+     * @param tableName 数据表格
+     * @return response的相关信息
      */
     @Permit(authorities = "query_expansion_module_information")
     @GetMapping(value = "/lists/{tablename}")
@@ -47,9 +47,9 @@ public class ExtendOperatorResource {
 
     /**
      * 查询某个表中的一条数据
-     * @param tableName
-     * @param id
-     * @return
+     * @param tableName 数据表格
+     * @param id id号码
+     * @return response的相关信息
      */
     @Permit(authorities = "query_expansion_module_information")
     @GetMapping(value = "lists/{tablename}/{id}")
@@ -72,9 +72,9 @@ public class ExtendOperatorResource {
 
     /**
      * 向某个数据表中添加数据
-     * @param map
-     * @param tableName
-     * @return
+     * @param map 数据表中存储的键值对
+     * @param tableName 数据表名称
+     * @return response 数据
      */
     @Permit(authorities = "add_extension_module_information")
     @PostMapping(value = "add/{tablename}")
@@ -92,9 +92,9 @@ public class ExtendOperatorResource {
 
     /**
      * 删除数据表中的某些记录
-     * @param tableName
-     * @param id
-     * @return
+     * @param tableName 数据表名称
+     * @param id 数据表某一条记录的ID号码
+     * @return response相关信息
      */
     @Permit(authorities = "delete_extension_module_information")
     @DeleteMapping(value = "delete/{tablename}/{id}")
@@ -112,10 +112,10 @@ public class ExtendOperatorResource {
 
     /**
      * 修改数据表中的某些记录
-     * @param tableName
-     * @param id
-     * @param values
-     * @return
+     * @param tableName 表格名称
+     * @param id 某一条记录的ID
+     * @param values 相关值
+     * @return response相关信息
      */
     @Permit(authorities = "modify_the_extension_module_information")
     @PutMapping(value = "update/{tablename}/{id}")
