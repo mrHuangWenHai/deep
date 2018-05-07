@@ -21,6 +21,7 @@ public class FactoryModel {
     @Min(value = -1, message = "负责人错误")
     private Long responsiblePersonId;
     private String responsiblePersonName;
+
     private String remark;
     @NotBlank(message = "不能为空")
     private String disinfectP;

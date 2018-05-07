@@ -148,6 +148,8 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
         permitMap.put(114, "delete_sheep_type");
         permitMap.put(115, "select_sheep_type");
         permitMap.put(116, "modify_sheep_type");
+        permitMap.put(117, "increase_pest_repellent_implementation_control_files");
+        permitMap.put(118, "check_insecticide_implementation_control_files");
     }
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -205,9 +207,11 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
                     authorSet.add(authority);
                     System.out.println(authority);
                 }
+
                 // 获取Redis数据库的用户权限信息
                 String allPermits = JedisUtil.getValue("defaultPermit"+tokenModel.getUserId());
                 System.out.println("allPermits.length() = " + allPermits.length());
+
                 for (int i = 0; i < allPermits.length(); i++) {
                     if (allPermits.charAt(i) == '1') {
                         String authority = permitMap.get(i+1);
@@ -220,7 +224,8 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
                 }
             }
         }
-      //  System.out.println("000000000000000000000000000000000000000000000000000000");
+      //  return true;
+        System.out.println("000000000000000000000000000000000000000000000000000000");
         response.setStatus(401);
         return false;
     }
