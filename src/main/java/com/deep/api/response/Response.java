@@ -40,4 +40,12 @@ public class Response {
   public void setData(Map<String, Object> data) {
     this.data = data;
   }
+
+  @Override
+  public String toString() {
+    return "Response{" +
+        "meta=" + meta +
+        ", data=" + data +
+        '}';
+  }
 }

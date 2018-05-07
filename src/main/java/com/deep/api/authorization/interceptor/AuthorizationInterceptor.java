@@ -33,6 +33,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
      */
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
+        System.out.println("222222222222222222222222222222222222222");
         logger.info("invoke preHandle of AuthorizationInterceptor {}", request, response, handler);
         if (request.getRequestURI().equals("/login") || request.getRequestURI().equals("/register") ||
                 request.getRequestURI().equals("/allfunction") ||request.getRequestURI().equals("/loginresult")||
@@ -55,13 +56,15 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         tokenManagerRealization = new TokenManagerRealization();
         // 从authorization中获取用户名以及token
         TokenModel model = tokenManagerRealization.getToken(authorization);
+        logger.info("TokenModel {}",model);
         if (model == null) {
             // 登录验证失败, 请登录
             logger.info("model == null");
             response.setStatus(401);
             return false;
         }
-        if(JedisUtil.getValue(String.valueOf(model.getUserId()))== null) {
+
+        if (JedisUtil.getValue(String.valueOf(model.getUserId())) == null) {
             logger.info("first false", JedisUtil.getValue(String.valueOf(model.getUserId())));
             response.setStatus(401);
             return false;

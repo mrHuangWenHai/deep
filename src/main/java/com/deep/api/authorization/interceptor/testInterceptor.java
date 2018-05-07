@@ -10,6 +10,7 @@ public class testInterceptor extends HandlerInterceptorAdapter {
      //   System.out.println(response.getHeader("Vary"));
      //   System.out.println(response.getHeaderNames());
      //   System.out.println(response.getStatus());
+        System.out.println("111111111111111111111111111111111");
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, Cache-Control");
         response.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET, PUT, POST, DELETE,PATCH");

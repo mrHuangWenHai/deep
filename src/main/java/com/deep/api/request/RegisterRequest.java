@@ -124,4 +124,21 @@ public class RegisterRequest {
     public void setQq(String qq) {
         this.qq = qq;
     }
+
+    @Override
+    public String toString() {
+        return "RegisterRequest{" +
+            "username='" + username + '\'' +
+            ", password='" + password + '\'' +
+            ", userTelephone='" + userTelephone + '\'' +
+            ", question_1='" + question_1 + '\'' +
+            ", answer_1='" + answer_1 + '\'' +
+            ", question_2='" + question_2 + '\'' +
+            ", answer_2='" + answer_2 + '\'' +
+            ", question_3='" + question_3 + '\'' +
+            ", answer_3='" + answer_3 + '\'' +
+            ", userEmail='" + userEmail + '\'' +
+            ", qq='" + qq + '\'' +
+            '}';
+    }
 }

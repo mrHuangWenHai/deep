@@ -31,13 +31,13 @@ import java.util.Map;
 @RestController
 public class OperationFileResource {
   private Logger logger = LoggerFactory.getLogger(OperationFileResource.class);
-
   @Resource
   private OperationFileService operationFileService;
 
   @PostMapping(value = "")
   Response addOperationFile(@Valid @RequestBody OperationFile operationFile,
                             BindingResult bindingResult) {
+
     if (bindingResult.hasErrors()) {
       Response response = Responses.errorResponse("param is error");
       Map<String, Object> map = new HashMap<String, Object>();
@@ -45,7 +45,9 @@ public class OperationFileResource {
       response.setData(map);
       return response;
     }
+
     logger.info("invoke Post /of {}",operationFile);
+
     try {
       int isSuccess  = operationFileService.addOperationFile(operationFile);
       if (isSuccess == 1) {

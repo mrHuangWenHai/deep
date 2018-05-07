@@ -152,7 +152,7 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         logger.info("invoke preHandle of PermitInterceptor", request, response, handler);
-
+        System.out.println("3333333333333333333333333333333");
         System.out.println("this is the preHandle of PermitInterceptor");
 
         if (request.getMethod().equals("OPTIONS")) {
@@ -171,6 +171,7 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
             logger.info("PermitInterceptor:don't need to interceptor");
             return true;
         }
+
         if (! (handler instanceof HandlerMethod)) {
             return true;
         }
@@ -219,7 +220,9 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
                 }
             }
         }
+      //  System.out.println("000000000000000000000000000000000000000000000000000000");
         response.setStatus(401);
         return false;
     }
+
 }

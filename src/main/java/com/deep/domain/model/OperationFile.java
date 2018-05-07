@@ -16,40 +16,40 @@ public class OperationFile {
   private Timestamp gmtCreate;
   @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
   private Timestamp gmtModified;
-  @NotBlank
+  @NotNull
   @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
   private Timestamp checkTime;
-  @NotBlank
+  @NotNull
   private Boolean colonyHouse;
-  @NotBlank
+  @NotNull
   private Boolean warehouseWorkshop;
-  @NotBlank
+  @NotNull
   private Boolean killWormDeratization;
-  @NotBlank
+  @NotNull
   private Boolean sterilizingRoom;
-  @NotBlank
+  @NotNull
   private Boolean operation;
-  @NotBlank
+  @NotNull
   private Boolean needleSheep;
-  @NotBlank
+  @NotNull
   private Boolean vaccine;
-  @NotBlank
+  @NotNull
   private Boolean safetyProtection;
-  @NotBlank
+  @NotNull
   private Boolean rubbishWater;
-  @NotBlank
+  @NotNull
   private Boolean operationSpecification;
-  @NotBlank
+  @NotNull
   private Boolean airTemperature;
-  @NotBlank
+  @NotNull
   private Boolean exerciseDaylighting;
-  @NotBlank
+  @NotNull
   private Boolean carDisinfect;
   @Min(0)
   private int operatorId;
   @Min(0)
   private int factoryNum;
-  @NotBlank
+  @NotNull
   private String factoryName;
 
   int ispassCheck;

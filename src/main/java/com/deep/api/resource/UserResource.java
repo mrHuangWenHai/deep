@@ -115,7 +115,6 @@ public class UserResource {
      * @param id 获取用户的信息(简略信息)
      * @return response
      */
-    @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @GetMapping(value = "user/detail/{username}")
     public Response getUserOneDetail(@PathVariable("username") String id) {
         logger.info("invoke getUserOneDetail{}, url is user/detail/{id}", id);
@@ -299,6 +298,7 @@ public class UserResource {
         HashMap<String, Object> data = new HashMap<>();
         data.put("success", success);
         response.setData(data);
+        System.out.println(response);
         return response;
     }
 
