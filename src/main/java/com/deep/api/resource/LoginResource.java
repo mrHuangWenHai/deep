@@ -70,7 +70,9 @@ public class LoginResource {
             return response;
         } else {
             // 验证密码信息, 忽略CASE OR case
+
             if (userModel.getUserPwd().equalsIgnoreCase(password)) {
+                System.out.println(userModel);
                 Response response = Responses.successResponse();
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("successMessage", "登录成功!");
@@ -115,6 +117,7 @@ public class LoginResource {
               JedisUtil.setValue("defaultPermit" + userModel.getId(), defaultPermit);
               JedisUtil.doExpire("defaultPermit" + userModel.getId());
               httpServletResponse.setHeader("Authorization", userModel.getId() + ":" + tokenModel.getToken());
+              System.out.println("response = "+response);
               return response;
             } else {
               Response response = Responses.errorResponse("用户名或者密码错误");

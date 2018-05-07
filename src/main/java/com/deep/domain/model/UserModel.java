@@ -379,4 +379,38 @@ public class UserModel {
 
         public interface UserDetailView extends UserSimpleView {}
 
+
+  @Override
+  public String toString() {
+    return "UserModel{" +
+        "id=" + id +
+        ", gmtCreate=" + gmtCreate +
+        ", gmtModified=" + gmtModified +
+        ", pkUserid='" + pkUserid + '\'' +
+        ", userPwd='" + userPwd + '\'' +
+        ", userNum='" + userNum + '\'' +
+        ", userPic='" + userPic + '\'' +
+        ", userRealname='" + userRealname + '\'' +
+        ", userLocation='" + userLocation + '\'' +
+        ", userTelephone='" + userTelephone + '\'' +
+        ", userRemark='" + userRemark + '\'' +
+        ", userFactory=" + userFactory +
+        ", userRole=" + userRole +
+        ", userPermit='" + userPermit + '\'' +
+        ", isExtended=" + isExtended +
+        ", isFactory=" + isFactory +
+        ", factoryName='" + factoryName + '\'' +
+        ", question_1='" + question_1 + '\'' +
+        ", answer_1='" + answer_1 + '\'' +
+        ", question_2='" + question_2 + '\'' +
+        ", answer_2='" + answer_2 + '\'' +
+        ", question_3='" + question_3 + '\'' +
+        ", answer_3='" + answer_3 + '\'' +
+        ", userEmail='" + userEmail + '\'' +
+        ", msn='" + msn + '\'' +
+        ", qq='" + qq + '\'' +
+        ", officialPhone='" + officialPhone + '\'' +
+        ", familyPhone='" + familyPhone + '\'' +
+        '}';
+  }
 }
