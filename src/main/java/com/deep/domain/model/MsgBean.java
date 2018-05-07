@@ -9,7 +9,7 @@ public class MsgBean {
   private String user_id;
   private String[] to;
   private String name;
-  private String role_id;
+  private String isExpert;
   private String mode;
 
   public String getTalk_id() {
@@ -52,12 +52,12 @@ public class MsgBean {
     this.name = name;
   }
 
-  public String getRole_id() {
-    return role_id;
+  public String getIsExpert() {
+    return isExpert;
   }
 
-  public void setRole_id(String role_id) {
-    this.role_id = role_id;
+  public void setIsExpert(String isExpert) {
+    this.isExpert = isExpert;
   }
 
   public String getMode() {

@@ -207,6 +207,7 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
                 }
                 // 获取Redis数据库的用户权限信息
                 String allPermits = JedisUtil.getValue("defaultPermit"+tokenModel.getUserId());
+                assert allPermits != null;
                 System.out.println("allPermits.length() = " + allPermits.length());
                 for (int i = 0; i < allPermits.length(); i++) {
                     if (allPermits.charAt(i) == '1') {
