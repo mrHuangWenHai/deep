@@ -3,6 +3,7 @@ package com.deep.api.resource;
 import com.deep.api.Utils.FileUtil;
 import com.deep.api.Utils.StringToLongUtil;
 import com.deep.api.authorization.annotation.Permit;
+import com.deep.api.authorization.tools.Constants;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.NoticePlan;
@@ -20,6 +21,7 @@ import javax.validation.Valid;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * author: Created  By  Caojiawei
@@ -49,7 +51,11 @@ public class NoticeResource {
     public Response addPlan(@RequestBody @Valid NoticePlan insert, BindingResult bindingResult){
         logger.info("invoke addPlan {}, the url is notice", insert);
         if (bindingResult.hasErrors()) {
-            return Responses.errorResponse("信息发布失败！");
+            Response response = Responses.errorResponse("信息发布失败!");
+            Map<String, Object> map = new HashMap<>();
+            map.put("errorMessage", bindingResult.getAllErrors());
+            response.setData(map);
+            return response;
         }else {
             insert.setGmtCreate(new Date());
             insert.setGmtModified(new Date());
@@ -198,11 +204,10 @@ public class NoticeResource {
     @GetMapping(value = "/type/{type}")
     public Response getAllOfOneType(@PathVariable("type") String type) {
         logger.info("invoke getAllOneType {}, url is notice/type/{type}", type);
-        int uid = StringToLongUtil.stringToInt(type);
-        if (uid == -1) {
-            return Responses.errorResponse("查询错误");
+        if (type == null || type.equals("")) {
+            return Responses.errorResponse("error!");
         }
-        List<NoticePlan> all = noticePlanService.getNoticesByOneType(uid);
+        List<NoticePlan> all = noticePlanService.getNoticesByOneType(type);
         if (all == null) {
             return Responses.errorResponse("查询错误");
         }
@@ -355,7 +360,6 @@ public class NoticeResource {
         logger.info("invoke uploadFile, no params");
 
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
-        String filepath = "/home/doubibobo/picture/";
         for (MultipartFile file : files) {
             String filename = file.getOriginalFilename();
             String path = System.currentTimeMillis() + filename;
@@ -396,10 +400,10 @@ public class NoticeResource {
             }
             if (!file.isEmpty()) {
                 try {
-                    noticePlanService.uploadFile(file.getBytes(), filepath, path);
+                    noticePlanService.uploadFile(file.getBytes(), Constants.filePath, path);
                     Response response = Responses.successResponse();
                     HashMap<String, Object> data = new HashMap<>();
-                    data.put("List", "180.76.180.95:9010/picture/" + path);
+                    data.put("List", Constants.serverUrl + path);
                     response.setData(data);
                     return response;
                 } catch (Exception e) {

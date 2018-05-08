@@ -19,7 +19,7 @@ public class NoticePlan implements Serializable {
 
     private Integer operatorId;
 
-    private Byte type;
+    private String type;
 
     @NotBlank(message = "不能为空")
     private String title;
@@ -68,11 +68,11 @@ public class NoticePlan implements Serializable {
 
     }
 
-    public Byte getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Byte type) {
+    public void setType(String type) {
         this.type = type;
     }
 

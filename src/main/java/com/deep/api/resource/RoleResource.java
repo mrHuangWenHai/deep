@@ -86,7 +86,9 @@ public class RoleResource {
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
         data.put("List", roleRequests);
-        data.put("size", roleService.findAllTheCount());
+        System.out.println("rank = " + rank);
+        System.out.println("size" + roleService.findAllTheCount(rank));
+        data.put("size", roleService.findAllTheCount(rank));
         response.setData(data);
         return response;
     }
@@ -107,22 +109,24 @@ public class RoleResource {
             response.setData(data);
             return response;
         } else {
+            if (roleRequest.getRolePermit() == null) {
+                System.out.println("权限为空!!!");
+                return Responses.errorResponse("失败!");
+            }
             RoleModel roleModel = new RoleModel();
-
             roleModel.setGmtCreate(new Timestamp(System.currentTimeMillis()));
             roleModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
             roleModel.setPkTypeid(String.valueOf(0));
             roleModel.setRoleDescription(roleRequest.getRoleDescription());
             roleModel.setTypeName(roleRequest.getTypeName());
             roleModel.setDefaultPermit(PermitUtil.stringArrayToString(roleRequest.getRolePermit()));
-
             Long success = roleService.addRole(roleModel);
             if (success <= 0) {
                 return Responses.errorResponse("添加失败");
             }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("model", success);
+            data.put("model", roleService.getTheBigId());
             response.setData(data);
             return response;
         }

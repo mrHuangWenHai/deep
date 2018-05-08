@@ -61,7 +61,7 @@ public class AgentResource {
             @RequestParam(value = "size", defaultValue = "10") String size,
             @PathVariable("id") String id, HttpServletRequest request
     ) {
-        logger.info("invoke agentLists, url is agent/");
+        logger.info("invoke agentLists, url is agent {}", id, page, size);
         Integer uid = StringToLongUtil.stringToInt(id);
         Long upage = StringToLongUtil.stringToLong(page);
         Byte usize = StringToLongUtil.stringToByte(size);
@@ -127,7 +127,7 @@ public class AgentResource {
         AgentRequest agentRequest = new AgentRequest();
         agentRequest.setAgentRank(agentRankMap.get(agentModel.getAgentRank()));
         agentRequest.setAgentArea(agentModel.getAgentArea());
-        agentRequest.setAgentFather(agentModel.getAgentFather());
+        agentRequest.setFactoryNum(agentModel.getAgentFather());
         agentRequest.setAgentName(agentModel.getAgentName());
         agentRequest.setResponsibleId(agentModel.getResponsibleId());
         agentRequest.setResponsibleName(agentModel.getResponsibleName());
@@ -205,7 +205,7 @@ public class AgentResource {
 
             agentModel.setAgentRank(agentMapRank.get(agentRequest.getAgentRank()));
             agentModel.setAgentArea(agentRequest.getAgentArea());
-            agentModel.setAgentFather(agentRequest.getAgentFather());
+            agentModel.setAgentFather(agentRequest.getFactoryNum());
             agentModel.setAgentName(agentRequest.getAgentName());
             agentModel.setResponsibleId(agentRequest.getResponsibleId());
             agentModel.setResponsibleName(agentRequest.getResponsibleName());
@@ -246,7 +246,7 @@ public class AgentResource {
             agentModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
             agentModel.setAgentRank(agentMapRank.get(agentRequest.getAgentRank()));
             agentModel.setAgentArea(agentRequest.getAgentArea());
-            agentModel.setAgentFather(agentRequest.getAgentFather());
+            agentModel.setAgentFather(agentRequest.getFactoryNum());
             agentModel.setAgentName(agentRequest.getAgentName());
             agentModel.setResponsibleId(agentRequest.getResponsibleId());
             agentModel.setResponsibleName(agentRequest.getResponsibleName());

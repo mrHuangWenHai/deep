@@ -18,7 +18,7 @@ public class AgentRequest {
     @NotEmpty(message = "代理区域不能为空")
     private String agentArea;
 
-    private int agentFather;
+    private int factoryNum;
 
     private long responsibleId;
 
@@ -72,12 +72,12 @@ public class AgentRequest {
         this.agentArea = agentArea;
     }
 
-    public int getAgentFather() {
-        return agentFather;
+    public int getFactoryNum() {
+        return factoryNum;
     }
 
-    public void setAgentFather(int agentFather) {
-        this.agentFather = agentFather;
+    public void setFactoryNum(int factoryNum) {
+        this.factoryNum = factoryNum;
     }
 
     public long getResponsibleId() {
