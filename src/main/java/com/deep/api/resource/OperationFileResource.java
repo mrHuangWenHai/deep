@@ -68,14 +68,15 @@ public class OperationFileResource {
   Response getOperationFile(@PathVariable(value = "id")long id,
                             OperationCoditionRequest operationCoditionRequest,
                             HttpServletRequest httpServletRequest) {
-    logger.info("invoke Get /of {}",operationCoditionRequest);
-    try {
 
+    try {
       Map<Long, List<Long>> factoryMap = null;
       Byte role = Byte.parseByte(TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION)));
       if (role == 0) {
+
         operationCoditionRequest.setFactoryNum(id);
       } else if (role == 1) {
+        System.out.println("----------------------");
         factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
         List<Long> factoryList = new ArrayList<>();
         factoryList.addAll(factoryMap.get(new Long(-1)));
@@ -84,7 +85,7 @@ public class OperationFileResource {
       } else {
         return Responses.errorResponse("你没有权限");
       }
-
+      logger.info("invoke Get /of {}",operationCoditionRequest);
       List<OperationFile> list = operationFileService.getOperationFile(operationCoditionRequest);
 
       if (role == 1) {
@@ -100,7 +101,6 @@ public class OperationFileResource {
             others.add(operationFile);
           }
         }
-
         factorylist.addAll(direct);
         factorylist.addAll(others);
         data.put("List", factorylist);
@@ -194,5 +194,15 @@ public class OperationFileResource {
     data.put("model", operationFile);
     response.setData(data);
     return response;
+  }
+
+  @DeleteMapping(value = "/{id}")
+  public Response deleteOperationFile(@PathVariable("id") int id) {
+    int isSuccess = operationFileService.deleteOperationFile(id);
+    if (isSuccess == 1) {
+      return Responses.successResponse();
+    } else {
+      return Responses.errorResponse("删除错误");
+    }
   }
 }

@@ -47,4 +47,8 @@ public class OperationFileService {
   public int updateOperationFileByOperationFile(OperationFile operationFile) {
     return operationFileMapper.updateOperationFileByOperationFile(operationFile);
   }
+
+  public int deleteOperationFile(int id) {
+    return operationFileMapper.deleteOperationFile(id);
+  }
 }

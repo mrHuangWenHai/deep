@@ -30,4 +30,5 @@ public interface OperationFileMapper {
 
   int updateOperationFileByOperationFile(@Param("operationFile")OperationFile operationFile);
 
+  int deleteOperationFile(@Param("id")int id);
 }

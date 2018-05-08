@@ -52,7 +52,6 @@ public class GenealogicalFilesResource {
     @Permit(authorities = "add_sheep_type")
     @RequestMapping(value = "/type",method = RequestMethod.POST)
     public Response type(@RequestBody @Validated TypeBriefModel typeBriefModel,
-
                          BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             System.out.println(bindingResult.getAllErrors());
@@ -112,9 +111,11 @@ public class GenealogicalFilesResource {
               break;
           }
       }
+
       if (i == 0) {
-          return Responses.errorResponse("No this type before");
+          return Responses.errorResponse("没有这种这种类型的商品");
       }
+
       SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
       String time = simpleDateFormat.format(new Timestamp(System.currentTimeMillis()));
       genealogicalFilesModel.setGmtCreate(time);
@@ -123,7 +124,7 @@ public class GenealogicalFilesResource {
       try {
           int id = genealogicalFilesService.insertGenealogicalFilesModel(genealogicalFilesModel);
           if (id == 0) {
-              return Responses.errorResponse("add data error");
+              return Responses.errorResponse("添加数据失败");
           } else {
               HashMap<String,Object> data = new HashMap<>();
               data.put("id",genealogicalFilesModel.getId());
@@ -131,7 +132,7 @@ public class GenealogicalFilesResource {
           }
       } catch (Exception e) {
           e.printStackTrace();
-          return Responses.errorResponse("data already exist");
+          return Responses.errorResponse("数据已经存在");
       }
 
     }

@@ -29,13 +29,11 @@ public class PicResource {
     private final Logger logger = LoggerFactory.getLogger(ExampleResource.class);
 
     @RequestMapping(value = "/uploadFile/upload",method = RequestMethod.POST)
-    public @ResponseBody Response addPic(@Valid Pic pic,
+    public @ResponseBody Response addPic(Pic pic,
                            @RequestParam("file")MultipartFile file,
                            HttpServletRequest request) {
 
         logger.info("invoke /uploadFile/upload [{},{},{}]",pic,file,request);
-
-
         try {
             String Header = FileUtil.getFileHeader(file);
             if ( !Header.equals("89504E47")  && !Header.equals("47494638") &&
@@ -49,8 +47,6 @@ public class PicResource {
                 throw new Exception("文件格式错误！");
 
             }
-
-
             Date udate = new Date();
             pic.setUdate(udate);
 
@@ -96,7 +92,7 @@ public class PicResource {
                 Response response = Responses.errorResponse("数据插入失败");
                 return response;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
 
             System.out.println(e.getMessage());
             Response response = Responses.errorResponse(e.getMessage());
@@ -105,10 +101,9 @@ public class PicResource {
     }
 
     @RequestMapping(value = "/searchfile/searchByExpert",method = RequestMethod.POST)
-    public @ResponseBody Response getByExpert(@RequestBody Pic pic){
+    public @ResponseBody Response getByExpert(@RequestBody Pic pic) {
         logger.info("invoke /searchfile/searchByExpert {}",pic);
-        if (pic.getExpert().isEmpty())
-        {
+        if (pic.getExpert().isEmpty()) {
             Response response = Responses.errorResponse("查询条件不能为空！");
             return response;
         }
@@ -125,7 +120,7 @@ public class PicResource {
     }
 
     @RequestMapping(value = "/searchfile/searchByDate",method = RequestMethod.POST)
-    public @ResponseBody Response getByDate(@RequestBody Pic pic){
+    public @ResponseBody Response getByDate(@RequestBody Pic pic) {
         logger.info("invoke /searchfile/searchByDate [{},{}]",pic.getSdate(),pic.getEdate());
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
@@ -140,7 +135,7 @@ public class PicResource {
     }
 
     @RequestMapping(value = "/searchfile/searchByBrand",method = RequestMethod.POST)
-    public @ResponseBody Response getByBrand(@RequestBody Pic pic){
+    public @ResponseBody Response getByBrand(@RequestBody Pic pic) {
         logger.info("invoke /searchfile/searchByBrand {}",pic.getBrand());
         if (pic.getBrand().isEmpty())
         {
@@ -158,6 +153,7 @@ public class PicResource {
         response.setData(data);
         return response;
     }
+
     @RequestMapping(value = "/searchfile/searchByVaccine",method = RequestMethod.POST)
     public @ResponseBody Response getByVaccine(@RequestBody Pic pic){
         logger.info("invoke /searchfile/searchByVaccine {}",pic.getVaccine());
@@ -207,21 +203,19 @@ public class PicResource {
     @RequestMapping(value = "/searchfile/searchByUploader",method = RequestMethod.POST)
     public @ResponseBody Response getByUploader(@RequestBody Pic pic){
         logger.info("invoke /searchfile/searchByUploader {}",pic.getUploader());
-        if (pic.getUploader().isEmpty())
-        {
+        if (pic.getUploader().isEmpty()) {
             Response response = Responses.errorResponse("查询条件不能为空！");
             return response;
         }
+
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
         criteria.andUploaderLike("%"+pic.getUploader()+"%");
         List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
-
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
         data.put("searchByUploader",select);
         response.setData(data);
         return response;
     }
-
 }

@@ -24,7 +24,6 @@ public class DiagnosisPlanModel {
     private String gmtModified;
     @NotBlank
     private String treatEffect;
-    @NotBlank
     @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
     private String gmtSup;
     @Min(0)

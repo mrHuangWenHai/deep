@@ -37,7 +37,6 @@ public class DiagnosisResource {
 
     @Resource
     private DiagnosisPlanService diagnosisPlanService;
-
     /**
      * 添加的接口：/addPlan
      * 接收参数：整个表单信息（所有参数必填）
@@ -146,7 +145,6 @@ public class DiagnosisResource {
         if (!json.containsKey("isPassCheck")) {
             return Responses.errorResponse("lack isPassCheck");
         }
-
         short ispassCheck = json.get("isPassCheck").shortValue();
         if (ispassCheck == 2) {
             return Responses.errorResponse("已经审批过了");
@@ -240,8 +238,8 @@ public class DiagnosisResource {
         } else if (role == 1) {
             factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
             List<Long> factoryList = new ArrayList<>();
-            factoryList.addAll(factoryMap.get(-1));
-            factoryList.addAll(factoryMap.get(0));
+            factoryList.addAll(factoryMap.get(new Long(-1)));
+            factoryList.addAll(factoryMap.get(new Long(0)));
             diagnosisRequest.setFactoryList(factoryList);
         } else {
             return Responses.errorResponse("你没有权限");
@@ -254,7 +252,7 @@ public class DiagnosisResource {
             Map<String,Object> data = new HashMap<>();
             List<DiagnosisPlanModel> direct = new ArrayList<>();
             List<DiagnosisPlanModel> others = new ArrayList<>();
-            List<Long> directId = factoryMap.get(-1);
+            List<Long> directId = factoryMap.get(new Long(-1));
             for (DiagnosisPlanModel diagnosisPlanModel : diagnosisPlanModels) {
                 if (directId.contains(diagnosisPlanModel.getFactoryNum())) {
                     direct.add(diagnosisPlanModel);

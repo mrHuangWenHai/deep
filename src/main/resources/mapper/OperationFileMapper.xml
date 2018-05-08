@@ -42,7 +42,9 @@
             </foreach>
             )
         </if>
-
+        <if test="operationCoditionRequest.factoryNum != null">
+            AND factory_num = #{operationCoditionRequest.factoryNum}
+        </if>
         <if test="operationCoditionRequest.operationId != null">
             AND operator_id = #{operationCoditionRequest.operationId}
         </if>
@@ -51,7 +53,7 @@
             AND check_time &gt;= #{operationCoditionRequest.checkTime}
         </if>
 
-        <if test="operationCoditionRequest.techCheckSt != null">
+        <if test="operationCoditionRequest.techCheckStatus != null">
             AND tech_check = #{operationCoditionRequest.techCheckStatus}
         </if>
     </select>
@@ -208,5 +210,11 @@
         </set>
         where id = #{operationFile.id} and ispass_check = 2 and ispass_sup = 2
     </update>
+
+    <delete id = "deleteOperationFile">
+        delete from
+        operation_file
+        where id = #{id}
+    </delete>
 
 </mapper>

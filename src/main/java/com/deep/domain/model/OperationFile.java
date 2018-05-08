@@ -1,8 +1,6 @@
 package com.deep.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
-
 import javax.validation.constraints.*;
 import java.sql.Timestamp;
 
@@ -13,12 +11,12 @@ import java.sql.Timestamp;
 public class OperationFile {
   private int id;
   @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
-  private Timestamp gmtCreate;
+  private String gmtCreate;
   @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
-  private Timestamp gmtModified;
+  private String gmtModified;
   @NotNull
   @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
-  private Timestamp checkTime;
+  private String checkTime;
   @NotNull
   private Boolean colonyHouse;
   @NotNull
@@ -64,27 +62,27 @@ public class OperationFile {
     this.id = id;
   }
 
-  public Timestamp getGmtCreate() {
+  public String getGmtCreate() {
     return gmtCreate;
   }
 
-  public void setGmtCreate(Timestamp gmtCreate) {
+  public void setGmtCreate(String gmtCreate) {
     this.gmtCreate = gmtCreate;
   }
 
-  public Timestamp getGmtModified() {
+  public String getGmtModified() {
     return gmtModified;
   }
 
-  public void setGmtModified(Timestamp gmtModified) {
+  public void setGmtModified(String gmtModified) {
     this.gmtModified = gmtModified;
   }
 
-  public Timestamp getCheckTime() {
+  public String getCheckTime() {
     return checkTime;
   }
 
-  public void setCheckTime(Timestamp checkTime) {
+  public void setCheckTime(String checkTime) {
     this.checkTime = checkTime;
   }
 

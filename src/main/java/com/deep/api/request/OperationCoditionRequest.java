@@ -86,6 +86,8 @@ public class OperationCoditionRequest {
         ", checkTime=" + checkTime +
         ", factoryNum=" + factoryNum +
         ", factoryName='" + factoryName + '\'' +
+        ", factoryList=" + factoryList +
         '}';
   }
+
 }
