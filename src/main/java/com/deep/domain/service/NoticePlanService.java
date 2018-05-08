@@ -43,7 +43,7 @@ public class NoticePlanService {
      * @param type
      * @return
      */
-    public List<NoticePlan> getNoticesByOneType(int type) {
+    public List<NoticePlan> getNoticesByOneType(String type) {
         return noticeMapper.queryAllNoticeByType(type);
     }
 

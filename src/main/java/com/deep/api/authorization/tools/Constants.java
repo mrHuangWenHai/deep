@@ -7,4 +7,8 @@ public class Constants {
     public static final int TOKEN_EXPIRES_HOUR = 72;
     // 存放Authorization的header字段
     public static final String AUTHORIZATION = "authorization";
+    // 设置文件的上传路径 TODO 上传时需要更改路径
+    public static final String filePath = "/home/doubibobo/picture/";
+    // 设置URL TODO 上传时需要更改路径
+    public static final String serverUrl = "192.168.1.108:9010/picture/";
 }

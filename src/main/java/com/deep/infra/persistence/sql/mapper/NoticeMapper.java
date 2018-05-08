@@ -31,7 +31,7 @@ public interface NoticeMapper {
             @Result(property = "operatorName", column = "operator_name"),
             @Result(property = "operatorId", column = "operator_id")
     })
-    List<NoticePlan> queryAllNoticeByType(int type);
+    List<NoticePlan> queryAllNoticeByType(String type);
 
     @Select("select * from notice_plan where id = #{id}")
     @Results({
