@@ -5,6 +5,7 @@ import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.authorization.token.TokenManagerRealization;
 import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.PasswordRequest;
+import com.deep.api.request.RolePermitRequest;
 import com.deep.api.request.UserRequest;
 
 import com.deep.api.response.Professor;
@@ -514,6 +515,27 @@ public class UserResource {
             return 1;
         } else {
             return 0;
+        }
+    }
+
+    @Permit(authorities = "modify_user")
+    @PatchMapping(value = "/user/role/{id}")
+    public Response updateUserRolePermit(@RequestBody RolePermitRequest rolePermitRequest, @PathVariable("id") String id) {
+        logger.info("invoke updateUserRolePermit {}", rolePermitRequest.getRole(), rolePermitRequest.getId());
+        long uid = StringToLongUtil.stringToLong(id);
+        if (uid == -1) {
+            return Responses.errorResponse("error!");
+        }
+
+        UserModel user = userService.getOneUser(uid);
+        //用户名不可以更改
+        user.setId(uid);
+        user.setUserRole(rolePermitRequest.getRole());
+        Long success = userService.updateUser(user);
+        if (success < 0) {
+            return Responses.errorResponse("Error!");
+        } else {
+            return Responses.successResponse();
         }
     }
 }

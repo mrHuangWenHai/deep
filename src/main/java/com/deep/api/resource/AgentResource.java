@@ -61,7 +61,7 @@ public class AgentResource {
             @RequestParam(value = "size", defaultValue = "10") String size,
             @PathVariable("id") String id, HttpServletRequest request
     ) {
-        logger.info("invoke agentLists, url is agent/");
+        logger.info("invoke agentLists, url is agent {}", id, page, size);
         Integer uid = StringToLongUtil.stringToInt(id);
         Long upage = StringToLongUtil.stringToLong(page);
         Byte usize = StringToLongUtil.stringToByte(size);

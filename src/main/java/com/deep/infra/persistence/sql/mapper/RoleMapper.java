@@ -6,14 +6,14 @@ import java.util.List;
 
 @Mapper
 public interface RoleMapper {
-    @Select("select count(*) from role_user")
-    Long queryCount();
+    @Select("select count(*) from role_user where id > #{rank}")
+    Long queryCount(Byte rank);
 
     /**
      * 列出角色列表
      * @return
      */
-    @Select("select * from role_user where id >= #{rank} limit #{start}, #{size}")
+    @Select("select * from role_user where id > #{rank} limit #{start}, #{size}")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "gmtCreate", column = "gmt_create"),
@@ -58,6 +58,10 @@ public interface RoleMapper {
             @Result(property = "defaultPermit", column = "default_permit")
     })
     RoleModel queryRoleByPkTypeId(Long pkTypeId);
+
+
+    @Select("select max(id) from role_user")
+    Long getTheBigId();
 
     /**
      * 插入一个角色

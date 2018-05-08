@@ -6,9 +6,7 @@ import com.deep.infra.persistence.sql.mapper.RoleMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @Service
@@ -54,6 +52,10 @@ public class RoleService {
      */
     public Long addRole(RoleModel roleModel) {
         return roleMapper.insertRole(roleModel);
+    }
+
+    public Long getTheBigId() {
+        return roleMapper.getTheBigId();
     }
 
     /**
@@ -121,7 +123,7 @@ public class RoleService {
      * 获取所有角色的数量
      * @return
      */
-    public Long findAllTheCount() {
-        return roleMapper.queryCount();
+    public Long findAllTheCount(Byte rank) {
+        return roleMapper.queryCount(rank);
     }
 }
