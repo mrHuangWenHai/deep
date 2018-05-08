@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.deep.infra.persistence.sql.mapper.RecoveryModelMapper" >
+  <resultMap id="BaseResultMap" type="com.deep.domain.model.RecoveryModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="company_id" property="companyId" jdbcType="INTEGER" />
+    <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+    <result column="sheep_type" property="sheepType" jdbcType="INTEGER" />
+    <result column="overall" property="overall" jdbcType="INTEGER" />
+    <result column="neck" property="neck" jdbcType="INTEGER" />
+    <result column="fore_body" property="foreBody" jdbcType="INTEGER" />
+    <result column="middle_body" property="middleBody" jdbcType="INTEGER" />
+    <result column="hindquarters" property="hindquarters" jdbcType="INTEGER" />
+    <result column="limbs" property="limbs" jdbcType="INTEGER" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="total" property="total" jdbcType="INTEGER" />
+    <result column="pedigree" property="pedigree" jdbcType="INTEGER" />
+    <result column="brucellosis" property="brucellosis" jdbcType="INTEGER" />
+    <result column="antibody" property="antibody" jdbcType="INTEGER" />
+    <result column="foot_mouth" property="footMouth" jdbcType="INTEGER" />
+    <result column="antibiotic" property="antibiotic" jdbcType="INTEGER" />
+    <result column="hormone" property="hormone" jdbcType="INTEGER" />
+    <result column="result" property="result" jdbcType="INTEGER" />
+    <result column="upload_time" property="uploadTime" jdbcType="DATE" />
+    <result column="eartag_address" property="eartagAddress" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, company_id, company_name, sheep_type, overall, neck, fore_body, middle_body, 
+    hindquarters, limbs, sex, total, pedigree, brucellosis, antibody, foot_mouth, antibiotic, 
+    hormone, result, upload_time, eartag_address
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.deep.domain.model.RecoveryModelExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from recovery_indicator
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from recovery_indicator
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from recovery_indicator
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.deep.domain.model.RecoveryModelExample" >
+    delete from recovery_indicator
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.deep.domain.model.RecoveryModel" useGeneratedKeys="true" keyProperty="returnId">
+    insert into recovery_indicator (id, company_id, company_name, 
+      sheep_type, overall, neck, 
+      fore_body, middle_body, hindquarters, 
+      limbs, sex, total, 
+      pedigree, brucellosis, antibody, 
+      foot_mouth, antibiotic, hormone, 
+      result, upload_time, eartag_address
+      )
+    values (#{id,jdbcType=INTEGER}, #{companyId,jdbcType=INTEGER}, #{companyName,jdbcType=VARCHAR}, 
+      #{sheepType,jdbcType=INTEGER}, #{overall,jdbcType=INTEGER}, #{neck,jdbcType=INTEGER}, 
+      #{foreBody,jdbcType=INTEGER}, #{middleBody,jdbcType=INTEGER}, #{hindquarters,jdbcType=INTEGER}, 
+      #{limbs,jdbcType=INTEGER}, #{sex,jdbcType=VARCHAR}, #{total,jdbcType=INTEGER}, 
+      #{pedigree,jdbcType=INTEGER}, #{brucellosis,jdbcType=INTEGER}, #{antibody,jdbcType=INTEGER}, 
+      #{footMouth,jdbcType=INTEGER}, #{antibiotic,jdbcType=INTEGER}, #{hormone,jdbcType=INTEGER}, 
+      #{result,jdbcType=INTEGER}, #{uploadTime,jdbcType=DATE}, #{eartagAddress,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.deep.domain.model.RecoveryModel" useGeneratedKeys="true" keyProperty="returnId">
+    insert into recovery_indicator
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="companyName != null" >
+        company_name,
+      </if>
+      <if test="sheepType != null" >
+        sheep_type,
+      </if>
+      <if test="overall != null" >
+        overall,
+      </if>
+      <if test="neck != null" >
+        neck,
+      </if>
+      <if test="foreBody != null" >
+        fore_body,
+      </if>
+      <if test="middleBody != null" >
+        middle_body,
+      </if>
+      <if test="hindquarters != null" >
+        hindquarters,
+      </if>
+      <if test="limbs != null" >
+        limbs,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="total != null" >
+        total,
+      </if>
+      <if test="pedigree != null" >
+        pedigree,
+      </if>
+      <if test="brucellosis != null" >
+        brucellosis,
+      </if>
+      <if test="antibody != null" >
+        antibody,
+      </if>
+      <if test="footMouth != null" >
+        foot_mouth,
+      </if>
+      <if test="antibiotic != null" >
+        antibiotic,
+      </if>
+      <if test="hormone != null" >
+        hormone,
+      </if>
+      <if test="result != null" >
+        result,
+      </if>
+      <if test="uploadTime != null" >
+        upload_time,
+      </if>
+      <if test="eartagAddress != null" >
+        eartag_address,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=INTEGER},
+      </if>
+      <if test="companyName != null" >
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="sheepType != null" >
+        #{sheepType,jdbcType=INTEGER},
+      </if>
+      <if test="overall != null" >
+        #{overall,jdbcType=INTEGER},
+      </if>
+      <if test="neck != null" >
+        #{neck,jdbcType=INTEGER},
+      </if>
+      <if test="foreBody != null" >
+        #{foreBody,jdbcType=INTEGER},
+      </if>
+      <if test="middleBody != null" >
+        #{middleBody,jdbcType=INTEGER},
+      </if>
+      <if test="hindquarters != null" >
+        #{hindquarters,jdbcType=INTEGER},
+      </if>
+      <if test="limbs != null" >
+        #{limbs,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="total != null" >
+        #{total,jdbcType=INTEGER},
+      </if>
+      <if test="pedigree != null" >
+        #{pedigree,jdbcType=INTEGER},
+      </if>
+      <if test="brucellosis != null" >
+        #{brucellosis,jdbcType=INTEGER},
+      </if>
+      <if test="antibody != null" >
+        #{antibody,jdbcType=INTEGER},
+      </if>
+      <if test="footMouth != null" >
+        #{footMouth,jdbcType=INTEGER},
+      </if>
+      <if test="antibiotic != null" >
+        #{antibiotic,jdbcType=INTEGER},
+      </if>
+      <if test="hormone != null" >
+        #{hormone,jdbcType=INTEGER},
+      </if>
+      <if test="result != null" >
+        #{result,jdbcType=INTEGER},
+      </if>
+      <if test="uploadTime != null" >
+        #{uploadTime,jdbcType=DATE},
+      </if>
+      <if test="eartagAddress != null" >
+        #{eartagAddress,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.deep.domain.model.RecoveryModelExample" resultType="java.lang.Integer" >
+    select count(*) from recovery_indicator
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update recovery_indicator
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.companyId != null" >
+        company_id = #{record.companyId,jdbcType=INTEGER},
+      </if>
+      <if test="record.companyName != null" >
+        company_name = #{record.companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sheepType != null" >
+        sheep_type = #{record.sheepType,jdbcType=INTEGER},
+      </if>
+      <if test="record.overall != null" >
+        overall = #{record.overall,jdbcType=INTEGER},
+      </if>
+      <if test="record.neck != null" >
+        neck = #{record.neck,jdbcType=INTEGER},
+      </if>
+      <if test="record.foreBody != null" >
+        fore_body = #{record.foreBody,jdbcType=INTEGER},
+      </if>
+      <if test="record.middleBody != null" >
+        middle_body = #{record.middleBody,jdbcType=INTEGER},
+      </if>
+      <if test="record.hindquarters != null" >
+        hindquarters = #{record.hindquarters,jdbcType=INTEGER},
+      </if>
+      <if test="record.limbs != null" >
+        limbs = #{record.limbs,jdbcType=INTEGER},
+      </if>
+      <if test="record.sex != null" >
+        sex = #{record.sex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.total != null" >
+        total = #{record.total,jdbcType=INTEGER},
+      </if>
+      <if test="record.pedigree != null" >
+        pedigree = #{record.pedigree,jdbcType=INTEGER},
+      </if>
+      <if test="record.brucellosis != null" >
+        brucellosis = #{record.brucellosis,jdbcType=INTEGER},
+      </if>
+      <if test="record.antibody != null" >
+        antibody = #{record.antibody,jdbcType=INTEGER},
+      </if>
+      <if test="record.footMouth != null" >
+        foot_mouth = #{record.footMouth,jdbcType=INTEGER},
+      </if>
+      <if test="record.antibiotic != null" >
+        antibiotic = #{record.antibiotic,jdbcType=INTEGER},
+      </if>
+      <if test="record.hormone != null" >
+        hormone = #{record.hormone,jdbcType=INTEGER},
+      </if>
+      <if test="record.result != null" >
+        result = #{record.result,jdbcType=INTEGER},
+      </if>
+      <if test="record.uploadTime != null" >
+        upload_time = #{record.uploadTime,jdbcType=DATE},
+      </if>
+      <if test="record.eartagAddress != null" >
+        eartag_address = #{record.eartagAddress,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update recovery_indicator
+    set id = #{record.id,jdbcType=INTEGER},
+      company_id = #{record.companyId,jdbcType=INTEGER},
+      company_name = #{record.companyName,jdbcType=VARCHAR},
+      sheep_type = #{record.sheepType,jdbcType=INTEGER},
+      overall = #{record.overall,jdbcType=INTEGER},
+      neck = #{record.neck,jdbcType=INTEGER},
+      fore_body = #{record.foreBody,jdbcType=INTEGER},
+      middle_body = #{record.middleBody,jdbcType=INTEGER},
+      hindquarters = #{record.hindquarters,jdbcType=INTEGER},
+      limbs = #{record.limbs,jdbcType=INTEGER},
+      sex = #{record.sex,jdbcType=VARCHAR},
+      total = #{record.total,jdbcType=INTEGER},
+      pedigree = #{record.pedigree,jdbcType=INTEGER},
+      brucellosis = #{record.brucellosis,jdbcType=INTEGER},
+      antibody = #{record.antibody,jdbcType=INTEGER},
+      foot_mouth = #{record.footMouth,jdbcType=INTEGER},
+      antibiotic = #{record.antibiotic,jdbcType=INTEGER},
+      hormone = #{record.hormone,jdbcType=INTEGER},
+      result = #{record.result,jdbcType=INTEGER},
+      upload_time = #{record.uploadTime,jdbcType=DATE},
+      eartag_address = #{record.eartagAddress,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.deep.domain.model.RecoveryModel" >
+    update recovery_indicator
+    <set >
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=INTEGER},
+      </if>
+      <if test="companyName != null" >
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="sheepType != null" >
+        sheep_type = #{sheepType,jdbcType=INTEGER},
+      </if>
+      <if test="overall != null" >
+        overall = #{overall,jdbcType=INTEGER},
+      </if>
+      <if test="neck != null" >
+        neck = #{neck,jdbcType=INTEGER},
+      </if>
+      <if test="foreBody != null" >
+        fore_body = #{foreBody,jdbcType=INTEGER},
+      </if>
+      <if test="middleBody != null" >
+        middle_body = #{middleBody,jdbcType=INTEGER},
+      </if>
+      <if test="hindquarters != null" >
+        hindquarters = #{hindquarters,jdbcType=INTEGER},
+      </if>
+      <if test="limbs != null" >
+        limbs = #{limbs,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="total != null" >
+        total = #{total,jdbcType=INTEGER},
+      </if>
+      <if test="pedigree != null" >
+        pedigree = #{pedigree,jdbcType=INTEGER},
+      </if>
+      <if test="brucellosis != null" >
+        brucellosis = #{brucellosis,jdbcType=INTEGER},
+      </if>
+      <if test="antibody != null" >
+        antibody = #{antibody,jdbcType=INTEGER},
+      </if>
+      <if test="footMouth != null" >
+        foot_mouth = #{footMouth,jdbcType=INTEGER},
+      </if>
+      <if test="antibiotic != null" >
+        antibiotic = #{antibiotic,jdbcType=INTEGER},
+      </if>
+      <if test="hormone != null" >
+        hormone = #{hormone,jdbcType=INTEGER},
+      </if>
+      <if test="result != null" >
+        result = #{result,jdbcType=INTEGER},
+      </if>
+      <if test="uploadTime != null" >
+        upload_time = #{uploadTime,jdbcType=DATE},
+      </if>
+      <if test="eartagAddress != null" >
+        eartag_address = #{eartagAddress,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.deep.domain.model.RecoveryModel" >
+    update recovery_indicator
+    set company_id = #{companyId,jdbcType=INTEGER},
+      company_name = #{companyName,jdbcType=VARCHAR},
+      sheep_type = #{sheepType,jdbcType=INTEGER},
+      overall = #{overall,jdbcType=INTEGER},
+      neck = #{neck,jdbcType=INTEGER},
+      fore_body = #{foreBody,jdbcType=INTEGER},
+      middle_body = #{middleBody,jdbcType=INTEGER},
+      hindquarters = #{hindquarters,jdbcType=INTEGER},
+      limbs = #{limbs,jdbcType=INTEGER},
+      sex = #{sex,jdbcType=VARCHAR},
+      total = #{total,jdbcType=INTEGER},
+      pedigree = #{pedigree,jdbcType=INTEGER},
+      brucellosis = #{brucellosis,jdbcType=INTEGER},
+      antibody = #{antibody,jdbcType=INTEGER},
+      foot_mouth = #{footMouth,jdbcType=INTEGER},
+      antibiotic = #{antibiotic,jdbcType=INTEGER},
+      hormone = #{hormone,jdbcType=INTEGER},
+      result = #{result,jdbcType=INTEGER},
+      upload_time = #{uploadTime,jdbcType=DATE},
+      eartag_address = #{eartagAddress,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select resultMap="BaseResultMap" parameterType="com.deep.domain.model.RecoveryModelExample" id="selectByExampleWithRowbounds" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from recovery_indicator
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

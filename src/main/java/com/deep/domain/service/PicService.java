@@ -16,27 +16,25 @@ public class PicService {
     @Resource
     private PicMapper picMapper;
 
-    public int insertPic(Pic pic)
-    {
+    public int insertPic(Pic pic) {
 
-        int flag=picMapper.insert(pic);
+        int flag = picMapper.insert(pic);
 
         return flag;
 
     }
 
-    public List<Pic> findPicSelective(PicExample picExample)
-    {
-        List<Pic>find=this.picMapper.selectByExample(picExample);
+    public List<Pic> findPicSelective(PicExample picExample) {
+        List<Pic> find = this.picMapper.selectByExample(picExample);
         return find;
     }
-    public List<Pic> findPicSelectiveWithRowbounds(PicExample picExample,int pageNumb,int limit)
-    {
-        int offset=(pageNumb-1)*limit;
 
-        RowBounds rowBounds=new RowBounds(offset,limit);
+    public List<Pic> findPicSelectiveWithRowbounds(PicExample picExample, int pageNumb, int limit) {
+        int offset = (pageNumb - 1) * limit;
 
-        List<Pic>find=this.picMapper.selectByExampleWithRowbounds(picExample,rowBounds);
+        RowBounds rowBounds = new RowBounds(offset, limit);
+
+        List<Pic> find = this.picMapper.selectByExampleWithRowbounds(picExample, rowBounds);
 
         return find;
 

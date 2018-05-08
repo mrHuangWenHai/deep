@@ -44,7 +44,9 @@
         <mapper resource="mapper/TempDataMapper.xml"/>
         <mapper resource="mapper/TypeBriefMapper.xml"/>
         <mapper resource="mapper/EnvironmentMapper.xml"/>
-
+        <mapper resource="mapper/CertificationModelMapper.xml"/>
+        <mapper resource="mapper/RecoveryModelMapper.xml"/>
+        <mapper resource="mapper/ProcessReviewModelMapper.xml"/>
     </mappers>
 </configuration>
 

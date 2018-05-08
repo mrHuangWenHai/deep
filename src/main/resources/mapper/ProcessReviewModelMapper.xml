@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.deep.infra.persistence.sql.mapper.ProcessReviewModelMapper" >
+  <resultMap id="BaseResultMap" type="com.deep.domain.model.ProcessReviewModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+    <result column="company_id" property="companyId" jdbcType="INTEGER" />
+    <result column="health_record" property="healthRecord" jdbcType="INTEGER" />
+    <result column="disinfection_record" property="disinfectionRecord" jdbcType="INTEGER" />
+    <result column="immunization_record" property="immunizationRecord" jdbcType="INTEGER" />
+    <result column="deworm_record" property="dewormRecord" jdbcType="INTEGER" />
+    <result column="nutrition_record" property="nutritionRecord" jdbcType="INTEGER" />
+    <result column="breeding_record" property="breedingRecord" jdbcType="INTEGER" />
+    <result column="prevention_record" property="preventionRecord" jdbcType="INTEGER" />
+    <result column="comprehensive_result" property="comprehensiveResult" jdbcType="INTEGER" />
+    <result column="reviewer" property="reviewer" jdbcType="VARCHAR" />
+    <result column="upload_time" property="uploadTime" jdbcType="DATE" />
+    <result column="eartag_address" property="eartagAddress" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, company_name, company_id, health_record, disinfection_record, immunization_record, 
+    deworm_record, nutrition_record, breeding_record, prevention_record, comprehensive_result, 
+    reviewer, upload_time, eartag_address
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.deep.domain.model.ProcessReviewModelExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from process_review
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from process_review
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from process_review
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.deep.domain.model.ProcessReviewModelExample" >
+    delete from process_review
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.deep.domain.model.ProcessReviewModel" >
+    insert into process_review (id, company_name, company_id, 
+      health_record, disinfection_record, immunization_record, 
+      deworm_record, nutrition_record, breeding_record, 
+      prevention_record, comprehensive_result, 
+      reviewer, upload_time, eartag_address
+      )
+    values (#{id,jdbcType=INTEGER}, #{companyName,jdbcType=VARCHAR}, #{companyId,jdbcType=INTEGER}, 
+      #{healthRecord,jdbcType=INTEGER}, #{disinfectionRecord,jdbcType=INTEGER}, #{immunizationRecord,jdbcType=INTEGER}, 
+      #{dewormRecord,jdbcType=INTEGER}, #{nutritionRecord,jdbcType=INTEGER}, #{breedingRecord,jdbcType=INTEGER}, 
+      #{preventionRecord,jdbcType=INTEGER}, #{comprehensiveResult,jdbcType=INTEGER}, 
+      #{reviewer,jdbcType=VARCHAR}, #{uploadTime,jdbcType=DATE}, #{eartagAddress,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.deep.domain.model.ProcessReviewModel" useGeneratedKeys="true" keyProperty="reviewId">
+    insert into process_review
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="companyName != null" >
+        company_name,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="healthRecord != null" >
+        health_record,
+      </if>
+      <if test="disinfectionRecord != null" >
+        disinfection_record,
+      </if>
+      <if test="immunizationRecord != null" >
+        immunization_record,
+      </if>
+      <if test="dewormRecord != null" >
+        deworm_record,
+      </if>
+      <if test="nutritionRecord != null" >
+        nutrition_record,
+      </if>
+      <if test="breedingRecord != null" >
+        breeding_record,
+      </if>
+      <if test="preventionRecord != null" >
+        prevention_record,
+      </if>
+      <if test="comprehensiveResult != null" >
+        comprehensive_result,
+      </if>
+      <if test="reviewer != null" >
+        reviewer,
+      </if>
+      <if test="uploadTime != null" >
+        upload_time,
+      </if>
+      <if test="eartagAddress != null" >
+        eartag_address,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="companyName != null" >
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=INTEGER},
+      </if>
+      <if test="healthRecord != null" >
+        #{healthRecord,jdbcType=INTEGER},
+      </if>
+      <if test="disinfectionRecord != null" >
+        #{disinfectionRecord,jdbcType=INTEGER},
+      </if>
+      <if test="immunizationRecord != null" >
+        #{immunizationRecord,jdbcType=INTEGER},
+      </if>
+      <if test="dewormRecord != null" >
+        #{dewormRecord,jdbcType=INTEGER},
+      </if>
+      <if test="nutritionRecord != null" >
+        #{nutritionRecord,jdbcType=INTEGER},
+      </if>
+      <if test="breedingRecord != null" >
+        #{breedingRecord,jdbcType=INTEGER},
+      </if>
+      <if test="preventionRecord != null" >
+        #{preventionRecord,jdbcType=INTEGER},
+      </if>
+      <if test="comprehensiveResult != null" >
+        #{comprehensiveResult,jdbcType=INTEGER},
+      </if>
+      <if test="reviewer != null" >
+        #{reviewer,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadTime != null" >
+        #{uploadTime,jdbcType=DATE},
+      </if>
+      <if test="eartagAddress != null" >
+        #{eartagAddress,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.deep.domain.model.ProcessReviewModelExample" resultType="java.lang.Integer" >
+    select count(*) from process_review
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update process_review
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.companyName != null" >
+        company_name = #{record.companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.companyId != null" >
+        company_id = #{record.companyId,jdbcType=INTEGER},
+      </if>
+      <if test="record.healthRecord != null" >
+        health_record = #{record.healthRecord,jdbcType=INTEGER},
+      </if>
+      <if test="record.disinfectionRecord != null" >
+        disinfection_record = #{record.disinfectionRecord,jdbcType=INTEGER},
+      </if>
+      <if test="record.immunizationRecord != null" >
+        immunization_record = #{record.immunizationRecord,jdbcType=INTEGER},
+      </if>
+      <if test="record.dewormRecord != null" >
+        deworm_record = #{record.dewormRecord,jdbcType=INTEGER},
+      </if>
+      <if test="record.nutritionRecord != null" >
+        nutrition_record = #{record.nutritionRecord,jdbcType=INTEGER},
+      </if>
+      <if test="record.breedingRecord != null" >
+        breeding_record = #{record.breedingRecord,jdbcType=INTEGER},
+      </if>
+      <if test="record.preventionRecord != null" >
+        prevention_record = #{record.preventionRecord,jdbcType=INTEGER},
+      </if>
+      <if test="record.comprehensiveResult != null" >
+        comprehensive_result = #{record.comprehensiveResult,jdbcType=INTEGER},
+      </if>
+      <if test="record.reviewer != null" >
+        reviewer = #{record.reviewer,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uploadTime != null" >
+        upload_time = #{record.uploadTime,jdbcType=DATE},
+      </if>
+      <if test="record.eartagAddress != null" >
+        eartag_address = #{record.eartagAddress,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update process_review
+    set id = #{record.id,jdbcType=INTEGER},
+      company_name = #{record.companyName,jdbcType=VARCHAR},
+      company_id = #{record.companyId,jdbcType=INTEGER},
+      health_record = #{record.healthRecord,jdbcType=INTEGER},
+      disinfection_record = #{record.disinfectionRecord,jdbcType=INTEGER},
+      immunization_record = #{record.immunizationRecord,jdbcType=INTEGER},
+      deworm_record = #{record.dewormRecord,jdbcType=INTEGER},
+      nutrition_record = #{record.nutritionRecord,jdbcType=INTEGER},
+      breeding_record = #{record.breedingRecord,jdbcType=INTEGER},
+      prevention_record = #{record.preventionRecord,jdbcType=INTEGER},
+      comprehensive_result = #{record.comprehensiveResult,jdbcType=INTEGER},
+      reviewer = #{record.reviewer,jdbcType=VARCHAR},
+      upload_time = #{record.uploadTime,jdbcType=DATE},
+      eartag_address = #{record.eartagAddress,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.deep.domain.model.ProcessReviewModel" >
+    update process_review
+    <set >
+      <if test="companyName != null" >
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=INTEGER},
+      </if>
+      <if test="healthRecord != null" >
+        health_record = #{healthRecord,jdbcType=INTEGER},
+      </if>
+      <if test="disinfectionRecord != null" >
+        disinfection_record = #{disinfectionRecord,jdbcType=INTEGER},
+      </if>
+      <if test="immunizationRecord != null" >
+        immunization_record = #{immunizationRecord,jdbcType=INTEGER},
+      </if>
+      <if test="dewormRecord != null" >
+        deworm_record = #{dewormRecord,jdbcType=INTEGER},
+      </if>
+      <if test="nutritionRecord != null" >
+        nutrition_record = #{nutritionRecord,jdbcType=INTEGER},
+      </if>
+      <if test="breedingRecord != null" >
+        breeding_record = #{breedingRecord,jdbcType=INTEGER},
+      </if>
+      <if test="preventionRecord != null" >
+        prevention_record = #{preventionRecord,jdbcType=INTEGER},
+      </if>
+      <if test="comprehensiveResult != null" >
+        comprehensive_result = #{comprehensiveResult,jdbcType=INTEGER},
+      </if>
+      <if test="reviewer != null" >
+        reviewer = #{reviewer,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadTime != null" >
+        upload_time = #{uploadTime,jdbcType=DATE},
+      </if>
+      <if test="eartagAddress != null" >
+        eartag_address = #{eartagAddress,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.deep.domain.model.ProcessReviewModel" >
+    update process_review
+    set company_name = #{companyName,jdbcType=VARCHAR},
+      company_id = #{companyId,jdbcType=INTEGER},
+      health_record = #{healthRecord,jdbcType=INTEGER},
+      disinfection_record = #{disinfectionRecord,jdbcType=INTEGER},
+      immunization_record = #{immunizationRecord,jdbcType=INTEGER},
+      deworm_record = #{dewormRecord,jdbcType=INTEGER},
+      nutrition_record = #{nutritionRecord,jdbcType=INTEGER},
+      breeding_record = #{breedingRecord,jdbcType=INTEGER},
+      prevention_record = #{preventionRecord,jdbcType=INTEGER},
+      comprehensive_result = #{comprehensiveResult,jdbcType=INTEGER},
+      reviewer = #{reviewer,jdbcType=VARCHAR},
+      upload_time = #{uploadTime,jdbcType=DATE},
+      eartag_address = #{eartagAddress,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select resultMap="BaseResultMap" parameterType="com.deep.domain.model.ProcessReviewModelExample" id="selectByExampleWithRowbounds" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from process_review
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

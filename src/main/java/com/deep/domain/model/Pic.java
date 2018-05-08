@@ -12,7 +12,7 @@ public class Pic implements Serializable {
     private String address;
 
     @NotBlank(message = "商标耳牌不能为空")
-    @Size(min =15, max =15, message = "商标耳牌长度错误")
+    @Size(min = 15, max = 15, message = "商标耳牌长度错误")
     private String brand;
 
 
@@ -54,7 +54,7 @@ public class Pic implements Serializable {
     private String uploader;
 
     @NotBlank(message = "检疫耳牌不能为空")
-    @Size(min =8, max =8, message = "检疫耳牌长度错误")
+    @Size(min = 8, max = 8, message = "检疫耳牌长度错误")
     private String vaccine;
 
     private String filename;
@@ -88,7 +88,6 @@ public class Pic implements Serializable {
     public void setReturnId(Integer returnId) {
         this.returnId = returnId;
     }
-
 
 
     private static final long serialVersionUID = 1L;

@@ -44,7 +44,7 @@ public class DiagnosisResource {
     public Response addPlan(@RequestBody @Valid DiagnosisPlanModel planModel, BindingResult bindingResult) throws ParseException {
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("诊疗实施档案录入失败");
-        }else {
+        } else {
             //将planModel部分变量拆分传递给对象insert
             DiagnosisPlanWithBLOBs insert = new DiagnosisPlanWithBLOBs();
             insert.setFactoryNum(planModel.getFactoryNum());
@@ -60,7 +60,7 @@ public class DiagnosisResource {
             otherTime.setS_diagnosisT(planModel.getS_diagnosisT());
 
             Byte zero = 0;
-            SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd HH:mm:SS");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
             Date diagnosisT = !otherTime.getS_diagnosisT().isEmpty() ? formatter.parse(otherTime.getS_diagnosisT()) : new Date();
             insert.setGmtCreate(new Date());
             insert.setDiagnosisT(diagnosisT);
@@ -72,7 +72,7 @@ public class DiagnosisResource {
             }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("diagnosis_plan",addID);
+            data.put("diagnosis_plan", addID);
             response.setData(data);
             return response;
         }
@@ -80,24 +80,25 @@ public class DiagnosisResource {
 
     /**
      * 按照主键删除的接口
+     *
      * @param id
      * @return
      */
     @DeleteMapping(value = "/{id}")
-    public Response dropPlan(@PathVariable("id") String id){
+    public Response dropPlan(@PathVariable("id") String id) {
         logger.info("invoke findOne{}, url is agent/{id}", id);
         int uid = StringToLongUtil.stringToInt(id);
         if (uid == -1) {
             return Responses.errorResponse("删除错误");
         } else {
             DiagnosisPlanWithBLOBs delete = new DiagnosisPlanWithBLOBs();
-            int deleteID =  diagnosisPlanService.dropPlan(uid);
+            int deleteID = diagnosisPlanService.dropPlan(uid);
             if (deleteID <= 0) {
                 return Responses.errorResponse("删除失败");
             }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("diagnosis_plan",deleteID);
+            data.put("diagnosis_plan", deleteID);
             response.setData(data);
             return response;
         }
@@ -107,6 +108,7 @@ public class DiagnosisResource {
      * 操作员使用按主键修改的接口：/operator
      * 操作员使用按主键修改的方法名：changePlanByOperator()
      * 操作员使用接收参数：整个表单信息（整型id必填，各参数选填）
+     *
      * @param planModel
      * @param bindingResult
      * @return
@@ -116,7 +118,7 @@ public class DiagnosisResource {
     public Response changePlanByOperator(@RequestBody @Valid DiagnosisPlanModel planModel, BindingResult bindingResult) throws ParseException {
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("诊疗实施档案更新(操作员页面)失败");
-        }else {
+        } else {
             //将planModel部分变量拆分传递给对象operator
             DiagnosisPlanWithBLOBs operator = new DiagnosisPlanWithBLOBs();
             operator.setId(planModel.getId());
@@ -132,7 +134,7 @@ public class DiagnosisResource {
             OtherTime otherTime = new OtherTime();
             otherTime.setS_diagnosisT(planModel.getS_diagnosisT());
 
-            SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd HH:mm:SS");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
             Date diagnosisT = !otherTime.getS_diagnosisT().isEmpty() ? formatter.parse(otherTime.getS_diagnosisT()) : new Date();
             operator.setDiagnosisT(diagnosisT);
 
@@ -153,26 +155,27 @@ public class DiagnosisResource {
      * 监督者使用按主键修改的接口：/diagnosisUpdateByProfessor
      * 监督者使用按主键修改的方法名：changePlanByProfessor()
      * 监督者使用接收参数：整个表单信息（整型id必填，各参数选填）
+     *
      * @param professor
      * @param bindingResult
      * @return
      */
     @PostMapping(value = "/professor")
-    public Response changePlanByProfessor(@RequestBody @Valid DiagnosisPlanWithBLOBs professor, BindingResult bindingResult){
+    public Response changePlanByProfessor(@RequestBody @Valid DiagnosisPlanWithBLOBs professor, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("诊疗实施档案更新(专家页面)失败");
-        }else {
+        } else {
             professor.setGmtModified(new Date());
-            if (professor.getIsPass() == 1){
+            if (professor.getIsPass() == 1) {
                 professor.setUpassReason("操作员已经修改档案并通过技术审核");
             }
-            int updateID =  diagnosisPlanService.changePlanSelective(professor);
+            int updateID = diagnosisPlanService.changePlanSelective(professor);
             if (updateID <= 0) {
                 return Responses.errorResponse("错误");
             }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("diagnosis_plan",updateID);
+            data.put("diagnosis_plan", updateID);
             response.setData(data);
             return response;
         }
@@ -182,15 +185,16 @@ public class DiagnosisResource {
      * 监督者使用按主键修改的接口：/diagnosisUpdateBySupervisor
      * 监督者使用按主键修改的方法名：changePlanBySupervisor()
      * 监督者使用接收参数：整个表单信息（整型id必填，各参数选填）
+     *
      * @param supervisor
      * @param bindingResult
      * @return
      */
     @PostMapping(value = "/supervisor")
-    public Response changePlanBySupervisor(@RequestBody @Valid DiagnosisPlanWithBLOBs supervisor, BindingResult bindingResult){
+    public Response changePlanBySupervisor(@RequestBody @Valid DiagnosisPlanWithBLOBs supervisor, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("诊疗实施档案更新(监督页面)失败");
-        }else {
+        } else {
             supervisor.setGmtSupervised(new Date());
             int updateID = diagnosisPlanService.changePlanSelective(supervisor);
             if (updateID <= 0) {
@@ -198,7 +202,7 @@ public class DiagnosisResource {
             }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("diagnosis_plan",updateID);
+            data.put("diagnosis_plan", updateID);
             response.setData(data);
             return response;
         }
@@ -208,10 +212,11 @@ public class DiagnosisResource {
      * 按主键查询的接口：/select
      * 按主键查询的方法名：findPlanById()
      * 接收参数：整型的主键号（保留接口查询，前端不调用此接口）
+     *
      * @return
      */
     @GetMapping(value = "/id/{id}")
-    public Response findPlanById(@PathVariable("id") String id){
+    public Response findPlanById(@PathVariable("id") String id) {
         int selectID = StringToLongUtil.stringToInt(id);
         if (selectID == -1) {
             return Responses.errorResponse("error");
@@ -223,7 +228,7 @@ public class DiagnosisResource {
         }
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
-        data.put("diagnosis_plan",selectById);
+        data.put("diagnosis_plan", selectById);
         response.setData(data);
         return response;
     }
@@ -232,6 +237,7 @@ public class DiagnosisResource {
      * 按条件查询接口：/diagnosisSelective
      * 按条件查询方法名：findPlanSelective()
      * 接收的参数：前端的各参数，以及两个("s_diagnosisT1")("s_diagnosisT2")时间字符串（所有参数可以选填）
+     *
      * @param planModel
      * @param bindingResult
      * @return
@@ -241,7 +247,7 @@ public class DiagnosisResource {
     public Response findPlanSelective(@RequestBody @Valid DiagnosisPlanModel planModel, BindingResult bindingResult) throws ParseException {
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("诊疗实施档案(根据条件)查询失败");
-        }else {
+        } else {
             //将planModel部分变量拆分传递给对象diagnosisPlanWithBLOBs
             DiagnosisPlanWithBLOBs diagnosisPlanWithBLOBs = new DiagnosisPlanWithBLOBs();
             diagnosisPlanWithBLOBs.setId(planModel.getId());
@@ -265,52 +271,52 @@ public class DiagnosisResource {
 
             Date diagnosisT1 = null;
             Date diagnosisT2 = null;
-            SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd HH:mm:SS");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
             DiagnosisPlanExample diagnosisPlanExample = new DiagnosisPlanExample();
             DiagnosisPlanExample.Criteria criteria = diagnosisPlanExample.createCriteria();
 
-            if (otherTime.getS_diagnosisT1() != null && !otherTime.getS_diagnosisT1().isEmpty()&& otherTime.getS_diagnosisT2() != null && !otherTime.getS_diagnosisT2().isEmpty()){
-                diagnosisT1 =  formatter.parse(otherTime.getS_diagnosisT1());
-                diagnosisT2 =  formatter.parse(otherTime.getS_diagnosisT2());
+            if (otherTime.getS_diagnosisT1() != null && !otherTime.getS_diagnosisT1().isEmpty() && otherTime.getS_diagnosisT2() != null && !otherTime.getS_diagnosisT2().isEmpty()) {
+                diagnosisT1 = formatter.parse(otherTime.getS_diagnosisT1());
+                diagnosisT2 = formatter.parse(otherTime.getS_diagnosisT2());
             }
-            if(diagnosisT1 != null && diagnosisT2 != null){
-                criteria.andDiagnosisTBetween(diagnosisT1,diagnosisT2);
+            if (diagnosisT1 != null && diagnosisT2 != null) {
+                criteria.andDiagnosisTBetween(diagnosisT1, diagnosisT2);
             }
 
-            if(diagnosisPlanWithBLOBs.getId() != null && !diagnosisPlanWithBLOBs.getId().toString().isEmpty()){
+            if (diagnosisPlanWithBLOBs.getId() != null && !diagnosisPlanWithBLOBs.getId().toString().isEmpty()) {
                 criteria.andIdEqualTo(diagnosisPlanWithBLOBs.getId());
             }
-            if(diagnosisPlanWithBLOBs.getFactoryNum() != null && !diagnosisPlanWithBLOBs.getFactoryNum().toString().isEmpty()){
+            if (diagnosisPlanWithBLOBs.getFactoryNum() != null && !diagnosisPlanWithBLOBs.getFactoryNum().toString().isEmpty()) {
                 criteria.andFactoryNumEqualTo(diagnosisPlanWithBLOBs.getFactoryNum());
             }
-            if(diagnosisPlanWithBLOBs.getBuilding() != null && !diagnosisPlanWithBLOBs.getBuilding().isEmpty()){
+            if (diagnosisPlanWithBLOBs.getBuilding() != null && !diagnosisPlanWithBLOBs.getBuilding().isEmpty()) {
                 criteria.andBuildingEqualTo(diagnosisPlanWithBLOBs.getBuilding());
             }
-            if(diagnosisPlanWithBLOBs.getEtB() != null && !diagnosisPlanWithBLOBs.getEtB().isEmpty()){
+            if (diagnosisPlanWithBLOBs.getEtB() != null && !diagnosisPlanWithBLOBs.getEtB().isEmpty()) {
                 criteria.andEtBEqualTo(diagnosisPlanWithBLOBs.getEtB());
             }
-            if(diagnosisPlanWithBLOBs.getOperator() != null && !diagnosisPlanWithBLOBs.getOperator().isEmpty()){
+            if (diagnosisPlanWithBLOBs.getOperator() != null && !diagnosisPlanWithBLOBs.getOperator().isEmpty()) {
                 criteria.andOperatorEqualTo(diagnosisPlanWithBLOBs.getOperator());
             }
-            if(diagnosisPlanWithBLOBs.getProfessor() != null && !diagnosisPlanWithBLOBs.getProfessor().isEmpty()){
+            if (diagnosisPlanWithBLOBs.getProfessor() != null && !diagnosisPlanWithBLOBs.getProfessor().isEmpty()) {
                 criteria.andProfessorEqualTo(diagnosisPlanWithBLOBs.getProfessor());
             }
-            if(diagnosisPlanWithBLOBs.getSupervisor() != null && !diagnosisPlanWithBLOBs.getSupervisor().isEmpty()){
+            if (diagnosisPlanWithBLOBs.getSupervisor() != null && !diagnosisPlanWithBLOBs.getSupervisor().isEmpty()) {
                 criteria.andSupervisorEqualTo(diagnosisPlanWithBLOBs.getSupervisor());
             }
-            if(diagnosisPlanWithBLOBs.getRemark() != null && !diagnosisPlanWithBLOBs.getRemark().isEmpty()){
+            if (diagnosisPlanWithBLOBs.getRemark() != null && !diagnosisPlanWithBLOBs.getRemark().isEmpty()) {
                 criteria.andRemarkLike(diagnosisPlanWithBLOBs.getRemark());
             }
-            if(diagnosisPlanWithBLOBs.getIsPass() != null && !diagnosisPlanWithBLOBs.getIsPass().toString().isEmpty()){
+            if (diagnosisPlanWithBLOBs.getIsPass() != null && !diagnosisPlanWithBLOBs.getIsPass().toString().isEmpty()) {
                 criteria.andIsPassEqualTo(diagnosisPlanWithBLOBs.getIsPass());
             }
-            if(diagnosisPlanWithBLOBs.getUpassReason() != null && !diagnosisPlanWithBLOBs.getUpassReason().isEmpty()){
+            if (diagnosisPlanWithBLOBs.getUpassReason() != null && !diagnosisPlanWithBLOBs.getUpassReason().isEmpty()) {
                 criteria.andUpassReasonLike(diagnosisPlanWithBLOBs.getUpassReason());
             }
-            if(diagnosisPlanWithBLOBs.getIsPass1() != null && !diagnosisPlanWithBLOBs.getIsPass1().toString().isEmpty()){
+            if (diagnosisPlanWithBLOBs.getIsPass1() != null && !diagnosisPlanWithBLOBs.getIsPass1().toString().isEmpty()) {
                 criteria.andIsPassEqualTo(diagnosisPlanWithBLOBs.getIsPass1());
             }
-            List<DiagnosisPlanWithBLOBs> selective = diagnosisPlanService.findPlanSelective(diagnosisPlanExample,new RowBounds(otherTime.getPage(),otherTime.getSize()));
+            List<DiagnosisPlanWithBLOBs> selective = diagnosisPlanService.findPlanSelective(diagnosisPlanExample, new RowBounds(otherTime.getPage(), otherTime.getSize()));
             if (selective == null) {
                 return Responses.errorResponse("错误");
             }
@@ -327,15 +333,16 @@ public class DiagnosisResource {
      * 供技术审核查询信息:/diagnosisSelectByProfessor
      * 供技术审核查询方法名：findPlanSelectByProfessor()
      * 接收的参数：前端的各参数，（所有参数可以选填）
+     *
      * @param planModel
      * @param bindingResult
      * @return
      */
     @PostMapping(value = "/professor/select")
-    public Response findPlanByProfessor(@RequestBody @Valid DiagnosisPlanModel planModel, BindingResult bindingResult){
+    public Response findPlanByProfessor(@RequestBody @Valid DiagnosisPlanModel planModel, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案(根据条件)查询失败");
-        }else {
+        } else {
             //将planModel部分变量拆分传递给对象diagnosisPlanWithBLOBs
             DiagnosisPlanWithBLOBs diagnosisPlanWithBLOBs = new DiagnosisPlanWithBLOBs();
             diagnosisPlanWithBLOBs.setId(planModel.getId());
@@ -394,20 +401,20 @@ public class DiagnosisResource {
             DiagnosisPlanExample diagnosisPlanExample = new DiagnosisPlanExample();
             DiagnosisPlanExample.Criteria criteria = diagnosisPlanExample.createCriteria();
 
-            if(diagnosisPlanWithBLOBs.getId() != null && !diagnosisPlanWithBLOBs.getId().toString().isEmpty()){
+            if (diagnosisPlanWithBLOBs.getId() != null && !diagnosisPlanWithBLOBs.getId().toString().isEmpty()) {
                 criteria.andIdEqualTo(diagnosisPlanWithBLOBs.getId());
             }
-            if(diagnosisPlanWithBLOBs.getProfessor() != null && !diagnosisPlanWithBLOBs.getProfessor().isEmpty()){
+            if (diagnosisPlanWithBLOBs.getProfessor() != null && !diagnosisPlanWithBLOBs.getProfessor().isEmpty()) {
                 criteria.andProfessorEqualTo(diagnosisPlanWithBLOBs.getProfessor());
             }
-            if(diagnosisPlanWithBLOBs.getUpassReason() != null && !diagnosisPlanWithBLOBs.getUpassReason().isEmpty()){
+            if (diagnosisPlanWithBLOBs.getUpassReason() != null && !diagnosisPlanWithBLOBs.getUpassReason().isEmpty()) {
                 criteria.andUpassReasonLike(diagnosisPlanWithBLOBs.getUpassReason());
             }
             criteria.andIsPassEqualTo(notPassed);
-            List<DiagnosisPlanWithBLOBs> select = diagnosisPlanService.findPlanSelective(diagnosisPlanExample,new RowBounds(otherTime.getPage(),otherTime.getSize()));
+            List<DiagnosisPlanWithBLOBs> select = diagnosisPlanService.findPlanSelective(diagnosisPlanExample, new RowBounds(otherTime.getPage(), otherTime.getSize()));
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("diagnosis_plan",select);
+            data.put("diagnosis_plan", select);
             response.setData(data);
             return response;
         }
@@ -417,15 +424,16 @@ public class DiagnosisResource {
      * 供监督者查询信息:/diagnosisSelectBySupervisor
      * 供监督者查询方法名：findPlanSelectBySupervisor()
      * 接收的参数：前端的各参数，（所有参数可以选填）
+     *
      * @param planModel
      * @param bindingResult
      * @return
      */
     @PostMapping(value = "/supervisor/select")
-    public Response findPlanSelectBySupervisor(@RequestBody @Valid DiagnosisPlanModel planModel, BindingResult bindingResult){
+    public Response findPlanSelectBySupervisor(@RequestBody @Valid DiagnosisPlanModel planModel, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("育种实施档案(根据条件)查询失败");
-        }else {
+        } else {
             //将planModel部分变量拆分传递给对象diagnosisPlanWithBLOBs
             DiagnosisPlanWithBLOBs diagnosisPlanWithBLOBs = new DiagnosisPlanWithBLOBs();
             diagnosisPlanWithBLOBs.setId(planModel.getId());
@@ -484,14 +492,14 @@ public class DiagnosisResource {
             DiagnosisPlanExample diagnosisPlanExample = new DiagnosisPlanExample();
             DiagnosisPlanExample.Criteria criteria = diagnosisPlanExample.createCriteria();
 
-            if(diagnosisPlanWithBLOBs.getId() != null && !diagnosisPlanWithBLOBs.getId().toString().isEmpty()){
+            if (diagnosisPlanWithBLOBs.getId() != null && !diagnosisPlanWithBLOBs.getId().toString().isEmpty()) {
                 criteria.andIdEqualTo(diagnosisPlanWithBLOBs.getId());
             }
             criteria.andIsPass1EqualTo(notPassed1);
-            List<DiagnosisPlanWithBLOBs> select = diagnosisPlanService.findPlanSelective(diagnosisPlanExample,new RowBounds(otherTime.getPage(),otherTime.getSize()));
+            List<DiagnosisPlanWithBLOBs> select = diagnosisPlanService.findPlanSelective(diagnosisPlanExample, new RowBounds(otherTime.getPage(), otherTime.getSize()));
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("diagnosis_plan",select);
+            data.put("diagnosis_plan", select);
             response.setData(data);
             return response;
         }
