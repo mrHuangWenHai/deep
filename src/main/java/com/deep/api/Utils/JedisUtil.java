@@ -11,13 +11,11 @@ public class JedisUtil {
     public static String getValue(String key) {
 
         try {
-
-          if (jedis.get(String.valueOf(key)) == null) {
+          if (jedis.get(key) == null) {
             return null;
           } else {
-            return jedis.get(String.valueOf(key));
+            return jedis.get(key);
           }
-
         } catch (Exception e ) {
           jedis.close();
         }

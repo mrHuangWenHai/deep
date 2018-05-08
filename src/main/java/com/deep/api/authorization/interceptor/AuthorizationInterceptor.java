@@ -68,13 +68,29 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             logger.info("first false", JedisUtil.getValue(String.valueOf(model.getUserId())));
             response.setStatus(401);
             return false;
-        } else if (!JedisUtil.getValue(String.valueOf(model.getUserId())).equals(model.getToken())) {
-            logger.info("second false", JedisUtil.getValue(String.valueOf(model.getUserId())));
-            System.out.println(JedisUtil.getValue(String.valueOf(model.getUserId())));
-            System.out.println(model.getToken());
-            System.out.println("second false");
-            response.setStatus(401);
+        } else {
+          String value = JedisUtil.getValue(String.valueOf(model.getUserId()));
+          if (value != null) {
+            if (!value.equals(model.getToken())) {
+              System.out.println(" =============================  "+value);
+              logger.info("second false {}", JedisUtil.getValue(String.valueOf(model.getUserId())));
+              System.out.println(JedisUtil.getValue(String.valueOf(model.getUserId())));
+              System.out.println(model.getToken());
+              System.out.println("second false");
+              response.setStatus(401);
+              return false;
+            }
+          } else {
             return false;
+          }
+//          if (!JedisUtil.getValue(String.valueOf(model.getUserId())).equals(model.getToken())) {
+//            logger.info("second false", JedisUtil.getValue(String.valueOf(model.getUserId())));
+//            System.out.println(JedisUtil.getValue(String.valueOf(model.getUserId())));
+//            System.out.println(model.getToken());
+//            System.out.println("second false");
+//            response.setStatus(401);
+//            return false;
+//          }
         }
         JedisUtil.doExpire(String.valueOf(model.getUserId()));
       // 从Redis数据库中获取用户原来的token, 然后取得其权限, 加入新的token
