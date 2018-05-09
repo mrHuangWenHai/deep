@@ -449,4 +449,17 @@ public class UserService {
     public Long getCountsOfOneFactoryOrOneAgent(Long factory, Byte which) {
         return userMapper.getCountsOfOneFactoryOrOneAgent(factory, which);
     }
+
+    /**
+     * 获取代理的等级
+     * @return 代理的等级
+     */
+    public Byte getAgentRank(Long id) {
+        AgentModel agentModel = agentService.getOneAgent(id);
+        if (agentModel != null) {
+            return agentModel.getAgentRank();
+        } else {
+            return null;
+        }
+    }
 }

@@ -11,6 +11,7 @@ import com.deep.api.request.UserRequest;
 import com.deep.api.response.Professor;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
+import com.deep.domain.model.AgentModel;
 import com.deep.domain.model.UserModel;
 import com.deep.domain.service.UserService;
 import org.slf4j.Logger;
@@ -117,15 +118,31 @@ public class UserResource {
      * @return response
      */
     @GetMapping(value = "user/detail/{username}")
-    public Response getUserOneDetail(@PathVariable("username") String id) {
+    public Response getUserOneDetail(@PathVariable("username") String id, HttpServletRequest request) {
         logger.info("invoke getUserOneDetail{}, url is user/detail/{id}", id);
         long uid = StringToLongUtil.stringToLong(id);
         if (uid < 0) {
             return Responses.errorResponse("错误");
         }
+
+        Byte which = StringToLongUtil.stringToByte(TokenAnalysis.getFlag(request.getHeader(Constants.AUTHORIZATION)));
+        if (which == 0) {
+            // 这时候是羊场
+            which = -1;
+        }
+
         UserModel userModel = userService.getOneUser(uid);
+
         if (userModel == null) {
             return Responses.errorResponse("系统中该用户不存在");
+        }
+
+        if (userModel.getIsFactory() == 0) {
+            // 如果是羊场
+            which = -1;
+        } else if(userModel.getIsFactory() == 1) {
+            // 如果是代理
+            which = userService.getAgentRank(userModel.getUserFactory());
         }
 
         // 前端不需要的字段
@@ -136,6 +153,7 @@ public class UserResource {
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
         data.put("model", userModel);
+        data.put("agentRank", which);
         response.setData(data);
         return response;
     }
@@ -335,9 +353,19 @@ public class UserResource {
      */
     @Permit(authorities = {"delete_users", "delete_expert", "remove_technician", "remove_administrator"})
     @DeleteMapping("user/{id}")
-    public Response deleteUser(@PathVariable("id") String id) {
+    public Response deleteUser(@PathVariable("id") String id, HttpServletRequest request) {
         logger.info("invoke deleteUser{}, url is user/{id}", id);
         long uid = StringToLongUtil.stringToLong(id);
+
+        // 首先判断所登录用户的ID是否是要删除自己
+        Long which = TokenAnalysis.getUserId(request.getHeader(Constants.AUTHORIZATION));
+
+        System.out.println("which = " + which);
+
+        if (which == uid) {
+            return Responses.errorResponse("您不能删除自己的账户");
+        }
+
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
         }

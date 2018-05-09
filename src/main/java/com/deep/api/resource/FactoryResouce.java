@@ -5,6 +5,7 @@ import com.deep.api.Utils.StringToLongUtil;
 import com.deep.api.Utils.TokenAnalysis;
 import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.authorization.tools.Constants;
+import com.deep.api.request.FactoryRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 
@@ -52,10 +53,12 @@ public class FactoryResouce {
             return Responses.errorResponse("错误");
         }
         if (which == 2) {
+            // 这是客户
             return Responses.errorResponse("error, have no permit");
-        } else if (which == 1) {
+        } else if (which == 0) {
+            // 这是代理
             Long start = upage*usize;
-            List<FactoryModel> factoryModelList = factoryService.getAll(start, usize);
+            List<FactoryModel> factoryModelList = factoryService.getAllFactoryOfOneAgentPage(uid, start, usize);
             if (factoryModelList == null) {
                 return Responses.errorResponse("暂无羊场信息");
             }
@@ -116,7 +119,7 @@ public class FactoryResouce {
 //        if (flag  == 2 || flag == 0) {
 //            return Responses.errorResponse("无权限, 您不能查看不属于您管辖的羊场");
 //        }
-        long uid = StringToLongUtil.stringToInt(id);
+        long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
         }
@@ -205,15 +208,15 @@ public class FactoryResouce {
 
     /**
      * 修改一个羊场
-     * @param factoryModel 羊场实体
+     * @param factoryRequest 羊场实体
      * @param id 羊场主键
      * @param bindingResult 错误对象
      * @return Response响应
      */
     @Permit(authorities = "modify_customer")
     @PutMapping(value = "/{id}")
-    public Response factoryUpdate(@Valid @RequestBody FactoryModel factoryModel, @PathVariable("id") String id , BindingResult bindingResult) {
-        logger.info("invoke factoryUpdate{}", factoryModel, id);
+    public Response factoryUpdate(@Valid @RequestBody FactoryRequest factoryRequest, @PathVariable("id") String id , BindingResult bindingResult) {
+        logger.info("invoke factoryUpdate{}", factoryRequest, id);
         long uid = StringToLongUtil.stringToInt(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -221,9 +224,28 @@ public class FactoryResouce {
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("羊场修改失败, 数据校验失败");
         } else {
+
+            FactoryModel factoryModel = new FactoryModel();
+
             factoryModel.setId(uid);
             factoryModel.setGmtCreate(factoryService.getOneFactory(uid).getGmtCreate());
             factoryModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
+
+            factoryModel.setAgent(factoryRequest.getFactoryNum());
+            factoryModel.setBreedLocation(factoryRequest.getBreedLocation());
+            factoryModel.setBreedLocationDetail(factoryRequest.getBreedLocationDetail());
+            factoryModel.setBreedName(factoryRequest.getBreedName());
+//            factoryModel.setDisinfectP(factoryRequest.getDisinfectP());
+
+            factoryModel.setDisinfectP("123");
+
+            factoryModel.setResponsiblePersonId(factoryRequest.getResponsibleId());
+            factoryModel.setResponsiblePersonName(factoryRequest.getResponsiblePersonId());
+
+            factoryModel.setPkNumber(factoryRequest.getPkNumber());
+            factoryModel.setCreateTime(factoryRequest.getCreateTime());
+            factoryModel.setRemark(factoryRequest.getRemark());
+
             Long updateID = factoryService.updateFactory(factoryModel);
             if (updateID <= 0) {
                 return Responses.errorResponse("修改失败");
@@ -238,19 +260,40 @@ public class FactoryResouce {
 
     /**
      * 增加一个工厂实体
-     * @param factoryModel factoryModel
+     * @param factoryRequest factoryRequest
      * @param bindingResult bindingResult
      * @return response
      */
     @Permit(authorities = "increase_customer")
     @PostMapping(value = "")
-    public Response addFactory(@Valid @RequestBody FactoryModel factoryModel, BindingResult bindingResult) {
-        logger.info("invoke addFactory{}, url is factory/add", factoryModel);
+    public Response addFactory(@Valid @RequestBody FactoryRequest factoryRequest, BindingResult bindingResult) {
+        logger.info("invoke addFactory{}, url is factory/add", factoryRequest);
         if (bindingResult.hasErrors()) {
-            return Responses.errorResponse(bindingResult.getFieldError().toString());
+            Response response = Responses.errorResponse("参数错误");
+            Map<String, Object> data = new HashMap<>();
+            data.put("errorMessage", bindingResult.getAllErrors());
+            response.setData(data);
+            return response;
         } else {
+            FactoryModel factoryModel = new FactoryModel();
+
             factoryModel.setGmtCreate(new Timestamp(System.currentTimeMillis()));
             factoryModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
+
+            factoryModel.setAgent(factoryRequest.getFactoryNum());
+            factoryModel.setBreedLocation(factoryRequest.getBreedLocation());
+            factoryModel.setBreedLocationDetail(factoryRequest.getBreedLocationDetail());
+            factoryModel.setBreedName(factoryRequest.getBreedName());
+//            factoryModel.setDisinfectP(factoryRequest.getDisinfectP());
+            factoryModel.setDisinfectP("123");
+
+            factoryModel.setResponsiblePersonId(factoryRequest.getResponsibleId());
+            factoryModel.setResponsiblePersonName(factoryRequest.getResponsiblePersonId());
+
+            factoryModel.setPkNumber(factoryRequest.getPkNumber());
+            factoryModel.setCreateTime(factoryRequest.getCreateTime());
+            factoryModel.setRemark(factoryRequest.getRemark());
+
             int issuccess = factoryService.addFactory(factoryModel);
 
             if (issuccess == 0) {
@@ -272,6 +315,11 @@ public class FactoryResouce {
     @Permit(authorities = "customer_inquiry")
     @GetMapping(value = "/fr")
     public Response findAllNoResponsibleFactory() {
+//        long uid = StringToLongUtil.stringToLong(id);
+//        if (uid == -1) {
+//            return Responses.errorResponse("查询错误");
+//        }
+        logger.info("fhaohfaf");
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
         List<FactoryModel> factoryModels = factoryService.findAllNoResponsibleFactory();

@@ -2,6 +2,7 @@ package com.deep.domain.service;
 
 import com.deep.domain.model.AgentModel;
 import com.deep.infra.persistence.sql.mapper.AgentMapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -126,6 +127,15 @@ public class AgentService {
      * @return
      */
     public Long deleteAgent(Long id) {
+        AgentModel agentModel = agentMapper.queryAgentByID(id);
+        // 获取其父亲信息
+        Integer father = agentModel.getAgentFather();
+        // 获取此代理的所有下级代理
+        List<AgentModel> lists = agentMapper.getSons(Integer.valueOf(String.valueOf(id)));
+        for (AgentModel list : lists) {
+            agentMapper.updateAgentFather(Long.valueOf(father), (long) list.getId());
+        }
+
         return agentMapper.deleteAgent(id);
     }
 

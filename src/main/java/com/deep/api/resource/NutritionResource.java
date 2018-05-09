@@ -85,6 +85,8 @@ public class NutritionResource {
             insert.setPickingR(planModel.getPickingR());
             insert.setPickingO(planModel.getPickingO());
             insert.setNutritionT(planModel.getNutritionT());
+            insert.setAverage(planModel.getAverage());
+            insert.setGmtCreate(new Date());
 
             Byte zero = 2;
             insert.setGmtCreate(new Date());

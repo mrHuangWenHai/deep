@@ -150,6 +150,9 @@ public interface AgentMapper {
             " where id = #{id}")
     Long updateAgent(AgentModel agentModel);
 
+    @Update("update agent_factory set agent_father = #{father} where id = #{id}")
+    Long updateAgentFather(@Param("father") Long father, @Param("id") Long id);
+
     /**
      * 删除一个代理
      * @param permitID
