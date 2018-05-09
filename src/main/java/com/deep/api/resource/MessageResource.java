@@ -75,12 +75,10 @@ public class MessageResource {
         if(message.getsTime() != null && message.geteTime() != null)
            criteria.andInserttimeBetween(message.getsTime(),message.geteTime());
 
-
         List<Message> select = messageService.findMessageSelectiveWithRowbounds(messageExample,message.getPageNumb(),message.getLimit());
-
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
-        data.put("data",select);
+        data.put("List",select);
         data.put("size",select.size());
 
         response.setData(data);

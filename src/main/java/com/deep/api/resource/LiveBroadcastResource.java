@@ -4,6 +4,8 @@ import com.deep.api.request.LiveStatRequest;
 import com.deep.api.response.Responses;
 import com.deep.infra.service.liveBroadcast.LiveBroadcastResp;
 import com.deep.infra.service.liveBroadcast.LiveBroadcastService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
@@ -23,13 +25,14 @@ public class LiveBroadcastResource {
   @Resource
   private LiveBroadcastService liveBroadcastService;
 
+  private final Logger logger = LoggerFactory.getLogger(LiveBroadcastResource.class);
   /**
    * 方法功能:获取推流地址
    * @param userid
    * @return
    */
-  @RequestMapping(value = "/getPushUrl", method = RequestMethod.GET)
-  public Response getLiveBroadCastPushUrl(@RequestParam(value = "userid", required = true) String userid) {
+  @RequestMapping(value = "/getPushUrl/{id}", method = RequestMethod.GET)
+  public Response getLiveBroadCastPushUrl(@PathVariable("id") String userid) {
 
     if (userid.equals("")) {
       return Responses.errorResponse("userid 不能为空");
@@ -48,13 +51,12 @@ public class LiveBroadcastResource {
     return response;
   }
 
-  @RequestMapping(value = "/getLiveUrl")
-  public Response getLiveBroadCastLiveUrl(@RequestParam(value = "userid", required = true) String  userid) {
+  @RequestMapping(value = "/getLiveUrl/{id}")
+  public Response getLiveBroadCastLiveUrl(@PathVariable("id") String  userid) {
 
     if (userid.equals("")) {
       return Responses.errorResponse("userid 不能为空");
     }
-
     LiveBroadcastResp resp = liveBroadcastService.getLiveBroadCastLiveUrl(userid);
     Response response;
     Map<String, Object> data = new HashMap<String, Object>();
@@ -109,7 +111,7 @@ public class LiveBroadcastResource {
 
   //腾讯处于Beta
   @RequestMapping(value = "/getLiveStat")
-  public Response getLiveStatMessage(@Validated LiveStatRequest statRequest) {
+  public Response getLiveStatMessage(LiveStatRequest statRequest) {
     LiveBroadcastResp resp = liveBroadcastService.getLiveStatMessage(statRequest);
     Response response;
     Map<String, Object> data = new HashMap<String, Object>();

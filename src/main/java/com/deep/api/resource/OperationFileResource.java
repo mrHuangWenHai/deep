@@ -37,7 +37,6 @@ public class OperationFileResource {
   @PostMapping(value = "")
   Response addOperationFile(@Valid @RequestBody OperationFile operationFile,
                             BindingResult bindingResult) {
-
     if (bindingResult.hasErrors()) {
       Response response = Responses.errorResponse("param is error");
       Map<String, Object> map = new HashMap<String, Object>();
@@ -76,7 +75,7 @@ public class OperationFileResource {
 
         operationCoditionRequest.setFactoryNum(id);
       } else if (role == 1) {
-        System.out.println("----------------------");
+
         factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
         List<Long> factoryList = new ArrayList<>();
         factoryList.addAll(factoryMap.get(new Long(-1)));
@@ -86,7 +85,13 @@ public class OperationFileResource {
         return Responses.errorResponse("你没有权限");
       }
       logger.info("invoke Get /of {}",operationCoditionRequest);
-      List<OperationFile> list = operationFileService.getOperationFile(operationCoditionRequest);
+      List<OperationFile> totalList = operationFileService.getOperationFile(operationCoditionRequest);
+
+      int size = totalList.size();
+      int page = operationCoditionRequest.getPage();
+      int pageSize = operationCoditionRequest.getPageSize();
+      int destIndex = (page+1) * pageSize + 1  > size ? size : (page+1) * pageSize + 1;
+      List<OperationFile> list = totalList.subList(page * pageSize, destIndex);
 
       if (role == 1) {
         Map<String,Object> data = new HashMap<>();
@@ -104,14 +109,14 @@ public class OperationFileResource {
         factorylist.addAll(direct);
         factorylist.addAll(others);
         data.put("List", factorylist);
-        data.put("size", factorylist.size());
+        data.put("size", size);
         data.put("directSize",direct.size());
         Response response = Responses.successResponse();
         response.setData(data);
         return response;
       } else {
         Map<String, Object> data = new HashMap<>();
-        data.put("size",data.size());
+        data.put("size",size);
         data.put("List",list);
         Response response = Responses.successResponse();
         response.setData(data);

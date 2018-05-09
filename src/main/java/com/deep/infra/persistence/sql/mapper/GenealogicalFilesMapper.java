@@ -18,9 +18,7 @@ public interface GenealogicalFilesMapper {
     int insertGenealogicalFilesModel(@Param("genealogicalFilesModel") GenealogicalFilesModel genealogicalFilesModel);
 
 
-    List<GenealogicalFilesModel> getGenealogicalFilesModel(@Param("genealogicalFilesModel") GenealogicalRequest genealogicalFilesModel,
-
-                                                           RowBounds rowBounds);
+    List<GenealogicalFilesModel> getGenealogicalFilesModel(@Param("genealogicalFilesModel") GenealogicalRequest genealogicalFilesModel);
 
     List<GenealogicalFilesModel> getGenealogicalFilesModelByFactoryNum(@Param("factoryNum") Long factoryNum);
 

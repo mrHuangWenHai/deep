@@ -1,10 +1,12 @@
 package com.deep.api.resource;
 
+import com.deep.api.request.VideoPublishRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.VideoPublish;
 import com.deep.domain.service.VideoPublishService;
 import com.deep.domain.util.DownloadUtil;
+import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -109,14 +111,26 @@ public class VideoPublishResource {
   }
 
   @PostMapping("/find")
-  public Response findVideoFile(@RequestBody VideoPublish videoPublish) {
-    List<VideoPublish> videoPublishList = videoPublishService.selectVideoFile(videoPublish);
+  public Response findVideoFile(@RequestBody VideoPublishRequest videoPublishRequest) {
+
+    RowBounds rowBounds = new RowBounds(videoPublishRequest.getPage() * 10, videoPublishRequest.getPageSize());
+    List<VideoPublish> videoPublishList = videoPublishService.selectVideoFile(videoPublishRequest, rowBounds);
+    int size = videoPublishService.allTotal();
     Response response = Responses.successResponse();
     Map<String, Object> data = new HashMap<String, Object>();
     data.put("List",videoPublishList);
-    data.put("size",videoPublishList.size());
+    data.put("size",size);
     response.setData(data);
     return response;
   }
 
+  @DeleteMapping("/{id}")
+  public Response deleteVideoFile(@PathVariable(value = "id") int id) {
+    int isSuccess = videoPublishService.deleteVideoFile(id);
+    if (isSuccess == 1) {
+      return Responses.successResponse();
+    } else {
+      return Responses.errorResponse("删除失败");
+    }
+  }
 }

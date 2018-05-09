@@ -148,12 +148,14 @@
     delete from pic
     where id = #{id,jdbcType=BIGINT}
   </delete>
+
   <delete id="deleteByExample" parameterType="com.deep.domain.model.PicExample" >
     delete from pic
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
+
   <insert id="insert" parameterType="com.deep.domain.model.Pic" useGeneratedKeys="true" keyProperty="returnId">
     insert into pic (id, address, brand, 
       udate, expert, sex, 

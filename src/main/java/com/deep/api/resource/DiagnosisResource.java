@@ -8,6 +8,7 @@ import com.deep.api.request.DiagnosisRequest;
 import com.deep.domain.model.DiagnosisPlanModel;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
+import com.deep.domain.model.GenealogicalFilesModel;
 import com.deep.domain.service.DiagnosisPlanService;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
@@ -245,11 +246,16 @@ public class DiagnosisResource {
             return Responses.errorResponse("你没有权限");
         }
 
-        RowBounds rowBounds = new RowBounds(diagnosisRequest.getPage() * diagnosisRequest.getSize(),diagnosisRequest.getSize());
-        List<DiagnosisPlanModel> diagnosisPlanModels = diagnosisPlanService.selectDiagnosisPlanModelByDiagnosisRequest(diagnosisRequest, rowBounds);
+        List<DiagnosisPlanModel> totalList = diagnosisPlanService.selectDiagnosisPlanModelByDiagnosisRequest(diagnosisRequest);
+        int size = totalList.size();
+        int page = diagnosisRequest.getPage();
+        int pageSize = diagnosisRequest.getSize();
+        int destIndex = (page+1) * pageSize + 1  > size ? size : (page+1) * pageSize + 1;
+        List<DiagnosisPlanModel> diagnosisPlanModels = totalList.subList(page * pageSize, destIndex);
 
         if (role == 1) {
             Map<String,Object> data = new HashMap<>();
+            List<DiagnosisPlanModel> factorylist = new ArrayList<>();
             List<DiagnosisPlanModel> direct = new ArrayList<>();
             List<DiagnosisPlanModel> others = new ArrayList<>();
             List<Long> directId = factoryMap.get(new Long(-1));
@@ -260,8 +266,11 @@ public class DiagnosisResource {
                     others.add(diagnosisPlanModel);
                 }
             }
-            data.put("direct", direct);
-            data.put("others", others);
+            factorylist.addAll(direct);
+            factorylist.addAll(others);
+            data.put("List", factorylist);
+            data.put("size", size);
+            data.put("directSize",direct.size());
             Response response = Responses.successResponse();
             response.setData(data);
             return response;
@@ -269,7 +278,7 @@ public class DiagnosisResource {
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("List", diagnosisPlanModels);
-            data.put("size", diagnosisPlanModels.size());
+            data.put("size", size);
             response.setData(data);
             return response;
         }

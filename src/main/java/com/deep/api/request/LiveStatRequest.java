@@ -9,12 +9,10 @@ import javax.validation.constraints.Min;
  */
 
 public class LiveStatRequest {
-  @Min(value = 1)
-  int pageNo;
 
-  @Min(value = 1)
-  @Max(value = 300)
-  int pageSize;
+  int pageNo = 1;
+
+  int pageSize = 1;
 
   String userId;
   String pulldomain;

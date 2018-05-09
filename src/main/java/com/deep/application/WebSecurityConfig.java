@@ -15,8 +15,8 @@ public class WebSecurityConfig implements WebMvcConfigurer {
 
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new testInterceptor()).addPathPatterns("/**");
-//        registry.addInterceptor(new AuthorizationInterceptor()).addPathPatterns("/**");
-//        registry.addInterceptor(new PermitInterceptor()).addPathPatterns("/**");
+   //     registry.addInterceptor(new AuthorizationInterceptor()).addPathPatterns("/**");
+   //     registry.addInterceptor(new PermitInterceptor()).addPathPatterns("/**");
     }
 
     @Bean
@@ -25,8 +25,9 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     }
 
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/picture/**").addResourceLocations("file:///home/doubibobo/picture/");
+        registry.addResourceHandler("/picture/**").addResourceLocations("file:///Users/huangwenhai/alibaba/Deep/");
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+        registry.addResourceHandler("/movie/**").addResourceLocations("file:///Users/huangwenhai/alibaba/Deep/video/");
         System.out.println("this is the ResourceHandler");
     }
 }

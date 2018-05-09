@@ -264,7 +264,7 @@
             <if test="genealogicalFilesModel.color != null and genealogicalFilesModel.color != '' ">
                 color = #{genealogicalFilesModel.color},
             </if>
-            <if test="genealogicalFilesModel.sex != null and genealogicalFilesModel.sex != '' ">
+            <if test="genealogicalFilesModel.sex != null">
                 sex = #{genealogicalFilesModel.sex},
             </if>
             <if test="genealogicalFilesModel.eartagOfFather != null and genealogicalFilesModel.eartagOfFather != '' ">
@@ -289,7 +289,6 @@
                 remark = #{genealogicalFilesModel.remark,jdbcType=VARCHAR},
             </if>
                 gmt_modified = now()
-
             <!--<if test="genealogicalFilesModel.operatorName != null and genealogicalFilesModel.operatorId != ''">-->
                 <!---->
             <!--</if>-->

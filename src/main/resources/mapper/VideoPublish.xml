@@ -33,17 +33,28 @@
         select *
         from video_publish
         where 1 = 1
-        <if test="videoPublish.fileName != null">
-            and file_name = #{videoPublish.fileName}
+        <if test="videoPublishRequest.fileName != null">
+            and file_name = #{videoPublishRequest.fileName}
         </if>
 
-        <if test="videoPublish.professorId != null">
-            and professor_id = #{videoPublish.professorId}
+        <if test="videoPublishRequest.professorId != null">
+            and professor_id = #{videoPublishRequest.professorId}
         </if>
 
-        <if test="videoPublish.professorName != null">
-            and professor_name = #{videoPublish.professorName}
+        <if test="videoPublishRequest.professorName != null">
+            and professor_name = #{videoPublishRequest.professorName}
         </if>
+
     </select>
+
+    <select id="allTotal" resultType="java.lang.Integer">
+        select count(*)
+        from video_publish
+    </select>
+
+    <delete id="deleteVideoFile">
+        delete from video_publish
+        where id = #{id}
+    </delete>
 
 </mapper>

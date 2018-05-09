@@ -18,31 +18,31 @@ public class OperationFile {
   @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
   private String checkTime;
   @NotNull
-  private Boolean colonyHouse;
+  private Integer colonyHouse;
   @NotNull
-  private Boolean warehouseWorkshop;
+  private Integer warehouseWorkshop;
   @NotNull
-  private Boolean killWormDeratization;
+  private Integer killWormDeratization;
   @NotNull
-  private Boolean sterilizingRoom;
+  private Integer sterilizingRoom;
   @NotNull
-  private Boolean operation;
+  private Integer operation;
   @NotNull
-  private Boolean needleSheep;
+  private Integer needleSheep;
   @NotNull
-  private Boolean vaccine;
+  private Integer vaccine;
   @NotNull
-  private Boolean safetyProtection;
+  private Integer safetyProtection;
   @NotNull
-  private Boolean rubbishWater;
+  private Integer rubbishWater;
   @NotNull
-  private Boolean operationSpecification;
+  private Integer operationSpecification;
   @NotNull
-  private Boolean airTemperature;
+  private Integer airTemperature;
   @NotNull
-  private Boolean exerciseDaylighting;
+  private Integer exerciseDaylighting;
   @NotNull
-  private Boolean carDisinfect;
+  private Integer carDisinfect;
   @Min(0)
   private int operatorId;
   @Min(0)
@@ -86,107 +86,107 @@ public class OperationFile {
     this.checkTime = checkTime;
   }
 
-  public Boolean getColonyHouse() {
+  public Integer getColonyHouse() {
     return colonyHouse;
   }
 
-  public void setColonyHouse(Boolean colonyHouse) {
+  public void setColonyHouse(Integer colonyHouse) {
     this.colonyHouse = colonyHouse;
   }
 
-  public Boolean getWarehouseWorkshop() {
+  public Integer getWarehouseWorkshop() {
     return warehouseWorkshop;
   }
 
-  public void setWarehouseWorkshop(Boolean warehouseWorkshop) {
+  public void setWarehouseWorkshop(Integer warehouseWorkshop) {
     this.warehouseWorkshop = warehouseWorkshop;
   }
 
-  public Boolean getKillWormDeratization() {
+  public Integer getKillWormDeratization() {
     return killWormDeratization;
   }
 
-  public void setKillWormDeratization(Boolean killWormDeratization) {
+  public void setKillWormDeratization(Integer killWormDeratization) {
     this.killWormDeratization = killWormDeratization;
   }
 
-  public Boolean getSterilizingRoom() {
+  public Integer getSterilizingRoom() {
     return sterilizingRoom;
   }
 
-  public void setSterilizingRoom(Boolean sterilizingRoom) {
+  public void setSterilizingRoom(Integer sterilizingRoom) {
     this.sterilizingRoom = sterilizingRoom;
   }
 
-  public Boolean getOperation() {
+  public Integer getOperation() {
     return operation;
   }
 
-  public void setOperation(Boolean operation) {
+  public void setOperation(Integer operation) {
     this.operation = operation;
   }
 
-  public Boolean getNeedleSheep() {
+  public Integer getNeedleSheep() {
     return needleSheep;
   }
 
-  public void setNeedleSheep(Boolean needleSheep) {
+  public void setNeedleSheep(Integer needleSheep) {
     this.needleSheep = needleSheep;
   }
 
-  public Boolean getVaccine() {
+  public Integer getVaccine() {
     return vaccine;
   }
 
-  public void setVaccine(Boolean vaccine) {
+  public void setVaccine(Integer vaccine) {
     this.vaccine = vaccine;
   }
 
-  public Boolean getSafetyProtection() {
+  public Integer getSafetyProtection() {
     return safetyProtection;
   }
 
-  public void setSafetyProtection(Boolean safetyProtection) {
+  public void setSafetyProtection(Integer safetyProtection) {
     this.safetyProtection = safetyProtection;
   }
 
-  public Boolean getRubbishWater() {
+  public Integer getRubbishWater() {
     return rubbishWater;
   }
 
-  public void setRubbishWater(Boolean rubbishWater) {
+  public void setRubbishWater(Integer rubbishWater) {
     this.rubbishWater = rubbishWater;
   }
 
-  public Boolean getOperationSpecification() {
+  public Integer getOperationSpecification() {
     return operationSpecification;
   }
 
-  public void setOperationSpecification(Boolean operationSpecification) {
+  public void setOperationSpecification(Integer operationSpecification) {
     this.operationSpecification = operationSpecification;
   }
 
-  public Boolean getAirTemperature() {
+  public Integer getAirTemperature() {
     return airTemperature;
   }
 
-  public void setAirTemperature(Boolean airTemperature) {
+  public void setAirTemperature(Integer airTemperature) {
     this.airTemperature = airTemperature;
   }
 
-  public Boolean getExerciseDaylighting() {
+  public Integer getExerciseDaylighting() {
     return exerciseDaylighting;
   }
 
-  public void setExerciseDaylighting(Boolean exerciseDaylighting) {
+  public void setExerciseDaylighting(Integer exerciseDaylighting) {
     this.exerciseDaylighting = exerciseDaylighting;
   }
 
-  public Boolean getCarDisinfect() {
+  public Integer getCarDisinfect() {
     return carDisinfect;
   }
 
-  public void setCarDisinfect(Boolean carDisinfect) {
+  public void setCarDisinfect(Integer carDisinfect) {
     this.carDisinfect = carDisinfect;
   }
 

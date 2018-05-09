@@ -19,8 +19,7 @@ public interface DiagnosisPlanMapper {
     int insert(@Param("diagnosisPlanModel") DiagnosisPlanModel diagnosisPlanModel);
 
 
-    List<DiagnosisPlanModel> selectDiagnosisPlanModelByDiagnosisRequest(@Param("diagnosisRequest") DiagnosisRequest diagnosisRequest,
-                                                                        RowBounds rowBounds);
+    List<DiagnosisPlanModel> selectDiagnosisPlanModelByDiagnosisRequest(@Param("diagnosisRequest") DiagnosisRequest diagnosisRequest);
 
     DiagnosisPlanModel selectByPrimaryKey(@Param("id") Integer id);
 

@@ -21,9 +21,8 @@ public class ImmunePlanService {
     }
 
 
-    public List<ImmunePlanModel> getImmunePlanModel(ImmuneRequest immunePlanModel,
-                                                    RowBounds bounds){
-        return this.immunePlanMapper.getImmunePlanModel(immunePlanModel,bounds);
+    public List<ImmunePlanModel> getImmunePlanModel(ImmuneRequest immunePlanModel){
+        return this.immunePlanMapper.getImmunePlanModel(immunePlanModel);
     }
 
 

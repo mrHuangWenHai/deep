@@ -215,8 +215,13 @@ public class ImmunePlanResource {
         return Responses.errorResponse("你没有权限");
       }
 
-      List<ImmunePlanModel> immunePlanModels = immunePlanService.getImmunePlanModel(immuneRequest,
-                new RowBounds(immuneRequest.getPage() * immuneRequest.getSize(),immuneRequest.getSize()));
+      List<ImmunePlanModel> totalList = immunePlanService.getImmunePlanModel(immuneRequest);
+
+      int size = totalList.size();
+      int page = immuneRequest.getPage();
+      int pageSize = immuneRequest.getSize();
+      int destIndex = (page+1) * pageSize + 1  > size ? size : (page+1) * pageSize + 1;
+      List<ImmunePlanModel> immunePlanModels = totalList.subList(page * pageSize, destIndex);
 
       if (role == 1) {
         Map<String,Object> data = new HashMap<>();
@@ -235,13 +240,13 @@ public class ImmunePlanResource {
         factorylist.addAll(direct);
         factorylist.addAll(others);
         data.put("List", factorylist);
-        data.put("size", factorylist.size());
+        data.put("size", size);
         data.put("directSize",direct.size());
         Response response = Responses.successResponse();
         response.setData(data);
         return response;
       } else {
-        return JudgeUtil.JudgeFind(immunePlanModels,immunePlanModels.size());
+        return JudgeUtil.JudgeFind(immunePlanModels,size);
       }
 
     }
