@@ -25,6 +25,7 @@ public interface PicMapper {
 
     List<Pic> selectByExample(PicExample example);
 
+    List<Pic> getAll();
 //    List<Pic> selectByBrand(String brand);
 //
 //    List<Pic> selectByUdate(Date udate);

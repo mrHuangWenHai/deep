@@ -195,4 +195,27 @@ public class Pic implements Serializable {
         String regex = "^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$";
         return Pattern.matches(regex, date);
     }
+
+    @Override
+    public String toString() {
+        return "Pic{" +
+            "id=" + id +
+            ", address='" + address + '\'' +
+            ", brand='" + brand + '\'' +
+            ", udate=" + udate +
+            ", sdate=" + sdate +
+            ", edate=" + edate +
+            ", expert='" + expert + '\'' +
+            ", sex='" + sex + '\'' +
+            ", solution='" + solution + '\'' +
+            ", symptom='" + symptom + '\'' +
+            ", uploader='" + uploader + '\'' +
+            ", vaccine='" + vaccine + '\'' +
+            ", filename='" + filename + '\'' +
+            ", returnId=" + returnId +
+            ", pageNumb=" + pageNumb +
+            ", limit=" + limit +
+            ", size=" + size +
+            '}';
+    }
 }

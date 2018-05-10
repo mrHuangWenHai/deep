@@ -89,6 +89,11 @@
       order by ${orderByClause}
     </if>
   </select>
+
+  <select id="getAll" resultMap="BaseResultMap">
+    select *
+    from pic
+  </select>
   <!--<select id="selectByBrand" resultMap="BaseResultMap" parameterType="java.lang.String">-->
       <!--select-->
       <!--*-->

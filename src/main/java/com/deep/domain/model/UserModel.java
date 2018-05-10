@@ -48,20 +48,20 @@ public class UserModel {
 //        @Max(1)
         private byte isFactory;
 
-        @NotBlank(message = "不能为空")
+   //     @NotBlank(message = "不能为空")
         private String factoryName;
 
-        @NotNull(message = "必须设置密保问题1")
+//        @NotNull(message = "必须设置密保问题1")
         private String question_1;    //找回密码问题1
-        @NotNull(message = "必须设置密保问题1的答案")
+//        @NotNull(message = "必须设置密保问题1的答案")
         private String answer_1;     //找回密码答案1
 
-        @NotNull(message = "必须设置密保问题2")
+//        @NotNull(message = "必须设置密保问题2")
         private String question_2;
-        @NotNull(message = "必须设置密保问题2的答案")
+//        @NotNull(message = "必须设置密保问题2的答案")
         private String answer_2;
 
-        @NotNull(message = "必须设置密保问题3")
+ //       @NotNull(message = "必须设置密保问题3")
         private String question_3;
 
 //        @NotNull(message = "必须设置密保问题3的答案")

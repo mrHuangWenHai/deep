@@ -32,6 +32,11 @@ public class PicService {
         return find;
     }
 
+    public List<Pic> getAll() {
+        List<Pic> list = this.picMapper.getAll();
+        return list;
+    }
+
     public List<Pic> findPicSelectiveWithRowbounds(PicExample picExample,int pageNumb,int limit) {
 
         int offset=(pageNumb-1)*limit;

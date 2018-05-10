@@ -222,7 +222,7 @@ public class RepellentPlanResource {
       int size = totalList.size();
       int page = repellentRequest.getPage();
       int pageSize = repellentRequest.getSize();
-      int destIndex = (page+1) * pageSize + 1  > size ? size : (page+1) * pageSize + 1;
+      int destIndex = (page+1) * pageSize   > size ? size : (page+1) * pageSize;
       List<RepellentPlanModel> repellentPlanModels = totalList.subList(page * pageSize, destIndex);
 
       if (role == 1) {
