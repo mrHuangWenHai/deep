@@ -45,8 +45,8 @@ public class PicResource {
                     !Header.equals("2E7261FD")  && !Header.equals("2E524D46") &&
                     !Header.equals("000001BA")  && !Header.equals("6D6F6F76") &&
                     !Header.equals("3026B27") && !Header.equals("58E66CF11") &&
-                    !Header.equals("00000020") && !Header.equals("FFD8FFE0")
-                    ) {
+                    !Header.equals("00000020") && !Header.equals("FFD8FFE0") &&
+                    !Header.equals("00000018")) {
                 throw new Exception("文件格式错误！");
 
             }

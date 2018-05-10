@@ -165,11 +165,7 @@ public class RepellentPlanResource {
                             }
                         }
                     }
-
-
                     return JudgeUtil.JudgeSuccess("id", repellentPlanModel.getId());
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                    return Responses.errorResponse("Exception");

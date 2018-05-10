@@ -53,9 +53,14 @@
             AND check_time &gt;= #{operationCoditionRequest.checkTime}
         </if>
 
-        <if test="operationCoditionRequest.techCheckStatus != null">
-            AND tech_check = #{operationCoditionRequest.techCheckStatus}
+        <if test="operationCoditionRequest.ispassCheck != null">
+            AND ispass_check = #{operationCoditionRequest.ispassCheck}
         </if>
+
+        <if test="operationCoditionRequest.ispassSup != null">
+            AND ispass_sup = #{operationCoditionRequest.ispassSup}
+        </if>
+
     </select>
 
     <select id = "getOperationFileById" resultMap="OperationFile">

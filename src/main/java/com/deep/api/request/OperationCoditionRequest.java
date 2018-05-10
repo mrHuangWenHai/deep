@@ -11,7 +11,8 @@ import java.util.List;
 public class OperationCoditionRequest {
 
   private Integer id;
-  private Integer techCheckStatus;
+  private Integer ispassCheck;
+  private Integer ispassSup;
   private Integer operationId;
   @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
   private Timestamp checkTime;
@@ -30,12 +31,12 @@ public class OperationCoditionRequest {
     this.id = id;
   }
 
-  public Integer getTechCheckStatus() {
-    return techCheckStatus;
+  public Integer getIspassCheck() {
+    return ispassCheck;
   }
 
-  public void setTechCheckStatus(Integer techCheckStatus) {
-    this.techCheckStatus = techCheckStatus;
+  public void setIspassCheck(Integer ispassCheck) {
+    this.ispassCheck = ispassCheck;
   }
 
   public Integer getOperationId() {
@@ -94,17 +95,27 @@ public class OperationCoditionRequest {
     this.pageSize = pageSize;
   }
 
+  public Integer getIspassSup() {
+    return ispassSup;
+  }
+
+  public void setIspassSup(Integer ispassSup) {
+    this.ispassSup = ispassSup;
+  }
+
   @Override
   public String toString() {
     return "OperationCoditionRequest{" +
         "id=" + id +
-        ", techCheckStatus=" + techCheckStatus +
+        ", ispassCheck=" + ispassCheck +
+        ", ispassSup=" + ispassSup +
         ", operationId=" + operationId +
         ", checkTime=" + checkTime +
         ", factoryNum=" + factoryNum +
         ", factoryName='" + factoryName + '\'' +
         ", factoryList=" + factoryList +
+        ", page=" + page +
+        ", pageSize=" + pageSize +
         '}';
   }
-
 }

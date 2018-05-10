@@ -70,17 +70,14 @@ public class OperationFileResource {
 
     try {
       Map<Long, List<Long>> factoryMap = null;
-
       String roleString = TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION));
       if (roleString == null) {
         return Responses.errorResponse("认证信息错误");
       }
       Byte role = Byte.parseByte(roleString);
-
       if (role == 0) {
         operationCoditionRequest.setFactoryNum(id);
       } else if (role == 1) {
-
         factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
         List<Long> factoryList = new ArrayList<>();
         factoryList.addAll(factoryMap.get(new Long(-1)));
@@ -91,7 +88,6 @@ public class OperationFileResource {
       }
       logger.info("invoke Get /of {}",operationCoditionRequest);
       List<OperationFile> totalList = operationFileService.getOperationFile(operationCoditionRequest);
-
       int size = totalList.size();
       int page = operationCoditionRequest.getPage();
       int pageSize = operationCoditionRequest.getPageSize();
