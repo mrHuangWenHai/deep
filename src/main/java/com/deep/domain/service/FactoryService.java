@@ -128,5 +128,9 @@ public class FactoryService {
         return factoryMapper.deleteFactory(id);
     }
 
+    public Short queryOneAgentByID(Long id) {
+        return factoryMapper.queryOneAgentByID(id);
+    }
+
 }
 

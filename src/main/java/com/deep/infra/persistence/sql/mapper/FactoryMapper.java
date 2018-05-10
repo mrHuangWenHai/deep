@@ -229,4 +229,16 @@ public interface FactoryMapper {
      */
     @Delete("delete from factory_manage where id = #{id}")
     Long deleteFactory(Long id);
+
+    /**
+     * 根据羊场的ID发展羊场的代理agent的ID
+     * @param id
+     * @return
+     */
+    @Select("select agent from factory_manage where id = #{id}")
+    @Results({
+            @Result(property = "agent", column = "agent")
+    })
+    Short queryOneAgentByID(Long id);
+
 }
