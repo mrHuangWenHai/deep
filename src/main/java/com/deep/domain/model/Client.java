@@ -6,7 +6,7 @@ public class Client {
 
     private Long id;
     @JSONField(name = "user_realname")
-    private String name;
+    private String user_realname;
 
     public Long getId() {
         return id;
@@ -16,11 +16,11 @@ public class Client {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUser_realname() {
+        return user_realname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUser_realname(String user_realname) {
+        this.user_realname = user_realname;
     }
 }

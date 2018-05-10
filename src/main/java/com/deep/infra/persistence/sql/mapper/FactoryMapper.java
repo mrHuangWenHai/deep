@@ -140,9 +140,9 @@ public interface FactoryMapper {
      * @return
      */
     @Select("select agent from factory_manage where pk_number = #{pkNumber}")
-    @Results({
-            @Result(property = "agent", column = "agent")
-    })
+//    @Results({
+//            @Result(property = "agent", column = "agent")
+//    })
     Short queryOneAgentByFactoryID(String pkNumber);
 
     /**

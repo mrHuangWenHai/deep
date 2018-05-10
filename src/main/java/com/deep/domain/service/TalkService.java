@@ -31,7 +31,7 @@ public class TalkService {
         return mapper.getTalkRecord(talk_id);
     }
 
-    public List<Client> getClientList(String expert_id) {
+    public List<Client> getClientList(Long expert_id) {
         return mapper.getClientList(expert_id);
     }
 

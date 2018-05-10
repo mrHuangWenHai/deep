@@ -208,7 +208,8 @@ public class TalkController {
     @ResponseBody
     public Response getClientList(@PathVariable("expert_id") String expert_id) {
         //List<Client> clients = new ArrayList<>();
-        List<Client> list = talkService.getClientList(expert_id);
+        logger.info(expert_id + "get list");
+        List<Client> list = talkService.getClientList(Long.valueOf(expert_id));
 //        Set<Long> set = MyWebSocket.getPersonalMap().keySet();
 //        if (set.size() > 0) {
 //            for (Client client : list) {
@@ -216,6 +217,7 @@ public class TalkController {
 //                    clients.add(client);
 //            }
 //        }
+
         HashMap<String, List<Client>> map = new HashMap<>();
         map.put("List", list);
         return Responses.successResponse(map);
