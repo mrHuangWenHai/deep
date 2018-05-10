@@ -120,8 +120,10 @@ public class UserResource {
      */
     @GetMapping(value = "user/detail/{username}")
     public Response getUserOneDetail(@PathVariable("username") String id, HttpServletRequest request) {
-        logger.info("invoke getUserOneDetail{}, url is user/detail/{id}", id);
+        logger.info("invoke getUserOneDetail{}, url is user/detail/{}", id);
+        System.out.println("1111111111110000000000001111111111111111111111");
         long uid = StringToLongUtil.stringToLong(id);
+      System.out.println("11111111111111122222222222222222222222222222222");
         if (uid < 0) {
             return Responses.errorResponse("错误");
         }
@@ -131,6 +133,7 @@ public class UserResource {
             which = -1;
         }
         UserModel userModel = userService.getOneUser(uid);
+        logger.info("===========  {}",userModel);
         if (userModel == null) {
             return Responses.errorResponse("系统中该用户不存在");
         }

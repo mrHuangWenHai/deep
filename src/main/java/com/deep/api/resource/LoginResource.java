@@ -57,7 +57,7 @@ public class LoginResource {
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Response LoginResult(@RequestBody LoginRequest loginRequest, HttpServletResponse httpServletResponse){
-        logger.info("invoke LoginResult{}, url is /login", loginRequest, httpServletResponse);
+        logger.info("invoke LoginResult{}, url is /login", loginRequest);
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
         UserModel userModel = userService.getUserByPkuserID(username);
@@ -113,11 +113,10 @@ public class LoginResource {
               TokenModel tokenModel = new TokenModel(userModel.getId(), String.valueOf(roleInt), String.valueOf(userModel.getIsFactory()));
               System.out.println("login=================================="+tokenModel);
               JedisUtil.setValue(String.valueOf(userModel.getId()), tokenModel.getToken());
-              JedisUtil.doExpire(String.valueOf(userModel.getId()));
+          //    JedisUtil.doExpire(String.valueOf(userModel.getId()));
               JedisUtil.setValue("defaultPermit" + userModel.getId(), defaultPermit);
-              JedisUtil.doExpire("defaultPermit" + userModel.getId());
+          //    JedisUtil.doExpire("defaultPermit" + userModel.getId());
               httpServletResponse.setHeader("Authorization", userModel.getId() + ":" + tokenModel.getToken());
-              System.out.println("response = "+response);
               return response;
             } else {
               Response response = Responses.errorResponse("用户名或者密码错误");

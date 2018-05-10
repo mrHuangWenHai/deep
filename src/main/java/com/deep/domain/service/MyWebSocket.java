@@ -74,10 +74,6 @@ public class MyWebSocket {
      */
     @OnClose
     public void onClose(@PathParam("user_id") Long user_id) {
-        if (personalMap.get(user_id) != null) {
-            DynamicTask.getTaskMap().get(personalMap.get(user_id)).cancel(true);
-            personalMap.remove(user_id);
-        }
         WebSocketUtil.remove(user_id);
         logger.info("Account " + user_id + " close!" + WebSocketUtil.getSize() + " online");
     }
@@ -115,9 +111,9 @@ public class MyWebSocket {
      * @param mode     0:服务器转发信息 1：发起建立群聊的信号 2：群聊 3:退出群聊
      * @param talk_id  会话id
      */
-    private void sendMessage(String message, Boolean isExpert, Long user_id, String name, Long[] tos, String mode, String talk_id) {
+    private void sendMessage(String message, Boolean isExpert, Long user_id, String name, Long[] tos, int mode, String talk_id) {
         switch (mode) {
-            case "0": {
+            case 0: {
                 //获取聊天对象的会话session
                 MyWebSocket item = WebSocketUtil.get(Long.valueOf(talk_id));
                 Date date = new Date();
@@ -139,19 +135,14 @@ public class MyWebSocket {
                 }
                 break;
             }
-            case "1": {
+            case 1: {
                 //给当前群聊生成一个聊天id,并记录群聊id与群成员,用户id与群聊id的映射关系,并绑定定时任务
-                logger.info("ok1");
                 List<Long> members = new ArrayList<>(Arrays.asList(tos));
-                logger.info("ok2");
+                //给对应id添加角色标志
                 talk_id = initGroupState(user_id, talk_id, members);
-                logger.info("ok");
                 for (Long member : members) {
                     MyWebSocket account = WebSocketUtil.get(member);
-                    if (!member.equals(Long.valueOf(user_id)))
-                        addAccount(talk_id, member, false);
-                    else
-                        addAccount(talk_id, member, true);
+                    addAccount(talk_id, member, null);
                     if (account != null)
                         account.getSession().getAsyncRemote().sendText(JSON.toJSONString(new ResponseBean(null, "fresh", talk_id, null)));
                 }
@@ -159,7 +150,7 @@ public class MyWebSocket {
                 System.out.println(chatMap);
                 break;
             }
-            case "2": {
+            case 2: {
                 //根据群聊成员列表对消息进行转发,并刷新定时任务
                 Date date = new Date();
                 List<Long> list = chatMap.get(talk_id);
@@ -176,7 +167,7 @@ public class MyWebSocket {
                 record(talk_id, name, user_id, 0L, message, date, false, true);
                 break;
             }
-            case "3":
+            case 3:
                 //获取当前群聊的成员聊表,移除该成员,更新映射表
                 List<Long> members = new ArrayList<>(chatMap.get(talk_id));
                 members.remove(user_id);

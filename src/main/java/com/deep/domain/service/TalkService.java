@@ -1,6 +1,7 @@
 package com.deep.domain.service;
 
 
+import com.deep.domain.model.Client;
 import com.deep.domain.model.Talk;
 import com.deep.infra.persistence.sql.mapper.TalkMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,10 @@ public class TalkService {
 
     public List<Talk> getTalkRecord(String talk_id) {
         return mapper.getTalkRecord(talk_id);
+    }
+
+    public List<Client> getClientList(String expert_id) {
+        return mapper.getClientList(expert_id);
     }
 
     public List<Talk> getSummaryTalkRecord(String talk_id) {

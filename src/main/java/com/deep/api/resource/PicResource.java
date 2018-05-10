@@ -31,7 +31,7 @@ public class PicResource {
 
     private final Logger logger = LoggerFactory.getLogger(ExampleResource.class);
 
-    private final String filePath = "../pic/";
+    private final String filePath = "./pic/";
 
     @RequestMapping(value = "/uploadFile/upload",method = RequestMethod.POST)
     public @ResponseBody Response addPic(Pic pic,

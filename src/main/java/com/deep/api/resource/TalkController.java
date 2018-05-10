@@ -3,10 +3,7 @@ package com.deep.api.resource;
 import com.alibaba.fastjson.JSON;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
-import com.deep.domain.model.Evaluation;
-import com.deep.domain.model.Expression;
-import com.deep.domain.model.ResponseBean;
-import com.deep.domain.model.Talk;
+import com.deep.domain.model.*;
 import com.deep.domain.service.EvaluationService;
 import com.deep.domain.service.ExpressionService;
 import com.deep.domain.service.MyWebSocket;
@@ -74,12 +71,12 @@ public class TalkController {
                         MyWebSocket role1 = WebSocketUtil.get(Long.valueOf(user_id));
                         MyWebSocket role2 = WebSocketUtil.get(Long.valueOf(talk_id));
                         if (role1 != null) {
-                            role1.getSession().getAsyncRemote().sendText(JSON.toJSONString(new ResponseBean(realPath + ":" + realName, "link", talk_id, null)));
+                            role1.getSession().getAsyncRemote().sendText(com.alibaba.fastjson.JSON.toJSONString(new ResponseBean(realPath + ":" + realName, "link", talk_id, null)));
                             MyWebSocket.record(MyWebSocket.getPersonalMap().get(target_id), user_name, Long.valueOf(user_id), Long.valueOf(talk_id), filePath, date, true, true);
                         } else
                             MyWebSocket.record(MyWebSocket.getPersonalMap().get(target_id), user_name, Long.valueOf(user_id), Long.valueOf(talk_id), filePath, date, true, false);
                         if (role2 != null)
-                            role2.getSession().getAsyncRemote().sendText(JSON.toJSONString(new ResponseBean(realPath + ":" + realName, "link", user_id, null)));
+                            role2.getSession().getAsyncRemote().sendText(com.alibaba.fastjson.JSON.toJSONString(new ResponseBean(realPath + ":" + realName, "link", user_id, null)));
                     } else if (mode.equals("2")) {
                         logger.info("group file transport");
                         List<Long> members = new ArrayList<>(MyWebSocket.getChatMap().get(talk_id));
@@ -185,26 +182,43 @@ public class TalkController {
         return map.get("List") != null ? Responses.successResponse(map) : Responses.errorResponse("no expression");
     }
 
-    @GetMapping("/getTalkRecords")
-    @ResponseBody
-    public Response summaryRecord(String user_id) {
-        List<String> record_ids = talkService.getTalkRecordIDs(Long.valueOf(user_id));
-        HashMap<String, List<Talk>> map = new HashMap<>();
-        for (String record_id : record_ids) {
-            List<Talk> talks = talkService.getSummaryTalkRecord(record_id);
-            map.put(record_id, talks);
-        }
-        return Responses.successResponse(map);
-    }
+//    @GetMapping("/getTalkRecords")
+//    @ResponseBody
+//    public Response summaryRecord(String user_id) {
+//        List<String> record_ids = talkService.getTalkRecordIDs(Long.valueOf(user_id));
+//        HashMap<String, List<Talk>> map = new HashMap<>();
+//        for (String record_id : record_ids) {
+//            List<Talk> talks = talkService.getSummaryTalkRecord(record_id);
+//            map.put(record_id, talks);
+//        }
+//        return Responses.successResponse(map);
+//    }
 
     @GetMapping("/getTalkRecord/{talk_id}")
     @ResponseBody
     public Response recordDetails(@PathVariable("talk_id") String talk_id) {
         String record_id = MyWebSocket.getChatMap().get(talk_id) == null ? MyWebSocket.getPersonalMap().get(Long.valueOf(talk_id)) : talk_id;
         HashMap<String, List<Talk>> map = new HashMap<>();
-        map.put(talk_id, talkService.getTalkRecord(record_id));
+        map.put("List", talkService.getTalkRecord(record_id));
         return Responses.successResponse(map);
         //return talkService.getTalkRecord(record_id) != null ? Responses.successResponse(map) : Responses.errorResponse("no any records");
+    }
+
+    @GetMapping("/getClientList/{expert_id}")
+    @ResponseBody
+    public Response getClientList(@PathVariable("expert_id") String expert_id) {
+        //List<Client> clients = new ArrayList<>();
+        List<Client> list = talkService.getClientList(expert_id);
+//        Set<Long> set = MyWebSocket.getPersonalMap().keySet();
+//        if (set.size() > 0) {
+//            for (Client client : list) {
+//                if (set.contains(client.getId()))
+//                    clients.add(client);
+//            }
+//        }
+        HashMap<String, List<Client>> map = new HashMap<>();
+        map.put("List", list);
+        return Responses.successResponse(map);
     }
 
     private static int getSeason(int month) {

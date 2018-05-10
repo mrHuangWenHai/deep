@@ -150,6 +150,7 @@ public class AgentResource {
     @Permit(authorities = "query_agent")
     @GetMapping(value = "/fr")
     public Response queryAgentWithoutResponsiblePersonId(HttpServletRequest request) {
+        logger.info("agent/fr {}");
         Long userId = TokenAnalysis.getUserId(request.getHeader(Constants.AUTHORIZATION));
         if (userId == null) {
             return Responses.errorResponse("Error!");

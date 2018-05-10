@@ -11,19 +11,20 @@ public class JedisUtil {
     public static String getValue(String key) {
 
         try {
-          if (jedis.get(key) == null) {
+          if (!jedis.exists(key)) {
             return null;
           } else {
             return jedis.get(key);
           }
         } catch (Exception e ) {
-          jedis.close();
+       //   jedis.close();
         }
         return null;
     }
 
     public static void setValue(String key, String value) {
-        jedis.set(key,value);
+         jedis.setex(key, seconds, value);
+      //  jedis.set(key,value);
     }
 
     public static void doExpire(String key) {
