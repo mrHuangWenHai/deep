@@ -27,7 +27,8 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/picture/**").addResourceLocations("file:///Users/huangwenhai/alibaba/Deep/");
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
-        registry.addResourceHandler("/movie/**").addResourceLocations("file://../video/");
+        registry.addResourceHandler("/movie/**").addResourceLocations("file:///Users/huangwenhai/alibaba/Deep/video/");
+        registry.addResourceHandler("/pic/**").addResourceLocations("file:///Users/huangwenhai/alibaba/pic/");
         System.out.println("this is the ResourceHandler");
     }
 }
