@@ -1,6 +1,7 @@
 package com.deep.domain.service;
 
 import com.deep.domain.model.AgentModel;
+import com.deep.domain.model.UserModel;
 import com.deep.infra.persistence.sql.mapper.AgentMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
@@ -28,8 +29,13 @@ public class AgentService {
      * find MinusSign
      * @return agentModel's List
      */
-    public List<AgentModel> queryAgentWithoutResponsiblePersonId() {
-        return agentMapper.queryAgentWithoutResponsiblePersonId();
+    public List<AgentModel> queryAgentWithoutResponsiblePersonId(Long id) {
+        UserModel userModel = userService.getOneUser(id);
+        if (userModel == null) {
+            return null;
+        }
+
+        return agentMapper.queryAgentWithoutResponsiblePersonId(userModel.getUserFactory());
     }
 
     public int[] getSonsId(int id) {

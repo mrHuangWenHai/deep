@@ -149,10 +149,14 @@ public class AgentResource {
      */
     @Permit(authorities = "query_agent")
     @GetMapping(value = "/fr")
-    public Response queryAgentWithoutResponsiblePersonId() {
+    public Response queryAgentWithoutResponsiblePersonId(HttpServletRequest request) {
+        Long userId = TokenAnalysis.getUserId(request.getHeader(Constants.AUTHORIZATION));
+        if (userId == null) {
+            return Responses.errorResponse("Error!");
+        }
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
-        List<AgentModel> agentModels = agentService.queryAgentWithoutResponsiblePersonId();
+        List<AgentModel> agentModels = agentService.queryAgentWithoutResponsiblePersonId(userId);
         data.put("List", agentModels);
         data.put("size", agentModels.size());
         response.setData(data);
