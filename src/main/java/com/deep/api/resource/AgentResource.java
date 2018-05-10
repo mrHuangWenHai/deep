@@ -65,7 +65,11 @@ public class AgentResource {
         Integer uid = StringToLongUtil.stringToInt(id);
         Long upage = StringToLongUtil.stringToLong(page);
         Byte usize = StringToLongUtil.stringToByte(size);
-        Byte which = StringToLongUtil.stringToByte(TokenAnalysis.getFlag(request.getHeader(Constants.AUTHORIZATION)));
+        String userId = TokenAnalysis.getFlag(request.getHeader(Constants.AUTHORIZATION));
+        if (userId == null) {
+            return Responses.errorResponse("请求错误!");
+        }
+        Byte which = StringToLongUtil.stringToByte(userId);
         if (uid < 0 || upage < 0 || usize < 0) {
             return Responses.errorResponse("错误");
         }

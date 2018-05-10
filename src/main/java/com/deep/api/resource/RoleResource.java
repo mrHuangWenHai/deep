@@ -174,7 +174,7 @@ public class RoleResource {
         logger.info("invoke deleteRole{}, url is role/{id}", id);
 
         long uid = StringToLongUtil.stringToLong(id);
-        if (uid == -1) {
+        if (uid == -1 || uid <= 21) {
             return Responses.errorResponse("查询错误");
         }
         Long success = roleService.deleteRole(uid);

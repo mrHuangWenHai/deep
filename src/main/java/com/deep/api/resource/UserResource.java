@@ -148,7 +148,7 @@ public class UserResource {
         // 前端不需要的字段
         userModel.setUserPermit("0");
         userModel.setUserPwd("0");
-        userModel.setUserRole(0);
+//        userModel.setUserRole(0);
 
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
