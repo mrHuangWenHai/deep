@@ -315,15 +315,16 @@ public class FactoryResouce {
      */
     @Permit(authorities = "customer_inquiry")
     @GetMapping(value = "/fr")
-    public Response findAllNoResponsibleFactory() {
-//        long uid = StringToLongUtil.stringToLong(id);
-//        if (uid == -1) {
-//            return Responses.errorResponse("查询错误");
-//        }
+    public Response findAllNoResponsibleFactory(HttpServletRequest request) {
         logger.info("fhaohfaf");
+
+        Long userId = TokenAnalysis.getUserId(request.getHeader(Constants.AUTHORIZATION));
+        if (userId == null) {
+            return Responses.errorResponse("Error!");
+        }
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
-        List<FactoryModel> factoryModels = factoryService.findAllNoResponsibleFactory();
+        List<FactoryModel> factoryModels = factoryService.findAllNoResponsibleFactory(userId);
         data.put("List", factoryModels);
         data.put("size", factoryModels.size());
         response.setData(data);

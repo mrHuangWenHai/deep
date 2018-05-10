@@ -11,7 +11,7 @@ public interface FactoryMapper {
     @Select("select count(*) from agent_factory where agent_rank != 0")
     Long queryCount();
 
-    @Select("select * from factory_manage where responsible_person_id < 0")
+    @Select("select * from factory_manage where responsible_person_id < 0 and agent = #{userId}")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "gmtCreate", column = "gmt_create"),
@@ -27,7 +27,7 @@ public interface FactoryMapper {
             @Result(property = "disinfectP", column = "disinfect_p"),
             @Result(property = "agent", column = "agent")
     })
-    List<FactoryModel> getAllNoResponsibleFactory();
+    List<FactoryModel> getAllNoResponsibleFactory(Long userId);
 
     /**
      * 列出羊场列表
