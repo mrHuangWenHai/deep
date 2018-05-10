@@ -107,7 +107,7 @@ public class ImmunePlanResource {
                 immunePlanService.setImmunePlanModel(immunePlanModel);
 
 
-                short agentID = this.factoryService.getAgentIDByFactoryNumber(immunePlanModel.getFactoryNum().toString());
+                short agentID = this.factoryService.queryOneAgentByID(immunePlanModel.getFactoryNum().longValue());
                 String professorKey = agentID + "_professor";
                 String supervisorKey = immunePlanModel.getFactoryNum().toString() + "_supervisor";
 
@@ -226,7 +226,7 @@ public class ImmunePlanResource {
       int size = totalList.size();
       int page = immuneRequest.getPage();
       int pageSize = immuneRequest.getSize();
-      int destIndex = (page+1) * pageSize + 1  > size ? size : (page+1) * pageSize + 1;
+      int destIndex = (page+1) * pageSize  > size ? size : (page+1) * pageSize;
       List<ImmunePlanModel> immunePlanModels = totalList.subList(page * pageSize, destIndex);
       if (role == 1) {
         Map<String,Object> data = new HashMap<>();

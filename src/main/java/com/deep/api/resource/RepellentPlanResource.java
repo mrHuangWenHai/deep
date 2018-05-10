@@ -94,13 +94,12 @@ public class RepellentPlanResource {
                     if (issuccess == 0) {
                       return Responses.errorResponse("add error");
                     }
-                    short agentID = this.factoryService.getAgentIDByFactoryNumber(repellentPlanModel.getFactoryNum().toString());
+                    short agentID = this.factoryService.queryOneAgentByID(repellentPlanModel.getFactoryNum().longValue());
                     String professorKey = agentID + "_professor";
                     String supervisorKey = repellentPlanModel.getFactoryNum().toString() + "_supervisor";
 
                     String testSendProfessor = agentID + "_professor_AlreadySend";
                     String testSendSupervisor = repellentPlanModel.getFactoryNum().toString() + "_supervisor_AlreadySend";
-
 
 
                     JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);

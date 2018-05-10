@@ -98,7 +98,7 @@ public class DisinfectFilesResource {
                 //数据插入redis
                 //professor字段为 代理ID + _professor
                 //supervisor字段为 工厂号 + _supervisor
-                short agentID = this.factoryService.getAgentIDByFactoryNumber(disinfectFilesModel.getFactoryNum().toString());
+                short agentID = this.factoryService.queryOneAgentByID(disinfectFilesModel.getFactoryNum().longValue());
                 String professorKey = agentID + "_professor";
                 String supervisorKey = disinfectFilesModel.getFactoryNum().toString() + "_supervisor";
 
