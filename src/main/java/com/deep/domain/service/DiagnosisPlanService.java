@@ -43,8 +43,8 @@ public class DiagnosisPlanService {
         return this.diagnosisPlanMapper.selectByPrimaryKey(id);
     }
 
-    public List<DiagnosisPlanModel> selectDiagnosisPlanModelByDiagnosisRequest(DiagnosisRequest diagnosisRequest, RowBounds rowBounds) {
-        return this.diagnosisPlanMapper.selectDiagnosisPlanModelByDiagnosisRequest(diagnosisRequest,rowBounds);
+    public List<DiagnosisPlanModel> selectDiagnosisPlanModelByDiagnosisRequest(DiagnosisRequest diagnosisRequest) {
+        return this.diagnosisPlanMapper.selectDiagnosisPlanModelByDiagnosisRequest(diagnosisRequest);
     }
 
 //    public List<DiagnosisPlanModel> professorFindPlan(long factoryNum,

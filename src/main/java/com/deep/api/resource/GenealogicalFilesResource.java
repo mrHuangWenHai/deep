@@ -52,7 +52,6 @@ public class GenealogicalFilesResource {
     @Permit(authorities = "add_sheep_type")
     @RequestMapping(value = "/type",method = RequestMethod.POST)
     public Response type(@RequestBody @Validated TypeBriefModel typeBriefModel,
-
                          BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             System.out.println(bindingResult.getAllErrors());
@@ -112,9 +111,11 @@ public class GenealogicalFilesResource {
               break;
           }
       }
+
       if (i == 0) {
-          return Responses.errorResponse("No this type before");
+          return Responses.errorResponse("没有这种这种类型的商品");
       }
+
       SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
       String time = simpleDateFormat.format(new Timestamp(System.currentTimeMillis()));
       genealogicalFilesModel.setGmtCreate(time);
@@ -123,7 +124,7 @@ public class GenealogicalFilesResource {
       try {
           int id = genealogicalFilesService.insertGenealogicalFilesModel(genealogicalFilesModel);
           if (id == 0) {
-              return Responses.errorResponse("add data error");
+              return Responses.errorResponse("添加数据失败");
           } else {
               HashMap<String,Object> data = new HashMap<>();
               data.put("id",genealogicalFilesModel.getId());
@@ -131,7 +132,7 @@ public class GenealogicalFilesResource {
           }
       } catch (Exception e) {
           e.printStackTrace();
-          return Responses.errorResponse("data already exist");
+          return Responses.errorResponse("数据已经存在");
       }
 
     }
@@ -149,10 +150,12 @@ public class GenealogicalFilesResource {
                              GenealogicalRequest genealogicalRequest,
                              HttpServletRequest httpServletRequest) {
 
-      logger.info("invoke findShow {}",genealogicalRequest);
-
       Map<Long, List<Long>> factoryMap = null;
-      Byte role = Byte.parseByte(TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION)));
+      String roleString = TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION));
+      if (roleString == null) {
+        return Responses.errorResponse("认证信息错误");
+      }
+      Byte role = Byte.parseByte(roleString);
       if (role == 0) {
         genealogicalRequest.setFactoryNum(id);
       } else if (role == 1) {
@@ -164,8 +167,14 @@ public class GenealogicalFilesResource {
       } else {
         return Responses.errorResponse("你没有权限");
       }
+        logger.info("invoke findShow {}",genealogicalRequest);
+        List<GenealogicalFilesModel> totalList = genealogicalFilesService.getGenealogicalFilesModel(genealogicalRequest);
+        int size = totalList.size();
+        int page = genealogicalRequest.getPage();
+        int pageSize = genealogicalRequest.getSize();
+        int destIndex = (page+1) * pageSize > size + 1 ? size  : (page+1) * pageSize + 1;
+        List<GenealogicalFilesModel> genealogicalFilesModels = totalList.subList(page * pageSize, destIndex);
 
-        List<GenealogicalFilesModel> genealogicalFilesModels = genealogicalFilesService.getGenealogicalFilesModel(genealogicalRequest,new RowBounds(genealogicalRequest.getPage() * genealogicalRequest.getSize() ,genealogicalRequest.getSize()));
         for (GenealogicalFilesModel genealogicalFilesModel : genealogicalFilesModels) {
             String brief = this.typeBriefService.getTypeBrief(genealogicalFilesModel.getTypeName()).getBrief();
             genealogicalFilesModel.setBrief(brief);
@@ -187,14 +196,14 @@ public class GenealogicalFilesResource {
         factorylist.addAll(direct);
         factorylist.addAll(others);
         data.put("List", factorylist);
-        data.put("size", factorylist.size());
+        data.put("size", size);
         data.put("directSize",direct.size());
         Response response = Responses.successResponse();
         response.setData(data);
         return response;
 
       } else {
-        return JudgeUtil.JudgeFind(genealogicalFilesModels,genealogicalFilesModels.size());
+        return JudgeUtil.JudgeFind(genealogicalFilesModels, size);
       }
 
     }
@@ -245,7 +254,6 @@ public class GenealogicalFilesResource {
     }
 
     //update
-
     /**
      * 更新操作 输入数据替代原数据
      * METHOD:PUT
@@ -256,12 +264,11 @@ public class GenealogicalFilesResource {
     @RequestMapping(value = "/{id}",method = RequestMethod.PUT)
     public Response update(@Validated @RequestBody GenealogicalFilesModel genealogicalFilesModel,
                            @NotNull @PathVariable(value = "id") int id) {
-
-        logger.info("invoke Put /gf/{} {}",id, genealogicalFilesModel);
         if (id < 0) {
             return Responses.errorResponse("path is invalid");
         }
         genealogicalFilesModel.setId(id);
+        logger.info("invoke Put /gf/{} {}",id, genealogicalFilesModel);
         int row = genealogicalFilesService.updateGenealogicalFilesModel(genealogicalFilesModel);
         return JudgeUtil.JudgeUpdate(row);
     }

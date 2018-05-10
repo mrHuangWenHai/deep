@@ -18,7 +18,8 @@ public class OperationCoditionRequest {
   private Long factoryNum;
   private String factoryName;
   private List<Long> factoryList;
-
+  private int page = 0;
+  private int pageSize = 10;
 
   public Integer getId() {
     return id;
@@ -77,6 +78,22 @@ public class OperationCoditionRequest {
     this.factoryList = factoryList;
   }
 
+  public int getPage() {
+    return page;
+  }
+
+  public void setPage(int page) {
+    this.page = page;
+  }
+
+  public int getPageSize() {
+    return pageSize;
+  }
+
+  public void setPageSize(int pageSize) {
+    this.pageSize = pageSize;
+  }
+
   @Override
   public String toString() {
     return "OperationCoditionRequest{" +
@@ -86,6 +103,8 @@ public class OperationCoditionRequest {
         ", checkTime=" + checkTime +
         ", factoryNum=" + factoryNum +
         ", factoryName='" + factoryName + '\'' +
+        ", factoryList=" + factoryList +
         '}';
   }
+
 }

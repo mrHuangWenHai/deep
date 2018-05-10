@@ -94,21 +94,21 @@
             AND factory_name = #{disinfectFilesModel.factoryName}
         </if>
 
-        <if test="disinfectFilesModel.disinfectTimeStart != null and disinfectFilesModel.disinfectTimeStart != '' and
+        <if test="disinfectFilesModel.startTime != null and disinfectFilesModel.startTime != '' and
 
-                  (disinfectFilesModel.disinfectTimeEnd == null or disinfectFilesModel.disinfectTimeEnd == '') ">
-            AND disinfect_time &gt;= #{disinfectFilesModel.disinfectTimeStart}
+                  (disinfectFilesModel.endTime == null or disinfectFilesModel.endTime == '') ">
+            AND disinfect_time &gt;= #{disinfectFilesModel.startTime}
         </if>
 
-        <if test="disinfectFilesModel.disinfectTimeStart != null and disinfectFilesModel.disinfectTimeStart != '' and
+        <if test="disinfectFilesModel.startTime != null and disinfectFilesModel.startTime != '' and
 
-                  disinfectFilesModel.disinfectTimeEnd != null and disinfectFilesModel.disinfectTimeEnd != '' ">
-            AND disinfect_time BETWEEN #{disinfectFilesModel.disinfectTimeStart} AND #{disinfectFilesModel.disinfectTimeEnd}
+                  disinfectFilesModel.endTime != null and disinfectFilesModel.endTime != '' ">
+            AND disinfect_time BETWEEN #{disinfectFilesModel.startTime} AND #{disinfectFilesModel.endTime}
         </if>
 
-        <if test="(disinfectFilesModel.disinfectTimeStart == null or disinfectFilesModel.disinfectTimeStart == '') and
-                  disinfectFilesModel.disinfectTimeEnd != null and disinfectFilesModel.disinfectTimeEnd != '' ">
-            AND disinfect_time &lt;= #{disinfectFilesModel.disinfectTimeEnd}
+        <if test="(disinfectFilesModel.startTime == null or disinfectFilesModel.startTime == '') and
+                  disinfectFilesModel.endTime != null and disinfectFilesModel.endTime != '' ">
+            AND disinfect_time &lt;= #{disinfectFilesModel.endTime}
         </if>
 
 

@@ -135,20 +135,19 @@
             </if>
 
 
-            <if test="genealogicalFilesModel.birthTimeStart != null and genealogicalFilesModel.birthTimeStart != '' and
-                     (genealogicalFilesModel.birthTimeEnd == null or genealogicalFilesModel.birthTimeEnd == '') ">
-                AND birth_time &gt;= #{genealogicalFilesModel.birthTimeStart}
+            <if test="genealogicalFilesModel.startTime != null and genealogicalFilesModel.startTime != '' and
+                     (genealogicalFilesModel.endTime == null or genealogicalFilesModel.endTime == '') ">
+                AND birth_time &gt;= #{genealogicalFilesModel.startTime}
             </if>
 
-
-            <if test="genealogicalFilesModel.birthTimeStart != null and genealogicalFilesModel.birthTimeStart != '' and
-                        genealogicalFilesModel.birthTimeEnd != null and genealogicalFilesModel.birthTimeEnd != '' ">
-                AND birth_time BETWEEN #{genealogicalFilesModel.birthTimeStart} AND #{genealogicalFilesModel.birthTimeEnd}
+            <if test="genealogicalFilesModel.startTime != null and genealogicalFilesModel.startTime != '' and
+                        genealogicalFilesModel.endTime != null and genealogicalFilesModel.endTime != '' ">
+                AND birth_time BETWEEN #{genealogicalFilesModel.startTime} AND #{genealogicalFilesModel.endTime}
             </if>
 
-            <if test="(genealogicalFilesModel.birthTimeStart == null or genealogicalFilesModel.birthTimeStart == '') and
-                     (genealogicalFilesModel.birthTimeEnd != null and genealogicalFilesModel.birthTimeEnd != '') ">
-                AND birth_time &lt;= #{genealogicalFilesModel.birthTimeEnd}
+            <if test="(genealogicalFilesModel.startTime == null or genealogicalFilesModel.startTime == '') and
+                     (genealogicalFilesModel.endTime != null and genealogicalFilesModel.endTime != '') ">
+                AND birth_time &lt;= #{genealogicalFilesModel.endTime}
             </if>
 
 
@@ -264,7 +263,7 @@
             <if test="genealogicalFilesModel.color != null and genealogicalFilesModel.color != '' ">
                 color = #{genealogicalFilesModel.color},
             </if>
-            <if test="genealogicalFilesModel.sex != null and genealogicalFilesModel.sex != '' ">
+            <if test="genealogicalFilesModel.sex != null">
                 sex = #{genealogicalFilesModel.sex},
             </if>
             <if test="genealogicalFilesModel.eartagOfFather != null and genealogicalFilesModel.eartagOfFather != '' ">
@@ -289,7 +288,6 @@
                 remark = #{genealogicalFilesModel.remark,jdbcType=VARCHAR},
             </if>
                 gmt_modified = now()
-
             <!--<if test="genealogicalFilesModel.operatorName != null and genealogicalFilesModel.operatorId != ''">-->
                 <!---->
             <!--</if>-->

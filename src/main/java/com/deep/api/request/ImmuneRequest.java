@@ -1,6 +1,7 @@
 package com.deep.api.request;
 
 import com.deep.domain.model.ImmunePlanModel;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -10,9 +11,7 @@ import java.util.List;
  */
 public class ImmuneRequest {
 
-
     private Long id;
-
     private Long factoryNum;
     private String factoryName;
     private String crowdNum;
@@ -34,9 +33,10 @@ public class ImmuneRequest {
     private String gmtModified;
     private String gmtProfessor;
     private String gmtSupervise;
-
-    private String immuneTimeStart;
-    private String immuneTimeEnd;
+    @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
+    private String startTime;
+    @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
+    private String endTime;
     private int page = 0;
     private int size = 10;
     private List<Long> factoryList;
@@ -169,20 +169,20 @@ public class ImmuneRequest {
         this.gmtSupervise = gmtSupervise;
     }
 
-    public String getImmuneTimeStart() {
-        return immuneTimeStart;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setImmuneTimeStart(String immuneTimeStart) {
-        this.immuneTimeStart = immuneTimeStart;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
-    public String getImmuneTimeEnd() {
-        return immuneTimeEnd;
+    public String getEndTime() {
+        return endTime;
     }
 
-    public void setImmuneTimeEnd(String immuneTimeEnd) {
-        this.immuneTimeEnd = immuneTimeEnd;
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
     public int getPage() {
@@ -282,8 +282,8 @@ public class ImmuneRequest {
             ", gmtModified='" + gmtModified + '\'' +
             ", gmtProfessor='" + gmtProfessor + '\'' +
             ", gmtSupervise='" + gmtSupervise + '\'' +
-            ", immuneTimeStart='" + immuneTimeStart + '\'' +
-            ", immuneTimeEnd='" + immuneTimeEnd + '\'' +
+            ", startTime='" + startTime + '\'' +
+            ", endTime='" + endTime + '\'' +
             ", page=" + page +
             ", size=" + size +
             ", factoryList=" + factoryList +

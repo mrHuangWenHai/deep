@@ -1,5 +1,7 @@
 package com.deep.api.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.List;
 
 /**
@@ -36,8 +38,10 @@ public class GenealogicalRequest {
 
 
     //查询关键字
-    private String birthTimeStart;
-    private String birthTimeEnd;
+    @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
+    private String startTime;
+    @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
+    private String endTime;
     private String birthWeightStart;
     private String birthWeightEnd;
     private int page = 0;
@@ -216,20 +220,20 @@ public class GenealogicalRequest {
         this.gmtModified = gmtModified;
     }
 
-    public String getBirthTimeStart() {
-        return birthTimeStart;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setBirthTimeStart(String birthTimeStart) {
-        this.birthTimeStart = birthTimeStart;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
-    public String getBirthTimeEnd() {
-        return birthTimeEnd;
+    public String getEndTime() {
+        return endTime;
     }
 
-    public void setBirthTimeEnd(String birthTimeEnd) {
-        this.birthTimeEnd = birthTimeEnd;
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
     public int getOperatorId() {
@@ -293,7 +297,7 @@ public class GenealogicalRequest {
     public String toString() {
         return "GenealogicalRequest{" +
             "id=" + id +
-            ", factoryNum='" + factoryNum + '\'' +
+            ", factoryNum=" + factoryNum +
             ", nativeEartag='" + nativeEartag + '\'' +
             ", immuneEartag='" + immuneEartag + '\'' +
             ", tradeMarkEartag='" + tradeMarkEartag + '\'' +
@@ -315,8 +319,8 @@ public class GenealogicalRequest {
             ", gmtModified='" + gmtModified + '\'' +
             ", operatorId=" + operatorId +
             ", operatorName='" + operatorName + '\'' +
-            ", birthTimeStart='" + birthTimeStart + '\'' +
-            ", birthTimeEnd='" + birthTimeEnd + '\'' +
+            ", startTime='" + startTime + '\'' +
+            ", endTime='" + endTime + '\'' +
             ", birthWeightStart='" + birthWeightStart + '\'' +
             ", birthWeightEnd='" + birthWeightEnd + '\'' +
             ", page=" + page +

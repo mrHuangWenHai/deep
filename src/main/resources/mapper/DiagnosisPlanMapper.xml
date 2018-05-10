@@ -149,7 +149,7 @@
         supervisor_id = #{diagnosisPlanModel.supervisorId},
       </if>
 
-      <if test="diagnosisPlanModel.remark != null and remark != ''" >
+      <if test="diagnosisPlanModel.remark != null and diagnosisPlanModel.remark != ''" >
         remark = #{diagnosisPlanModel.remark},
       </if>
 
@@ -161,7 +161,7 @@
         diagnosis_m = #{diagnosisPlanModel.diagnosisMethod},
       </if>
 
-      <if test="dose != null and dose != ''" >
+      <if test="diagnosisPlanModel.dose != null and diagnosisPlanModel.dose != ''" >
         dose = #{diagnosisPlanModel.dose}
       </if>
 
@@ -237,6 +237,11 @@
     <if test="diagnosisRequest.ispassSup != null">
       AND ispass_sup = #{diagnosisRequest.ispassSup}
     </if>
+
+    <if test="diagnosisRequest.startTime != null and diagnosisRequest.endTime != null">
+      AND diagnosis_t BETWEEN #{diagnosisRequest.startTime} AND #{diagnosisRequest.endTime}
+    </if>
+
   </select>
 
 </mapper>

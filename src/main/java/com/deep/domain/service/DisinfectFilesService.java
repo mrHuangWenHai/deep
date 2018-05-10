@@ -21,9 +21,8 @@ public class DisinfectFilesService {
         this.disinfectFilesMapper.setDisinfectFilesModel(disinfectFilesModel);
     }
 
-    public List<DisinfectFilesModel> getDisinfectFilesModel(DisinfectRequest disinfectRequest,
-                                                            RowBounds bounds) {
-        return this.disinfectFilesMapper.getDisinfectFilesModel(disinfectRequest,bounds);
+    public List<DisinfectFilesModel> getDisinfectFilesModel(DisinfectRequest disinfectRequest) {
+        return this.disinfectFilesMapper.getDisinfectFilesModel(disinfectRequest);
     }
 
     public DisinfectFilesModel getDisinfectFilesModelById(long id) {

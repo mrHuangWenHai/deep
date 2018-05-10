@@ -4,6 +4,8 @@ import com.deep.api.request.LiveStatRequest;
 import com.deep.api.response.Responses;
 import com.deep.infra.service.liveBroadcast.LiveBroadcastResp;
 import com.deep.infra.service.liveBroadcast.LiveBroadcastService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
@@ -23,18 +25,20 @@ public class LiveBroadcastResource {
   @Resource
   private LiveBroadcastService liveBroadcastService;
 
+  private final Logger logger = LoggerFactory.getLogger(LiveBroadcastResource.class);
+
   /**
    * 方法功能:获取推流地址
    * @param userid
-   * @return
+   * @return response
    */
-  @RequestMapping(value = "/getPushUrl", method = RequestMethod.GET)
-  public Response getLiveBroadCastPushUrl(@RequestParam(value = "userid", required = true) String userid) {
+  @RequestMapping(value = "/getPushUrl/{id}", method = RequestMethod.GET)
+  public Response getLiveBroadCastPushUrl(@PathVariable("id") String userid) {
 
     if (userid.equals("")) {
       return Responses.errorResponse("userid 不能为空");
     }
-
+    logger.info("invoke /liveBroadcast/getPushUrl/{}",userid);
     LiveBroadcastResp resp = liveBroadcastService.getLiveBroadCastPushUrl(userid);
     Response response;
     Map<String, Object> data = new HashMap<String, Object>();
@@ -48,13 +52,13 @@ public class LiveBroadcastResource {
     return response;
   }
 
-  @RequestMapping(value = "/getLiveUrl")
-  public Response getLiveBroadCastLiveUrl(@RequestParam(value = "userid", required = true) String  userid) {
+  @RequestMapping(value = "/getLiveUrl/{id}")
+  public Response getLiveBroadCastLiveUrl(@PathVariable("id") String  userid) {
 
     if (userid.equals("")) {
       return Responses.errorResponse("userid 不能为空");
     }
-
+    logger.info("invoke /liveBroadcast/getLiveUrl/{}",userid);
     LiveBroadcastResp resp = liveBroadcastService.getLiveBroadCastLiveUrl(userid);
     Response response;
     Map<String, Object> data = new HashMap<String, Object>();
@@ -74,7 +78,7 @@ public class LiveBroadcastResource {
     if (userid.equals("") || status.equals("")) {
       return Responses.errorResponse("userid status 不能为空");
     }
-
+    logger.info("invoke /liveBroadcast/getLiveUrl {} {}",userid, status);
     LiveBroadcastResp resp = liveBroadcastService.setLiveBroadcastStatus(userid,status);
     Response response;
     Map<String, Object> data = new HashMap<String, Object>();
@@ -94,6 +98,7 @@ public class LiveBroadcastResource {
     if (userid.equals("")) {
       return Responses.errorResponse("userid 不能为空");
     }
+    logger.info("invoke /liveBroadcast/getStatus/{}",userid);
     LiveBroadcastResp resp = liveBroadcastService.getLiveChannelPushStatus(userid);
     Response response;
     Map<String, Object> data = new HashMap<String, Object>();
@@ -107,9 +112,14 @@ public class LiveBroadcastResource {
     return response;
   }
 
-  //腾讯处于Beta
+  /**
+   * 方法功能:查询现在直播的接口
+   * @param statRequest
+   * @return response
+   */
   @RequestMapping(value = "/getLiveStat")
-  public Response getLiveStatMessage(@Validated LiveStatRequest statRequest) {
+  public Response getLiveStatMessage(LiveStatRequest statRequest) {
+    logger.info("invoke /liveBroadcast/getLiveStat/{}",statRequest);
     LiveBroadcastResp resp = liveBroadcastService.getLiveStatMessage(statRequest);
     Response response;
     Map<String, Object> data = new HashMap<String, Object>();
@@ -122,5 +132,4 @@ public class LiveBroadcastResource {
     response.setData(data);
     return response;
   }
-
 }

@@ -8,6 +8,7 @@ import com.deep.api.request.DiagnosisRequest;
 import com.deep.domain.model.DiagnosisPlanModel;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
+import com.deep.domain.model.GenealogicalFilesModel;
 import com.deep.domain.service.DiagnosisPlanService;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
@@ -115,13 +116,6 @@ public class DiagnosisResource {
         }
 
         diagnosisPlanModel.setId(id);
-        if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("param is error");
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("param",bindingResult.getAllErrors());
-            response.setData(map);
-            return response;
-        }
 
         logger.info("invoke diagnosis/update {}", diagnosisPlanModel);
         int isSuccess = diagnosisPlanService.updateDiagnosisPlanModel(diagnosisPlanModel);
@@ -146,7 +140,6 @@ public class DiagnosisResource {
         if (!json.containsKey("isPassCheck")) {
             return Responses.errorResponse("lack isPassCheck");
         }
-
         short ispassCheck = json.get("isPassCheck").shortValue();
         if (ispassCheck == 2) {
             return Responses.errorResponse("已经审批过了");
@@ -231,30 +224,42 @@ public class DiagnosisResource {
     public Response findPlanSelective(@PathVariable(value = "id")long id,
                                       DiagnosisRequest diagnosisRequest,
                                       HttpServletRequest httpServletRequest) {
+
         logger.info("invoke Get diagnosis {}", diagnosisRequest);
 
         Map<Long, List<Long>> factoryMap = null;
-        Byte role = Byte.parseByte(TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION)));
+        String roleString = TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION));
+
+        if (roleString == null) {
+            return Responses.errorResponse("认证信息错误");
+        }
+
+        Byte role = Byte.parseByte(roleString);
         if (role == 0) {
             diagnosisRequest.setFactoryNum(id);
         } else if (role == 1) {
             factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
             List<Long> factoryList = new ArrayList<>();
-            factoryList.addAll(factoryMap.get(-1));
-            factoryList.addAll(factoryMap.get(0));
+            factoryList.addAll(factoryMap.get(new Long(-1)));
+            factoryList.addAll(factoryMap.get(new Long(0)));
             diagnosisRequest.setFactoryList(factoryList);
         } else {
             return Responses.errorResponse("你没有权限");
         }
 
-        RowBounds rowBounds = new RowBounds(diagnosisRequest.getPage() * diagnosisRequest.getSize(),diagnosisRequest.getSize());
-        List<DiagnosisPlanModel> diagnosisPlanModels = diagnosisPlanService.selectDiagnosisPlanModelByDiagnosisRequest(diagnosisRequest, rowBounds);
+        List<DiagnosisPlanModel> totalList = diagnosisPlanService.selectDiagnosisPlanModelByDiagnosisRequest(diagnosisRequest);
+        int size = totalList.size();
+        int page = diagnosisRequest.getPage();
+        int pageSize = diagnosisRequest.getSize();
+        int destIndex = (page+1) * pageSize + 1  > size ? size : (page+1) * pageSize + 1;
+        List<DiagnosisPlanModel> diagnosisPlanModels = totalList.subList(page * pageSize, destIndex);
 
         if (role == 1) {
             Map<String,Object> data = new HashMap<>();
+            List<DiagnosisPlanModel> factorylist = new ArrayList<>();
             List<DiagnosisPlanModel> direct = new ArrayList<>();
             List<DiagnosisPlanModel> others = new ArrayList<>();
-            List<Long> directId = factoryMap.get(-1);
+            List<Long> directId = factoryMap.get(new Long(-1));
             for (DiagnosisPlanModel diagnosisPlanModel : diagnosisPlanModels) {
                 if (directId.contains(diagnosisPlanModel.getFactoryNum())) {
                     direct.add(diagnosisPlanModel);
@@ -262,8 +267,12 @@ public class DiagnosisResource {
                     others.add(diagnosisPlanModel);
                 }
             }
-            data.put("direct", direct);
-            data.put("others", others);
+
+            factorylist.addAll(direct);
+            factorylist.addAll(others);
+            data.put("List", factorylist);
+            data.put("size", size);
+            data.put("directSize",direct.size());
             Response response = Responses.successResponse();
             response.setData(data);
             return response;
@@ -271,7 +280,7 @@ public class DiagnosisResource {
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("List", diagnosisPlanModels);
-            data.put("size", diagnosisPlanModels.size());
+            data.put("size", size);
             response.setData(data);
             return response;
         }

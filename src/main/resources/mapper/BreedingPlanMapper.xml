@@ -133,7 +133,7 @@
     ispass_check, upass_reason, ispass_sup,
     operator_id, professor_id, supervisor_id
     )
-    values (#{id,jdbcType=INTEGER}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
+    values (#{id,jdbcType=INTEGER}, now(), now(),
     #{gmtSupervised,jdbcType=TIMESTAMP}, #{factoryNum,jdbcType=BIGINT}, #{building,jdbcType=VARCHAR},
     #{mEtI,jdbcType=VARCHAR}, #{mEtB,jdbcType=VARCHAR}, #{fEtI,jdbcType=VARCHAR}, #{fEtB,jdbcType=VARCHAR},
     #{breedingT,jdbcType=TIMESTAMP}, #{gestationT,jdbcType=TIMESTAMP}, #{prenatalIT,jdbcType=TIMESTAMP},

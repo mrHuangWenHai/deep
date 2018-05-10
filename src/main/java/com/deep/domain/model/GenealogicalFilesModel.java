@@ -36,12 +36,10 @@ public class GenealogicalFilesModel {
     private String birthTime;  //出登时间or出生时间
     @DecimalMin(value = "0.0")
     private Float birthWeight;  //初登体重
-
     @NotEmpty
     @NotNull
     private String color;  //颜色
     @NotNull
-
     private Integer sex;   //性别
 
     @NotEmpty

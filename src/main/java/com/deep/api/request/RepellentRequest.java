@@ -1,6 +1,7 @@
 package com.deep.api.request;
 
 import com.deep.domain.model.RepellentPlanModel;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -31,9 +32,10 @@ public class RepellentRequest {
     private String gmtModified;
     private String gmtProfessor;
     private String gmtSupervise;
-
-    private String repellentTimeStart;
-    private String repellentTimeEnd;
+    @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
+    private String startTime;
+    @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
+    private String endTime;
     private int page = 0;
     private int size = 10;
     private List<Long> factoryList;
@@ -160,20 +162,20 @@ public class RepellentRequest {
         this.gmtSupervise = gmtSupervise;
     }
 
-    public String getRepellentTimeStart() {
-        return repellentTimeStart;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setRepellentTimeStart(String repellentTimeStart) {
-        this.repellentTimeStart = repellentTimeStart;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
-    public String getRepellentTimeEnd() {
-        return repellentTimeEnd;
+    public String getEndTime() {
+        return endTime;
     }
 
-    public void setRepellentTimeEnd(String repellentTimeEnd) {
-        this.repellentTimeEnd = repellentTimeEnd;
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
     public int getPage() {
@@ -260,7 +262,6 @@ public class RepellentRequest {
             ", repellentName='" + repellentName + '\'' +
             ", repellentWay='" + repellentWay + '\'' +
             ", dose='" + dose + '\'' +
-            ", operatorName='" + operatorName + '\'' +
             ", operatorId='" + operatorId + '\'' +
             ", professor='" + professor + '\'' +
             ", operatorName='" + operatorName + '\'' +
@@ -273,10 +274,11 @@ public class RepellentRequest {
             ", gmtModified='" + gmtModified + '\'' +
             ", gmtProfessor='" + gmtProfessor + '\'' +
             ", gmtSupervise='" + gmtSupervise + '\'' +
-            ", repellentTimeStart='" + repellentTimeStart + '\'' +
-            ", repellentTimeEnd='" + repellentTimeEnd + '\'' +
+            ", startTime='" + startTime + '\'' +
+            ", endTime='" + endTime + '\'' +
             ", page=" + page +
             ", size=" + size +
+            ", factoryList=" + factoryList +
             '}';
     }
 }

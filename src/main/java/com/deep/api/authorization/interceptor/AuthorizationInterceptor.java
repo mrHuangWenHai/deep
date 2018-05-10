@@ -50,6 +50,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         if (! (handler instanceof HandlerMethod)) {
             return true;
         }
+
         // 从header中获取token
         String authorization = request.getHeader(Constants.AUTHORIZATION);
         System.out.println(authorization);
@@ -72,7 +73,6 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
           String value = JedisUtil.getValue(String.valueOf(model.getUserId()));
           if (value != null) {
             if (!value.equals(model.getToken())) {
-              System.out.println(" =============================  "+value);
               logger.info("second false {}", JedisUtil.getValue(String.valueOf(model.getUserId())));
               System.out.println(JedisUtil.getValue(String.valueOf(model.getUserId())));
               System.out.println(model.getToken());

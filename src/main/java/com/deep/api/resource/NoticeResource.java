@@ -158,9 +158,9 @@ public class NoticeResource {
      * @return response
      */
     @Permit(authorities = "check_community_activities")
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/find/{id}")
     public Response findPlanById(@PathVariable("id") String id){
-        logger.info("invoke findPlanById {}, url is notice/{id}", id);
+        logger.info("invoke findPlanById {}, url is notice/find/{id}", id);
         int uid = StringToLongUtil.stringToInt(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
@@ -171,7 +171,7 @@ public class NoticeResource {
         }
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
-        data.put("List",selectById);
+        data.put("model",selectById);
         response.setData(data);
         return response;
     }

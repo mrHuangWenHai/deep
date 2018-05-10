@@ -187,7 +187,13 @@ public class DisinfectFilesResource {
         logger.info("invoke get /{} {}",id,disinfectRequest);
 
         Map<Long, List<Long>> factoryMap = null;
-        Byte role = Byte.parseByte(TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION)));
+
+        String roleString = TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION));
+        if (roleString == null) {
+            return Responses.errorResponse("认证信息错误");
+        }
+        Byte role = Byte.parseByte(roleString);
+
         if (role == 0) {
           disinfectRequest.setFactoryNum(id);
         } else if (role == 1) {
@@ -201,8 +207,13 @@ public class DisinfectFilesResource {
           return Responses.errorResponse("你没有权限");
         }
 
-        List<DisinfectFilesModel> disinfectFilesModels = disinfectFilesService.getDisinfectFilesModel(disinfectRequest,
-            new RowBounds(disinfectRequest.getPage() * disinfectRequest.getSize(),disinfectRequest.getSize()));
+        List<DisinfectFilesModel> totalList = disinfectFilesService.getDisinfectFilesModel(disinfectRequest);
+
+        int size = totalList.size();
+        int page = disinfectRequest.getPage();
+        int pageSize = disinfectRequest.getSize();
+        int destIndex = (page+1) * pageSize + 1  > size ? size : (page+1) * pageSize + 1;
+        List<DisinfectFilesModel> disinfectFilesModels = totalList.subList(page * pageSize, destIndex);
 
         if (role == 1) {
           Map<String,Object> data = new HashMap<>();
@@ -220,13 +231,13 @@ public class DisinfectFilesResource {
           factorylist.addAll(direct);
           factorylist.addAll(others);
           data.put("List", factorylist);
-          data.put("size", factorylist.size());
+          data.put("size", size);
           data.put("directSize",direct.size());
           Response response = Responses.successResponse();
           response.setData(data);
           return response;
         } else {
-          return JudgeUtil.JudgeFind(disinfectFilesModels,disinfectFilesModels.size());
+          return JudgeUtil.JudgeFind(disinfectFilesModels, size);
         }
     }
 

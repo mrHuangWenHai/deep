@@ -183,6 +183,7 @@ public class FactoryResouce {
         response.setData(data);
         return response;
     }
+
     /**
      * 根据工厂的主键删除一个羊场
      * @param id 羊场主键

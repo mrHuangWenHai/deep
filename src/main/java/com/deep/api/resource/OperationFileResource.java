@@ -37,7 +37,6 @@ public class OperationFileResource {
   @PostMapping(value = "")
   Response addOperationFile(@Valid @RequestBody OperationFile operationFile,
                             BindingResult bindingResult) {
-
     if (bindingResult.hasErrors()) {
       Response response = Responses.errorResponse("param is error");
       Map<String, Object> map = new HashMap<String, Object>();
@@ -68,14 +67,20 @@ public class OperationFileResource {
   Response getOperationFile(@PathVariable(value = "id")long id,
                             OperationCoditionRequest operationCoditionRequest,
                             HttpServletRequest httpServletRequest) {
-    logger.info("invoke Get /of {}",operationCoditionRequest);
-    try {
 
+    try {
       Map<Long, List<Long>> factoryMap = null;
-      Byte role = Byte.parseByte(TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION)));
+
+      String roleString = TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION));
+      if (roleString == null) {
+        return Responses.errorResponse("认证信息错误");
+      }
+      Byte role = Byte.parseByte(roleString);
+
       if (role == 0) {
         operationCoditionRequest.setFactoryNum(id);
       } else if (role == 1) {
+
         factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
         List<Long> factoryList = new ArrayList<>();
         factoryList.addAll(factoryMap.get(new Long(-1)));
@@ -84,8 +89,14 @@ public class OperationFileResource {
       } else {
         return Responses.errorResponse("你没有权限");
       }
+      logger.info("invoke Get /of {}",operationCoditionRequest);
+      List<OperationFile> totalList = operationFileService.getOperationFile(operationCoditionRequest);
 
-      List<OperationFile> list = operationFileService.getOperationFile(operationCoditionRequest);
+      int size = totalList.size();
+      int page = operationCoditionRequest.getPage();
+      int pageSize = operationCoditionRequest.getPageSize();
+      int destIndex = (page+1) * pageSize + 1  > size ? size : (page+1) * pageSize + 1;
+      List<OperationFile> list = totalList.subList(page * pageSize, destIndex);
 
       if (role == 1) {
         Map<String,Object> data = new HashMap<>();
@@ -100,18 +111,17 @@ public class OperationFileResource {
             others.add(operationFile);
           }
         }
-
         factorylist.addAll(direct);
         factorylist.addAll(others);
         data.put("List", factorylist);
-        data.put("size", factorylist.size());
+        data.put("size", size);
         data.put("directSize",direct.size());
         Response response = Responses.successResponse();
         response.setData(data);
         return response;
       } else {
         Map<String, Object> data = new HashMap<>();
-        data.put("size",data.size());
+        data.put("size",size);
         data.put("List",list);
         Response response = Responses.successResponse();
         response.setData(data);
@@ -126,18 +136,20 @@ public class OperationFileResource {
   @PatchMapping(value = "s/{id}")
   Response setCheckStatus(@PathVariable(value = "id")int id,
                           @RequestBody Map<String, Integer> json) {
-    if (!json.containsKey("ispassCheck")) {
-      return Responses.errorResponse("lock param ispassCheck");
+    if (!json.containsKey("ispassSup")) {
+      return Responses.errorResponse("lock param ispassSup");
     }
 
-    short checkStatus = json.get("ispassCheck").shortValue();
+    short checkStatus = json.get("ispassSup").shortValue();
     if (id < 0 || checkStatus < 0 || checkStatus > 2) {
       return Responses.errorResponse("param is invalid");
     }
     logger.info("/of/s/{} {}",id,checkStatus);
 
     try {
-      int isSuccess = operationFileService.updateCheckStatus(id, checkStatus);
+
+      int isSuccess = operationFileService.updateSupStatus(id, checkStatus);
+
       if (isSuccess == 1) {
           return Responses.successResponse();
       } else {
@@ -151,18 +163,18 @@ public class OperationFileResource {
 
   @PatchMapping(value = "p/{id}")
   Response setSupStatus(@PathVariable(value = "id")int id,
-                          @RequestBody Map<String, Integer> json) {
-    if (!json.containsKey("ispassSup")) {
-      return Responses.errorResponse("lock param ispassSup");
+                        @RequestBody Map<String, Integer> json) {
+    if (!json.containsKey("ispassCheck")) {
+      return Responses.errorResponse("lock param ispassCheck");
     }
 
-    short supStatus = json.get("ispassSup").shortValue();
+    short supStatus = json.get("ispassCheck").shortValue();
     if (id < 0 || supStatus < 0 || supStatus > 2) {
       return Responses.errorResponse("param is invalid");
     }
     logger.info("/of/s/{} {}",id,supStatus);
     try {
-      int isSuccess = operationFileService.updateSupStatus(id, supStatus);
+      int isSuccess = operationFileService.updateCheckStatus(id, supStatus);
       if (isSuccess == 1) {
         return Responses.successResponse();
       } else {
@@ -194,5 +206,15 @@ public class OperationFileResource {
     data.put("model", operationFile);
     response.setData(data);
     return response;
+  }
+
+  @DeleteMapping(value = "/{id}")
+  public Response deleteOperationFile(@PathVariable("id") int id) {
+    int isSuccess = operationFileService.deleteOperationFile(id);
+    if (isSuccess == 1) {
+      return Responses.successResponse();
+    } else {
+      return Responses.errorResponse("删除错误");
+    }
   }
 }
