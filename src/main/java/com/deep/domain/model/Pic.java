@@ -41,7 +41,7 @@ public class Pic implements Serializable {
     @NotBlank(message = "专家不能为空")
     private String expert;
 
-    @NotBlank(message = "性别不能为空")
+//    @NotBlank(message = "性别不能为空")
     private String sex;
 
     @NotBlank(message = "解决方案不能为空")
@@ -64,6 +64,16 @@ public class Pic implements Serializable {
     private Integer pageNumb = 1;
 
     private Integer limit = 10;
+
+    private Integer size;
+
+    public Integer getSize() {
+        return size;
+    }
+
+    public void setSize(Integer size) {
+        this.size = size;
+    }
 
     public Integer getPageNumb() {
         return pageNumb;

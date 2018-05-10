@@ -6,6 +6,7 @@ import com.deep.api.response.Responses;
 import com.deep.domain.model.Message;
 import com.deep.domain.model.MessageExample;
 import com.deep.domain.service.MessageService;
+import com.deep.domain.service.PicService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,9 +15,11 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class MessageResource {
@@ -60,7 +63,7 @@ public class MessageResource {
 
     @Permit(authorities = "check_message_of_all_user")
     @RequestMapping(value = "/messageBoard/search",method = RequestMethod.POST)
-    public Response searchByMessage(@RequestBody  Message message) {
+    public Response searchByMessage(@RequestBody  Message message)throws Exception {
 
         logger.info("invoke /messageBoard/searchByMessage {}",message);
         MessageExample messageExample = new MessageExample();
@@ -71,15 +74,19 @@ public class MessageResource {
             criteria.andAttitudeLike("%"+message.getAttitude()+"%");
         if(message.getIntention() != null && !message.getIntention().isEmpty())
             criteria.andIntentionLike("%"+message.getIntention()+"%");
-
-        if(message.getsTime() != null && message.geteTime() != null)
-           criteria.andInserttimeBetween(message.getsTime(),message.geteTime());
-
+        if(message.getsTime() != null )
+        {
+            String[] times = message.getsTime().split(",");
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            criteria.andInserttimeBetween(sdf.parse(times[0]),sdf.parse(times[1]));
+        }
+        List<Message> sizeOfALL = messageService.findMessageSelective(messageExample);
         List<Message> select = messageService.findMessageSelectiveWithRowbounds(messageExample,message.getPageNumb(),message.getLimit());
+        Integer size = sizeOfALL.size();
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
         data.put("List",select);
-        data.put("size",select.size());
+        data.put("Size",size);
 
         response.setData(data);
         return response;
@@ -164,5 +171,16 @@ public class MessageResource {
         response.setData(data);
         return response;
     }
+    @RequestMapping(value = "/messageBoard/delete",method = RequestMethod.DELETE)
+    public Response deleteMessageById(@RequestBody Map map)
+    {
+        messageService.deleteMessageById(Integer.parseInt(map.get("id")+""));
+        Response response = Responses.successResponse();
+        HashMap<String,Object> data = new HashMap<>();
+        data.put("删除成功",200);
+        response.setData(data);
+        return response;
+    }
+
 
 }

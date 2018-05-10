@@ -1,6 +1,8 @@
 package com.deep.domain.model;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -24,6 +26,7 @@ public class Message implements Serializable {
 
 
 //    @NotBlank(message = "标签不可为空")
+    @Null
     private String tag;
 
     @NotBlank(message = "态度不可为空")
@@ -32,9 +35,9 @@ public class Message implements Serializable {
     @NotBlank(message = "购买意向不可为空")
     private String intention;
 
-    private Date sTime;
-
-    private Date eTime;
+    private String sTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private String eTime;
 
     public Integer getMessageId() {
         return messageId;
@@ -50,19 +53,29 @@ public class Message implements Serializable {
 
     private Integer limit = 10;
 
-    public Date getsTime() {
+    public Integer getSize() {
+        return size;
+    }
+
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
+    private Integer size;
+
+    public String getsTime() {
         return sTime;
     }
 
-    public void setsTime(Date sTime) {
+    public void setsTime(String sTime) {
         this.sTime = sTime;
     }
 
-    public Date geteTime() {
+    public String geteTime() {
         return eTime;
     }
 
-    public void seteTime(Date eTime) {
+    public void seteTime(String eTime) {
         this.eTime = eTime;
     }
 
