@@ -110,11 +110,13 @@ public class PicResource {
         PicExample picExample = new PicExample();
         PicExample.Criteria criteria = picExample.createCriteria();
         criteria.andExpertLike("%"+pic.getExpert()+"%");
+        List<Pic> sizeOfAll = picService.findPicSelective(picExample);
+        Integer size = sizeOfAll.size();
         List<Pic> select = picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
-
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
         data.put("searchByExpert",select);
+        data.put("Size",size);
         response.setData(data);
         return response;
     }
@@ -125,11 +127,13 @@ public class PicResource {
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
         criteria.andUdateBetween(pic.getSdate(),pic.getEdate());
+        List<Pic> sizeOfAll = picService.findPicSelective(picExample);
+        Integer size = sizeOfAll.size();
         List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
-
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
         data.put("searchByUdate",select);
+        data.put("Size",size);
         response.setData(data);
         return response;
     }
@@ -145,11 +149,13 @@ public class PicResource {
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
         criteria.andBrandLike("%"+pic.getBrand()+"%");
+        List<Pic> sizeOfAll = picService.findPicSelective(picExample);
+        Integer size = sizeOfAll.size();
         List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
-
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
         data.put("searchByBrand",select);
+        data.put("Size",size);
         response.setData(data);
         return response;
     }
@@ -165,11 +171,13 @@ public class PicResource {
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
         criteria.andVaccineLike("%"+pic.getVaccine()+"%");
+        List<Pic> sizeOfAll = picService.findPicSelective(picExample);
+        Integer size = sizeOfAll.size();
         List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
-
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
         data.put("searchByVaccine",select);
+        data.put("Size",size);
         response.setData(data);
         return response;
     }
@@ -185,11 +193,13 @@ public class PicResource {
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
         criteria.andSymptomLike("%"+pic.getSymptom()+"%");
+        List<Pic> sizeOfAll = picService.findPicSelective(picExample);
+        Integer size = sizeOfAll.size();
         List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
-
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
         data.put("searchBySymptom",select);
+        data.put("Size",size);
         response.setData(data);
         return response;
     }
@@ -211,10 +221,13 @@ public class PicResource {
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
         criteria.andUploaderLike("%"+pic.getUploader()+"%");
+        List<Pic> sizeOfAll = picService.findPicSelective(picExample);
+        Integer size = sizeOfAll.size();
         List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
         data.put("searchByUploader",select);
+        data.put("Size",size);
         response.setData(data);
         return response;
     }

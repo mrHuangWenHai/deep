@@ -38,5 +38,9 @@ public class MessageService {
         return find;
 
     }
+    public void deleteMessageById(Integer id)
+    {
+        messageMapper.deleteByPrimaryKey(id);
+    }
 
 }
