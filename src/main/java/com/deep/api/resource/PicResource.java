@@ -2,6 +2,7 @@ package com.deep.api.resource;
 
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
+import com.deep.constant.FileTypeEnum;
 import com.deep.domain.model.Pic;
 import com.deep.domain.model.PicExample;
 import com.deep.domain.model.RepellentPlanModel;
@@ -36,20 +37,23 @@ public class PicResource {
     public @ResponseBody Response addPic(Pic pic,
                            @RequestParam("file")MultipartFile file) {
 
-        logger.info("invoke /uploadFile/upload [{},{},{}]",pic,file);
+        logger.info("invoke /uploadFile/upload [{}]",pic);
         try {
             String Header = FileUtil.getFileHeader(file);
-            if ( !Header.equals("89504E47")  && !Header.equals("47494638") &&
-                    !Header.equals("49492A00")  && !Header.equals("4D546864")&&
-                    !Header.equals("57415645")  && !Header.equals("41564920") &&
-                    !Header.equals("2E7261FD")  && !Header.equals("2E524D46") &&
-                    !Header.equals("000001BA")  && !Header.equals("6D6F6F76") &&
-                    !Header.equals("3026B27") && !Header.equals("58E66CF11") &&
-                    !Header.equals("00000020") && !Header.equals("FFD8FFE0")
-                    ) {
-                throw new Exception("文件格式错误！");
-
+            if (    Header.equals(FileTypeEnum.PNG.value)  || Header.equals(FileTypeEnum.GIF.value) ||
+                    Header.equals(FileTypeEnum.TIF.value) || Header.equals(FileTypeEnum.MPG.value)  ||
+                    Header.equals(FileTypeEnum.JPG.value) || Header.equals(FileTypeEnum.JPG1.value)) {
+                    pic.setFiletype(0);
             }
+            else if(Header.equals(FileTypeEnum.AVI.value) || Header.equals(FileTypeEnum.RM.value)  ||
+                    Header.equals(FileTypeEnum.MOV.value) || Header.equals(FileTypeEnum.ASF.value) ||
+                    Header.equals(FileTypeEnum.MP4.value)){
+                    pic.setFiletype(1);
+            }
+            else{
+                throw new Exception("文件格式错误！");
+            }
+
 
             Date udate = new Date();
             pic.setUdate(udate);
@@ -126,10 +130,10 @@ public class PicResource {
     @RequestMapping(value = "/searchfile/searchByExpert",method = RequestMethod.POST)
     public @ResponseBody Response getByExpert(@RequestBody Pic pic) {
         logger.info("invoke /searchfile/searchByExpert {}",pic);
-//        if (pic.getExpert().isEmpty()) {
-//            Response response = Responses.errorResponse("查询条件不能为空！");
-//            return response;
-//        }
+        if (pic.getExpert().isEmpty()) {
+            Response response = Responses.errorResponse("查询条件不能为空！");
+            return response;
+        }
         if (pic.getExpert() == null) {
           Response response = Responses.errorResponse("查询条件不能为空！");
             return response;
@@ -138,9 +142,16 @@ public class PicResource {
         PicExample picExample = new PicExample();
         PicExample.Criteria criteria = picExample.createCriteria();
         criteria.andExpertLike("%"+pic.getExpert()+"%");
+
         List<Pic> sizeOfAll = picService.findPicSelective(picExample);
-        Integer size = sizeOfAll.size();
-        List<Pic> select = picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
+        int size = sizeOfAll.size();
+        int page = pic.getPageNumb();
+        int pageSize = pic.getLimit();
+        int destIndex = (page+1) * pageSize  > size ? size : (page+1) * pageSize ;
+        List<Pic> select = sizeOfAll.subList(page * pageSize, destIndex);
+//        Integer size = sizeOfAll.size();
+//        List<Pic> select = picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
+
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
         data.put("List",select);
@@ -152,12 +163,21 @@ public class PicResource {
     @RequestMapping(value = "/searchfile/searchByDate",method = RequestMethod.POST)
     public @ResponseBody Response getByDate(@RequestBody Pic pic) {
         logger.info("invoke /searchfile/searchByDate [{},{}]",pic.getSdate(),pic.getEdate());
+        if (pic.getSdate() == null || pic.getEdate() == null) {
+            Response response = Responses.errorResponse("查询条件不能为空！");
+            return response;
+        }
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
         criteria.andUdateBetween(pic.getSdate(),pic.getEdate());
         List<Pic> sizeOfAll = picService.findPicSelective(picExample);
-        Integer size = sizeOfAll.size();
-        List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
+//        Integer size = sizeOfAll.size();
+//        List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
+        int size = sizeOfAll.size();
+        int page = pic.getPageNumb();
+        int pageSize = pic.getLimit();
+        int destIndex = (page+1) * pageSize  > size ? size : (page+1) * pageSize ;
+        List<Pic> select = sizeOfAll.subList(page * pageSize, destIndex);
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
         data.put("List",select);
@@ -178,8 +198,13 @@ public class PicResource {
         PicExample.Criteria criteria=picExample.createCriteria();
         criteria.andBrandLike("%"+pic.getBrand()+"%");
         List<Pic> sizeOfAll = picService.findPicSelective(picExample);
-        Integer size = sizeOfAll.size();
-        List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
+//        Integer size = sizeOfAll.size();
+//        List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
+        int size = sizeOfAll.size();
+        int page = pic.getPageNumb();
+        int pageSize = pic.getLimit();
+        int destIndex = (page+1) * pageSize  > size ? size : (page+1) * pageSize ;
+        List<Pic> select = sizeOfAll.subList(page * pageSize, destIndex);
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
         data.put("List",select);
@@ -200,8 +225,13 @@ public class PicResource {
         PicExample.Criteria criteria=picExample.createCriteria();
         criteria.andVaccineLike("%"+pic.getVaccine()+"%");
         List<Pic> sizeOfAll = picService.findPicSelective(picExample);
-        Integer size = sizeOfAll.size();
-        List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
+//        Integer size = sizeOfAll.size();
+//        List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
+        int size = sizeOfAll.size();
+        int page = pic.getPageNumb();
+        int pageSize = pic.getLimit();
+        int destIndex = (page+1) * pageSize  > size ? size : (page+1) * pageSize ;
+        List<Pic> select = sizeOfAll.subList(page * pageSize, destIndex);
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
         data.put("List",select);
@@ -222,8 +252,13 @@ public class PicResource {
         PicExample.Criteria criteria=picExample.createCriteria();
         criteria.andSymptomLike("%"+pic.getSymptom()+"%");
         List<Pic> sizeOfAll = picService.findPicSelective(picExample);
-        Integer size = sizeOfAll.size();
-        List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
+//        Integer size = sizeOfAll.size();
+//        List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
+        int size = sizeOfAll.size();
+        int page = pic.getPageNumb();
+        int pageSize = pic.getLimit();
+        int destIndex = (page+1) * pageSize  > size ? size : (page+1) * pageSize ;
+        List<Pic> select = sizeOfAll.subList(page * pageSize, destIndex);
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
         data.put("List",select);
@@ -232,12 +267,6 @@ public class PicResource {
         return response;
     }
 
-//    @RequestMapping(value = "/searchFile/searchByUploader",method = RequestMethod.GET)
-//    public String searchByUploader(){
-//
-//        return "searchByUploader";
-//
-//    }
     @RequestMapping(value = "/searchfile/searchByUploader",method = RequestMethod.POST)
     public @ResponseBody Response getByUploader(@RequestBody Pic pic){
         logger.info("invoke /searchfile/searchByUploader {}",pic.getUploader());
@@ -249,8 +278,13 @@ public class PicResource {
         PicExample.Criteria criteria=picExample.createCriteria();
         criteria.andUploaderLike("%"+pic.getUploader()+"%");
         List<Pic> sizeOfAll = picService.findPicSelective(picExample);
-        Integer size = sizeOfAll.size();
-        List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
+//        Integer size = sizeOfAll.size();
+//        List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
+        int size = sizeOfAll.size();
+        int page = pic.getPageNumb();
+        int pageSize = pic.getLimit();
+        int destIndex = (page+1) * pageSize  > size ? size : (page+1) * pageSize ;
+        List<Pic> select = sizeOfAll.subList(page * pageSize, destIndex);
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
         data.put("List",select);

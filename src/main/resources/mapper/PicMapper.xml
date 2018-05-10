@@ -13,6 +13,7 @@
     <result column="uploader" property="uploader" jdbcType="VARCHAR" />
     <result column="vaccine" property="vaccine" jdbcType="VARCHAR" />
     <result column="filename" property="filename" jdbcType="VARCHAR" />
+    <result column="filetype" property="filetype" jdbcType="INTEGER"/>
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -165,11 +166,11 @@
     insert into pic (id, address, brand, 
       udate, expert, sex, 
       solution, symptom, uploader, 
-      vaccine, filename)
+      vaccine, filename, filetype)
     values (#{id,jdbcType=BIGINT}, #{address,jdbcType=VARCHAR}, #{brand,jdbcType=VARCHAR}, 
       #{udate,jdbcType=TIMESTAMP}, #{expert,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, 
       #{solution,jdbcType=VARCHAR}, #{symptom,jdbcType=VARCHAR}, #{uploader,jdbcType=VARCHAR}, 
-      #{vaccine,jdbcType=VARCHAR}, #{filename,jdbcType=VARCHAR})
+      #{vaccine,jdbcType=VARCHAR}, #{filename,jdbcType=VARCHAR}), #{filetype,jdbcType=INTEGER}
   </insert>
   <insert id="insertSelective" parameterType="com.deep.domain.model.Pic" >
     insert into pic
@@ -207,6 +208,9 @@
       <if test="filename != null" >
         filename,
       </if>
+      <if test="filetype != null" >
+        filetype,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -241,6 +245,9 @@
       </if>
       <if test="filename != null" >
         #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="filetype != null" >
+        #{filetype,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>

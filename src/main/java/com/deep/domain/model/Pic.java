@@ -67,6 +67,16 @@ public class Pic implements Serializable {
 
     private Integer size;
 
+    private Integer filetype;
+
+    public Integer getFiletype() {
+        return filetype;
+    }
+
+    public void setFiletype(Integer filetype) {
+        this.filetype = filetype;
+    }
+
     public Integer getSize() {
         return size;
     }
@@ -199,23 +209,24 @@ public class Pic implements Serializable {
     @Override
     public String toString() {
         return "Pic{" +
-            "id=" + id +
-            ", address='" + address + '\'' +
-            ", brand='" + brand + '\'' +
-            ", udate=" + udate +
-            ", sdate=" + sdate +
-            ", edate=" + edate +
-            ", expert='" + expert + '\'' +
-            ", sex='" + sex + '\'' +
-            ", solution='" + solution + '\'' +
-            ", symptom='" + symptom + '\'' +
-            ", uploader='" + uploader + '\'' +
-            ", vaccine='" + vaccine + '\'' +
-            ", filename='" + filename + '\'' +
-            ", returnId=" + returnId +
-            ", pageNumb=" + pageNumb +
-            ", limit=" + limit +
-            ", size=" + size +
-            '}';
+                "id=" + id +
+                ", address='" + address + '\'' +
+                ", brand='" + brand + '\'' +
+                ", udate=" + udate +
+                ", sdate=" + sdate +
+                ", edate=" + edate +
+                ", expert='" + expert + '\'' +
+                ", sex='" + sex + '\'' +
+                ", solution='" + solution + '\'' +
+                ", symptom='" + symptom + '\'' +
+                ", uploader='" + uploader + '\'' +
+                ", vaccine='" + vaccine + '\'' +
+                ", filename='" + filename + '\'' +
+                ", returnId=" + returnId +
+                ", pageNumb=" + pageNumb +
+                ", limit=" + limit +
+                ", size=" + size +
+                ", filetype=" + filetype +
+                '}';
     }
 }
