@@ -65,7 +65,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         }
 
         if (JedisUtil.getValue(String.valueOf(model.getUserId())) == null) {
-            logger.info("first false", JedisUtil.getValue(String.valueOf(model.getUserId())));
+            logger.info("first false {}", JedisUtil.getValue(String.valueOf(model.getUserId())));
             response.setStatus(401);
             return false;
         } else {

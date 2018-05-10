@@ -70,7 +70,6 @@ public class LoginResource {
             return response;
         } else {
             // 验证密码信息, 忽略CASE OR case
-
             if (userModel.getUserPwd().equalsIgnoreCase(password)) {
                 System.out.println(userModel);
                 Response response = Responses.successResponse();
