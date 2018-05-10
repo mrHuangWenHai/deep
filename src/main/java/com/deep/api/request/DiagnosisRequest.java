@@ -27,6 +27,10 @@ public class DiagnosisRequest {
   private Integer ispassSup;
   @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
   private String diagnosisTime;
+  @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
+  private String startTime;
+  @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
+  private String endTime;
   private Integer buildingNum;
   private String earTag;
   private Integer page = 0;
@@ -217,6 +221,22 @@ public class DiagnosisRequest {
     this.factoryList = factoryList;
   }
 
+  public String getStartTime() {
+    return startTime;
+  }
+
+  public void setStartTime(String startTime) {
+    this.startTime = startTime;
+  }
+
+  public String getEndTime() {
+    return endTime;
+  }
+
+  public void setEndTime(String endTime) {
+    this.endTime = endTime;
+  }
+
   @Override
   public String toString() {
     return "DiagnosisRequest{" +
@@ -238,10 +258,13 @@ public class DiagnosisRequest {
         ", upassReason='" + upassReason + '\'' +
         ", ispassSup=" + ispassSup +
         ", diagnosisTime='" + diagnosisTime + '\'' +
+        ", startTime='" + startTime + '\'' +
+        ", endTime='" + endTime + '\'' +
         ", buildingNum=" + buildingNum +
         ", earTag='" + earTag + '\'' +
         ", page=" + page +
         ", size=" + size +
+        ", factoryList=" + factoryList +
         '}';
   }
 }

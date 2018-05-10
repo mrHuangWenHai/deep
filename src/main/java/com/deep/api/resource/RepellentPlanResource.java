@@ -192,23 +192,32 @@ public class RepellentPlanResource {
                              HttpServletRequest httpServletRequest) {
 
       Map<Long, List<Long>> factoryMap = null;
-      Byte role = Byte.parseByte(TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION)));
+
+      String roleString = TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION));
+      if (roleString == null) {
+        return Responses.errorResponse("认证信息错误");
+      }
+      Byte role = Byte.parseByte(roleString);
+
       if (role == 0) {
+
         repellentRequest.setFactoryNum(id);
+
       } else if (role == 1) {
+
         factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
         List<Long> factoryList = new ArrayList<>();
         factoryList.addAll(factoryMap.get(new Long(-1)));
         factoryList.addAll(factoryMap.get(new Long(0)));
         repellentRequest.setFactoryList(factoryList);
+
       } else {
         return Responses.errorResponse("你没有权限");
       }
 
       logger.info("invoke rp/{} {}",id, repellentRequest);
 
-      List<RepellentPlanModel> totalList = repellentPlanService.getRepellentPlanModel(repellentRequest,
-                new RowBounds(repellentRequest.getPage() * repellentRequest.getSize() ,repellentRequest.getSize()));
+      List<RepellentPlanModel> totalList = repellentPlanService.getRepellentPlanModel(repellentRequest);
 
       int size = totalList.size();
       int page = repellentRequest.getPage();
@@ -223,11 +232,13 @@ public class RepellentPlanResource {
         List<RepellentPlanModel> others = new ArrayList<>();
         List<Long> directId = factoryMap.get((long) -1);
         for (RepellentPlanModel repellentPlanModel : repellentPlanModels) {
+
           if (directId.contains(repellentPlanModel.getFactoryNum())) {
             direct.add(repellentPlanModel);
           } else {
             others.add(repellentPlanModel);
           }
+
         }
         factorylist.addAll(direct);
         factorylist.addAll(others);
@@ -375,7 +386,8 @@ public class RepellentPlanResource {
         repellentPlanModel.setId(id);
         if (repellentPlanModel.getProfessor() == null ||
             repellentPlanModel.getIspassCheck() == null ||
-            repellentPlanModel.getUnpassReason() == null) {
+            repellentPlanModel.getFactoryNum() == null) {
+
             return Responses.errorResponse("Lack param");
         } else {
           int row = repellentPlanService.updateRepellentPlanModelByProfessor(repellentPlanModel);

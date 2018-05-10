@@ -26,10 +26,11 @@ public class LiveBroadcastResource {
   private LiveBroadcastService liveBroadcastService;
 
   private final Logger logger = LoggerFactory.getLogger(LiveBroadcastResource.class);
+
   /**
    * 方法功能:获取推流地址
    * @param userid
-   * @return
+   * @return response
    */
   @RequestMapping(value = "/getPushUrl/{id}", method = RequestMethod.GET)
   public Response getLiveBroadCastPushUrl(@PathVariable("id") String userid) {
@@ -37,7 +38,7 @@ public class LiveBroadcastResource {
     if (userid.equals("")) {
       return Responses.errorResponse("userid 不能为空");
     }
-
+    logger.info("invoke /liveBroadcast/getPushUrl/{}",userid);
     LiveBroadcastResp resp = liveBroadcastService.getLiveBroadCastPushUrl(userid);
     Response response;
     Map<String, Object> data = new HashMap<String, Object>();
@@ -57,6 +58,7 @@ public class LiveBroadcastResource {
     if (userid.equals("")) {
       return Responses.errorResponse("userid 不能为空");
     }
+    logger.info("invoke /liveBroadcast/getLiveUrl/{}",userid);
     LiveBroadcastResp resp = liveBroadcastService.getLiveBroadCastLiveUrl(userid);
     Response response;
     Map<String, Object> data = new HashMap<String, Object>();
@@ -76,7 +78,7 @@ public class LiveBroadcastResource {
     if (userid.equals("") || status.equals("")) {
       return Responses.errorResponse("userid status 不能为空");
     }
-
+    logger.info("invoke /liveBroadcast/getLiveUrl {} {}",userid, status);
     LiveBroadcastResp resp = liveBroadcastService.setLiveBroadcastStatus(userid,status);
     Response response;
     Map<String, Object> data = new HashMap<String, Object>();
@@ -96,6 +98,7 @@ public class LiveBroadcastResource {
     if (userid.equals("")) {
       return Responses.errorResponse("userid 不能为空");
     }
+    logger.info("invoke /liveBroadcast/getStatus/{}",userid);
     LiveBroadcastResp resp = liveBroadcastService.getLiveChannelPushStatus(userid);
     Response response;
     Map<String, Object> data = new HashMap<String, Object>();
@@ -109,9 +112,14 @@ public class LiveBroadcastResource {
     return response;
   }
 
-  //腾讯处于Beta
+  /**
+   * 方法功能:查询现在直播的接口
+   * @param statRequest
+   * @return response
+   */
   @RequestMapping(value = "/getLiveStat")
   public Response getLiveStatMessage(LiveStatRequest statRequest) {
+    logger.info("invoke /liveBroadcast/getLiveStat/{}",statRequest);
     LiveBroadcastResp resp = liveBroadcastService.getLiveStatMessage(statRequest);
     Response response;
     Map<String, Object> data = new HashMap<String, Object>();

@@ -94,17 +94,17 @@
         <if test="repellentPlanModel.crowdNum != null and repellentPlanModel.crowdNum != '' ">
             AND crowd_num = #{repellentPlanModel.crowdNum}
         </if>
-        <if test="repellentPlanModel.repellentTimeStart != null and repellentPlanModel.repellentTimeStart != '' and
-                  (repellentPlanModel.repellentTimeEnd == null or repellentPlanModel.repellentTimeEnd == '') ">
-            AND repellent_t &gt;= #{repellentPlanModel.repellentTimeStart}
+        <if test="repellentPlanModel.startTime != null and repellentPlanModel.startTime != '' and
+                  (repellentPlanModel.endTime == null or repellentPlanModel.endTime == '') ">
+            AND repellent_t &gt;= #{repellentPlanModel.startTime}
         </if>
-        <if test="repellentPlanModel.repellentTimeStart != null and repellentPlanModel.repellentTimeStart != '' and
-                  repellentPlanModel.repellentTimeEnd != null and repellentPlanModel.repellentTimeEnd != '' ">
-            AND repellent_t BETWEEN #{repellentPlanModel.repellentTimeStart} AND #{repellentPlanModel.repellentTimeEnd}
+        <if test="repellentPlanModel.startTime != null and repellentPlanModel.startTime != '' and
+                  repellentPlanModel.endTime != null and repellentPlanModel.endTime != '' ">
+            AND repellent_t BETWEEN #{repellentPlanModel.startTime} AND #{repellentPlanModel.endTime}
         </if>
-        <if test="(repellentPlanModel.repellentTimeStart == null or repellentPlanModel.repellentTimeStart == '') and
-                  repellentPlanModel.repellentTimeEnd != null and repellentPlanModel.repellentTimeEnd != '' ">
-            AND repellent_t &lt;=  #{repellentPlanModel.repellentTimeEnd}
+        <if test="(repellentPlanModel.startTime == null or repellentPlanModel.startTime == '') and
+                  repellentPlanModel.endTime != null and repellentPlanModel.endTime != '' ">
+            AND repellent_t &lt;=  #{repellentPlanModel.endTime}
         </if>
 
         <if test="repellentPlanModel.repellentName != null and repellentPlanModel.repellentName != '' ">
@@ -203,7 +203,6 @@
         FROM
         repellent_plan
         WHERE
-
         factory_num = #{factoryNum}
         <if test="ispassSup != null and ispassSup != '' ">
             AND ispass_sup = #{ispassSup}
@@ -216,7 +215,9 @@
         UPDATE repellent_plan
         SET  professor = #{repellentPlanModel.professor},
         ispass_check = #{repellentPlanModel.ispassCheck},
-        upass_reason = #{repellentPlanModel.unpassReason},
+        <if test="repellentPlanModel.unpassReason != null">
+            upass_reason = #{repellentPlanModel.unpassReason},
+        </if>
         gmt_professor = now()
         WHERE
         id = #{repellentPlanModel.id} and ispass_check = 2

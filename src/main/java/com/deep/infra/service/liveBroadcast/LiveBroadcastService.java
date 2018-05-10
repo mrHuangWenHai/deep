@@ -152,7 +152,9 @@ public class LiveBroadcastService {
           .append("&t=")
           .append(t)
           .append("&sign=")
-          .append(sign).append("&Param.n.page_no=")
+          .append(sign)
+          .append("&Param.n.status=1")
+          .append("&Param.n.page_no=")
           .append(statRequest.getPageNo())
           .append("&Param.n.page_size=")
           .append(statRequest.getPageSize());

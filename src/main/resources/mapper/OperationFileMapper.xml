@@ -122,7 +122,6 @@
     </insert>
 
 
-
     <update id="updateCheckStatus" >
         update
         operation_file
@@ -137,7 +136,7 @@
         update
         operation_file
         <set>
-            ispass_check = #{supStatus},
+            ispass_sup = #{supStatus},
             gmt_modified = now()
         </set>
         where  id = #{id} and ispass_sup = 2

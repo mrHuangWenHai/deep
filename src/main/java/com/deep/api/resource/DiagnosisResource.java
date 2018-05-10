@@ -38,6 +38,7 @@ public class DiagnosisResource {
 
     @Resource
     private DiagnosisPlanService diagnosisPlanService;
+
     /**
      * 添加的接口：/addPlan
      * 接收参数：整个表单信息（所有参数必填）
@@ -115,13 +116,6 @@ public class DiagnosisResource {
         }
 
         diagnosisPlanModel.setId(id);
-        if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("param is error");
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("param",bindingResult.getAllErrors());
-            response.setData(map);
-            return response;
-        }
 
         logger.info("invoke diagnosis/update {}", diagnosisPlanModel);
         int isSuccess = diagnosisPlanService.updateDiagnosisPlanModel(diagnosisPlanModel);
@@ -230,10 +224,17 @@ public class DiagnosisResource {
     public Response findPlanSelective(@PathVariable(value = "id")long id,
                                       DiagnosisRequest diagnosisRequest,
                                       HttpServletRequest httpServletRequest) {
+
         logger.info("invoke Get diagnosis {}", diagnosisRequest);
 
         Map<Long, List<Long>> factoryMap = null;
-        Byte role = Byte.parseByte(TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION)));
+        String roleString = TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION));
+
+        if (roleString == null) {
+            return Responses.errorResponse("认证信息错误");
+        }
+
+        Byte role = Byte.parseByte(roleString);
         if (role == 0) {
             diagnosisRequest.setFactoryNum(id);
         } else if (role == 1) {
@@ -266,6 +267,7 @@ public class DiagnosisResource {
                     others.add(diagnosisPlanModel);
                 }
             }
+
             factorylist.addAll(direct);
             factorylist.addAll(others);
             data.put("List", factorylist);

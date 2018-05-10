@@ -70,9 +70,14 @@ public class OperationFileResource {
 
     try {
       Map<Long, List<Long>> factoryMap = null;
-      Byte role = Byte.parseByte(TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION)));
-      if (role == 0) {
 
+      String roleString = TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION));
+      if (roleString == null) {
+        return Responses.errorResponse("认证信息错误");
+      }
+      Byte role = Byte.parseByte(roleString);
+
+      if (role == 0) {
         operationCoditionRequest.setFactoryNum(id);
       } else if (role == 1) {
 
@@ -131,18 +136,20 @@ public class OperationFileResource {
   @PatchMapping(value = "s/{id}")
   Response setCheckStatus(@PathVariable(value = "id")int id,
                           @RequestBody Map<String, Integer> json) {
-    if (!json.containsKey("ispassCheck")) {
-      return Responses.errorResponse("lock param ispassCheck");
+    if (!json.containsKey("ispassSup")) {
+      return Responses.errorResponse("lock param ispassSup");
     }
 
-    short checkStatus = json.get("ispassCheck").shortValue();
+    short checkStatus = json.get("ispassSup").shortValue();
     if (id < 0 || checkStatus < 0 || checkStatus > 2) {
       return Responses.errorResponse("param is invalid");
     }
     logger.info("/of/s/{} {}",id,checkStatus);
 
     try {
-      int isSuccess = operationFileService.updateCheckStatus(id, checkStatus);
+
+      int isSuccess = operationFileService.updateSupStatus(id, checkStatus);
+
       if (isSuccess == 1) {
           return Responses.successResponse();
       } else {
@@ -156,18 +163,18 @@ public class OperationFileResource {
 
   @PatchMapping(value = "p/{id}")
   Response setSupStatus(@PathVariable(value = "id")int id,
-                          @RequestBody Map<String, Integer> json) {
-    if (!json.containsKey("ispassSup")) {
-      return Responses.errorResponse("lock param ispassSup");
+                        @RequestBody Map<String, Integer> json) {
+    if (!json.containsKey("ispassCheck")) {
+      return Responses.errorResponse("lock param ispassCheck");
     }
 
-    short supStatus = json.get("ispassSup").shortValue();
+    short supStatus = json.get("ispassCheck").shortValue();
     if (id < 0 || supStatus < 0 || supStatus > 2) {
       return Responses.errorResponse("param is invalid");
     }
     logger.info("/of/s/{} {}",id,supStatus);
     try {
-      int isSuccess = operationFileService.updateSupStatus(id, supStatus);
+      int isSuccess = operationFileService.updateCheckStatus(id, supStatus);
       if (isSuccess == 1) {
         return Responses.successResponse();
       } else {

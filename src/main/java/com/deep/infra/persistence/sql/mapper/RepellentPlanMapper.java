@@ -16,8 +16,7 @@ public interface RepellentPlanMapper {
     int setRepellentPlanModel(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel);
 
 
-    List<RepellentPlanModel> getRepellentPlanModel(@Param("repellentPlanModel") RepellentRequest repellentPlanModel,
-                                                   RowBounds bounds);
+    List<RepellentPlanModel> getRepellentPlanModel(@Param("repellentPlanModel") RepellentRequest repellentPlanModel);
 
     List<RepellentPlanModel> getRepellentPlanModelByTradeMarkEarTag(@Param("repellentEartag") List<String[]> repellentEartag,
                                                                     RowBounds bounds);

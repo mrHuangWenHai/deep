@@ -150,10 +150,12 @@ public class GenealogicalFilesResource {
                              GenealogicalRequest genealogicalRequest,
                              HttpServletRequest httpServletRequest) {
 
-
-
       Map<Long, List<Long>> factoryMap = null;
-      Byte role = Byte.parseByte(TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION)));
+      String roleString = TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION));
+      if (roleString == null) {
+        return Responses.errorResponse("认证信息错误");
+      }
+      Byte role = Byte.parseByte(roleString);
       if (role == 0) {
         genealogicalRequest.setFactoryNum(id);
       } else if (role == 1) {

@@ -20,9 +20,8 @@ public class RepellentPlanService {
     }
 
 
-    public List<RepellentPlanModel> getRepellentPlanModel(RepellentRequest repellentPlanModel,
-                                                          RowBounds bounds){
-        return this.repellentPlanMapper.getRepellentPlanModel(repellentPlanModel,bounds);
+    public List<RepellentPlanModel> getRepellentPlanModel(RepellentRequest repellentPlanModel){
+        return this.repellentPlanMapper.getRepellentPlanModel(repellentPlanModel);
     }
 
 

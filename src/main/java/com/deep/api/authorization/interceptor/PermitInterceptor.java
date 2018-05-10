@@ -184,6 +184,7 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
         if (! (handler instanceof HandlerMethod)) {
             return true;
         }
+
         // 将handler强制转换为HandlerMethod
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         // 从方法处理器中获取要调用的方法
@@ -234,7 +235,7 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
         }
       //  return true;
         System.out.println("000000000000000000000000000000000000000000000000000000");
-        response.setStatus(401);
+        response.setStatus(403);
         return false;
     }
 

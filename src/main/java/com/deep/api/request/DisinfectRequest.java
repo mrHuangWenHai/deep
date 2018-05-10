@@ -1,5 +1,7 @@
 package com.deep.api.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.math.BigInteger;
 import java.util.List;
 
@@ -28,9 +30,10 @@ public class DisinfectRequest {
     private String gmtModified;     //修改时间
     private String gmtProfessor;     //审核时间 可空
     private String gmtSupervise;     //监督确认时间 可空
-
-    private String disinfectTimeStart;
-    private String disinfectTimeEnd;
+    @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
+    private String startTime;
+    @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
+    private String endTime;
     private int page = 0;
     private int size = 10;
     private List<Long>factoryList;
@@ -174,23 +177,23 @@ public class DisinfectRequest {
         this.gmtSupervise = gmtSupervise;
     }
 
-    public String getDisinfectTimeStart() {
-        return disinfectTimeStart;
-    }
+  public String getStartTime() {
+    return startTime;
+  }
 
-    public void setDisinfectTimeStart(String disinfectTimeStart) {
-        this.disinfectTimeStart = disinfectTimeStart;
-    }
+  public void setStartTime(String startTime) {
+    this.startTime = startTime;
+  }
 
-    public String getDisinfectTimeEnd() {
-        return disinfectTimeEnd;
-    }
+  public String getEndTime() {
+    return endTime;
+  }
 
-    public void setDisinfectTimeEnd(String disinfectTimeEnd) {
-        this.disinfectTimeEnd = disinfectTimeEnd;
-    }
+  public void setEndTime(String endTime) {
+    this.endTime = endTime;
+  }
 
-    public int getPage() {
+  public int getPage() {
         return page;
     }
 
@@ -239,32 +242,33 @@ public class DisinfectRequest {
     }
 
   @Override
-    public String toString() {
-        return "DisinfectRequest{" +
-            "disinfectEartag='" + disinfectEartag + '\'' +
-            ", factoryNum=" + factoryNum +
-            ", factoryName='" + factoryName + '\'' +
-            ", disinfectTime='" + disinfectTime + '\'' +
-            ", disinfectName='" + disinfectName + '\'' +
-            ", dose='" + dose + '\'' +
-            ", disinfectWay='" + disinfectWay + '\'' +
-            ", operatorId=" + operatorId +
-            ", operatorName='" + operatorName + '\'' +
-            ", professor='" + professor + '\'' +
-            ", supervisor='" + supervisor + '\'' +
-            ", remark='" + remark + '\'' +
-            ", ispassCheck='" + ispassCheck + '\'' +
-            ", unpassReason='" + unpassReason + '\'' +
-            ", ispassSup='" + ispassSup + '\'' +
-            ", gmtCreate='" + gmtCreate + '\'' +
-            ", gmtModified='" + gmtModified + '\'' +
-            ", gmtProfessor='" + gmtProfessor + '\'' +
-            ", gmtSupervise='" + gmtSupervise + '\'' +
-            ", disinfectTimeStart='" + disinfectTimeStart + '\'' +
-            ", disinfectTimeEnd='" + disinfectTimeEnd + '\'' +
-            ", page=" + page +
-            ", size=" + size +
-            ", factoryList=" + factoryList +
-            '}';
-    }
+  public String toString() {
+    return "DisinfectRequest{" +
+        "id=" + id +
+        ", disinfectEartag='" + disinfectEartag + '\'' +
+        ", factoryNum=" + factoryNum +
+        ", factoryName='" + factoryName + '\'' +
+        ", disinfectTime='" + disinfectTime + '\'' +
+        ", disinfectName='" + disinfectName + '\'' +
+        ", dose='" + dose + '\'' +
+        ", disinfectWay='" + disinfectWay + '\'' +
+        ", operatorId=" + operatorId +
+        ", operatorName='" + operatorName + '\'' +
+        ", professor='" + professor + '\'' +
+        ", supervisor='" + supervisor + '\'' +
+        ", remark='" + remark + '\'' +
+        ", ispassCheck=" + ispassCheck +
+        ", unpassReason='" + unpassReason + '\'' +
+        ", ispassSup=" + ispassSup +
+        ", gmtCreate='" + gmtCreate + '\'' +
+        ", gmtModified='" + gmtModified + '\'' +
+        ", gmtProfessor='" + gmtProfessor + '\'' +
+        ", gmtSupervise='" + gmtSupervise + '\'' +
+        ", startTime='" + startTime + '\'' +
+        ", endTime='" + endTime + '\'' +
+        ", page=" + page +
+        ", size=" + size +
+        ", factoryList=" + factoryList +
+        '}';
+  }
 }

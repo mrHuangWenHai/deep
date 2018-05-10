@@ -198,37 +198,42 @@ public class ImmunePlanResource {
     public Response findShow(@PathVariable(value = "id")long id,
                              ImmuneRequest immuneRequest,
                              HttpServletRequest httpServletRequest) {
-        logger.info("invoke  /ip/{} {}", id,immuneRequest);
-        //前台传参数
 
+      logger.info("invoke  /ip/{} {}", id,immuneRequest);
+        //前台传参数
       Map<Long, List<Long>> factoryMap = null;
-      Byte role = Byte.parseByte(TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION)));
+
+      String roleString = TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION));
+      if (roleString == null) {
+        return Responses.errorResponse("认证信息错误");
+      }
+      Byte role = Byte.parseByte(roleString);
+
+
       if (role == 0) {
         immuneRequest.setFactoryNum(id);
       } else if (role == 1) {
         factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
         List<Long> factoryList = new ArrayList<>();
-        factoryList.addAll(factoryMap.get(-1));
-        factoryList.addAll(factoryMap.get(0));
+        factoryList.addAll(factoryMap.get(new Long(-1)));
+        factoryList.addAll(factoryMap.get(new Long(0)));
         immuneRequest.setFactoryList(factoryList);
       } else {
         return Responses.errorResponse("你没有权限");
       }
 
       List<ImmunePlanModel> totalList = immunePlanService.getImmunePlanModel(immuneRequest);
-
       int size = totalList.size();
       int page = immuneRequest.getPage();
       int pageSize = immuneRequest.getSize();
       int destIndex = (page+1) * pageSize + 1  > size ? size : (page+1) * pageSize + 1;
       List<ImmunePlanModel> immunePlanModels = totalList.subList(page * pageSize, destIndex);
-
       if (role == 1) {
         Map<String,Object> data = new HashMap<>();
         List<ImmunePlanModel> factorylist = new ArrayList<>();
         List<ImmunePlanModel> direct = new ArrayList<>();
         List<ImmunePlanModel> others = new ArrayList<>();
-        List<Long> directId = factoryMap.get(-1);
+        List<Long> directId = factoryMap.get(new Long(-1));
         for (ImmunePlanModel immunePlanModel : immunePlanModels) {
           if (directId.contains(immunePlanModel.getFactoryNum())) {
             direct.add(immunePlanModel);
@@ -362,8 +367,6 @@ public class ImmunePlanResource {
         }
     }
 
-
-
     /**
      * 审核入口 审核isPass = 0的数据
      * METHOD:PATCH
@@ -377,8 +380,7 @@ public class ImmunePlanResource {
 
         logger.info("invoke PATCH /p/{id} {} {}",id, immunePlanModel);
         if( immunePlanModel.getIspassCheck() == null
-            || immunePlanModel.getProfessor() == null
-            || immunePlanModel.getUnpassReason() == null) {
+            || immunePlanModel.getProfessor() == null) {
             return Responses.errorResponse("Lack Item");
         } else {
           immunePlanModel.setId(id);

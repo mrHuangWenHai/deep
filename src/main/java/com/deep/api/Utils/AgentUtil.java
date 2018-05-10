@@ -202,7 +202,6 @@ public class AgentUtil {
         } else {
             agentUtil.agentCount++;
         }
-
         List<AgentModel> agentModels = agentUtil.agentService.getSons(uid);
         if (agentModels != null) {
             for (AgentModel agentModel : agentModels) {
