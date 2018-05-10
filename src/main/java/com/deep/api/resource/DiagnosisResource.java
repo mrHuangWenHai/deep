@@ -137,8 +137,8 @@ public class DiagnosisResource {
     public Response changePlanByProfessor(@PathVariable(value = "id") int id,
                                           @RequestBody Map<String, Integer> json) {
         logger.info("invoke diagnosis/p/{} {}", id,json);
-        if (!json.containsKey("isPassCheck")) {
-            return Responses.errorResponse("lack isPassCheck");
+        if (!json.containsKey("ispassCheck")) {
+            return Responses.errorResponse("lack ispassCheck");
         }
         short ispassCheck = json.get("isPassCheck").shortValue();
         if (ispassCheck == 2) {

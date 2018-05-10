@@ -57,7 +57,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         tokenManagerRealization = new TokenManagerRealization();
         // 从authorization中获取用户名以及token
         TokenModel model = tokenManagerRealization.getToken(authorization);
-        logger.info("TokenModel {}",model);
+        logger.info("TokenModel {}", model);
         if (model == null) {
             // 登录验证失败, 请登录
             logger.info("model == null");
