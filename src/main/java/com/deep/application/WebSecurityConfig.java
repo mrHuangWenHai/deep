@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.filter.HttpPutFormContentFilter;
+import java.io.File;
 
 @Configuration
 public class WebSecurityConfig implements WebMvcConfigurer {
@@ -25,10 +26,43 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     }
 
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/picture/**").addResourceLocations("file:///Users/huangwenhai/alibaba/Deep/");
-        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
-        registry.addResourceHandler("/movie/**").addResourceLocations("file:///Users/huangwenhai/alibaba/Deep/video/");
-        registry.addResourceHandler("/pic/**").addResourceLocations("file:///Users/huangwenhai/alibaba/pic/");
+
+      File directory = new File("");//参数为空
+      try {
+
+        String directoryPath = directory.getCanonicalPath() ;
+
+        String picturePath = directoryPath + "/picture/";
+        File pictureFile = new File(picturePath);
+        if (!pictureFile.exists()) {
+          System.out.println("========================");
+          pictureFile.mkdirs();
+        } else {
+          System.out.println("---------------------------");
+        }
+
+        System.out.println(picturePath);
+
+        String videoPath = directoryPath + "/video/";
+        File videoFile  = new File(videoPath);
+        if (!videoFile.exists()) {
+          videoFile.mkdirs();
+        }
+
+        String picPath = directoryPath + "/pic/";
+        File picFile  = new File(picPath);
+        if (!picFile.exists()) {
+          picFile.mkdirs();
+        }
+
+        registry.addResourceHandler("/picture/**").addResourceLocations("file://"+picturePath);
+        registry.addResourceHandler("/movie/**").addResourceLocations("file://"+videoPath);
+        registry.addResourceHandler("/pic/**").addResourceLocations("file://"+picPath);
+
         System.out.println("this is the ResourceHandler");
+      } catch (Exception e) {
+        System.out.println(e);
+      }
+
     }
 }
