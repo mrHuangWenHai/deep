@@ -5,6 +5,7 @@ import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.Message;
 import com.deep.domain.model.MessageExample;
+import com.deep.domain.model.Pic;
 import com.deep.domain.service.MessageService;
 import com.deep.domain.service.PicService;
 import org.slf4j.Logger;
@@ -80,9 +81,15 @@ public class MessageResource {
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             criteria.andInserttimeBetween(sdf.parse(times[0]),sdf.parse(times[1]));
         }
-        List<Message> sizeOfALL = messageService.findMessageSelective(messageExample);
-        List<Message> select = messageService.findMessageSelectiveWithRowbounds(messageExample,message.getPageNumb(),message.getLimit());
-        Integer size = sizeOfALL.size();
+        List<Message> sizeOfAll = messageService.findMessageSelective(messageExample);
+//        List<Message> select = messageService.findMessageSelectiveWithRowbounds(messageExample,message.getPageNumb(),message.getLimit());
+//        Integer size = sizeOfALL.size();
+        int size = sizeOfAll.size();
+        int page = message.getPageNumb();
+        int pageSize = message.getLimit();
+        int destIndex = (page+1) * pageSize  > size ? size : (page+1) * pageSize ;
+        List<Message> select = sizeOfAll.subList(page * pageSize, destIndex);
+
         Response response = Responses.successResponse();
         HashMap<String,Object>data = new HashMap<>();
         data.put("List",select);

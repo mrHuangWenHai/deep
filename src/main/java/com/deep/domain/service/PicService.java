@@ -20,7 +20,7 @@ public class PicService {
     public int insertPic(Pic pic) {
 
 
-        int flag=picMapper.insert(pic);
+        int flag=picMapper.insertSelective(pic);
 
         return flag;
 

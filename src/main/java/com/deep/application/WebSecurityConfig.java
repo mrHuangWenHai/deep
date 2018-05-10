@@ -35,10 +35,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         String picturePath = directoryPath + "/picture/";
         File pictureFile = new File(picturePath);
         if (!pictureFile.exists()) {
-          System.out.println("========================");
           pictureFile.mkdirs();
-        } else {
-          System.out.println("---------------------------");
         }
 
         System.out.println(picturePath);
