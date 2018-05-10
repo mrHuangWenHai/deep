@@ -70,7 +70,6 @@ public class LoginResource {
             return response;
         } else {
             // 验证密码信息, 忽略CASE OR case
-
             if (userModel.getUserPwd().equalsIgnoreCase(password)) {
                 System.out.println(userModel);
                 Response response = Responses.successResponse();
@@ -108,6 +107,7 @@ public class LoginResource {
               response.setData(data);
               Long roleInt = userModel.getUserRole();
               String defaultPermit = roleService.findRoleDefaultPermits(userModel.getUserRole());
+
               defaultPermit = roleService.findExtendPermit(defaultPermit, userModel.getUserPermit());
 
               TokenModel tokenModel = new TokenModel(userModel.getId(), String.valueOf(roleInt), String.valueOf(userModel.getIsFactory()));

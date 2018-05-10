@@ -194,7 +194,7 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
         System.out.println("Permit拦截器" + authorization);
         if (authorization == null) {
             logger.info("authorization == null");
-            response.setStatus(401);
+            response.setStatus(403);
             return false;
         }
         tokenManagerRealization = new TokenManagerRealization();
@@ -218,7 +218,10 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
 
                 // 获取Redis数据库的用户权限信息
                 String allPermits = JedisUtil.getValue("defaultPermit"+tokenModel.getUserId());
-                assert allPermits != null;
+                if (allPermits == null) {
+                    response.setStatus(403);
+                    return false;
+                }
                 System.out.println("allPermits.length() = " + allPermits.length());
 
                 for (int i = 0; i < allPermits.length(); i++) {

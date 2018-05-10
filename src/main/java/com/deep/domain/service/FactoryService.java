@@ -2,6 +2,7 @@ package com.deep.domain.service;
 
 
 import com.deep.domain.model.FactoryModel;
+import com.deep.domain.model.UserModel;
 import com.deep.infra.persistence.sql.mapper.FactoryMapper;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,9 @@ import java.util.List;
 public class FactoryService {
     @Resource
     private FactoryMapper factoryMapper;
+
+    @Resource
+    private UserService userService;
 
     /**
      * 获取所有的羊场信息
@@ -29,8 +33,12 @@ public class FactoryService {
      * 获取所有的没有负责人的羊场信息, 主要是羊场的编号和羊场的名称
      * @return
      */
-    public List<FactoryModel> findAllNoResponsibleFactory() {
-        return factoryMapper.getAllNoResponsibleFactory();
+    public List<FactoryModel> findAllNoResponsibleFactory(Long userId) {
+        UserModel userModel = userService.getOneUser(userId);
+        if (userModel == null) {
+            return null;
+        }
+        return factoryMapper.getAllNoResponsibleFactory(userModel.getUserFactory());
     }
 
     /**

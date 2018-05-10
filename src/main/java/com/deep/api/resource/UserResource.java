@@ -12,6 +12,7 @@ import com.deep.api.response.Professor;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.AgentModel;
+import com.deep.domain.model.FactoryModel;
 import com.deep.domain.model.UserModel;
 import com.deep.domain.service.UserService;
 import org.slf4j.Logger;
@@ -124,22 +125,19 @@ public class UserResource {
         if (uid < 0) {
             return Responses.errorResponse("错误");
         }
-
         Byte which = StringToLongUtil.stringToByte(TokenAnalysis.getFlag(request.getHeader(Constants.AUTHORIZATION)));
         if (which == 0) {
             // 这时候是羊场
             which = -1;
         }
-
         UserModel userModel = userService.getOneUser(uid);
-
         if (userModel == null) {
             return Responses.errorResponse("系统中该用户不存在");
         }
-
         if (userModel.getIsFactory() == 0) {
             // 如果是羊场
             which = -1;
+
         } else if(userModel.getIsFactory() == 1) {
             // 如果是代理
             which = userService.getAgentRank(userModel.getUserFactory());
@@ -154,6 +152,8 @@ public class UserResource {
         HashMap<String, Object> data = new HashMap<>();
         data.put("model", userModel);
         data.put("agentRank", which);
+        data.put("agent", userService.getFatherAgent(userModel.getUserFactory(), userModel.getIsFactory()));
+        data.put("role", userModel.getIsFactory());
         response.setData(data);
         return response;
     }
@@ -508,7 +508,7 @@ public class UserResource {
     @Permit(authorities = "query_expert")
     @GetMapping(value = "getExpert/{agent_id}")
     public Response getOnlineAncestors(@PathVariable("agent_id") String id) {
-        logger.info("invoke getAncestors {}", id);
+        logger.info("invoke getOnlineAncestors {}", id);
         long agentID = StringToLongUtil.stringToLong(id);
         if (agentID == -1) {
             return Responses.errorResponse("error");
@@ -528,7 +528,7 @@ public class UserResource {
                 response.setData(data);
                 return response;
             }
-            return Responses.errorResponse("there is no online father agents");
+            return Responses.successResponse();
         }
     }
 
