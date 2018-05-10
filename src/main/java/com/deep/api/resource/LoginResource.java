@@ -107,6 +107,7 @@ public class LoginResource {
               response.setData(data);
               Long roleInt = userModel.getUserRole();
               String defaultPermit = roleService.findRoleDefaultPermits(userModel.getUserRole());
+
               defaultPermit = roleService.findExtendPermit(defaultPermit, userModel.getUserPermit());
 
               TokenModel tokenModel = new TokenModel(userModel.getId(), String.valueOf(roleInt), String.valueOf(userModel.getIsFactory()));

@@ -102,35 +102,117 @@ public class PermitUtil {
             }
         }
 
-        for (int i = 36; i < 48; i++) {
-            for (int j = 7; j < 10; j++) {
-                for (int k = 0; k < 4; k++) {
-                    if (permit.charAt(i)  == '1') {
-                        permitFinal.add(j + "-" + k);
-                    }
-                }
+        Integer count = 7;
+
+        for (int i = 36; i < 40; i++) {
+            if(permit.charAt(i) == '1') {
+                permitFinal.add(7 + "-" + String.valueOf(i-36));
             }
         }
 
-        for (int i = 56; i < 80; i++) {
-            for (int j = 10; j < 16; j++) {
-                for (int k = 0; k < 4; k++) {
-                    if (permit.charAt(i)  == '1') {
-                        permitFinal.add(j + "-" + k);
-                    }
-                }
+        for (int i = 40; i < 44; i++) {
+            if(permit.charAt(i) == '1') {
+                permitFinal.add(8 + "-" + String.valueOf(i-40));
             }
         }
 
-        for (int i = 88; i < 108; i++) {
-            for (int j = 16; j < 21; j++) {
-                for (int k = 0; k < 4; k++) {
-                    if (permit.charAt(i)  == '1') {
-                        permitFinal.add(j + "-" + k);
-                    }
-                }
+        for (int i = 44; i < 48; i++) {
+            if(permit.charAt(i) == '1') {
+                permitFinal.add(9 + "-" + String.valueOf(i-44));
             }
         }
+
+        for (int i = 56; i < 60; i++) {
+            if(permit.charAt(i) == '1') {
+                permitFinal.add(10 + "-" + String.valueOf(i-56));
+            }
+        }
+
+        for (int i = 60; i < 64; i++) {
+            if(permit.charAt(i) == '1') {
+                permitFinal.add(11 + "-" + String.valueOf(i-60));
+            }
+        }
+
+        for (int i = 64; i < 68; i++) {
+            if(permit.charAt(i) == '1') {
+                permitFinal.add(12 + "-" + String.valueOf(i-64));
+            }
+        }
+
+        for (int i = 68; i < 72; i++) {
+            if(permit.charAt(i) == '1') {
+                permitFinal.add(13 + "-" + String.valueOf(i-68));
+            }
+        }
+
+        for (int i = 72; i < 76; i++) {
+            if(permit.charAt(i) == '1') {
+                permitFinal.add(14 + "-" + String.valueOf(i-72));
+            }
+        }
+
+        for (int i = 76; i < 80; i++) {
+            if(permit.charAt(i) == '1') {
+                permitFinal.add(15 + "-" + String.valueOf(i-76));
+            }
+        }
+
+
+
+        for (int i = 88; i < 92; i++) {
+            if(permit.charAt(i) == '1') {
+                permitFinal.add(16 + "-" + String.valueOf(i-88));
+            }
+        }
+
+        for (int i = 92; i < 96; i++) {
+            if(permit.charAt(i) == '1') {
+                permitFinal.add(17 + "-" + String.valueOf(i-92));
+            }
+        }
+
+        for (int i = 96; i < 100; i++) {
+            if(permit.charAt(i) == '1') {
+                permitFinal.add(18 + "-" + String.valueOf(i-96));
+            }
+        }
+
+        for (int i = 100; i < 104; i++) {
+            if(permit.charAt(i) == '1') {
+                permitFinal.add(19 + "-" + String.valueOf(i-100));
+            }
+        }
+
+        for (int i = 104; i < 108; i++) {
+            if(permit.charAt(i) == '1') {
+                permitFinal.add(20 + "-" + String.valueOf(i-104));
+            }
+        }
+
+        for (int i = 109; i < 112; i++) {
+            if(permit.charAt(i) == '1') {
+                permitFinal.add(21 + "-" + String.valueOf(i-109));
+            }
+        }
+
+        for (int i = 112; i < 116; i++) {
+            if(permit.charAt(i) == '1') {
+                permitFinal.add(22 + "-" + String.valueOf(i-112));
+            }
+        }
+
+        for (int i = 118; i < 124; i++) {
+            if(permit.charAt(i) == '1') {
+                permitFinal.add(23 + "-" + String.valueOf(i-118));
+            }
+        }
+
+        if (permit.charAt(116) == '1')
+            permitFinal.add(24 + "-" + String.valueOf(0));
+
+        if (permit.charAt(117) == '1')
+            permitFinal.add(25 + "-" + String.valueOf(0));
 
         return permitFinal;
     }

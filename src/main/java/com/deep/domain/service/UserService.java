@@ -462,4 +462,16 @@ public class UserService {
             return null;
         }
     }
+
+    public Long getFatherAgent(Long userFactory, Byte flag) {
+        if (flag == 0) {
+            FactoryModel factoryModel = factoryService.getOneFactory(userFactory);
+            return Long.valueOf(String.valueOf(factoryModel.getAgent()));
+        } else if (flag == 1) {
+            AgentModel agentModel = agentService.getOneAgent(userFactory);
+            return (long) agentModel.getAgentFather();
+        } else {
+            return (long)1;
+        }
+    }
 }

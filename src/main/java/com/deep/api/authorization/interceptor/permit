@@ -131,20 +131,24 @@ front       realId      权限
 20-2            107         查询角色 _________________query_role
 20-3            108         修改角色 _________________modify_role
 
-            109         查看权限 _________________query_permit
-            110         @下载数据库表格权限__________download_database
-            111         @发送短信________________send_messages   53, 54, 55
-            112         @编辑短信________________edit_messages
 
-            113         @增加羊品种________________add_sheep_type
-            114         @删除羊品种 _______________delete_sheep_type
-            115         @查询羊品种________________select_sheep_type
-            116         @修改羊品种________________modify_sheep_type
-            117         @下载文件_________________ download_product_file_action
-            118         @查看留言_________________ check_message_of_all_user
-            119        @增加驱虫实施防治档案_________ increase_pest_repellent_implementation_control_files
-            120        @删除驱虫实施防治档案_________ deworming_implementation_control_files
-            121        @查询驱虫实施防治档案_________ check_insecticide_implementation_control_files
-            122        @修改驱虫实施防治档案_________ modify_the_insect_repellent_implementation_control_file
-            123        @监督审核驱虫实施防治档案_________ supervise_and_verify_the_implementation_of_pest_control_files
-            124        @专家审核驱虫实施防治档案_________ experts_review_deworming_implementation_control_files
+
+            109         查看权限 _________________query_permit
+21-0            110         @下载数据库表格权限__________download_database
+21-1            111         @发送短信________________send_messages   53, 54, 55
+21-2            112         @编辑短信________________edit_messages
+
+22-0            113         @增加羊品种________________add_sheep_type
+22-1            114         @删除羊品种 _______________delete_sheep_type
+22-2            115         @查询羊品种________________select_sheep_type
+22-3            116         @修改羊品种________________modify_sheep_type
+
+24-0            117         @下载文件_________________ download_product_file_action
+25-0            118         @查看留言_________________ check_message_of_all_user
+
+23-0            119        @增加驱虫实施防治档案_________ increase_pest_repellent_implementation_control_files
+23-1            120        @删除驱虫实施防治档案_________ deworming_implementation_control_files
+23-2            121        @查询驱虫实施防治档案_________ check_insecticide_implementation_control_files
+23-3            122        @修改驱虫实施防治档案_________ modify_the_insect_repellent_implementation_control_file
+23-4            123        @监督审核驱虫实施防治档案_________ supervise_and_verify_the_implementation_of_pest_control_files
+23-5            124        @专家审核驱虫实施防治档案_________ experts_review_deworming_implementation_control_files
