@@ -80,4 +80,17 @@ public class UserRequest {
     public void setRealname(String realname) {
         this.realname = realname;
     }
+
+    @Override
+    public String toString() {
+        return "UserRequest{" +
+            "username='" + username + '\'' +
+            ", password='" + password + '\'' +
+            ", realname='" + realname + '\'' +
+            ", telephone='" + telephone + '\'' +
+            ", flag=" + flag +
+            ", factoryName='" + factoryName + '\'' +
+            ", factoryId=" + factoryId +
+            '}';
+    }
 }

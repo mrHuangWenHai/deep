@@ -1,6 +1,8 @@
 package com.deep.infra.persistence.sql.mapper;
 
+import com.deep.domain.model.Client;
 import com.deep.domain.model.Talk;
+import com.deep.domain.model.UserModel;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
@@ -38,4 +40,7 @@ public interface TalkMapper {
 
     @Select("select user_realname from user_manage where id in (select member_id from talk_account where member_role = #{member_role} and talk_id = #{talk_id}")
     String getExpertName(@Param("talk_id") String talk_id, @Param("member_role") Boolean member_role);
+
+    @Select("select id,user_realname from user_manage where id in (select distinct member_id from talk_account where member_role = 0 and talk_id in (select talk_id from talk_account where member_id = #{member_id}))")
+    List<Client> getClientList(@Param("member_id") Long member_id);
 }

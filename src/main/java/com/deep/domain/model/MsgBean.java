@@ -10,7 +10,7 @@ public class MsgBean {
   private Long[] to;
   private String name;
   private String isExpert;
-  private String mode;
+  private int mode;
 
   public String getTalk_id() {
     return talk_id;
@@ -60,11 +60,11 @@ public class MsgBean {
     this.isExpert = isExpert;
   }
 
-  public String getMode() {
+  public int getMode() {
     return mode;
   }
 
-  public void setMode(String mode) {
+  public void setMode(int mode) {
     this.mode = mode;
   }
 }

@@ -14,6 +14,8 @@ import com.deep.api.response.Responses;
 import com.deep.domain.model.AgentModel;
 import com.deep.domain.model.FactoryModel;
 import com.deep.domain.model.UserModel;
+import com.deep.domain.service.AgentService;
+import com.deep.domain.service.FactoryService;
 import com.deep.domain.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +42,12 @@ public class UserResource {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private AgentService agentService;
+
+    @Resource
+    private FactoryService factoryService;
 
     @Resource
     private TokenManagerRealization tokenManagerRealization;
@@ -120,8 +128,10 @@ public class UserResource {
      */
     @GetMapping(value = "user/detail/{username}")
     public Response getUserOneDetail(@PathVariable("username") String id, HttpServletRequest request) {
-        logger.info("invoke getUserOneDetail{}, url is user/detail/{id}", id);
+        logger.info("invoke getUserOneDetail{}, url is user/detail/{}", id);
+        System.out.println("1111111111110000000000001111111111111111111111");
         long uid = StringToLongUtil.stringToLong(id);
+      System.out.println("11111111111111122222222222222222222222222222222");
         if (uid < 0) {
             return Responses.errorResponse("错误");
         }
@@ -131,6 +141,7 @@ public class UserResource {
             which = -1;
         }
         UserModel userModel = userService.getOneUser(uid);
+        logger.info("===========  {}",userModel);
         if (userModel == null) {
             return Responses.errorResponse("系统中该用户不存在");
         }
@@ -225,8 +236,9 @@ public class UserResource {
      */
     @Permit(authorities = "add_user")
     @PostMapping("user")
-    public Response addUser(@RequestBody @Valid UserRequest userRequest, BindingResult bindingResult) {
+    public Response addUser(@RequestBody @Valid UserRequest userRequest, BindingResult bindingResult, HttpServletRequest request) {
         logger.info("invoke addUser{}, url is register", userRequest, bindingResult);
+        Byte which = StringToLongUtil.stringToByte(TokenAnalysis.getFlag(request.getHeader(Constants.AUTHORIZATION)));
         if (bindingResult.hasErrors() || userRequest.getUsername() == null) {
             Response response = Responses.errorResponse("验证失败");
             HashMap<String, Object> data = new HashMap<>();
@@ -251,6 +263,50 @@ public class UserResource {
             }
             userModel.setUserFactory(userRequest.getFactoryId());
             userModel.setIsFactory(userRequest.getFlag());
+
+            if (userRequest.getFlag() == 0) {
+                // 这表示羊场
+                userModel.setUserRole(18);
+                // 找到羊场， 赋值id
+                FactoryModel factoryModel = factoryService.getOneFactory(userRequest.getFactoryId());
+                factoryModel.setResponsiblePersonId((long)2);
+                Long success = factoryService.updateFactory(factoryModel);
+                if (success == null) {
+                    return Responses.errorResponse("error");
+                }
+            } else if (userRequest.getFlag() == 1) {
+                // 这个表示代理
+                // 首先查询代理等级
+                AgentModel agentModel = agentService.getOneAgent(userRequest.getFactoryId());
+                if (agentModel == null) {
+                    return Responses.errorResponse("error!");
+                }
+                switch (agentModel.getAgentRank()) {
+                    case 0:
+                        userModel.setUserRole(3);
+                        break;
+                    case 1:
+                        userModel.setUserRole(6);
+                        break;
+                    case 2:
+                        userModel.setUserRole(10);
+                        break;
+                    case 3:
+                        userModel.setUserRole(14);
+                        break;
+                    default:
+                        userModel.setUserRole(0);
+                }
+                AgentModel agentModel1 = agentService.getOneAgent(userRequest.getFactoryId());
+                agentModel1.setResponsibleId((long)2);
+                Long success = agentService.updateAgent(agentModel1);
+                if (success == null) {
+                    return Responses.errorResponse("error");
+                }
+            } else if (userRequest.getFlag() == 3) {
+                userModel.setIsFactory(which);
+            }
+
             userModel.setPkUserid(userRequest.getUsername());
             userModel.setUserPwd(userRequest.getPassword());
             userModel.setUserTelephone(userRequest.getTelephone());
