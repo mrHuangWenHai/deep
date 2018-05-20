@@ -26,7 +26,8 @@ public class Message implements Serializable {
 
 
 //    @NotBlank(message = "标签不可为空")
-    @Null
+//    @Null
+
     private String tag;
 
     @NotBlank(message = "态度不可为空")
