@@ -93,26 +93,44 @@ public class UserResource {
                 return response;
             }
         } else if (which == 1) {
-            // 这是代理
-            // 需要看到下面所有的用户
+            System.out.println("this is agent");
+            // 所有的子代理
             Map<Long, List<Integer>> agents = AgentUtil.getAllSubordinateAgent(id);
-            if (agents == null) {
-                return Responses.errorResponse("error request!");
-            }
+            // 所有的子羊场
+            Map<Long, List<Long> > factories = AgentUtil.getAllSubordinateFactory(id);
             List<UserModel> models = new ArrayList<>(userService.getAllUserOfFactoryOrAgent(uid, which, upage*usize, usize));
-            // direct people
-            List<Integer> directAgents = agents.get((long) -1);
-            if (directAgents != null) {
-                for (Integer directFactory : directAgents) {
-                    System.out.println("directFactory = " + directFactory);
-                    models.addAll(userService.getAllUserOfFactoryOrAgent(Long.parseLong(directFactory.toString()), which, upage*usize, usize));
+            if (agents != null && factories != null) {
+                // direct agent people
+                List<Integer> directAgents = agents.get((long) -1);
+                if (directAgents != null) {
+                    for (Integer directFactory : directAgents) {
+                        System.out.println("directFactory = " + directFactory);
+                        models.addAll(userService.getAllUserOfFactoryOrAgent(Long.parseLong(directFactory.toString()), which, upage*usize, usize));
+                    }
                 }
-            }
-            // un direct people
-            List<Integer> undirectAgents = agents.get((long) 0);
-            if (undirectAgents != null) {
-                for (Integer undirectFactory : undirectAgents) {
-                    models.addAll(userService.getAllUserOfFactoryOrAgent(Long.parseLong(undirectFactory.toString()), which, upage*usize, usize));
+
+                // direct factory people
+                List<Long> directFactories = factories.get((long)-1);
+                if (directFactories != null) {
+                    for (Long directFactory : directFactories) {
+                        models.addAll(userService.getAllUserOfFactoryOrAgent(Long.parseLong(directFactory.toString()), (byte)0, upage*usize, usize));
+                    }
+                }
+
+                // un direct agent people
+                List<Integer> undirectAgents = agents.get((long) 0);
+                if (undirectAgents != null) {
+                    for (Integer undirectFactory : undirectAgents) {
+                        models.addAll(userService.getAllUserOfFactoryOrAgent(Long.parseLong(undirectFactory.toString()), which, upage*usize, usize));
+                    }
+                }
+
+                // direct factory people
+                List<Long> undirectFactories = factories.get((long)-1);
+                if (directFactories != null) {
+                    for (Long undirectFactory : undirectFactories) {
+                        models.addAll(userService.getAllUserOfFactoryOrAgent(Long.parseLong(undirectFactory.toString()), (byte)0, upage*usize, usize));
+                    }
                 }
             }
             Response response = Responses.successResponse();

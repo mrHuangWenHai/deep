@@ -11,7 +11,7 @@ public final class RedisPool {
     //Redis的端口号
     private static Integer PORT = ServiceConfiguration.port;
     //访问密码
-    private static String AUTH = "";
+    private static String AUTH = "foobared";
 
     //可用连接实例的最大数目，默认为8；
     //如果赋值为-1，则表示不限制，如果pool已经分配了maxActive个jedis实例，则此时pool的状态为exhausted(耗尽)
@@ -46,7 +46,8 @@ public final class RedisPool {
             config.setMaxIdle(MAX_IDLE);
             config.setMaxWaitMillis(MAX_WAIT_MILLIS);
             config.setTestOnBorrow(TEST_ON_BORROW);
-            jedisPool = new JedisPool(config, ADDRESS, PORT, TIMEOUT, AUTH);
+//            jedisPool = new JedisPool(config, ADDRESS, PORT, TIMEOUT, AUTH);
+            jedisPool = new JedisPool(config, ADDRESS, PORT, TIMEOUT);
         } catch (Exception e) {
             e.printStackTrace();
         }
