@@ -20,6 +20,7 @@ import java.util.Map;
 @RequestMapping(value = "extend")
 public class ExtendTableResource {
     private final Logger logger = LoggerFactory.getLogger(ExtendTableResource.class);
+
     /**
      * 方法功能: 创建数据表
      * @param extendModel 拓展模块类型

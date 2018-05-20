@@ -11,7 +11,7 @@ public interface UserMapper {
 
     /**
      * 列出用户列表
-     * @return
+     * @return 用户列表
      */
     @Select("select * from user_manage where user_role >= #{roleID}")
     @Results({
@@ -87,8 +87,8 @@ public interface UserMapper {
 
     /**
      * 根据ID获取单个用户
-     * @param userId
-     * @return
+     * @param userId 用户ID
+     * @return 单个用户的信息
      */
     @Select("select * from user_manage where id = #{id}")
     @Results({
@@ -126,12 +126,11 @@ public interface UserMapper {
 
     /**
      * 查询某一个用户的角色
-     * @param agentID
-     * @param roleID
-     * @return
+     * @param agentID 羊场号或者代理号
+     * @param roleID 角色ID
+     * @return 用户角色信息
      */
     @Select("select id, pk_userid, user_telephone, user_role, user_email, qq, official_phone from user_manage where is_factory = 1 and user_factory = #{agentID} and user_role = #{roleID}")
-
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "pkUserid", column = "pk_userid"),
@@ -146,8 +145,8 @@ public interface UserMapper {
 
     /**
      * 查询上级代理专家的手机号
-     * @param agentID
-     * @return
+     * @param agentID 代理号
+     * @return 某一级别代理的手机号码
      */
     @Select("select user_telephone from user_manage where is_factory = 1 and user_factory = #{agentID} and user_role in (4, 8, 12, 16)")
     @Results({
@@ -157,8 +156,8 @@ public interface UserMapper {
 
     /**
      * 获取羊场监督者的所有信息
-     * @param agentID
-     * @return
+     * @param agentID 羊场ID或者代理ID
+     * @return 相关信息
      */
     @Select("select user_telephone from user_manage where is_factory = 0 and user_factory = #{agentID} and user_role = 20")
     @Results({
@@ -169,8 +168,8 @@ public interface UserMapper {
 
     /**
      * 根据用户名获取单个用户
-     * @param pkUserid
-     * @return
+     * @param pkUserid 用户名
+     * @return 用户信息
      */
     @Select("select * from user_manage where pk_userid = #{pkUserid}")
     @Results({
@@ -207,8 +206,8 @@ public interface UserMapper {
 
     /**
      * 根据用户名进行模糊查询获取单个用户的信息
-     * @param userRealname
-     * @return
+     * @param userRealname 用户真实姓名
+     * @return 相关信息
      */
     @Select("select * from user_manage where user_realname = #{userRealname}")
     @Results({
@@ -245,8 +244,8 @@ public interface UserMapper {
 
     /**
      * 插入一个用户
-     * @param userModel
-     * @return
+     * @param userModel 用户对象模型
+     * @return 是否插入成功的标志
      */
     @Insert("insert into user_manage(" +
             "gmt_create," +
@@ -309,8 +308,8 @@ public interface UserMapper {
 
     /**
      * 修改用户信息
-     * @param userModel
-     * @return
+     * @param userModel 用户对象模型
+     * @return 是否修改成功的标志
      */
     @Update("update user_manage set " +
             "gmt_create = #{gmtCreate}," +
@@ -345,25 +344,31 @@ public interface UserMapper {
 
     /**
      * 删除用户信息
-     * @param userID
-     * @return
+     * @param userID 用户的ID
+     * @return 是否成功的标志
      */
     @Delete("delete from user_manage where id = #{id}")
     Long deleteUser(Long userID);
 
     /**
+     * 根据羊场名称或者代理名称删除用户
+     */
+    @Delete("delete from user_manage where user_factory = #{factoryNumber} and is_factory = #{isFactory}")
+    void deleteUserByFactoryNumber(@Param("factoryNumber") Long factoryNumber, @Param("isFactory") Byte isFactory);
+
+    /**
      * 修改用户密码
-     * @param userPwd
-     * @param username
-     * @return
+     * @param userPwd 新密码
+     * @param username 用户名
+     * @return 是否修改
      */
     @Update("update user_manage set user_pwd = #{userPwd} where username = #{username}")
     Long updateUserPwd(String userPwd, String username);
 
     /**
      * 获取某一类专家
-     * @param roleID
-     * @return
+     * @param roleID 角色的ID
+     * @return 专家信息
      */
     @Select("select id, pk_userid, user_telephone, user_role, user_email, official_phone, qq from user_manage where user_role = #{roleID}")
     @Results({
@@ -392,7 +397,7 @@ public interface UserMapper {
 
     /**
      * 查找某一个羊场或者一个代理的所有用户
-     * @return
+     * @return 对象模型列表
      */
     @Select("select * from user_manage where user_factory = #{factory} and is_factory = #{which} limit #{page}, #{size}")
     @Results({
@@ -416,7 +421,7 @@ public interface UserMapper {
 
     /**
      * 查找某一个羊场或者一个代理的所有用户
-     * @return
+     * @return 返回总的记录条数
      */
     @Select("select count(*) from user_manage where user_factory = #{factory} and is_factory = #{which}")
     Long getCountsOfOneFactoryOrOneAgent(@Param("factory") Long factory, @Param("which") Byte which);
