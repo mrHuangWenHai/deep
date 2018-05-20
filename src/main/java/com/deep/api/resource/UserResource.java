@@ -126,7 +126,7 @@ public class UserResource {
                 }
 
                 // direct factory people
-                List<Long> undirectFactories = factories.get((long)-1);
+                List<Long> undirectFactories = factories.get((long)0);
                 if (directFactories != null) {
                     for (Long undirectFactory : undirectFactories) {
                         models.addAll(userService.getAllUserOfFactoryOrAgent(Long.parseLong(undirectFactory.toString()), (byte)0, upage*usize, usize));
