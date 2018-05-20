@@ -155,9 +155,9 @@ public interface AgentMapper {
 
     /**
      * 删除一个代理
-     * @param permitID
-     * @return
+     * @param id 代理主键
+     * @return 删除成功标记
      */
     @Delete("delete from agent_factory where id = #{id}")
-    Long deleteAgent(Long permitID);
+    Long deleteAgent(Long id);
 }

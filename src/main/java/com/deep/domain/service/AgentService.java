@@ -129,8 +129,8 @@ public class AgentService {
 
     /**
      * 删除一个代理
-     * @param id
-     * @return
+     * @param id 代理的主键
+     * @return 删除成功的标记
      */
     public Long deleteAgent(Long id) {
         AgentModel agentModel = agentMapper.queryAgentByID(id);
@@ -141,7 +141,9 @@ public class AgentService {
         for (AgentModel list : lists) {
             agentMapper.updateAgentFather(Long.valueOf(father), (long) list.getId());
         }
-
+        // 删除此代理下面的所有用户
+        userService.deleteUserByFactoryNumber(id, (byte)1);
+        // 返回相关信息
         return agentMapper.deleteAgent(id);
     }
 

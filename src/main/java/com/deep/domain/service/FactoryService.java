@@ -125,6 +125,8 @@ public class FactoryService {
      * @return
      */
     public Long deleteFactory(Long id) {
+        // 删除此羊场下面的所有用户
+        userService.deleteUserByFactoryNumber(id, (byte)0);
         return factoryMapper.deleteFactory(id);
     }
 

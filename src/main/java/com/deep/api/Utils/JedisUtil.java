@@ -4,12 +4,13 @@ import com.deep.domain.service.ServiceConfiguration;
 import redis.clients.jedis.Jedis;
 
 public class JedisUtil {
-    public static Jedis jedis = new Jedis(ServiceConfiguration.redisServer, ServiceConfiguration.port);
-
     public static int seconds = 3600;
 
     public static String getValue(String key) {
-
+        Jedis jedis = RedisPool.getJedis();
+        if (jedis == null) {
+            return null;
+        }
         try {
           if (!jedis.exists(key)) {
             return null;
@@ -23,27 +24,38 @@ public class JedisUtil {
     }
 
     public static void setValue(String key, String value) {
-         jedis.setex(key, seconds, value);
-      //  jedis.set(key,value);
+        Jedis jedis = RedisPool.getJedis();
+        if (jedis != null) {
+            try {
+                jedis.setex(key, seconds, value);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void doExpire(String key) {
         System.out.println("doExpire ==================================== "+key+"         seconds    ===" +seconds);
-        try {
-          jedis.expire(key,seconds);
-        } catch (Exception e) {
-          System.out.println(e);
+        Jedis jedis = RedisPool.getJedis();
+        if (jedis != null) {
+            try {
+                jedis.expire(key,seconds);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
     }
 
     public static boolean doDelete(String key) {
-        try {
-            jedis.del(key);
-            System.out.println("Yes, it is");
-        } catch (Exception e) {
-            System.out.println("Something must be wrong!");
-            return false;
+        Jedis jedis = RedisPool.getJedis();
+        if (jedis != null) {
+            try {
+                jedis.del(key);
+                System.out.println("Yes, it is");
+            } catch (Exception e) {
+                System.out.println("Something must be wrong!");
+                return false;
+            }
         }
         return true;
     }

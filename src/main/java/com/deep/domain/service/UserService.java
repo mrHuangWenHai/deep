@@ -474,4 +474,13 @@ public class UserService {
             return (long)1;
         }
     }
+
+    /**
+     * 根据羊场编号或者代理编号删除该羊场或者代理下面的全部信息
+     * @param factoryNumber 羊场编号
+     * @param isFactory 羊场或者代理标记
+     */
+    public void deleteUserByFactoryNumber(Long factoryNumber, Byte isFactory) {
+        userMapper.deleteUserByFactoryNumber(factoryNumber, isFactory);
+    }
 }

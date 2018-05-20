@@ -54,7 +54,7 @@ public class NutritionResource {
     @Permit(authorities = "increase_phase_nutritional_profile")
     @PostMapping(value = "")
     public Response addPlan(@RequestBody @Valid NutritionPlanModel planModel, BindingResult bindingResult) throws ParseException {
-        logger.info("invoke addPlan {}, url is nutrition", planModel);
+        logger.info("invoke addPlan {}, url is nutrition", planModel.toString());
         if (bindingResult.hasErrors()) {
             return Responses.errorResponse("营养实施档案录入失败");
         }else {

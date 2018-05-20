@@ -114,7 +114,7 @@ public class LoginResource {
               System.out.println("login=================================="+tokenModel);
 
               JedisUtil.setValue(String.valueOf(userModel.getId()), tokenModel.getToken());
-          //    JedisUtil.doExpire(String.valueOf(userModel.getId()));
+                //    JedisUtil.doExpire(String.valueOf(userModel.getId()));
               JedisUtil.setValue("defaultPermit" + userModel.getId(), defaultPermit);
 
           //    JedisUtil.doExpire("defaultPermit" + userModel.getId());

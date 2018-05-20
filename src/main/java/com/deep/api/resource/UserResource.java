@@ -80,7 +80,7 @@ public class UserResource {
         if (uid < 0 || upage < 0 || usize < 0) {
             return Responses.errorResponse("错误");
         }
-        if (which == 0 || which == 1 || which == 2) {
+        if (which == 0 || which == 2) {
             List<UserModel> userLists = userService.getAllUserOfFactoryOrAgent(uid, which, upage, usize);
             if (userLists == null) {
                 return Responses.errorResponse("error");
@@ -92,6 +92,35 @@ public class UserResource {
                 response.setData(data);
                 return response;
             }
+        } else if (which == 1) {
+            // 这是代理
+            // 需要看到下面所有的用户
+            Map<Long, List<Integer>> agents = AgentUtil.getAllSubordinateAgent(id);
+            if (agents == null) {
+                return Responses.errorResponse("error request!");
+            }
+            List<UserModel> models = new ArrayList<>(userService.getAllUserOfFactoryOrAgent(uid, which, upage*usize, usize));
+            // direct people
+            List<Integer> directAgents = agents.get((long) -1);
+            if (directAgents != null) {
+                for (Integer directFactory : directAgents) {
+                    System.out.println("directFactory = " + directFactory);
+                    models.addAll(userService.getAllUserOfFactoryOrAgent(Long.parseLong(directFactory.toString()), which, upage*usize, usize));
+                }
+            }
+            // un direct people
+            List<Integer> undirectAgents = agents.get((long) 0);
+            if (undirectAgents != null) {
+                for (Integer undirectFactory : undirectAgents) {
+                    models.addAll(userService.getAllUserOfFactoryOrAgent(Long.parseLong(undirectFactory.toString()), which, upage*usize, usize));
+                }
+            }
+            Response response = Responses.successResponse();
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("List", models);
+            data.put("size", models.size());
+            response.setData(data);
+            return response;
         } else {
             return Responses.errorResponse("error");
         }
@@ -131,7 +160,7 @@ public class UserResource {
         logger.info("invoke getUserOneDetail{}, url is user/detail/{}", id);
         System.out.println("1111111111110000000000001111111111111111111111");
         long uid = StringToLongUtil.stringToLong(id);
-      System.out.println("11111111111111122222222222222222222222222222222");
+        System.out.println("11111111111111122222222222222222222222222222222");
         if (uid < 0) {
             return Responses.errorResponse("错误");
         }
