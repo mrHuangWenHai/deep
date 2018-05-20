@@ -17,7 +17,7 @@ public class MessageService {
     private MessageMapper messageMapper;
 
     public int insertMessage(Message message) {
-        int flag = messageMapper.insert(message);
+        int flag = messageMapper.insertSelective(message);
         return flag;
     }
 
