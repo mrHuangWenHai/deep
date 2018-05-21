@@ -57,13 +57,16 @@ public final class RedisPool {
      * 获取Jedis实例
      * @return jedis实例操作
      */
-    public synchronized static Jedis getJedis(){
+    public synchronized static Jedis getJedis() {
+
         try {
-            if(jedisPool != null){
+
+            if(jedisPool != null) {
                 return jedisPool.getResource();
-            }else{
+            } else {
                 return null;
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             return null;

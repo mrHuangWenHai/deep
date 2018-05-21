@@ -33,8 +33,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
      */
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        System.out.println("222222222222222222222222222222222222222");
-        logger.info("invoke preHandle of AuthorizationInterceptor");
+        logger.info("invoke preHandle of AuthorizationInterceptor ruquestURI = {}",request.getRequestURI());
         if (request.getRequestURI().equals("/login") || request.getRequestURI().equals("/register") ||
                 request.getRequestURI().equals("/allfunction") ||request.getRequestURI().equals("/loginresult")||
                 request.getRequestURI().equals("/userAdd") ||request.getRequestURI().equals("/ensurequestion")||
@@ -50,7 +49,6 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         if (! (handler instanceof HandlerMethod)) {
             return true;
         }
-
         // 从header中获取token
         String authorization = request.getHeader(Constants.AUTHORIZATION);
         System.out.println(authorization);
