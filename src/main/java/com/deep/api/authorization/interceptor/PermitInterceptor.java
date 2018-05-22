@@ -38,124 +38,150 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
         permitMap.put(4, "modify_breeding_seed_file");
         permitMap.put(5, "supervise_auditing_breeding_child_files");
         permitMap.put(6, "experts_review_mating_and_childbirth_files");
+
         permitMap.put(7, "increase_disease_prevention_files");
         permitMap.put(8, "delete_disease_prevention_files");
         permitMap.put(9, "check_disease_prevention_files");
         permitMap.put(10, "modify_disease_prevention_files");
         permitMap.put(11, "supervise_and_verify_disease_prevention_files");
         permitMap.put(12, "experts_review_disease_prevention_files");
+
         permitMap.put(13, "increase_sanitation_files");
         permitMap.put(14, "delete_sanitation_files");
         permitMap.put(15, "view_sanitation_files");
         permitMap.put(16, "modify_sanitation_files");
         permitMap.put(17, "surveillance_audit_sanitation_files");
         permitMap.put(18, "experts_review_sanitation_files");
+
         permitMap.put(19, "increase_the_immunization_implementation_file");
         permitMap.put(20, "delete_the_immunization_implementation_file");
         permitMap.put(21, "query_the_immunization_implementation_file");
         permitMap.put(22, "modify_the_immunization_implementation_file");
         permitMap.put(23, "surveillance_audit_of_immunization_implementation_files");
         permitMap.put(24, "experts_review_immune_implementation_files");
+
         permitMap.put(25, "increase_phase_nutritional_profile");
         permitMap.put(26, "delete_stage_nutrition_file");
         permitMap.put(27, "inquiry_phase_nutrition_file");
         permitMap.put(28, "modification_phase_nutrition_file");
         permitMap.put(29, "supervision_review_phase_nutrition_answer");
         permitMap.put(30, "expert_review_nutrition_file");
+
         permitMap.put(31, "increase_health_and_animal_welfare");
         permitMap.put(32, "remove_health_and_animal_welfare");
         permitMap.put(33, "inquiries_on_hygiene_and_animal_welfare");
         permitMap.put(34, "modify_health_and_animal_welfare");
         permitMap.put(35, "supervise_and_audit_health_and_animal_welfare");
         permitMap.put(36, "experts_review_health_and_animal_welfare");
-        permitMap.put(37, "increase_plan");
-        permitMap.put(38, "delete_the_plan");
-        permitMap.put(39, "query_plan");
-        permitMap.put(40, "amendment");
-        permitMap.put(41, "add_agent");
-        permitMap.put(42, "deleting_an_agent");
-        permitMap.put(43, "query_agent");
-        permitMap.put(44, "modify_the_proxy");
-        permitMap.put(45, "increase_customer");
-        permitMap.put(46, "delete_customer");
-        permitMap.put(47, "customer_inquiry");
-        permitMap.put(48, "modify_customer");
-        permitMap.put(49, "increase_expert_evaluation");
-        permitMap.put(50, "delete_expert_evaluation");
-        permitMap.put(51, "query_expert_evaluation");
-        permitMap.put(52, "modify_expert_evaluation");
-        permitMap.put(53, "view_overall_rating");
-        permitMap.put(54, "front_view_organic_environment");
-        permitMap.put(55, "rear_view_organic_environment");
-        permitMap.put(56, "send_messages");
-        permitMap.put(57, "add_live");
-        permitMap.put(58, "delete_live");
-        permitMap.put(59, "view_live");
-        permitMap.put(60, "ban_live");
-        permitMap.put(61, "add_community_activities");
-        permitMap.put(62, "delete_community_activity");
-        permitMap.put(63, "check_community_activities");
-        permitMap.put(64, "modify_community_activities");
-        permitMap.put(65, "add_release");
-        permitMap.put(66, "delete_release");
-        permitMap.put(67, "query_publishing");
-        permitMap.put(68, "modify_release");
-        permitMap.put(69, "add_pedigree_files");
-        permitMap.put(70, "delete_pedigree_files");
-        permitMap.put(71, "query_pedigree_files");
-        permitMap.put(72, "modify_pedigree_files");
-        permitMap.put(73, "add_video");
-        permitMap.put(74, "delete_video");
-        permitMap.put(75, "see_video");
-        permitMap.put(76, "edit_video");
-        permitMap.put(77, "add_pictures");
-        permitMap.put(78, "delete_picture");
-        permitMap.put(79, "view_image");
-        permitMap.put(80, "edit_picture");
-        permitMap.put(81, "add_expansion_module");
-        permitMap.put(82, "delete_extension_module");
-        permitMap.put(83, "modify_the_extension_module");
-        permitMap.put(84, "query_expansion_module");
-        permitMap.put(85, "add_extension_module_information");
-        permitMap.put(86, "delete_extension_module_information");
-        permitMap.put(87, "modify_the_extension_module_information");
-        permitMap.put(88, "query_expansion_module_information");
-        permitMap.put(89, "add_user");
-        permitMap.put(90, "delete_users");
-        permitMap.put(91, "query_user");
-        permitMap.put(92, "modify_user");
-        permitMap.put(93, "add_expert");
-        permitMap.put(94, "delete_expert");
-        permitMap.put(95, "query_expert");
-        permitMap.put(96, "modify_expert");
-        permitMap.put(97, "add_technician");
-        permitMap.put(98, "remove_technician");
-        permitMap.put(99, "query_technician");
-        permitMap.put(100, "modify_technician");
-        permitMap.put(101, "add_an_administrator");
-        permitMap.put(102, "remove_administrator");
-        permitMap.put(103, "query_administrator");
-        permitMap.put(104, "modify_administrator");
-        permitMap.put(105, "add_role");
-        permitMap.put(106, "remove_role");
-        permitMap.put(107, "query_role");
-        permitMap.put(108, "modify_role");
-        permitMap.put(109, "query_permit");
-        permitMap.put(110, "download_database");
-        permitMap.put(111, "send_messages");
-        permitMap.put(112, "edit_messages");
-        permitMap.put(113, "add_sheep_type");
-        permitMap.put(114, "delete_sheep_type");
-        permitMap.put(115, "select_sheep_type");
-        permitMap.put(116, "modify_sheep_type");
-        permitMap.put(117, " download_product_file_action");
-        permitMap.put(118, " check_message_of_all_user");
-        permitMap.put(119, " increase_pest_repellent_implementation_control_files");
-        permitMap.put(120, " deworming_implementation_control_files");
-        permitMap.put(121, " check_insecticide_implementation_control_files");
-        permitMap.put(122, " modify_the_insect_repellent_implementation_control_file");
-        permitMap.put(123, " supervise_and_verify_the_implementation_of_pest_control_files");
-        permitMap.put(124, " experts_review_deworming_implementation_control_files");
+
+        permitMap.put(37, "increase_pest_repellent_implementation_control_files");
+        permitMap.put(38, "deworming_implementation_control_files");
+        permitMap.put(39, "check_insecticide_implementation_control_files");
+        permitMap.put(40, "modify_the_insect_repellent_implementation_control_file");
+        permitMap.put(41, "supervise_and_verify_the_implementation_of_pest_control_files");
+        permitMap.put(42, "experts_review_deworming_implementation_control_files");
+
+        permitMap.put(43, "increase_expert_evaluation");
+        permitMap.put(44, "delete_expert_evaluation");
+        permitMap.put(45, "query_expert_evaluation");
+        permitMap.put(46, "modify_expert_evaluation");
+        permitMap.put(47, "view_overall_rating");
+
+        permitMap.put(48, "increase_plan");
+        permitMap.put(49, "delete_the_plan");
+        permitMap.put(50, "query_plan");
+        permitMap.put(51, "amendment");
+
+        permitMap.put(52, "add_agent");
+        permitMap.put(53, "deleting_an_agent");
+        permitMap.put(54, "query_agent");
+        permitMap.put(55, "modify_the_proxy");
+
+        permitMap.put(56, "increase_customer");
+        permitMap.put(57, "delete_customer");
+        permitMap.put(58, "customer_inquiry");
+        permitMap.put(59, "modify_customer");
+
+        permitMap.put(60, "add_live");
+        permitMap.put(61, "delete_live");
+        permitMap.put(62, "view_live");
+        permitMap.put(63, "ban_live");
+
+        permitMap.put(64, "add_release");
+        permitMap.put(65, "delete_release");
+        permitMap.put(66, "query_publishing");
+        permitMap.put(67, "modify_release");
+
+        permitMap.put(68, "add_pedigree_files");
+        permitMap.put(69, "delete_pedigree_files");
+        permitMap.put(70, "query_pedigree_files");
+        permitMap.put(71, "modify_pedigree_files");
+
+        permitMap.put(72, "add_video");
+        permitMap.put(73, "delete_video");
+        permitMap.put(74, "see_video");
+        permitMap.put(75, "edit_video");
+
+        permitMap.put(76, "add_video");
+        permitMap.put(77, "delete_video");
+        permitMap.put(78, "see_video");
+        permitMap.put(79, "edit_video");
+
+        permitMap.put(80, "add_user");
+        permitMap.put(81, "delete_users");
+        permitMap.put(82, "query_user");
+        permitMap.put(83, "modify_user");
+
+        permitMap.put(84, "add_expert");
+        permitMap.put(85, "delete_expert");
+        permitMap.put(86, "query_expert");
+        permitMap.put(87, "modify_expert");
+
+        permitMap.put(88, "add_technician");
+        permitMap.put(89, "remove_technician");
+        permitMap.put(90, "query_technician");
+        permitMap.put(91, "modify_technician");
+
+        permitMap.put(92, "add_an_administrator");
+        permitMap.put(93, "remove_administrator");
+        permitMap.put(94, "query_administrator");
+        permitMap.put(95, "modify_administrator");
+
+        permitMap.put(96, "add_role");
+        permitMap.put(97, "remove_role");
+        permitMap.put(98, "query_role");
+        permitMap.put(99, "modify_role");
+
+        permitMap.put(100, "send_messages");
+        permitMap.put(101, "edit_messages");
+
+        permitMap.put(102, "download_database");
+
+        permitMap.put(103, "add_sheep_type");
+        permitMap.put(104, "delete_sheep_type");
+        permitMap.put(105, "select_sheep_type");
+        permitMap.put(106, "modify_sheep_type");
+
+        permitMap.put(107, "download_product_file_action");
+
+        permitMap.put(108, "check_message_of_all_user");
+
+//        permitMap.put(109, "query_permit");
+//        permitMap.put(110, "download_database");
+//        permitMap.put(111, "send_messages");
+//        permitMap.put(112, "edit_messages");
+//        permitMap.put(113, "add_sheep_type");
+//        permitMap.put(114, "delete_sheep_type");
+//        permitMap.put(115, "select_sheep_type");
+//        permitMap.put(116, "modify_sheep_type");
+//        permitMap.put(117, " download_product_file_action");
+//        permitMap.put(118, " check_message_of_all_user");
+//        permitMap.put(119, " increase_pest_repellent_implementation_control_files");
+//        permitMap.put(120, " deworming_implementation_control_files");
+//        permitMap.put(121, " check_insecticide_implementation_control_files");
+//        permitMap.put(122, " modify_the_insect_repellent_implementation_control_file");
+//        permitMap.put(123, " supervise_and_verify_the_implementation_of_pest_control_files");
+//        permitMap.put(124, " experts_review_deworming_implementation_control_files");
 
     }
 

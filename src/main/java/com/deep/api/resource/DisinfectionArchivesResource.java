@@ -2,16 +2,13 @@ package com.deep.api.resource;
 
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
-import com.deep.domain.model.DisinfectionArchives;
 import com.deep.domain.service.DisinfectionArchivesService;
-import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import com.deep.api.request.DisinfectionArchivesRequest;
 

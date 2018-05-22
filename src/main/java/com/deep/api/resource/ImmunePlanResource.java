@@ -264,7 +264,7 @@ public class ImmunePlanResource {
     @Permit(authorities = "query_the_immunization_implementation_file")
     @RequestMapping(value = "/find/{id}",method = RequestMethod.GET)
     public Response find(@PathVariable("id") long id) {
-        logger.info(" invoke find{id} {}" , id);
+        logger.info("invoke find{id} {}" , id);
         ImmunePlanModel immunePlanModel = this.immunePlanService.getImmunePlanModelById(id);
         return JudgeUtil.JudgeFind(immunePlanModel);
     }

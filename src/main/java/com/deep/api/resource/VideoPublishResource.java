@@ -1,5 +1,6 @@
 package com.deep.api.resource;
 
+import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.request.VideoPublishRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
@@ -34,6 +35,7 @@ public class VideoPublishResource {
   @Resource
   private VideoPublishService videoPublishService;
 
+  @Permit(authorities = "add_video")
   @PostMapping(value = "/upload")
   public Response uploadVideo(@Valid VideoPublish videoPublish,
                               @RequestParam("file")MultipartFile file) {
@@ -124,6 +126,7 @@ public class VideoPublishResource {
     return response;
   }
 
+  @Permit(authorities = "delete_video")
   @DeleteMapping("/{id}")
   public Response deleteVideoFile(@PathVariable(value = "id") int id) {
     int isSuccess = videoPublishService.deleteVideoFile(id);
