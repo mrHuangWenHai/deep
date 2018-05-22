@@ -24,6 +24,7 @@
         <result property="exerciseDaylighting" column="exercise_daylighting" />
         <result property="carDisinfect" column="car_disinfect" />
         <result property="operatorId" column="operator_id" />
+        <result property="operatorName" column="operator_name"/>
         <result property="ispassCheck" column="ispass_check" />
         <result property="ispassSup" column="ispass_sup"/>
         <result property="factoryName" column="factory_name"/>
@@ -95,6 +96,7 @@
         exercise_daylighting,
         car_disinfect,
         operator_id,
+        operator_name,
         ispass_check,
         ispass_sup,
         gmt_create,
@@ -119,6 +121,7 @@
         #{operationFile.exerciseDaylighting},
         #{operationFile.carDisinfect},
         #{operationFile.operatorId},
+        #{operationFile.operatorName},
         2,
         2,
         now(),
@@ -205,6 +208,10 @@
 
             <if test="operationFile.exerciseDaylighting != null">
                 exercise_daylighting = #{operationFile.exerciseDaylighting},
+            </if>
+
+            <if test="operationFile.operatorName != null">
+                operator_name = #{operationFile.operatorName},
             </if>
 
             <if test="operationFile.carDisinfect != null">
