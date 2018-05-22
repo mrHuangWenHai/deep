@@ -24,9 +24,6 @@ public class Message implements Serializable {
 
     private Date inserttime;
 
-
-//    @NotBlank(message = "标签不可为空")
-    @Null
     private String tag;
 
     @NotBlank(message = "态度不可为空")
