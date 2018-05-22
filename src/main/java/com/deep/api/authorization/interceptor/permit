@@ -61,7 +61,7 @@ front       realId      权限
 6-1          50          删除专家评价_____________delete_expert_evaluation
 6-2          51          查询专家评价_____________query_expert_evaluation
 6-3          52          修改专家评价_____________modify_expert_evaluation
-6-4          53          查看总评分(专家)_________view_overall_rating_
+6-4          53          查看总评分(专家)_________view_overall_rating
 
             54          @前端查看有机环境_________front_view_organic_environment
             55          @后端查看有机环境_________rear_view_organic_environment
