@@ -50,7 +50,7 @@ public class PicResource {
             }
             else if(Header.equals(FileTypeEnum.AVI.value) || Header.equals(FileTypeEnum.RM.value)  ||
                     Header.equals(FileTypeEnum.MOV.value) || Header.equals(FileTypeEnum.ASF.value) ||
-                    Header.equals(FileTypeEnum.MP4.value)){
+                    Header.equals(FileTypeEnum.MP4.value) || Header.equals(FileTypeEnum.MP4_1.value)){
                     pic.setFiletype(1);
             }
             else{
