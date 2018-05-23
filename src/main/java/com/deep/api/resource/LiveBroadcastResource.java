@@ -1,5 +1,6 @@
 package com.deep.api.resource;
 
+import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.request.LiveStatRequest;
 import com.deep.api.response.Responses;
 import com.deep.infra.service.liveBroadcast.LiveBroadcastResp;
@@ -8,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
-import org.springframework.validation.annotation.Validated;
 import com.deep.api.response.Response;
 import java.util.Map;
 import java.util.HashMap;
@@ -32,6 +32,7 @@ public class LiveBroadcastResource {
    * @param userid
    * @return response
    */
+  @Permit(authorities = "add_live")
   @RequestMapping(value = "/getPushUrl/{id}", method = RequestMethod.GET)
   public Response getLiveBroadCastPushUrl(@PathVariable("id") String userid) {
 

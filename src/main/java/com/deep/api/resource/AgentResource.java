@@ -361,11 +361,9 @@ public class AgentResource {
         } else {
             List<AgentModel> agents = agentService.getAncestors(agentID);
             if (agents != null) {
-                Response response = Responses.successResponse();
-                Map<String, Object> data = new HashMap<>();
+                HashMap<String, Object> data = new HashMap<>();
                 data.put("ancestors", agents);
-                response.setData(data);
-                return response;
+                return Responses.successResponse(data);
             }
             return Responses.errorResponse("error");
         }

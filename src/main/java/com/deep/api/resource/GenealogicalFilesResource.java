@@ -13,7 +13,6 @@ import com.deep.domain.model.TypeBriefModel;
 import com.deep.domain.service.GenealogicalFilesService;
 import com.deep.domain.service.TypeBriefService;
 import com.deep.domain.util.JudgeUtil;
-import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
@@ -161,8 +160,11 @@ public class GenealogicalFilesResource {
       } else if (role == 1) {
         factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
         List<Long> factoryList = new ArrayList<>();
-        factoryList.addAll(factoryMap.get(new Long(-1)));
-        factoryList.addAll(factoryMap.get(new Long(0)));
+        if (factoryMap == null) {
+            return Responses.errorResponse("错误！");
+        }
+        factoryList.addAll(factoryMap.get((long) -1));
+        factoryList.addAll(factoryMap.get(0L));
         genealogicalRequest.setFactoryList(factoryList);
       } else {
         return Responses.errorResponse("你没有权限");
@@ -185,7 +187,7 @@ public class GenealogicalFilesResource {
         List<GenealogicalFilesModel> factorylist = new ArrayList<>();
         List<GenealogicalFilesModel> direct = new ArrayList<>();
         List<GenealogicalFilesModel> others = new ArrayList<>();
-        List<Long> directId = factoryMap.get(new Long(-1));
+        List<Long> directId = factoryMap.get((long) -1);
         for (GenealogicalFilesModel genealogicalFilesModel : genealogicalFilesModels) {
           if (directId.contains(genealogicalFilesModel.getFactoryNum())) {
             direct.add(genealogicalFilesModel);

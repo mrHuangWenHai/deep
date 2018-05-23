@@ -47,9 +47,9 @@ public class PermitResource {
 
     /**
      * 添加一个权限
-     * @param permitModel
-     * @param bindingResult
-     * @return
+     * @param permitModel 权限模型
+     * @param bindingResult 相关信息
+     * @return response信息
      */
     @Permit(authorities = "")
     @PostMapping(value = "/")

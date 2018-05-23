@@ -8,9 +8,7 @@ import com.deep.api.request.DiagnosisRequest;
 import com.deep.domain.model.DiagnosisPlanModel;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
-import com.deep.domain.model.GenealogicalFilesModel;
 import com.deep.domain.service.DiagnosisPlanService;
-import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
@@ -72,8 +70,8 @@ public class DiagnosisResource {
 
     /**
      * 按照主键删除的接口
-     * @param id
-     * @return
+     * @param id 记录主键
+     * @return response响应
      */
     @Permit(authorities = "delete_disease_prevention_files")
     @DeleteMapping(value = "/{id}")
@@ -85,18 +83,17 @@ public class DiagnosisResource {
         if (isSuccess == 0) {
             return Responses.errorResponse("删除失败");
         }
-        Response response = Responses.successResponse();
-        return response;
+        return Responses.successResponse();
     }
 
     /**
      * 操作员使用按主键修改的接口：/{id}
      * 操作员使用按主键修改的方法名：changePlanByOperator()
      * 操作员使用接收参数：整个表单信息（整型id必填，各参数选填）
-     * @param diagnosisPlanModel
-     * @param bindingResult
-     * @return
-     * @throws ParseException
+     * @param diagnosisPlanModel 修改对象模型
+     * @param bindingResult 错误信息
+     * @return response 响应
+     * @throws ParseException 异常exception
      */
     @Permit(authorities = "increase_disease_prevention_files")
     @PatchMapping(value = "/{id}")
@@ -151,8 +148,7 @@ public class DiagnosisResource {
         if (isSuccess == 0) {
             return Responses.errorResponse("错误");
         }
-        Response response = Responses.successResponse();
-        return response;
+        return Responses.successResponse();
 
 
     }
@@ -182,8 +178,7 @@ public class DiagnosisResource {
         if (isSuccess == 0) {
             return Responses.errorResponse("监督失败");
         }
-        Response response = Responses.successResponse();
-        return response;
+        return Responses.successResponse();
     }
 
     /**
@@ -216,7 +211,7 @@ public class DiagnosisResource {
     /**
      * 按条件查询接口：/
      * 按条件查询方法名：findPlanSelective()
-     * @param diagnosisRequest
+     * @param diagnosisRequest 按条件查询对象模型
      * @return Response
      */
     @Permit(authorities = "check_disease_prevention_files")

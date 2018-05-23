@@ -1,5 +1,6 @@
 package com.deep.api.resource;
 
+import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.constant.FileTypeEnum;
@@ -33,6 +34,7 @@ public class PicResource {
 
     private final String filePath = "./pic/";
 
+    @Permit(authorities = {"add_video"})
     @RequestMapping(value = "/uploadFile/upload",method = RequestMethod.POST)
     public @ResponseBody Response addPic(Pic pic,
                            @RequestParam("file")MultipartFile file) {
@@ -97,14 +99,12 @@ public class PicResource {
                 response.setData(data);
                 return response;
             } else {
-                Response response = Responses.errorResponse("数据插入失败");
-                return response;
+                return Responses.errorResponse("数据插入失败");
             }
         } catch (Exception e) {
 
             System.out.println(e.getMessage());
-            Response response = Responses.errorResponse(e.getMessage());
-            return response;
+            return Responses.errorResponse(e.getMessage());
         }
     }
 
@@ -133,12 +133,10 @@ public class PicResource {
     public @ResponseBody Response getByExpert(@RequestBody Pic pic) {
         logger.info("invoke /searchfile/searchByExpert {}",pic);
         if (pic.getExpert().isEmpty()) {
-            Response response = Responses.errorResponse("查询条件不能为空！");
-            return response;
+            return Responses.errorResponse("查询条件不能为空！");
         }
         if (pic.getExpert() == null) {
-          Response response = Responses.errorResponse("查询条件不能为空！");
-            return response;
+            return Responses.errorResponse("查询条件不能为空！");
         }
 
         PicExample picExample = new PicExample();
@@ -166,8 +164,7 @@ public class PicResource {
     public @ResponseBody Response getByDate(@RequestBody Pic pic) {
         logger.info("invoke /searchfile/searchByDate [{},{}]",pic.getSdate(),pic.getEdate());
         if (pic.getSdate() == null || pic.getEdate() == null) {
-            Response response = Responses.errorResponse("查询条件不能为空！");
-            return response;
+            return Responses.errorResponse("查询条件不能为空！");
         }
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
@@ -193,8 +190,7 @@ public class PicResource {
         logger.info("invoke /searchfile/searchByBrand {}",pic.getBrand());
         if (pic.getBrand().isEmpty())
         {
-            Response response = Responses.errorResponse("查询条件不能为空！");
-            return response;
+            return Responses.errorResponse("查询条件不能为空！");
         }
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
@@ -220,8 +216,7 @@ public class PicResource {
         logger.info("invoke /searchfile/searchByVaccine {}",pic.getVaccine());
         if (pic.getVaccine().isEmpty())
         {
-            Response response = Responses.errorResponse("查询条件不能为空！");
-            return response;
+            return Responses.errorResponse("查询条件不能为空！");
         }
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
@@ -247,8 +242,7 @@ public class PicResource {
 
         logger.info("invoke /searchfile/searchBySymptom {}",pic.getSymptom());
         if (pic.getSymptom().isEmpty()) {
-            Response response = Responses.errorResponse("查询条件不能为空！");
-            return response;
+            return Responses.errorResponse("查询条件不能为空！");
         }
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
@@ -273,8 +267,7 @@ public class PicResource {
     public @ResponseBody Response getByUploader(@RequestBody Pic pic){
         logger.info("invoke /searchfile/searchByUploader {}",pic.getUploader());
         if (pic.getUploader().isEmpty()) {
-            Response response = Responses.errorResponse("查询条件不能为空！");
-            return response;
+            return Responses.errorResponse("查询条件不能为空！");
         }
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();

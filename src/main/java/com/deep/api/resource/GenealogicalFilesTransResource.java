@@ -15,7 +15,7 @@ public class GenealogicalFilesTransResource {
     //追溯系统 通过商标耳牌追溯
     /**
      * METHOD:GET
-     * @return
+     * @return 相关信息
      */
     @RequestMapping(value = "/function",method = RequestMethod.POST)
     public String GenealogicalFilesFunctionChoice(){

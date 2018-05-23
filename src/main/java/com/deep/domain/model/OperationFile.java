@@ -45,6 +45,8 @@ public class OperationFile {
   private Integer carDisinfect;
   @Min(0)
   private int operatorId;
+  @NotBlank
+  private String operatorName;
   @Min(0)
   private int factoryNum;
   @NotNull
@@ -230,13 +232,21 @@ public class OperationFile {
     this.ispassSup = ispassSup;
   }
 
+  public String getOperatorName() {
+    return operatorName;
+  }
+
+  public void setOperatorName(String operatorName) {
+    this.operatorName = operatorName;
+  }
+
   @Override
   public String toString() {
     return "OperationFile{" +
         "id=" + id +
-        ", gmtCreate=" + gmtCreate +
-        ", gmtModified=" + gmtModified +
-        ", checkTime=" + checkTime +
+        ", gmtCreate='" + gmtCreate + '\'' +
+        ", gmtModified='" + gmtModified + '\'' +
+        ", checkTime='" + checkTime + '\'' +
         ", colonyHouse=" + colonyHouse +
         ", warehouseWorkshop=" + warehouseWorkshop +
         ", killWormDeratization=" + killWormDeratization +
@@ -251,6 +261,7 @@ public class OperationFile {
         ", exerciseDaylighting=" + exerciseDaylighting +
         ", carDisinfect=" + carDisinfect +
         ", operatorId=" + operatorId +
+        ", operatorName='" + operatorName + '\'' +
         ", factoryNum=" + factoryNum +
         ", factoryName='" + factoryName + '\'' +
         ", ispassCheck=" + ispassCheck +

@@ -125,7 +125,7 @@ public class UserResource {
                     }
                 }
 
-                // direct factory people
+                // undirect factory people
                 List<Long> undirectFactories = factories.get((long)0);
                 if (directFactories != null) {
                     for (Long undirectFactory : undirectFactories) {

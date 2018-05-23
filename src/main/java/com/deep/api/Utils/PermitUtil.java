@@ -33,49 +33,64 @@ public class PermitUtil {
                     defaultPermit[Integer.valueOf(temp[1]) + 30] = '1';
                     break;
                 case "6":
-                    defaultPermit[Integer.valueOf(temp[1]) + 48] = '1';
-                    break;
-                case "7":
                     defaultPermit[Integer.valueOf(temp[1]) + 36] = '1';
                     break;
+                case "7":
+                    defaultPermit[Integer.valueOf(temp[1]) + 42] = '1';
+                    break;
                 case "8":
-                    defaultPermit[Integer.valueOf(temp[1]) + 40] = '1';
+                    defaultPermit[Integer.valueOf(temp[1]) + 47] = '1';
                     break;
                 case "9":
-                    defaultPermit[Integer.valueOf(temp[1]) + 44] = '1';
+                    defaultPermit[Integer.valueOf(temp[1]) + 51] = '1';
                     break;
                 case "10":
-                    defaultPermit[Integer.valueOf(temp[1]) + 56] = '1';
+                    defaultPermit[Integer.valueOf(temp[1]) + 55] = '1';
                     break;
                 case "11":
-                    defaultPermit[Integer.valueOf(temp[1]) + 60] = '1';
+                    defaultPermit[Integer.valueOf(temp[1]) + 59] = '1';
                     break;
                 case "12":
-                    defaultPermit[Integer.valueOf(temp[1]) + 64] = '1';
+                    defaultPermit[Integer.valueOf(temp[1]) + 63] = '1';
                     break;
                 case "13":
-                    defaultPermit[Integer.valueOf(temp[1]) + 68] = '1';
+                    defaultPermit[Integer.valueOf(temp[1]) + 67] = '1';
                     break;
                 case "14":
-                    defaultPermit[Integer.valueOf(temp[1]) + 72] = '1';
+                    defaultPermit[Integer.valueOf(temp[1]) + 71] = '1';
                     break;
                 case "15":
-                    defaultPermit[Integer.valueOf(temp[1]) + 76] = '1';
+                    defaultPermit[Integer.valueOf(temp[1]) + 75] = '1';
                     break;
                 case "16":
-                    defaultPermit[Integer.valueOf(temp[1]) + 88] = '1';
+                    defaultPermit[Integer.valueOf(temp[1]) + 79] = '1';
                     break;
                 case "17":
-                    defaultPermit[Integer.valueOf(temp[1]) + 92] = '1';
+                    defaultPermit[Integer.valueOf(temp[1]) + 83] = '1';
                     break;
                 case "18":
-                    defaultPermit[Integer.valueOf(temp[1]) + 96] = '1';
+                    defaultPermit[Integer.valueOf(temp[1]) + 87] = '1';
                     break;
                 case "19":
-                    defaultPermit[Integer.valueOf(temp[1]) + 100] = '1';
+                    defaultPermit[Integer.valueOf(temp[1]) + 91] = '1';
                     break;
                 case "20":
-                    defaultPermit[Integer.valueOf(temp[1]) + 104] = '1';
+                    defaultPermit[Integer.valueOf(temp[1]) + 95] = '1';
+                    break;
+                case "21":
+                    defaultPermit[Integer.valueOf(temp[1]) + 99] = '1';
+                    break;
+                case "22":
+                    defaultPermit[Integer.valueOf(temp[1]) + 101] = '1';
+                    break;
+                case "23":
+                    defaultPermit[Integer.valueOf(temp[1]) + 102] = '1';
+                    break;
+                case "24":
+                    defaultPermit[Integer.valueOf(temp[1]) + 106] = '1';
+                    break;
+                case "25":
+                    defaultPermit[Integer.valueOf(temp[1]) + 107] = '1';
                     break;
                 default:
                     System.out.println("error");
@@ -88,7 +103,7 @@ public class PermitUtil {
     // 将字符串解析成字符数组
     public static List<String> stringToStringArray(String permit) {
         List<String> permitFinal = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 6; j++) {
                 if (permit.charAt(i*6 + j) == '1') {
                     permitFinal.add(i + "-" + j);
@@ -96,124 +111,121 @@ public class PermitUtil {
             }
         }
 
-        for (int i = 48; i < 53; i++) {
+        for (int i = 42; i < 47; i++) {
             if (permit.charAt(i)  == '1') {
-                permitFinal.add(6 + "-" + String.valueOf(i - 48));
+                permitFinal.add(7 + "-" + String.valueOf(i - 42));
             }
         }
 
-        Integer count = 7;
-
-        for (int i = 36; i < 40; i++) {
+        for (int i = 47; i < 51; i++) {
             if(permit.charAt(i) == '1') {
-                permitFinal.add(7 + "-" + String.valueOf(i-36));
+                permitFinal.add(8 + "-" + String.valueOf(i-47));
             }
         }
 
-        for (int i = 40; i < 44; i++) {
+        for (int i = 51; i < 55; i++) {
             if(permit.charAt(i) == '1') {
-                permitFinal.add(8 + "-" + String.valueOf(i-40));
+                permitFinal.add(9 + "-" + String.valueOf(i-51));
             }
         }
 
-        for (int i = 44; i < 48; i++) {
+        for (int i = 55; i < 59; i++) {
             if(permit.charAt(i) == '1') {
-                permitFinal.add(9 + "-" + String.valueOf(i-44));
+                permitFinal.add(10 + "-" + String.valueOf(i-55));
             }
         }
 
-        for (int i = 56; i < 60; i++) {
+        for (int i = 59; i < 63; i++) {
             if(permit.charAt(i) == '1') {
-                permitFinal.add(10 + "-" + String.valueOf(i-56));
+                permitFinal.add(11 + "-" + String.valueOf(i-59));
             }
         }
 
-        for (int i = 60; i < 64; i++) {
+        for (int i = 63; i < 67; i++) {
             if(permit.charAt(i) == '1') {
-                permitFinal.add(11 + "-" + String.valueOf(i-60));
+                permitFinal.add(12 + "-" + String.valueOf(i-63));
             }
         }
 
-        for (int i = 64; i < 68; i++) {
+        for (int i = 67; i < 71; i++) {
             if(permit.charAt(i) == '1') {
-                permitFinal.add(12 + "-" + String.valueOf(i-64));
+                permitFinal.add(13 + "-" + String.valueOf(i-67));
             }
         }
 
-        for (int i = 68; i < 72; i++) {
+        for (int i = 71; i < 75; i++) {
             if(permit.charAt(i) == '1') {
-                permitFinal.add(13 + "-" + String.valueOf(i-68));
+                permitFinal.add(14 + "-" + String.valueOf(i-71));
             }
         }
 
-        for (int i = 72; i < 76; i++) {
+        for (int i = 75; i < 79; i++) {
             if(permit.charAt(i) == '1') {
-                permitFinal.add(14 + "-" + String.valueOf(i-72));
+                permitFinal.add(15 + "-" + String.valueOf(i-75));
             }
         }
 
-        for (int i = 76; i < 80; i++) {
+        for (int i = 79; i < 83; i++) {
             if(permit.charAt(i) == '1') {
-                permitFinal.add(15 + "-" + String.valueOf(i-76));
+                permitFinal.add(16 + "-" + String.valueOf(i-79));
             }
         }
 
 
 
-        for (int i = 88; i < 92; i++) {
+        for (int i = 83; i < 87; i++) {
             if(permit.charAt(i) == '1') {
-                permitFinal.add(16 + "-" + String.valueOf(i-88));
+                permitFinal.add(17 + "-" + String.valueOf(i-83));
             }
         }
 
-        for (int i = 92; i < 96; i++) {
+        for (int i = 87; i < 91; i++) {
             if(permit.charAt(i) == '1') {
-                permitFinal.add(17 + "-" + String.valueOf(i-92));
+                permitFinal.add(18 + "-" + String.valueOf(i-87));
             }
         }
 
-        for (int i = 96; i < 100; i++) {
+        for (int i = 91; i < 95; i++) {
             if(permit.charAt(i) == '1') {
-                permitFinal.add(18 + "-" + String.valueOf(i-96));
+                permitFinal.add(19 + "-" + String.valueOf(i-91));
             }
         }
 
-        for (int i = 100; i < 104; i++) {
+        for (int i = 95; i < 99; i++) {
             if(permit.charAt(i) == '1') {
-                permitFinal.add(19 + "-" + String.valueOf(i-100));
+                permitFinal.add(20 + "-" + String.valueOf(i-95));
             }
         }
 
-        for (int i = 104; i < 108; i++) {
+        for (int i = 99; i < 101; i++) {
             if(permit.charAt(i) == '1') {
-                permitFinal.add(20 + "-" + String.valueOf(i-104));
+                permitFinal.add(21 + "-" + String.valueOf(i-99));
             }
         }
 
-        for (int i = 109; i < 112; i++) {
+        for (int i = 101; i < 102; i++) {
             if(permit.charAt(i) == '1') {
-                permitFinal.add(21 + "-" + String.valueOf(i-109));
+                permitFinal.add(22 + "-" + String.valueOf(i-101));
             }
         }
 
-        for (int i = 112; i < 116; i++) {
+        for (int i = 102; i < 106; i++) {
             if(permit.charAt(i) == '1') {
-                permitFinal.add(22 + "-" + String.valueOf(i-112));
+                permitFinal.add(23 + "-" + String.valueOf(i-102));
             }
         }
 
-        for (int i = 118; i < 124; i++) {
+        for (int i = 106; i < 107; i++) {
             if(permit.charAt(i) == '1') {
-                permitFinal.add(23 + "-" + String.valueOf(i-118));
+                permitFinal.add(24 + "-" + String.valueOf(i-106));
             }
         }
 
-        if (permit.charAt(116) == '1')
-            permitFinal.add(24 + "-" + String.valueOf(0));
-
-        if (permit.charAt(117) == '1')
-            permitFinal.add(25 + "-" + String.valueOf(0));
-
+        for (int i = 107; i < 108; i++) {
+            if(permit.charAt(i) == '1') {
+                permitFinal.add(25 + "-" + String.valueOf(i-107));
+            }
+        }
         return permitFinal;
     }
 }

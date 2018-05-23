@@ -2,6 +2,7 @@ package com.deep.api.resource;
 
 import com.deep.api.Utils.AgentUtil;
 import com.deep.api.Utils.TokenAnalysis;
+import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.OperationCoditionRequest;
 import com.deep.api.response.Response;
@@ -34,6 +35,7 @@ public class OperationFileResource {
   @Resource
   private OperationFileService operationFileService;
 
+  @Permit(authorities = "increase_health_and_animal_welfare")
   @PostMapping(value = "")
   Response addOperationFile(@Valid @RequestBody OperationFile operationFile,
                             BindingResult bindingResult) {
@@ -63,6 +65,7 @@ public class OperationFileResource {
     }
   }
 
+  @Permit(authorities = "inquiries_on_hygiene_and_animal_welfare")
   @GetMapping(value = "/{id}")
   Response getOperationFile(@PathVariable(value = "id")long id,
                             OperationCoditionRequest operationCoditionRequest,
@@ -99,7 +102,7 @@ public class OperationFileResource {
         List<OperationFile> factorylist = new ArrayList<>();
         List<OperationFile> direct = new ArrayList<>();
         List<OperationFile> others = new ArrayList<>();
-        List<Long> directId = factoryMap.get(new Long(-1));
+        List<Long> directId = factoryMap.get((long) -1);
         for (OperationFile operationFile : list) {
           if (directId.contains(operationFile.getFactoryNum())) {
             direct.add(operationFile);
@@ -129,6 +132,7 @@ public class OperationFileResource {
     }
   }
 
+  @Permit(authorities = "supervise_and_audit_health_and_animal_welfare")
   @PatchMapping(value = "s/{id}")
   Response setCheckStatus(@PathVariable(value = "id")int id,
                           @RequestBody Map<String, Integer> json) {
@@ -157,6 +161,7 @@ public class OperationFileResource {
     }
   }
 
+  @Permit(authorities = "experts_review_health_and_animal_welfare")
   @PatchMapping(value = "p/{id}")
   Response setSupStatus(@PathVariable(value = "id")int id,
                         @RequestBody Map<String, Integer> json) {
@@ -182,6 +187,7 @@ public class OperationFileResource {
     }
   }
 
+  @Permit(authorities = "modify_health_and_animal_welfare")
   @PutMapping(value = "/{id}")
   public Response update(@RequestBody OperationFile operationFile,
                          @PathVariable(value = "id") int id) {
@@ -194,6 +200,7 @@ public class OperationFileResource {
     }
   }
 
+  @Permit(authorities = "inquiries_on_hygiene_and_animal_welfare")
   @GetMapping(value = "/find/{id}")
   public Response getOperationFileById(@PathVariable(value = "id") int id) {
     OperationFile operationFile = operationFileService.getOperationFileById(id);
@@ -204,6 +211,7 @@ public class OperationFileResource {
     return response;
   }
 
+  @Permit(authorities = "remove_health_and_animal_welfare")
   @DeleteMapping(value = "/{id}")
   public Response deleteOperationFile(@PathVariable("id") int id) {
     int isSuccess = operationFileService.deleteOperationFile(id);
