@@ -372,7 +372,7 @@ public class RepellentPlanResource {
      * @param repellentPlanModel 驱虫类
      * @return 更新结果
      */
-    @Permit(authorities = "experts_review deworming_implementation_control_files")
+    @Permit(authorities = "experts_review_deworming_implementation_control_files")
     @RequestMapping(value = "/p/{id}",method = RequestMethod.PATCH)
     public Response professorUpdate(@PathVariable(value = "id") long id,
                                     @RequestBody RepellentPlanModel repellentPlanModel) {

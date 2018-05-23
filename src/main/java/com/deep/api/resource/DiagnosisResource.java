@@ -133,16 +133,16 @@ public class DiagnosisResource {
     @RequestMapping(value = "/p/{id}",method = RequestMethod.PATCH)
     public Response changePlanByProfessor(@PathVariable(value = "id") int id,
                                           @RequestBody Map<String, Integer> json) {
-        logger.info("invoke diagnosis/p/{} {}", id,json);
+        logger.info("invoke diagnosis/p/{} {}", id, json);
         if (!json.containsKey("ispassCheck")) {
             return Responses.errorResponse("lack ispassCheck");
         }
-        short ispassCheck = json.get("isPassCheck").shortValue();
+        short ispassCheck = json.get("ispassCheck").shortValue();
         if (ispassCheck == 2) {
             return Responses.errorResponse("已经审批过了");
         }
 
-        int professorId = json.get("professorId").intValue();
+        int professorId = json.get("professorId");
 
         int isSuccess =  diagnosisPlanService.checkDiagnosisPlanModelById(id, ispassCheck, professorId);
         if (isSuccess == 0) {
