@@ -172,6 +172,11 @@ public class BreedingAnotherResource {
         if (uid <= 0) {
             return Responses.errorResponse("修改第一阶段信息失败！");
         }
+        // 首先查询是否符合修改信息的条件
+        BreedingPlanAnotherModel model = breedingPlanAnotherService.findARecord(uid);
+        if (model == null || model.getStageFlag() == 1 || model.getIsPassCheckFirst() <= 1 || model.getIsPassSupFirst() <= 1) {
+            return Responses.errorResponse("error!");
+        }
         breedingOperatorFirst.setGmtModify(new Timestamp(System.currentTimeMillis()));
         Long success = breedingPlanAnotherService.updateARecordFirstByOperator(breedingOperatorFirst, uid);
         if (success > 0) {
@@ -201,6 +206,11 @@ public class BreedingAnotherResource {
         Long uid = StringToLongUtil.stringToLong(id);
         if (uid <= 0) {
             return Responses.errorResponse("增加第二阶段信息失败！");
+        }
+        // 首先查询是否符合修改信息的条件
+        BreedingPlanAnotherModel model = breedingPlanAnotherService.findARecord(uid);
+        if (model == null || model.getStageFlag() == 0 || model.getIsPassCheckSecond() <= 1 || model.getIsPassSupSecond() <= 1) {
+            return Responses.errorResponse("error!");
         }
         breedingOperatorSecond.setId(uid);
         breedingOperatorSecond.setGmtModify(new Timestamp(System.currentTimeMillis()));

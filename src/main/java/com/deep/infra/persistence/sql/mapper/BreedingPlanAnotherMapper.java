@@ -338,7 +338,8 @@ public interface BreedingPlanAnotherMapper {
             "is_pass_check_first = #{ispassCheck}, " +
             "professor_time_first = #{professorTimeFirst}, " +
             "professor_id_first = #{professorId}, " +
-            "professor_name_first = #{professorName}" +
+            "professor_name_first = #{professorName}," +
+            "stage_flag = 1" +
             "where id = #{id}")
     Long updateARecordFirstByProfessor(@Param("id") Long id, @Param("gmtModify") Timestamp gmtModify, @Param("professorTimeFirst") Timestamp professorTimeFirst, @Param("ispassCheck") Byte ispassCheck, @Param("professorId") Integer professorId, @Param("professorName") String professorName);
 
