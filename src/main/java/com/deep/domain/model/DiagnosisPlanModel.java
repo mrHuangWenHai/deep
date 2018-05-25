@@ -50,7 +50,27 @@ public class DiagnosisPlanModel {
     @Pattern(regexp = "^[0-9]+$", message = "商标耳牌由数字组成15位")
     private String earTag;
 
-  public int getId() {
+    private String supervisorName;
+
+    private String professorName;
+
+    public String getSupervisorName() {
+        return supervisorName;
+    }
+
+    public void setSupervisorName(String supervisorName) {
+        this.supervisorName = supervisorName;
+    }
+
+    public String getProfessorName() {
+        return professorName;
+    }
+
+    public void setProfessorName(String professorName) {
+        this.professorName = professorName;
+    }
+
+    public int getId() {
     return id;
   }
 

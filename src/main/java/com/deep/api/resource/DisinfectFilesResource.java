@@ -371,11 +371,11 @@ public class DisinfectFilesResource {
                                     HttpServletRequest httpServletRequest) {
         disinfectRequest.setId(id);
         logger.info("invoke gf/p/{} {}",id, disinfectRequest);
-
         if( disinfectRequest.getIspassCheck() == null
             || disinfectRequest.getUnpassReason() == null) {
             return Responses.errorResponse("Lack Item");
         } else {
+            disinfectRequest.setProfessor(disinfectRequest.getName());
             int row = disinfectFilesService.updateDisinfectFilesModelByProfessor(disinfectRequest);
             if (row == 1) {
                 String professorKey = this.factoryService.getAgentIDByFactoryNumber(disinfectRequest.getFactoryNum().toString()) + "_professor";
@@ -406,6 +406,7 @@ public class DisinfectFilesResource {
             || disinfectRequest.getIspassSup() == null) {
             return Responses.errorResponse("Lack Item");
         } else {
+            disinfectRequest.setSupervisor(disinfectRequest.getName());
             int row = disinfectFilesService.updateDisinfectFilesModelBySupervisor(disinfectRequest);
             if (row == 1) {
                 String supervisorKey = disinfectRequest.getFactoryNum().toString() + "_supervisor";

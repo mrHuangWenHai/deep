@@ -116,18 +116,23 @@ public class NutritionResource {
     public Response dropPlan(@PathVariable("id") String id){
         logger.info("invoke dropPlan {}, url is nutrition/{id}", id);
         int uid = StringToLongUtil.stringToInt(id);
+        NutritionPlanWithBLOBs selectById = nutritionPlanService.findPlanById(uid);
         if (uid == -1) {
             return Responses.errorResponse("错误");
         }
-        int success = nutritionPlanService.dropPlan(uid);
-        if (success <= 0) {
-            return Responses.errorResponse("删除失败");
+        if (selectById.getIspassCheck() == 2 && selectById.getIspassSup() == 2) {
+            int success = nutritionPlanService.dropPlan(uid);
+            if (success <= 0) {
+                return Responses.errorResponse("删除失败");
+            }
+            Response response = Responses.successResponse();
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("success", success);
+            response.setData(data);
+            return response;
+        } else {
+            return Responses.errorResponse("该记录已经被审核过，不能删除！");
         }
-        Response response = Responses.successResponse();
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("success", success);
-        response.setData(data);
-        return response;
     }
 
     /**
@@ -330,8 +335,8 @@ public class NutritionResource {
             // time of the professor modify
             professor.setId(uid);
             professor.setGmtModified(new Date());
-//            professor.setProfessorId(professorRequest.getProfessor().longValue());
-            professor.setProfessorName(professorRequest.getProfessor());
+            professor.setProfessorId(professorRequest.getProfessor().longValue());
+            professor.setProfessorName(professorRequest.getName());
             professor.setUpassReason(professorRequest.getUpassReason());
             professor.setIspassCheck(professorRequest.getIspassCheck());
 
@@ -370,8 +375,8 @@ public class NutritionResource {
             // modify the time of the supervised
             supervisor.setId(uid);
             supervisor.setGmtSupervised(new Date());
-//            supervisor.setSupervisorId(supervisorRequest.getSupervisor().longValue());
-            supervisor.setSupervisorName(supervisorRequest.getSupervisor());
+            supervisor.setSupervisorId(supervisorRequest.getSupervisor().longValue());
+            supervisor.setSupervisorName(supervisorRequest.getName());
             supervisor.setIspassSup(supervisorRequest.getIspassSup());
 
             int success = nutritionPlanService.changePlanSelective(supervisor);

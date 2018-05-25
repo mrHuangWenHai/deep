@@ -8,10 +8,11 @@ import javax.validation.constraints.NotBlank;
  * supervisor check
  */
 public class SupervisorRequest {
-    private String supervisor;
+    // 监督员的ID
+    private Integer supervisor;
 
 //    @NotBlank(message = "supervisor can not be null")
-    private String supervisorName;
+    private String name;
 
     private Long factoryNum;
 
@@ -27,20 +28,20 @@ public class SupervisorRequest {
         this.factoryNum = factoryNum;
     }
 
-    public String getSupervisor() {
+    public Integer getSupervisor() {
         return supervisor;
     }
 
-    public void setSupervisor(String supervisor) {
+    public void setSupervisor(Integer supervisor) {
         this.supervisor = supervisor;
     }
 
-    public String getSupervisorName() {
-        return supervisorName;
+    public String getName() {
+        return name;
     }
 
-    public void setSupervisorName(String supervisorName) {
-        this.supervisorName = supervisorName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Byte getIspassSup() {
@@ -49,5 +50,15 @@ public class SupervisorRequest {
 
     public void setIspassSup(Byte ispassSup) {
         this.ispassSup = ispassSup;
+    }
+
+    @Override
+    public String toString() {
+        return "SupervisorRequest{" +
+                "supervisor=" + supervisor +
+                ", name='" + name + '\'' +
+                ", factoryNum=" + factoryNum +
+                ", ispassSup=" + ispassSup +
+                '}';
     }
 }

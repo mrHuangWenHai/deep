@@ -29,11 +29,14 @@ public interface DiagnosisPlanMapper {
 
     int checkDiagnosisPlanModelById(@Param("id") int id,
                                     @Param("ispassCheck") short ispassCheck,
-                                    @Param("professorId") int professorId);
+                                    @Param("professorId") int professorId,
+                                    @Param("name") String name);
 
     int supCheckDiagnosisPlanModelById(@Param("id") int id,
                                        @Param("ispassSup") short ispassSup,
-                                       @Param("upassReason") String upassReason);
+                                       @Param("upassReason") String upassReason,
+                                       @Param("supervisor_id") int supervisor_id,
+                                       @Param("name") String name);
 
     int updateDiagnosisPlanModel(@Param("diagnosisPlanModel") DiagnosisPlanModel diagnosisPlanModel);
 

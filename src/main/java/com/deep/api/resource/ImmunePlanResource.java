@@ -384,6 +384,7 @@ public class ImmunePlanResource {
             return Responses.errorResponse("Lack Item");
         } else {
           immunePlanModel.setId(id);
+          immunePlanModel.setProfessor(immunePlanModel.getName());
           int row = immunePlanService.updateImmunePlanModelByProfessor(immunePlanModel);
           if (row == 1) {
             String professorKey = this.factoryService.getAgentIDByFactoryNumber(immunePlanModel.getFactoryNum().toString()) + "_professor";
@@ -414,6 +415,7 @@ public class ImmunePlanResource {
             return Responses.errorResponse("Lack Item");
         } else {
           immunePlanModel.setId(id);
+          immunePlanModel.setSupervisor(immunePlanModel.getName());
           int row = immunePlanService.updateImmunePlanModelBySupervisor(immunePlanModel);
           if (row == 1) {
             String supervisorKey = immunePlanModel.getFactoryNum().toString() + "_supervisor";
@@ -430,7 +432,6 @@ public class ImmunePlanResource {
     /**
      * 操作员在审核前想修改数据的接口
      * 或处理被退回操作的接口
-     *
      * @param immunePlanModel 免疫类
      * @return 更新结果
      */
@@ -498,13 +499,15 @@ public class ImmunePlanResource {
 
         ImmunePlanModel immunePlanModel = this.immunePlanService.getImmunePlanModelById(id);
         String filePath = pathPre + immunePlanModel.getFactoryNum().toString() + "/immuneEartag/" + immunePlanModel.getImmuneEartag();
-        int row = immunePlanService.deleteImmunePlanModelById(id);
-        if (FileUtil.deleteFile(filePath) && row == 1){
-            return JudgeUtil.JudgeDelete(row);
+        if (immunePlanModel.getIspassCheck().equals(2) && immunePlanModel.getIspassSup().equals(2)) {
+            int row = immunePlanService.deleteImmunePlanModelById(id);
+            if (FileUtil.deleteFile(filePath) && row == 1){
+                return JudgeUtil.JudgeDelete(row);
+            } else {
+                return Responses.errorResponse("delete wrong");
+            }
         } else {
-            return Responses.errorResponse("delete wrong");
+            return Responses.errorResponse("该条记录已经被审核过，不能删除！");
         }
     }
-
-
 }

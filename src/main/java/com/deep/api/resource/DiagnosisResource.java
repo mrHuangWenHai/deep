@@ -5,6 +5,8 @@ import com.deep.api.Utils.TokenAnalysis;
 import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.DiagnosisRequest;
+import com.deep.api.request.ProfessorRequest;
+import com.deep.api.request.SupervisorRequest;
 import com.deep.domain.model.DiagnosisPlanModel;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
@@ -76,14 +78,18 @@ public class DiagnosisResource {
     @Permit(authorities = "delete_disease_prevention_files")
     @DeleteMapping(value = "/{id}")
     public Response dropPlan(@PathVariable("id") int id) {
-
         logger.info("invoke diagnosis/{}", id);
-
-        int isSuccess =  diagnosisPlanService.dropPlan(id);
-        if (isSuccess == 0) {
-            return Responses.errorResponse("删除失败");
+        // 首先查询该条数据
+        DiagnosisPlanModel diagnosisPlanModel = diagnosisPlanService.findPlanById(id);
+        if (diagnosisPlanModel.getIspassSup() == 2 && diagnosisPlanModel.getIspassCheck() == 2) {
+            int isSuccess =  diagnosisPlanService.dropPlan(id);
+            if (isSuccess == 0) {
+                return Responses.errorResponse("删除失败");
+            }
+            return Responses.successResponse();
+        } else {
+            return Responses.errorResponse("该记录已经被审核，不能进行删除操作");
         }
-        return Responses.successResponse();
     }
 
     /**
@@ -119,8 +125,7 @@ public class DiagnosisResource {
         if (isSuccess == 0) {
             return Responses.errorResponse("修改失败");
         }
-        Response response = Responses.successResponse();
-        return response;
+        return Responses.successResponse();
     }
 
     /**
@@ -132,21 +137,13 @@ public class DiagnosisResource {
     @Permit(authorities = "experts_review_disease_prevention_files")
     @RequestMapping(value = "/p/{id}",method = RequestMethod.PATCH)
     public Response changePlanByProfessor(@PathVariable(value = "id") int id,
-                                          @RequestBody Map<String, Integer> json) {
-        logger.info("invoke diagnosis/p/{} {}", id, json);
-        if (!json.containsKey("ispassCheck")) {
-            return Responses.errorResponse("lack ispassCheck");
-        }
-
-        short ispassCheck = json.get("ispassCheck").shortValue();
-//        short ispassCheck = Short.valueOf(json.get("ispassCheck"));
-        if (ispassCheck == 2) {
+                                          @RequestBody ProfessorRequest professorRequest) {
+        logger.info("invoke diagnosis/p/{} {}", id, professorRequest.toString());
+//        short ispassCheck = json.get("ispassCheck").shortValue();
+        if (professorRequest.getIspassCheck() == 2) {
             return Responses.errorResponse("已经审批过了");
         }
-
-        int professorId = json.get("professor");
-
-        int isSuccess =  diagnosisPlanService.checkDiagnosisPlanModelById(id, ispassCheck, professorId);
+        int isSuccess =  diagnosisPlanService.checkDiagnosisPlanModelById(id, professorRequest.getIspassCheck(), professorRequest.getProfessor(), professorRequest.getName());
         if (isSuccess == 0) {
             return Responses.errorResponse("错误");
         }
@@ -162,19 +159,13 @@ public class DiagnosisResource {
     @Permit(authorities = "supervise_and_verify_disease_prevention_files")
     @RequestMapping(value = "/s/{id}",method = RequestMethod.PATCH)
     public Response changePlanBySupervisor(@PathVariable(value = "id") int id,
-                                           @RequestBody Map<String, Object> json) {
-        logger.info("invoke diagnosis/supdate/{} {}", id,json);
-        if (!json.containsKey("ispassSup")) {
-            return Responses.errorResponse("lack ispassSup");
-        }
-        short ispassSup = ((Integer)json.get("ispassSup")).shortValue();
-        if (ispassSup == 2) {
+                                           @RequestBody SupervisorRequest supervisorRequest) {
+        logger.info("invoke diagnosis/supdate/{} {}", id, supervisorRequest.toString());
+        if (supervisorRequest.getIspassSup() == 2) {
             return Responses.errorResponse("已经审批过了");
         }
 
-        String upassReason = (String) json.get("upassReason");
-
-        int isSuccess = diagnosisPlanService.supCheckDiagnosisPlanModelById(id, ispassSup, upassReason);
+        int isSuccess = diagnosisPlanService.supCheckDiagnosisPlanModelById(id, supervisorRequest.getIspassSup(), null, supervisorRequest.getSupervisor(), supervisorRequest.getName());
         if (isSuccess == 0) {
             return Responses.errorResponse("监督失败");
         }

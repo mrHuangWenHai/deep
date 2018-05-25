@@ -303,7 +303,7 @@
 //            professor.setGmtModified(new Date());
 //            professor.setIsPassCheck(professorRequest.getIspassCheck());
 //            professor.setUpassReason(professorRequest.getUpassReason());
-//            professor.setProfessorId(professorRequest.getProfessorId());
+////            professor.setProfessorId(professorRequest.getProfessor());
 //            professor.setProfessorName(professorRequest.getProfessorName());
 //
 //            int success = breedingPlanService.changePlanSelective(professor);

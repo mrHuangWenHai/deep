@@ -26,6 +26,7 @@ public class RepellentPlanModel {
     private Integer operatorId;
     @NotBlank
     private String operatorName;
+    private String name;
     private String professor;
     private String supervisor;
     private String remark;
@@ -36,6 +37,14 @@ public class RepellentPlanModel {
     private String gmtModified;
     private String gmtProfessor;
     private String gmtSupervise;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Long getId() {
         return id;

@@ -376,20 +376,17 @@ public class RepellentPlanResource {
     @RequestMapping(value = "/p/{id}",method = RequestMethod.PATCH)
     public Response professorUpdate(@PathVariable(value = "id") long id,
                                     @RequestBody RepellentPlanModel repellentPlanModel) {
-
         logger.info("invoke /rp/p/id {} {}",id, repellentPlanModel);
         repellentPlanModel.setId(id);
         if (repellentPlanModel.getProfessor() == null ||
             repellentPlanModel.getIspassCheck() == null ||
             repellentPlanModel.getFactoryNum() == null) {
-
             return Responses.errorResponse("Lack param");
         } else {
+            repellentPlanModel.setProfessor(repellentPlanModel.getName());
           int row = repellentPlanService.updateRepellentPlanModelByProfessor(repellentPlanModel);
           if (row == 1) {
-
             String professorKey = this.factoryService.getAgentIDByFactoryNumber(repellentPlanModel.getFactoryNum().toString()) + "_professor";
-
             JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
           }
           return JudgeUtil.JudgeUpdate(row);
@@ -415,10 +412,10 @@ public class RepellentPlanResource {
             repellentPlanModel.getIspassSup() == null) {
             return Responses.errorResponse("Lack Item");
         } else {
+            repellentPlanModel.setSupervisor(repellentPlanModel.getName());
           int row = repellentPlanService.updateRepellentPlanModelBySupervisor(repellentPlanModel);
           if (row == 1) {
             String supervisorKey = repellentPlanModel.getFactoryNum().toString() + "_supervisor";
-
             JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey);
           }
           return JudgeUtil.JudgeUpdate(row);
