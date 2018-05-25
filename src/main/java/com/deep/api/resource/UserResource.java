@@ -82,7 +82,7 @@ public class UserResource {
             return Responses.errorResponse("错误");
         }
         if (which == 0 || which == 2) {
-            List<UserModel> userLists = userService.getAllUserOfFactoryOrAgent(uid, which, upage, usize);
+            List<UserResponse> userLists = userService.getAllUserOfFactoryOrAgent(uid, which, upage, usize);
             if (userLists == null) {
                 return Responses.errorResponse("error");
             } else {
@@ -99,7 +99,7 @@ public class UserResource {
             Map<Long, List<Integer> > agents = AgentUtil.getAllSubordinateAgent(id);
             // 所有的子羊场
             Map<Long, List<Long> > factories = AgentUtil.getAllSubordinateFactory(id);
-            List<UserModel> models = new ArrayList<>(userService.getAllUserOfFactoryOrAgent(uid, which, upage*usize, usize));
+            List<UserResponse> models = new ArrayList<>(userService.getAllUserOfFactoryOrAgent(uid, which, upage*usize, usize));
             if (agents != null && factories != null) {
                 // direct agent people
                 List<Integer> directAgents = agents.get((long) -1);

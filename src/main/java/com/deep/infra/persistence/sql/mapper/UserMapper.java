@@ -406,6 +406,30 @@ public interface UserMapper {
     })
     List<UserModel> getAllUsersOfOneFactoryOrOneAgent(@Param("factory") Long factory, @Param("which") Byte which, @Param("page") Long page, @Param("size") Byte size);
 
+
+    /**
+     * 根据ID获取某个羊场下的用户
+     * @return 单个用户的信息
+     */
+    @Select("select user_manage.factory_name, user_manage.pk_userid, user_manage.user_realname, user_manage.user_role, " +
+            "user_manage.user_telephone, user_manage.official_phone, user_manage.qq, user_manage.msn, user_manage.is_factory, " +
+            "user_manage.user_factory, role_user.type_name from user_manage, role_user where user_manage.user_role = role_user.id" +
+            " and user_manage.user_factory = #{factory} and user_manage.is_factory = #{which} limit #{page}, #{size}")
+    @Results({
+            @Result(property = "factoryName", column = "factory_name"),
+            @Result(property = "pkUserid", column = "pk_userid"),
+            @Result(property = "userRealname", column = "user_realname"),
+            @Result(property = "roleName", column = "type_name"),
+            @Result(property = "userRole", column = "user_role"),
+            @Result(property = "userTelephone", column = "user_telephone"),
+            @Result(property = "officialPhone", column = "official_phone"),
+            @Result(property = "qq", column = "qq"),
+            @Result(property = "msn", column = "msn"),
+            @Result(property = "isFactory", column = "is_factory"),
+            @Result(property = "userFactory", column = "user_factory"),
+    })
+    List<UserResponse> queryUserResponsesById(@Param("factory") Long factory, @Param("which") Byte which, @Param("page") Long page, @Param("size") Byte size);
+
     /**
      * 查找某一个羊场或者一个代理的所有用户
      * @return 返回总的记录条数
