@@ -36,17 +36,14 @@ public class NoticeResource {
     @Resource
     private NoticePlanService noticePlanService;
 
-
     private final Logger logger = LoggerFactory.getLogger(NoticeResource.class);
-
-
 
     /**
      * @param insert 整个表单信息（所有参数必填）, 参数类型为：String professor;Byte type;String title;String content;
      * @param bindingResult bindingResult
      * @return response
      */
-    @Permit(authorities = "add_community_activities")
+    @Permit(authorities = "add_release")
     @PostMapping(value = "")
     public Response addPlan(@RequestBody @Valid NoticePlan insert, BindingResult bindingResult){
         logger.info("invoke addPlan {}, the url is notice", insert);
@@ -77,7 +74,7 @@ public class NoticeResource {
      * @param id 接收参数：id，根据主键号删除
      * @return response
      */
-    @Permit(authorities = "check_community_activities")
+    @Permit(authorities = "query_publishing")
     @DeleteMapping(value = "/{id}")
     public Response dropPlan(@PathVariable("id") String id) {
 
@@ -111,7 +108,7 @@ public class NoticeResource {
      * @param bindingResult bindingResult
      * @return response
      */
-    @Permit(authorities = "modify_community_activities")
+    @Permit(authorities = "modify_release")
     @PatchMapping(value = "/{id}")
     public Response changePlan(@RequestBody @Valid NoticePlan update, @PathVariable("id") String id, BindingResult bindingResult){
         logger.info("invoke changePlan {}, url is notice/{id}", id);
@@ -157,7 +154,7 @@ public class NoticeResource {
      * 接收参数：整型的主键号（保留接口查询，前端不调用此接口）
      * @return response
      */
-    @Permit(authorities = "check_community_activities")
+    @Permit(authorities = "query_publishing")
     @GetMapping(value = "/find/{id}")
     public Response findPlanById(@PathVariable("id") String id){
         logger.info("invoke findPlanById {}, url is notice/find/{id}", id);
@@ -180,7 +177,7 @@ public class NoticeResource {
      * 查询所有的通告
      * @return response
      */
-    @Permit(authorities = "check_community_activities")
+    @Permit(authorities = "query_publishing")
     @GetMapping(value = "")
     public Response getAll() {
         logger.info("invoke geAll, url is notice");
@@ -200,7 +197,7 @@ public class NoticeResource {
      * @param type 通知公告类型, 需要跟前端协商
      * @return response
      */
-    @Permit(authorities = "check_community_activities")
+    @Permit(authorities = "query_publishing")
     @GetMapping(value = "/type/{type}")
     public Response getAllOfOneType(@PathVariable("type") String type) {
         logger.info("invoke getAllOneType {}, url is notice/type/{type}", type);
@@ -330,7 +327,7 @@ public class NoticeResource {
      * 接收的参数：用户在搜索栏输入的信息（字符串）
      * @return response
      */
-    @Permit(authorities = "check_community_activities")
+    @Permit(authorities = "query_publishing")
     @GetMapping(value = "/inSite")
     public Response searchInSite(@RequestParam(value = "content", defaultValue = "") String content){
         logger.info("invoke searchInSite {}, url is notice/inSite", content);
@@ -353,7 +350,7 @@ public class NoticeResource {
      * @param request Request
      * @return response
      */
-    @Permit(authorities = {"add_community_activities", "modify_community_activities"})
+    @Permit(authorities = {"add_release", "modify_release"})
     @PostMapping(value = "/upload")
     public Response uploadFile(HttpServletRequest request){
 

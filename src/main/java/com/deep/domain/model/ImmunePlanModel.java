@@ -30,6 +30,7 @@ public class ImmunePlanModel {
     private String operatorName;     //操作员
     private String professor;    //技术审核
     private String supervisor;    //监督员
+    private String name;
     private String remark;      //备注
     private String ispassCheck;      //是否通过审核 默认 未审核 0
     private String unpassReason;   //未通过审核原因
@@ -40,6 +41,14 @@ public class ImmunePlanModel {
     private String gmtSupervise;    //监督审核时间 可空
     public Long getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setId(Long id) {

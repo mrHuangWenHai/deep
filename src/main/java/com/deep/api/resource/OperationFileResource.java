@@ -135,21 +135,20 @@ public class OperationFileResource {
   @Permit(authorities = "supervise_and_audit_health_and_animal_welfare")
   @PatchMapping(value = "s/{id}")
   Response setCheckStatus(@PathVariable(value = "id")int id,
-                          @RequestBody Map<String, Integer> json) {
+                          @RequestBody Map<String, String> json) {
     if (!json.containsKey("ispassSup")) {
       return Responses.errorResponse("lock param ispassSup");
     }
 
-    short checkStatus = json.get("ispassSup").shortValue();
+//    short checkStatus = json.get("ispassSup").shortValue();
+    short checkStatus = Short.valueOf(json.get("ispassSup"));
     if (id < 0 || checkStatus < 0 || checkStatus > 2) {
       return Responses.errorResponse("param is invalid");
     }
     logger.info("/of/s/{} {}",id,checkStatus);
 
     try {
-
       int isSuccess = operationFileService.updateSupStatus(id, checkStatus);
-
       if (isSuccess == 1) {
           return Responses.successResponse();
       } else {
@@ -164,16 +163,17 @@ public class OperationFileResource {
   @Permit(authorities = "experts_review_health_and_animal_welfare")
   @PatchMapping(value = "p/{id}")
   Response setSupStatus(@PathVariable(value = "id")int id,
-                        @RequestBody Map<String, Integer> json) {
+                        @RequestBody Map<String, String> json) {
     if (!json.containsKey("ispassCheck")) {
       return Responses.errorResponse("lock param ispassCheck");
     }
 
-    short supStatus = json.get("ispassCheck").shortValue();
+//    short supStatus = json.get("ispassCheck").shortValue();
+    short supStatus = Short.valueOf(json.get("ispassCheck"));
     if (id < 0 || supStatus < 0 || supStatus > 2) {
       return Responses.errorResponse("param is invalid");
     }
-    logger.info("/of/s/{} {}",id,supStatus);
+    logger.info("/of/p/{} {}",id,supStatus);
     try {
       int isSuccess = operationFileService.updateCheckStatus(id, supStatus);
       if (isSuccess == 1) {

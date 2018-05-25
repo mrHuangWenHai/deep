@@ -15,13 +15,15 @@ public class GenealogicalFilesModel {
     @NotEmpty
     @NotNull
     private String nativeEartag;  //原耳牌
+    @Size(min = 15, max = 15, message = "immuneEartag need size:15 ")
+    @Pattern(regexp = "^[0-9]+$", message = "免疫耳牌由数字组成15位")
     @NotEmpty
     @NotNull
     private String immuneEartag;  //免疫耳牌
     @NotEmpty
     @NotNull
-    @Size(min = 15, max = 15, message = "trademarkEartag need size:15 ")
-    @Pattern(regexp = "^[0-9]+$", message = "商标耳牌由数字组成15位")
+    @Size(min = 7, max = 7, message = "trademarkEartag need size:7 ")
+    @Pattern(regexp = "G+[0-9]+$|M+[0-9]+$", message = "商标耳牌由字母+数字组成7位")
     private String tradeMarkEartag;  //商标耳牌
     @NotEmpty
     @NotNull

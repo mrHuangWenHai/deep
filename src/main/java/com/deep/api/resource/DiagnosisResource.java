@@ -5,10 +5,15 @@ import com.deep.api.Utils.TokenAnalysis;
 import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.DiagnosisRequest;
+import com.deep.api.request.ProfessorRequest;
+import com.deep.api.request.SupervisorRequest;
 import com.deep.domain.model.DiagnosisPlanModel;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.service.DiagnosisPlanService;
+import com.deep.domain.service.FactoryService;
+import com.deep.domain.service.UserService;
+import com.deep.domain.util.JedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
@@ -16,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,6 +42,12 @@ public class DiagnosisResource {
 
     @Resource
     private DiagnosisPlanService diagnosisPlanService;
+
+    @Resource
+    private UserService userService;
+
+    @Resource
+    private FactoryService factoryService;
 
     /**
      * 添加的接口：/addPlan
@@ -60,6 +72,54 @@ public class DiagnosisResource {
 
                 return Responses.errorResponse("插入错误");
             }
+            short agentID = this.factoryService.queryOneAgentByID(diagnosisPlanModel.getFactoryNum().longValue());
+            String professorKey = agentID + "_professor";
+            String supervisorKey = diagnosisPlanModel.getFactoryNum().toString() + "_supervisor";
+
+            String testSendProfessor = agentID + "_professor_AlreadySend";
+            String testSendSupervisor = diagnosisPlanModel.getFactoryNum().toString() + "_supervisor_AlreadySend";
+
+            JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
+            JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
+
+            if( !("1".equals(JedisUtil.getCertainKeyValue(testSendProfessor)))) {
+                if( JedisUtil.redisJudgeTime(professorKey) ) {
+                    System.out.println("in redis:");
+                    List<String> phone = userService.getProfessorTelephoneByFactoryNum(BigInteger.valueOf(diagnosisPlanModel.getFactoryNum()));
+
+                    StringBuffer phoneList = new StringBuffer("");
+
+                    for (String aPhone : phone) {
+                        phoneList = phoneList.append(aPhone).append(",");
+                    }
+
+                    if (phoneList.length() != 0) {
+                        if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
+                            JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
+                        }
+                    }
+                }
+            }
+
+            if( !("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
+                if(JedisUtil.redisJudgeTime(supervisorKey)) {
+                    List<String> phone = userService.getSuperiorTelephoneByFactoryNum(BigInteger.valueOf(diagnosisPlanModel.getFactoryNum()));
+
+                    StringBuffer phoneList = new StringBuffer("");
+
+                    for (String aPhone : phone) {
+                        phoneList = phoneList.append(aPhone).append(",");
+                    }
+
+                    if (phoneList.length() != 0) {
+
+                        if( JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
+                            JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime"))*24*60*60);
+                        }
+                    }
+                }
+            }
+
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("id",diagnosisPlanModel.getId());
@@ -76,14 +136,18 @@ public class DiagnosisResource {
     @Permit(authorities = "delete_disease_prevention_files")
     @DeleteMapping(value = "/{id}")
     public Response dropPlan(@PathVariable("id") int id) {
-
         logger.info("invoke diagnosis/{}", id);
-
-        int isSuccess =  diagnosisPlanService.dropPlan(id);
-        if (isSuccess == 0) {
-            return Responses.errorResponse("删除失败");
+        // 首先查询该条数据
+        DiagnosisPlanModel diagnosisPlanModel = diagnosisPlanService.findPlanById(id);
+        if (diagnosisPlanModel.getIspassSup() == 2 && diagnosisPlanModel.getIspassCheck() == 2) {
+            int isSuccess =  diagnosisPlanService.dropPlan(id);
+            if (isSuccess == 0) {
+                return Responses.errorResponse("删除失败");
+            }
+            return Responses.successResponse();
+        } else {
+            return Responses.errorResponse("该记录已经被审核，不能进行删除操作");
         }
-        return Responses.successResponse();
     }
 
     /**
@@ -119,8 +183,7 @@ public class DiagnosisResource {
         if (isSuccess == 0) {
             return Responses.errorResponse("修改失败");
         }
-        Response response = Responses.successResponse();
-        return response;
+        return Responses.successResponse();
     }
 
     /**
@@ -132,25 +195,21 @@ public class DiagnosisResource {
     @Permit(authorities = "experts_review_disease_prevention_files")
     @RequestMapping(value = "/p/{id}",method = RequestMethod.PATCH)
     public Response changePlanByProfessor(@PathVariable(value = "id") int id,
-                                          @RequestBody Map<String, Integer> json) {
-        logger.info("invoke diagnosis/p/{} {}", id,json);
-        if (!json.containsKey("ispassCheck")) {
-            return Responses.errorResponse("lack ispassCheck");
-        }
-        short ispassCheck = json.get("isPassCheck").shortValue();
-        if (ispassCheck == 2) {
+                                          @RequestBody ProfessorRequest professorRequest) {
+        logger.info("invoke diagnosis/p/{} {}", id, professorRequest.toString());
+//        short ispassCheck = json.get("ispassCheck").shortValue();
+        if (professorRequest.getIspassCheck() == 2) {
             return Responses.errorResponse("已经审批过了");
         }
-
-        int professorId = json.get("professorId").intValue();
-
-        int isSuccess =  diagnosisPlanService.checkDiagnosisPlanModelById(id, ispassCheck, professorId);
+        int isSuccess =  diagnosisPlanService.checkDiagnosisPlanModelById(id, professorRequest.getIspassCheck(), professorRequest.getProfessor(), professorRequest.getName());
         if (isSuccess == 0) {
             return Responses.errorResponse("错误");
         }
+        String professorKey = this.factoryService.getAgentIDByFactoryNumber(professorRequest.getFactoryNum().toString()) + "_professor";
+        if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
+            return Responses.errorResponse("cancel error");
+        }
         return Responses.successResponse();
-
-
     }
 
     /**
@@ -162,21 +221,19 @@ public class DiagnosisResource {
     @Permit(authorities = "supervise_and_verify_disease_prevention_files")
     @RequestMapping(value = "/s/{id}",method = RequestMethod.PATCH)
     public Response changePlanBySupervisor(@PathVariable(value = "id") int id,
-                                           @RequestBody Map<String, Object> json) {
-        logger.info("invoke diagnosis/supdate/{} {}", id,json);
-        if (!json.containsKey("ispassSup")) {
-            return Responses.errorResponse("lack ispassSup");
-        }
-        short ispassSup = ((Integer)json.get("ispassSup")).shortValue();
-        if (ispassSup == 2) {
+                                           @RequestBody SupervisorRequest supervisorRequest) {
+        logger.info("invoke diagnosis/supdate/{} {}", id, supervisorRequest.toString());
+        if (supervisorRequest.getIspassSup() == 2) {
             return Responses.errorResponse("已经审批过了");
         }
 
-        String upassReason = (String) json.get("upassReason");
-
-        int isSuccess = diagnosisPlanService.supCheckDiagnosisPlanModelById(id, ispassSup, upassReason);
+        int isSuccess = diagnosisPlanService.supCheckDiagnosisPlanModelById(id, supervisorRequest.getIspassSup(), null, supervisorRequest.getSupervisor(), supervisorRequest.getName());
         if (isSuccess == 0) {
             return Responses.errorResponse("监督失败");
+        }
+        String supervisorKey = supervisorRequest.getFactoryNum().toString() + "_supervisor";
+        if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
+            return Responses.errorResponse("cancel error");
         }
         return Responses.successResponse();
     }

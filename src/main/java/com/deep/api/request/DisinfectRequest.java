@@ -20,8 +20,9 @@ public class DisinfectRequest {
     private String disinfectWay;     //消毒方法
     private Integer operatorId;
     private String operatorName;      //操作员(创建表操作人员)
-    private String professor;       //技术审核(审核表人员 专家) 可空
+    private String professor;       //技术审核(审核表人员专家) 可空
     private String supervisor;       //监督员(监督操作员人员) 可空
+    private String name;
     private String remark;        //备注
     private Integer ispassCheck;       //是否通过审核 可空 默认为 0
     private String unpassReason;   //未通过审核原因 可空 默认未 无
@@ -37,6 +38,14 @@ public class DisinfectRequest {
     private int page = 0;
     private int size = 10;
     private List<Long>factoryList;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getDisinfectEartag() {
         return disinfectEartag;

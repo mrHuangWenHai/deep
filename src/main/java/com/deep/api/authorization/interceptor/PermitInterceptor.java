@@ -165,24 +165,6 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
         permitMap.put(107, "download_product_file_action");
 
         permitMap.put(108, "check_message_of_all_user");
-
-//        permitMap.put(109, "query_permit");
-//        permitMap.put(110, "download_database");
-//        permitMap.put(111, "send_messages");
-//        permitMap.put(112, "edit_messages");
-//        permitMap.put(113, "add_sheep_type");
-//        permitMap.put(114, "delete_sheep_type");
-//        permitMap.put(115, "select_sheep_type");
-//        permitMap.put(116, "modify_sheep_type");
-//        permitMap.put(117, " download_product_file_action");
-//        permitMap.put(118, " check_message_of_all_user");
-//        permitMap.put(119, " increase_pest_repellent_implementation_control_files");
-//        permitMap.put(120, " deworming_implementation_control_files");
-//        permitMap.put(121, " check_insecticide_implementation_control_files");
-//        permitMap.put(122, " modify_the_insect_repellent_implementation_control_file");
-//        permitMap.put(123, " supervise_and_verify_the_implementation_of_pest_control_files");
-//        permitMap.put(124, " experts_review_deworming_implementation_control_files");
-
     }
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

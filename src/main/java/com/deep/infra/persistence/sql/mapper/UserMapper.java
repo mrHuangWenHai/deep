@@ -1,6 +1,7 @@
 package com.deep.infra.persistence.sql.mapper;
 
 import com.deep.api.response.Professor;
+import com.deep.api.response.UserResponse;
 import com.deep.domain.model.UserModel;
 import com.deep.domain.service.UserService;
 import org.apache.ibatis.annotations.*;
@@ -52,45 +53,7 @@ public interface UserMapper {
     })
     List<String> queryAllUsernameNoCondition();
 
-    @Select("select * from user_manage")
-    @Results({
-            @Result(property = "id", column = "id"),
-            @Result(property = "gmtCreate", column = "gmt_create"),
-            @Result(property = "gmtModified", column = "gmt_modified"),
-            @Result(property = "pkUserid", column = "pk_userid"),
-            @Result(property = "userPwd", column = "user_pwd"),
-            @Result(property = "userNum", column = "user_num"),
-            @Result(property = "userPic", column = "user_pic"),
-            @Result(property = "userRealname", column = "user_realname"),
-            @Result(property = "userLocation", column = "user_location"),
-            @Result(property = "userTelephone", column = "user_telephone"),
-            @Result(property = "userRemark", column = "user_remark"),
-            @Result(property = "userFactory", column = "user_factory"),
-            @Result(property = "userRole", column = "user_role"),
-            @Result(property = "userPermit", column = "user_permit"),
-            @Result(property = "isExtended", column = "is_extended"),
-            @Result(property = "isFactory", column = "is_factory"),
-            @Result(property = "question_1", column = "question_1"),
-            @Result(property = "question_2", column = "question_2"),
-            @Result(property = "question_3", column = "question_3"),
-            @Result(property = "answer_1", column = "answer_1"),
-            @Result(property = "answer_2", column = "answer_2"),
-            @Result(property = "answer_3", column = "answer_3"),
-            @Result(property = "userEmail", column = "user_email"),
-            @Result(property = "msn", column = "msn"),
-            @Result(property = "qq", column = "qq"),
-            @Result(property = "officialPhone", column = "official_phone"),
-            @Result(property = "familyPhone", column = "family_phone"),
-            @Result(property = "factoryName", column = "factory_name")
-    })
-    List<UserModel> queryAllUserNoCondition();
-
-    /**
-     * 根据ID获取单个用户
-     * @param userId 用户ID
-     * @return 单个用户的信息
-     */
-    @Select("select * from user_manage where id = #{id}")
+    @Select("select * from user_manage where id = #{userId}")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "gmtCreate", column = "gmt_create"),
@@ -122,6 +85,30 @@ public interface UserMapper {
             @Result(property = "factoryName", column = "factory_name")
     })
     UserModel queryUserById(Long userId);
+
+
+    /**
+     * 根据ID获取单个用户
+     * @param userId 用户ID
+     * @return 单个用户的信息
+     */
+    @Select("select user_manage.factory_name, user_manage.pk_userid, user_manage.user_realname, user_manage.user_role, " +
+            "user_manage.user_telephone, user_manage.official_phone, user_manage.qq, user_manage.msn, user_manage.is_factory, " +
+            "user_manage.user_factory, role_user.type_name from user_manage, role_user where user_manage.id = #{id} and user_manage.user_role = role_user.id")
+    @Results({
+            @Result(property = "factoryName", column = "factory_name"),
+            @Result(property = "pkUserid", column = "pk_userid"),
+            @Result(property = "userRealname", column = "user_realname"),
+            @Result(property = "roleName", column = "type_name"),
+            @Result(property = "userRole", column = "user_role"),
+            @Result(property = "userTelephone", column = "user_telephone"),
+            @Result(property = "officialPhone", column = "official_phone"),
+            @Result(property = "qq", column = "qq"),
+            @Result(property = "msn", column = "msn"),
+            @Result(property = "isFactory", column = "is_factory"),
+            @Result(property = "userFactory", column = "user_factory"),
+    })
+    UserResponse queryUserResponseById(Long userId);
 
 
     /**
@@ -418,6 +405,30 @@ public interface UserMapper {
             @Result(property = "factoryName", column = "factory_name")
     })
     List<UserModel> getAllUsersOfOneFactoryOrOneAgent(@Param("factory") Long factory, @Param("which") Byte which, @Param("page") Long page, @Param("size") Byte size);
+
+
+    /**
+     * 根据ID获取某个羊场下的用户
+     * @return 单个用户的信息
+     */
+    @Select("select user_manage.factory_name, user_manage.pk_userid, user_manage.user_realname, user_manage.user_role, " +
+            "user_manage.user_telephone, user_manage.official_phone, user_manage.qq, user_manage.msn, user_manage.is_factory, " +
+            "user_manage.user_factory, role_user.type_name from user_manage, role_user where user_manage.user_role = role_user.id" +
+            " and user_manage.user_factory = #{factory} and user_manage.is_factory = #{which} limit #{page}, #{size}")
+    @Results({
+            @Result(property = "factoryName", column = "factory_name"),
+            @Result(property = "pkUserid", column = "pk_userid"),
+            @Result(property = "userRealname", column = "user_realname"),
+            @Result(property = "roleName", column = "type_name"),
+            @Result(property = "userRole", column = "user_role"),
+            @Result(property = "userTelephone", column = "user_telephone"),
+            @Result(property = "officialPhone", column = "official_phone"),
+            @Result(property = "qq", column = "qq"),
+            @Result(property = "msn", column = "msn"),
+            @Result(property = "isFactory", column = "is_factory"),
+            @Result(property = "userFactory", column = "user_factory"),
+    })
+    List<UserResponse> queryUserResponsesById(@Param("factory") Long factory, @Param("which") Byte which, @Param("page") Long page, @Param("size") Byte size);
 
     /**
      * 查找某一个羊场或者一个代理的所有用户

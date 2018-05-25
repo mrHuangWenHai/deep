@@ -8,15 +8,42 @@ import javax.validation.constraints.NotBlank;
  * professor check
  */
 public class ProfessorRequest {
-    private Integer professorId;
 
-    @NotBlank(message = "professor can not be null")
-    private String professorName;
+    private Integer professor;          // 专家的ID
+
+//    @NotBlank(message = "professor can not be null")
+    private String name;                // 专家姓名
     @Max(value = 1)
     @Min(value = 0)
-    private Byte ispassCheck;
+    private Byte ispassCheck;           // 是否审核通过
 
     private String upassReason;
+
+    private Long factoryNum;
+
+    public Long getFactoryNum() {
+        return factoryNum;
+    }
+
+    public void setFactoryNum(Long factoryNum) {
+        this.factoryNum = factoryNum;
+    }
+
+    public Integer getProfessor() {
+        return professor;
+    }
+
+    public void setProfessor(Integer professor) {
+        this.professor = professor;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getUpassReason() {
         return upassReason;
@@ -26,27 +53,22 @@ public class ProfessorRequest {
         this.upassReason = upassReason;
     }
 
-    public Integer getProfessorId() {
-        return professorId;
-    }
-
-    public void setProfessorId(Integer professorId) {
-        this.professorId = professorId;
-    }
-
-    public String getProfessorName() {
-        return professorName;
-    }
-
-    public void setProfessorName(String professorName) {
-        this.professorName = professorName;
-    }
-
     public Byte getIspassCheck() {
         return ispassCheck;
     }
 
     public void setIspassCheck(Byte ispassCheck) {
         this.ispassCheck = ispassCheck;
+    }
+
+    @Override
+    public String toString() {
+        return "ProfessorRequest{" +
+                "professor=" + professor +
+                ", name='" + name + '\'' +
+                ", ispassCheck=" + ispassCheck +
+                ", upassReason='" + upassReason + '\'' +
+                ", factoryNum=" + factoryNum +
+                '}';
     }
 }
