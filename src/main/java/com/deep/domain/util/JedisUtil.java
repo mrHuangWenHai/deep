@@ -68,7 +68,6 @@ public class JedisUtil {
         String temValue = jedis.get(key);
 
         if (temValue == null) {
-
             jedis.set(key,"1");
         } else {
 

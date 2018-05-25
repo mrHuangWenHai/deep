@@ -385,7 +385,6 @@ public class DisinfectFilesResource {
             }
             return JudgeUtil.JudgeUpdate(row);
         }
-
     }
 
     /**

@@ -330,8 +330,8 @@ public class NutritionResource {
             // time of the professor modify
             professor.setId(uid);
             professor.setGmtModified(new Date());
-            professor.setProfessorId(professorRequest.getProfessorId().longValue());
-            professor.setProfessorName(professorRequest.getProfessorName());
+//            professor.setProfessorId(professorRequest.getProfessor().longValue());
+            professor.setProfessorName(professorRequest.getProfessor());
             professor.setUpassReason(professorRequest.getUpassReason());
             professor.setIspassCheck(professorRequest.getIspassCheck());
 
@@ -370,8 +370,8 @@ public class NutritionResource {
             // modify the time of the supervised
             supervisor.setId(uid);
             supervisor.setGmtSupervised(new Date());
-            supervisor.setSupervisorId(supervisorRequest.getSupervisorId().longValue());
-            supervisor.setSupervisorName(supervisorRequest.getSupervisorName());
+//            supervisor.setSupervisorId(supervisorRequest.getSupervisor().longValue());
+            supervisor.setSupervisorName(supervisorRequest.getSupervisor());
             supervisor.setIspassSup(supervisorRequest.getIspassSup());
 
             int success = nutritionPlanService.changePlanSelective(supervisor);

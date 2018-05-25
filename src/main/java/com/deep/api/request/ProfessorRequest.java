@@ -8,15 +8,25 @@ import javax.validation.constraints.NotBlank;
  * professor check
  */
 public class ProfessorRequest {
-    private Integer professorId;
+    private String professor;
 
-    @NotBlank(message = "professor can not be null")
+//    @NotBlank(message = "professor can not be null")
     private String professorName;
     @Max(value = 1)
     @Min(value = 0)
     private Byte ispassCheck;
 
     private String upassReason;
+
+    private Long factoryNum;
+
+    public Long getFactoryNum() {
+        return factoryNum;
+    }
+
+    public void setFactoryNum(Long factoryNum) {
+        this.factoryNum = factoryNum;
+    }
 
     public String getUpassReason() {
         return upassReason;
@@ -26,12 +36,12 @@ public class ProfessorRequest {
         this.upassReason = upassReason;
     }
 
-    public Integer getProfessorId() {
-        return professorId;
+    public String getProfessor() {
+        return professor;
     }
 
-    public void setProfessorId(Integer professorId) {
-        this.professorId = professorId;
+    public void setProfessor(String professor) {
+        this.professor = professor;
     }
 
     public String getProfessorName() {

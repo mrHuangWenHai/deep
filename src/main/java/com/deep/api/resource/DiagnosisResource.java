@@ -137,20 +137,20 @@ public class DiagnosisResource {
         if (!json.containsKey("ispassCheck")) {
             return Responses.errorResponse("lack ispassCheck");
         }
+
         short ispassCheck = json.get("ispassCheck").shortValue();
+//        short ispassCheck = Short.valueOf(json.get("ispassCheck"));
         if (ispassCheck == 2) {
             return Responses.errorResponse("已经审批过了");
         }
 
-        int professorId = json.get("professorId");
+        int professorId = json.get("professor");
 
         int isSuccess =  diagnosisPlanService.checkDiagnosisPlanModelById(id, ispassCheck, professorId);
         if (isSuccess == 0) {
             return Responses.errorResponse("错误");
         }
         return Responses.successResponse();
-
-
     }
 
     /**

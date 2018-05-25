@@ -8,21 +8,31 @@ import javax.validation.constraints.NotBlank;
  * supervisor check
  */
 public class SupervisorRequest {
-    private Integer supervisorId;
+    private String supervisor;
 
-    @NotBlank(message = "supervisor can not be null")
+//    @NotBlank(message = "supervisor can not be null")
     private String supervisorName;
+
+    private Long factoryNum;
 
     @Max(value = 1)
     @Min(value = 0)
     private Byte ispassSup;
 
-    public Integer getSupervisorId() {
-        return supervisorId;
+    public Long getFactoryNum() {
+        return factoryNum;
     }
 
-    public void setSupervisorId(Integer supervisorId) {
-        this.supervisorId = supervisorId;
+    public void setFactoryNum(Long factoryNum) {
+        this.factoryNum = factoryNum;
+    }
+
+    public String getSupervisor() {
+        return supervisor;
+    }
+
+    public void setSupervisor(String supervisor) {
+        this.supervisor = supervisor;
     }
 
     public String getSupervisorName() {
