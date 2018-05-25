@@ -206,9 +206,11 @@ public class DiagnosisResource {
             return Responses.errorResponse("错误");
         }
         String professorKey = this.factoryService.getAgentIDByFactoryNumber(professorRequest.getFactoryNum().toString()) + "_professor";
-        if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
-            return Responses.errorResponse("cancel error");
-        }
+        JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
+// TODO
+//        if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
+//            return Responses.errorResponse("cancel error");
+//        }
         return Responses.successResponse();
     }
 
@@ -232,9 +234,11 @@ public class DiagnosisResource {
             return Responses.errorResponse("监督失败");
         }
         String supervisorKey = supervisorRequest.getFactoryNum().toString() + "_supervisor";
-        if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
-            return Responses.errorResponse("cancel error");
-        }
+        JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey);
+// TODO
+//   if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
+//            return Responses.errorResponse("cancel error");
+//        }
         return Responses.successResponse();
     }
 

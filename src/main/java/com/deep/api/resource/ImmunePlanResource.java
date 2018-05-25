@@ -390,9 +390,11 @@ public class ImmunePlanResource {
               System.out.println("factoryNumber: " + immunePlanModel.getFactoryNum());
             String professorKey = this.factoryService.getAgentIDByFactoryNumber(immunePlanModel.getFactoryNum().toString()) + "_professor";
             System.out.println("professorKey" + professorKey);
-            if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
-                return Responses.errorResponse("cancel error");
-            }
+            JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
+            // TODO
+//              if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
+//                return Responses.errorResponse("cancel error");
+//            }
           }
           return JudgeUtil.JudgeUpdate(row);
         }
@@ -420,9 +422,10 @@ public class ImmunePlanResource {
           int row = immunePlanService.updateImmunePlanModelBySupervisor(immunePlanModel);
           if (row == 1) {
             String supervisorKey = immunePlanModel.getFactoryNum().toString() + "_supervisor";
-            if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
-                return Responses.errorResponse("cancel error");
-            }
+              JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey);
+//            if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
+//                return Responses.errorResponse("cancel error");
+//            }
 
           }
           return JudgeUtil.JudgeUpdate(row);

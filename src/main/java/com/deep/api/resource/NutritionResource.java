@@ -404,10 +404,11 @@ public class NutritionResource {
             if (success <= 0) {
                 return Responses.errorResponse("错误");
             }
-            String professorKey = this.factoryService.getAgentIDByFactoryNumber(professorRequest.getFactoryNum().toString()) + "_professor";
-            if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
-                return Responses.errorResponse("cancel error");
-            }
+            String professorKey = this.factoryService.getAgentIDByFactoryNumber(professorRequest.getFactoryNum().toString()) + "_professor";;
+            JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
+//            if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
+//                return Responses.errorResponse("cancel error");
+//            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("success", success);
@@ -448,9 +449,10 @@ public class NutritionResource {
                 return Responses.errorResponse("失败");
             }
             String supervisorKey = supervisorRequest.getFactoryNum().toString() + "_supervisor";
-            if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
-                return Responses.errorResponse("cancel error");
-            }
+            JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey);
+//            if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
+//                return Responses.errorResponse("cancel error");
+//            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("success", success);
