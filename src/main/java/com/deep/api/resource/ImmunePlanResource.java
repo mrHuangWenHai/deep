@@ -387,11 +387,12 @@ public class ImmunePlanResource {
           immunePlanModel.setProfessor(immunePlanModel.getName());
           int row = immunePlanService.updateImmunePlanModelByProfessor(immunePlanModel);
           if (row == 1) {
+              System.out.println("factoryNumber: " + immunePlanModel.getFactoryNum());
             String professorKey = this.factoryService.getAgentIDByFactoryNumber(immunePlanModel.getFactoryNum().toString()) + "_professor";
+            System.out.println("professorKey" + professorKey);
             if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
                 return Responses.errorResponse("cancel error");
             }
-
           }
           return JudgeUtil.JudgeUpdate(row);
         }
@@ -499,7 +500,7 @@ public class ImmunePlanResource {
 
         ImmunePlanModel immunePlanModel = this.immunePlanService.getImmunePlanModelById(id);
         String filePath = pathPre + immunePlanModel.getFactoryNum().toString() + "/immuneEartag/" + immunePlanModel.getImmuneEartag();
-        if (immunePlanModel.getIspassCheck().equals(2) && immunePlanModel.getIspassSup().equals(2)) {
+        if (immunePlanModel.getIspassCheck().equals("2") && immunePlanModel.getIspassSup().equals("2")) {
             int row = immunePlanService.deleteImmunePlanModelById(id);
             if (FileUtil.deleteFile(filePath) && row == 1){
                 return JudgeUtil.JudgeDelete(row);

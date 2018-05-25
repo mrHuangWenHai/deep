@@ -490,13 +490,16 @@ public class RepellentPlanResource {
             return Responses.errorResponse("Wrong id");
         }
         RepellentPlanModel repellentPlanModel = this.repellentPlanService.getRepellentPlanModelById(id);
-        String filePath = pathPre + repellentPlanModel.getFactoryNum().toString() + "/repellentEartag/" + repellentPlanModel.getRepellentEartag();
-        int row = repellentPlanService.deleteRepellentPlanModelByid(id);
-        if (FileUtil.deleteFile(filePath) && row == 1){
-            return JudgeUtil.JudgeDelete(row);
+        if ("2".equals(repellentPlanModel.getIspassCheck()) && "2".equals(repellentPlanModel.getIspassSup())) {
+            String filePath = pathPre + repellentPlanModel.getFactoryNum().toString() + "/repellentEartag/" + repellentPlanModel.getRepellentEartag();
+            int row = repellentPlanService.deleteRepellentPlanModelByid(id);
+            if (FileUtil.deleteFile(filePath) && row == 1) {
+                return JudgeUtil.JudgeDelete(row);
+            } else {
+                return Responses.errorResponse("delete wrong");
+            }
         } else {
-            return Responses.errorResponse("delete wrong");
+            return Responses.errorResponse("该记录已经被审核过，不能删除！");
         }
-
     }
 }

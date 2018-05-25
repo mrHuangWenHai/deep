@@ -225,7 +225,7 @@
     <delete id = "deleteOperationFile">
         delete from
         operation_file
-        where id = #{id}
+        where id = #{id} and ispass_sup != 1
     </delete>
 
 </mapper>

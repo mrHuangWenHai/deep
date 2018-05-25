@@ -484,12 +484,16 @@ public class DisinfectFilesResource {
             return Responses.errorResponse("Wrong id");
         }
         DisinfectFilesModel disinfectFilesModel = this.disinfectFilesService.getDisinfectFilesModelById(id);
-        String filePath = pathPre + disinfectFilesModel.getFactoryNum() + "/disinfectEartag/"+disinfectFilesModel.getDisinfectEartag();
-        int row = this.disinfectFilesService.deleteDisinfectFilesModelById(id);
-        if (FileUtil.deleteFile(filePath) && row == 1){
-            return JudgeUtil.JudgeDelete(row);
+        if ("2".equals(disinfectFilesModel.getIspassCheck()) && "2".equals(disinfectFilesModel.getIspassSup())) {
+            String filePath = pathPre + disinfectFilesModel.getFactoryNum() + "/disinfectEartag/" + disinfectFilesModel.getDisinfectEartag();
+            int row = this.disinfectFilesService.deleteDisinfectFilesModelById(id);
+            if (FileUtil.deleteFile(filePath) && row == 1) {
+                return JudgeUtil.JudgeDelete(row);
+            } else {
+                return Responses.errorResponse("delete wrong");
+            }
         } else {
-            return Responses.errorResponse("delete wrong");
+            return Responses.errorResponse("该记录已经被审核过，不能删除！");
         }
     }
 

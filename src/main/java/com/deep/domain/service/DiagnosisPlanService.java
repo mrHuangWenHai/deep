@@ -31,8 +31,8 @@ public class DiagnosisPlanService {
         return this.diagnosisPlanMapper.checkDiagnosisPlanModelById(id, isPassCheck, professorId, name);
     }
 
-    public int supCheckDiagnosisPlanModelById(int id, short ispassSup, String upassReason, int supervisor_id, String name) {
-        return this.diagnosisPlanMapper.supCheckDiagnosisPlanModelById(id, ispassSup, upassReason, supervisor_id, name);
+    public int supCheckDiagnosisPlanModelById(int id, short ispassSup, String upassReason, int supervisorId, String name) {
+        return this.diagnosisPlanMapper.supCheckDiagnosisPlanModelById(id, ispassSup, upassReason, supervisorId, name);
     }
 
     public int updateDiagnosisPlanModel(DiagnosisPlanModel diagnosisPlanModel) {

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.deep.infra.persistence.sql.mapper.DiagnosisPlanMapper" >
-
-
   <resultMap id="BaseResultMap" type="com.deep.domain.model.DiagnosisPlanModel" >
     <id column="id" property="id" />
     <result column="gmt_create" property="gmtCreate"  />
@@ -25,6 +23,8 @@
     <result column="upass_reason" property="upassReason" jdbcType="VARCHAR" />
     <result column="ispass_sup" property="ispassSup" jdbcType="TINYINT" />
     <result column="tre_eff" property="treatEffect" />
+    <result column="professor_name" property="professorName" />
+    <result column="supervisor_name" property="supervisorName" />
   </resultMap>
 
   <sql id="Base_Column_List" >
