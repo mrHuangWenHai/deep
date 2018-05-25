@@ -14,6 +14,7 @@ public enum FileTypeEnum {
     RM ("2E524D46"),
     MOV("6D6F6F76"),
     ASF("3026B27"),
+    MP4_1("00000014"),
     MP4("00000018");
 
     public String value;
