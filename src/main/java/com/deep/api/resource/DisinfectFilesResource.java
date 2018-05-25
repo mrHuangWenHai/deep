@@ -379,9 +379,10 @@ public class DisinfectFilesResource {
             int row = disinfectFilesService.updateDisinfectFilesModelByProfessor(disinfectRequest);
             if (row == 1) {
                 String professorKey = this.factoryService.getAgentIDByFactoryNumber(disinfectRequest.getFactoryNum().toString()) + "_professor";
-                if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
-                    return Responses.errorResponse("cancel error");
-                }
+                JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
+//                if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
+//                    return Responses.errorResponse("cancel error");
+//                }
             }
             return JudgeUtil.JudgeUpdate(row);
         }
@@ -410,9 +411,11 @@ public class DisinfectFilesResource {
             int row = disinfectFilesService.updateDisinfectFilesModelBySupervisor(disinfectRequest);
             if (row == 1) {
                 String supervisorKey = disinfectRequest.getFactoryNum().toString() + "_supervisor";
-                if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
-                    return Responses.errorResponse("cancel error");
-                }
+                JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey);
+                // TODO
+//                if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
+//                    return Responses.errorResponse("cancel error");
+//                }
             }
             return JudgeUtil.JudgeUpdate(row);
         }
