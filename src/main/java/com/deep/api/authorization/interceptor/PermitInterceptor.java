@@ -183,7 +183,8 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
                 request.getRequestURI().equals("/phonefind") ||request.getRequestURI().equals("/questionfind")||
                 request.getRequestURI().equals("/ensureverify") ||request.getRequestURI().equals("/findpassword")||
                 request.getRequestURI().equals("/phonefind")||request.getRequestURI().equals("/ensurequestion") ||
-                request.getRequestURI().equals("/error") || request.getRequestURI().equals("/question")
+                request.getRequestURI().equals("/error") || request.getRequestURI().equals("/question") ||
+                request.getRequestURI().equals("/messageBoard/insert")
                 ) {
             logger.info("PermitInterceptor:don't need to interceptor");
             return true;
