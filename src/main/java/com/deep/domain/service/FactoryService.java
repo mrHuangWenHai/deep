@@ -1,6 +1,7 @@
 package com.deep.domain.service;
 
 
+import com.deep.api.response.FactoryResponse;
 import com.deep.domain.model.FactoryModel;
 import com.deep.domain.model.UserModel;
 import com.deep.infra.persistence.sql.mapper.FactoryMapper;
@@ -50,6 +51,10 @@ public class FactoryService {
         return factoryMapper.queryFactoryByID(id);
     }
 
+    public FactoryResponse getOneFactoryAgent(Long id) {
+        return factoryMapper.queryFactoryAgentByID(id);
+    }
+
     /**
      * 根据代理号查询所有的羊场(包括分页)
      * @param id 代理号
@@ -64,7 +69,7 @@ public class FactoryService {
      * @param id 代理号
      * @return
      */
-    public List<FactoryModel> getAllFactoryOfOneAgentPage(Long id, Long start, Byte page) {
+    public List<FactoryResponse> getAllFactoryOfOneAgentPage(Long id, Long start, Byte page) {
         return factoryMapper.queryFactoryByAgentIDPage(id, start, page);
     }
 

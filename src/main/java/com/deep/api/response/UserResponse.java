@@ -1,6 +1,8 @@
 package com.deep.api.response;
 
 public class UserResponse {
+    private Long id;
+
     private String factoryName;
 
     private String pkUserid;
@@ -22,6 +24,14 @@ public class UserResponse {
     private Byte isFactory;
 
     private Long userFactory;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getFactoryName() {
         return factoryName;
@@ -114,7 +124,8 @@ public class UserResponse {
     @Override
     public String toString() {
         return "UserResponse{" +
-                "factoryName='" + factoryName + '\'' +
+                "id=" + id +
+                ", factoryName='" + factoryName + '\'' +
                 ", pkUserid='" + pkUserid + '\'' +
                 ", userRealname='" + userRealname + '\'' +
                 ", roleName='" + roleName + '\'' +
