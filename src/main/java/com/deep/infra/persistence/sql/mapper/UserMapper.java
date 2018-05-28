@@ -411,11 +411,12 @@ public interface UserMapper {
      * 根据ID获取某个羊场下的用户
      * @return 单个用户的信息
      */
-    @Select("select user_manage.factory_name, user_manage.pk_userid, user_manage.user_realname, user_manage.user_role, " +
+    @Select("select user_manage.id, user_manage.factory_name, user_manage.pk_userid, user_manage.user_realname, user_manage.user_role, " +
             "user_manage.user_telephone, user_manage.official_phone, user_manage.qq, user_manage.msn, user_manage.is_factory, " +
             "user_manage.user_factory, role_user.type_name from user_manage, role_user where user_manage.user_role = role_user.id" +
             " and user_manage.user_factory = #{factory} and user_manage.is_factory = #{which} limit #{page}, #{size}")
     @Results({
+            @Result(property = "id", column = "id"),
             @Result(property = "factoryName", column = "factory_name"),
             @Result(property = "pkUserid", column = "pk_userid"),
             @Result(property = "userRealname", column = "user_realname"),

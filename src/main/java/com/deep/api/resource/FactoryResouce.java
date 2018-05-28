@@ -6,6 +6,7 @@ import com.deep.api.Utils.TokenAnalysis;
 import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.FactoryRequest;
+import com.deep.api.response.FactoryResponse;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 
@@ -58,7 +59,7 @@ public class FactoryResouce {
         } else if (which == 0) {
             // 这是代理
             Long start = upage*usize;
-            List<FactoryModel> factoryModelList = factoryService.getAllFactoryOfOneAgentPage(uid, start, usize);
+            List<FactoryResponse> factoryModelList = factoryService.getAllFactoryOfOneAgentPage(uid, start, usize);
             if (factoryModelList == null) {
                 return Responses.errorResponse("暂无羊场信息");
             }
@@ -73,22 +74,22 @@ public class FactoryResouce {
             if (factories == null) {
                 return Responses.errorResponse("error request!");
             }
-            List<FactoryModel> models = new ArrayList<>();
+            List<FactoryResponse> models = new ArrayList<>();
             // direct people
             List<Long> directFactories = factories.get((long) -1);
-            List<FactoryModel> theOther = new ArrayList<>();
+            List<FactoryResponse> theOther = new ArrayList<>();
             if (directFactories != null) {
                 for (Long directFactory : directFactories) {
                     System.out.println("directFactory = " + directFactory);
-                    theOther.add(factoryService.getOneFactory(Long.parseLong(directFactory.toString())));
+                    theOther.add(factoryService.getOneFactoryAgent(Long.parseLong(directFactory.toString())));
                 }
             }
             // un direct people
             List<Long> undirectFacotries = factories.get((long) 0);
-            List<FactoryModel> other = new ArrayList<>();
+            List<FactoryResponse> other = new ArrayList<>();
             if (undirectFacotries != null) {
                 for (Long undirectFactory : undirectFacotries) {
-                    other.add(factoryService.getOneFactory(Long.parseLong(undirectFactory.toString())));
+                    other.add(factoryService.getOneFactoryAgent(Long.parseLong(undirectFactory.toString())));
                 }
             }
             models.addAll(theOther);
@@ -129,7 +130,7 @@ public class FactoryResouce {
         if (upage < 0 || usize < 0) {
             return Responses.errorResponse("错误");
         }
-        List<FactoryModel> lists = factoryService.getAllFactoryOfOneAgentPage(uid, start, usize);
+        List<FactoryResponse> lists = factoryService.getAllFactoryOfOneAgentPage(uid, start, usize);
         if (lists == null) {
             return Responses.errorResponse("没有相应直属羊场");
         }
