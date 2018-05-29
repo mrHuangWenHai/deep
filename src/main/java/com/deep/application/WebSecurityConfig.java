@@ -60,6 +60,5 @@ public class WebSecurityConfig implements WebMvcConfigurer {
       } catch (Exception e) {
         System.out.println(e);
       }
-
     }
 }

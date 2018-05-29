@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.deep.infra.persistence.sql.mapper.DiagnosisPlanMapper" >
-
-
   <resultMap id="BaseResultMap" type="com.deep.domain.model.DiagnosisPlanModel" >
     <id column="id" property="id" />
     <result column="gmt_create" property="gmtCreate"  />
@@ -25,6 +23,8 @@
     <result column="upass_reason" property="upassReason" jdbcType="VARCHAR" />
     <result column="ispass_sup" property="ispassSup" jdbcType="TINYINT" />
     <result column="tre_eff" property="treatEffect" />
+    <result column="professor_name" property="professorName" />
+    <result column="supervisor_name" property="supervisorName" />
   </resultMap>
 
   <sql id="Base_Column_List" >
@@ -48,7 +48,9 @@
     ispass_check,
     upass_reason,
     ispass_sup,
-    tre_eff
+    tre_eff,
+    professor_name,
+    supervisor_name
   </sql>
 
   <sql id="Blob_Column_List" >
@@ -88,12 +90,14 @@
     diagnosis_r,
     diagnosis_m,
     dose,
-    tre_eff
+    tre_eff,
+    professor_name,
+    supervisor_name
     )
     values (
     now(),
     now(),
-      #{diagnosisPlanModel.gmtSup},
+    #{diagnosisPlanModel.gmtSup},
     #{diagnosisPlanModel.factoryNum},
     #{diagnosisPlanModel.factoryName},
     #{diagnosisPlanModel.diagnosisTime},
@@ -108,7 +112,9 @@
     #{diagnosisPlanModel.diagnosisResult},
     #{diagnosisPlanModel.diagnosisMethod},
     #{diagnosisPlanModel.dose},
-    #{diagnosisPlanModel.treatEffect}
+    #{diagnosisPlanModel.treatEffect},
+    #{diagnosisPlanModel.professorName},
+    #{diagnosisPlanModel.supervisorName}
     )
   </insert>
 
@@ -164,7 +170,6 @@
       <if test="diagnosisPlanModel.dose != null and diagnosisPlanModel.dose != ''" >
         dose = #{diagnosisPlanModel.dose}
       </if>
-
     </set>
     where id = #{diagnosisPlanModel.id} and ispass_check = 2
   </update>
@@ -174,7 +179,8 @@
     <set>
       gmt_modified = now(),
       ispass_check = #{ispassCheck},
-        professor_id = #{professorId}
+      professor_id = #{professorId},
+      professor_name = #{name}
     </set>
     where id = #{id} and ispass_check = 2
   </update>
@@ -185,7 +191,8 @@
       gmt_modified = now(),
       ispass_sup = #{ispassSup},
       upass_reason = #{upassReason},
-        supervisor_id = #{supervisorId}
+      supervisor_id = #{supervisorId},
+      supervisor_name = #{name}
     </set>
     where id = #{id} and ispass_sup = 2
   </update>
@@ -238,9 +245,20 @@
       AND ispass_sup = #{diagnosisRequest.ispassSup}
     </if>
 
+    <if test="diagnosisRequest.supervisorName != null">
+      AND supervisor_name = #{diagnosisRequest.supervisorName}
+    </if>
+
+    <if test="diagnosisRequest.professorName != null">
+      AND professor_name = #{diagnosisRequest.professorName}
+    </if>
+
     <if test="diagnosisRequest.startTime != null and diagnosisRequest.endTime != null">
       AND diagnosis_t BETWEEN #{diagnosisRequest.startTime} AND #{diagnosisRequest.endTime}
     </if>
+
+
+
 
   </select>
 

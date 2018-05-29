@@ -371,21 +371,21 @@ public class DisinfectFilesResource {
                                     HttpServletRequest httpServletRequest) {
         disinfectRequest.setId(id);
         logger.info("invoke gf/p/{} {}",id, disinfectRequest);
-
         if( disinfectRequest.getIspassCheck() == null
             || disinfectRequest.getUnpassReason() == null) {
             return Responses.errorResponse("Lack Item");
         } else {
+            disinfectRequest.setProfessor(disinfectRequest.getName());
             int row = disinfectFilesService.updateDisinfectFilesModelByProfessor(disinfectRequest);
             if (row == 1) {
                 String professorKey = this.factoryService.getAgentIDByFactoryNumber(disinfectRequest.getFactoryNum().toString()) + "_professor";
-                if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
-                    return Responses.errorResponse("cancel error");
-                }
+                JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
+//                if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
+//                    return Responses.errorResponse("cancel error");
+//                }
             }
             return JudgeUtil.JudgeUpdate(row);
         }
-
     }
 
     /**
@@ -407,12 +407,15 @@ public class DisinfectFilesResource {
             || disinfectRequest.getIspassSup() == null) {
             return Responses.errorResponse("Lack Item");
         } else {
+            disinfectRequest.setSupervisor(disinfectRequest.getName());
             int row = disinfectFilesService.updateDisinfectFilesModelBySupervisor(disinfectRequest);
             if (row == 1) {
                 String supervisorKey = disinfectRequest.getFactoryNum().toString() + "_supervisor";
-                if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
-                    return Responses.errorResponse("cancel error");
-                }
+                JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey);
+                // TODO
+//                if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
+//                    return Responses.errorResponse("cancel error");
+//                }
             }
             return JudgeUtil.JudgeUpdate(row);
         }
@@ -484,12 +487,16 @@ public class DisinfectFilesResource {
             return Responses.errorResponse("Wrong id");
         }
         DisinfectFilesModel disinfectFilesModel = this.disinfectFilesService.getDisinfectFilesModelById(id);
-        String filePath = pathPre + disinfectFilesModel.getFactoryNum() + "/disinfectEartag/"+disinfectFilesModel.getDisinfectEartag();
-        int row = this.disinfectFilesService.deleteDisinfectFilesModelById(id);
-        if (FileUtil.deleteFile(filePath) && row == 1){
-            return JudgeUtil.JudgeDelete(row);
+        if ("2".equals(disinfectFilesModel.getIspassCheck()) && "2".equals(disinfectFilesModel.getIspassSup())) {
+            String filePath = pathPre + disinfectFilesModel.getFactoryNum() + "/disinfectEartag/" + disinfectFilesModel.getDisinfectEartag();
+            int row = this.disinfectFilesService.deleteDisinfectFilesModelById(id);
+            if (FileUtil.deleteFile(filePath) && row == 1) {
+                return JudgeUtil.JudgeDelete(row);
+            } else {
+                return Responses.errorResponse("delete wrong");
+            }
         } else {
-            return Responses.errorResponse("delete wrong");
+            return Responses.errorResponse("该记录已经被审核过，不能删除！");
         }
     }
 

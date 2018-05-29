@@ -11,7 +11,10 @@ import com.deep.api.request.SupervisorRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.*;
+import com.deep.domain.service.FactoryService;
 import com.deep.domain.service.NutritionPlanService;
+import com.deep.domain.service.UserService;
+import com.deep.domain.util.JedisUtil;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +23,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.math.BigInteger;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -35,6 +38,13 @@ public class NutritionResource {
 
     private final Logger logger = LoggerFactory.getLogger(NutritionResource.class);
 
+    //用于查询专家/监督员电话并抉择发送短信
+    @Resource
+    private UserService userService;
+
+    //用于查询羊厂代理id
+    @Resource
+    private FactoryService factoryService;
 
     @Resource
     private NutritionPlanService nutritionPlanService;
@@ -97,6 +107,55 @@ public class NutritionResource {
             if (success <= 0) {
                 return Responses.errorResponse("插入失败");
             }
+
+            short agentID = this.factoryService.queryOneAgentByID(planModel.getFactoryNum().longValue());
+            String professorKey = agentID + "_professor";
+            String supervisorKey = planModel.getFactoryNum().toString() + "_supervisor";
+
+            String testSendProfessor = agentID + "_professor_AlreadySend";
+            String testSendSupervisor = planModel.getFactoryNum().toString() + "_supervisor_AlreadySend";
+
+            JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
+            JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
+
+            if( !("1".equals(JedisUtil.getCertainKeyValue(testSendProfessor)))) {
+                if( JedisUtil.redisJudgeTime(professorKey) ) {
+                    System.out.println("in redis:");
+                    List<String> phone = userService.getProfessorTelephoneByFactoryNum(BigInteger.valueOf(planModel.getFactoryNum()));
+
+                    StringBuffer phoneList = new StringBuffer("");
+
+                    for (String aPhone : phone) {
+                        phoneList = phoneList.append(aPhone).append(",");
+                    }
+
+                    if (phoneList.length() != 0) {
+                        if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
+                            JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
+                        }
+                    }
+                }
+            }
+
+            if( !("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
+                if(JedisUtil.redisJudgeTime(supervisorKey)) {
+                    List<String> phone = userService.getSuperiorTelephoneByFactoryNum(BigInteger.valueOf(planModel.getFactoryNum()));
+
+                    StringBuffer phoneList = new StringBuffer("");
+
+                    for (String aPhone : phone) {
+                        phoneList = phoneList.append(aPhone).append(",");
+                    }
+
+                    if (phoneList.length() != 0) {
+
+                        if( JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
+                            JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime"))*24*60*60);
+                        }
+                    }
+                }
+            }
+
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("success", success);
@@ -117,18 +176,23 @@ public class NutritionResource {
     public Response dropPlan(@PathVariable("id") String id){
         logger.info("invoke dropPlan {}, url is nutrition/{id}", id);
         int uid = StringToLongUtil.stringToInt(id);
+        NutritionPlanWithBLOBs selectById = nutritionPlanService.findPlanById(uid);
         if (uid == -1) {
             return Responses.errorResponse("错误");
         }
-        int success = nutritionPlanService.dropPlan(uid);
-        if (success <= 0) {
-            return Responses.errorResponse("删除失败");
+        if (selectById.getIspassCheck() == 2 && selectById.getIspassSup() == 2) {
+            int success = nutritionPlanService.dropPlan(uid);
+            if (success <= 0) {
+                return Responses.errorResponse("删除失败");
+            }
+            Response response = Responses.successResponse();
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("success", success);
+            response.setData(data);
+            return response;
+        } else {
+            return Responses.errorResponse("该记录已经被审核过，不能删除！");
         }
-        Response response = Responses.successResponse();
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("success", success);
-        response.setData(data);
-        return response;
     }
 
     /**
@@ -331,8 +395,8 @@ public class NutritionResource {
             // time of the professor modify
             professor.setId(uid);
             professor.setGmtModified(new Date());
-            professor.setProfessorId(professorRequest.getProfessorId().longValue());
-            professor.setProfessorName(professorRequest.getProfessorName());
+            professor.setProfessorId(professorRequest.getProfessor().longValue());
+            professor.setProfessorName(professorRequest.getName());
             professor.setUpassReason(professorRequest.getUpassReason());
             professor.setIspassCheck(professorRequest.getIspassCheck());
 
@@ -340,6 +404,11 @@ public class NutritionResource {
             if (success <= 0) {
                 return Responses.errorResponse("错误");
             }
+            String professorKey = this.factoryService.getAgentIDByFactoryNumber(professorRequest.getFactoryNum().toString()) + "_professor";;
+            JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
+//            if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
+//                return Responses.errorResponse("cancel error");
+//            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("success", success);
@@ -371,14 +440,19 @@ public class NutritionResource {
             // modify the time of the supervised
             supervisor.setId(uid);
             supervisor.setGmtSupervised(new Date());
-            supervisor.setSupervisorId(supervisorRequest.getSupervisorId().longValue());
-            supervisor.setSupervisorName(supervisorRequest.getSupervisorName());
+            supervisor.setSupervisorId(supervisorRequest.getSupervisor().longValue());
+            supervisor.setSupervisorName(supervisorRequest.getName());
             supervisor.setIspassSup(supervisorRequest.getIspassSup());
 
             int success = nutritionPlanService.changePlanSelective(supervisor);
             if (success <= 0) {
                 return Responses.errorResponse("失败");
             }
+            String supervisorKey = supervisorRequest.getFactoryNum().toString() + "_supervisor";
+            JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey);
+//            if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
+//                return Responses.errorResponse("cancel error");
+//            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("success", success);

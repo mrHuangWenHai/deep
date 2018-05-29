@@ -242,8 +242,8 @@
 
     <update id="updateDisinfectFilesModelBySupervisor">
         UPDATE disinfect_files
-        SET  supervisor = #{disinfectFilesModel.supervisor},
-        ispass_sup = #{disinfectFilesModel.ispassSup},
+        SET  supervisor = #{disinfectRequest.supervisor},
+        ispass_sup = #{disinfectRequest.ispassSup},
         gmt_supervised = now()
         WHERE
         id = #{disinfectRequest.id} and ispass_sup = 2
@@ -252,7 +252,6 @@
     <update id="updateDisinfectFilesModelByOperatorName">
         UPDATE disinfect_files
         <set>
-
             <if test="disinfectFilesModel.place != null and disinfectFilesModel.place != ''">
                 place = #{disinfectFilesModel.place},
             </if>

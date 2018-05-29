@@ -25,6 +25,11 @@ public class DiagnosisRequest {
   private Integer ispassCheck;
   private String upassReason;
   private Integer ispassSup;
+
+  private String supervisorName;
+
+  private String professorName;
+
   @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
   private String diagnosisTime;
   @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
@@ -237,34 +242,52 @@ public class DiagnosisRequest {
     this.endTime = endTime;
   }
 
+  public String getSupervisorName() {
+    return supervisorName;
+  }
+
+  public void setSupervisorName(String supervisorName) {
+    this.supervisorName = supervisorName;
+  }
+
+  public String getProfessorName() {
+    return professorName;
+  }
+
+  public void setProfessorName(String professorName) {
+    this.professorName = professorName;
+  }
+
   @Override
   public String toString() {
     return "DiagnosisRequest{" +
-        "id=" + id +
-        ", diagnosisResult='" + diagnosisResult + '\'' +
-        ", diagnosisMethod='" + diagnosisMethod + '\'' +
-        ", dose='" + dose + '\'' +
-        ", gmtCreate='" + gmtCreate + '\'' +
-        ", gmtModified='" + gmtModified + '\'' +
-        ", gmtSup='" + gmtSup + '\'' +
-        ", factoryNum=" + factoryNum +
-        ", factoryName='" + factoryName + '\'' +
-        ", operatorId=" + operatorId +
-        ", operatorName='" + operatorName + '\'' +
-        ", professorId=" + professorId +
-        ", supervisorId=" + supervisorId +
-        ", remark='" + remark + '\'' +
-        ", ispassCheck=" + ispassCheck +
-        ", upassReason='" + upassReason + '\'' +
-        ", ispassSup=" + ispassSup +
-        ", diagnosisTime='" + diagnosisTime + '\'' +
-        ", startTime='" + startTime + '\'' +
-        ", endTime='" + endTime + '\'' +
-        ", buildingNum=" + buildingNum +
-        ", earTag='" + earTag + '\'' +
-        ", page=" + page +
-        ", size=" + size +
-        ", factoryList=" + factoryList +
-        '}';
+            "id=" + id +
+            ", diagnosisResult='" + diagnosisResult + '\'' +
+            ", diagnosisMethod='" + diagnosisMethod + '\'' +
+            ", dose='" + dose + '\'' +
+            ", gmtCreate='" + gmtCreate + '\'' +
+            ", gmtModified='" + gmtModified + '\'' +
+            ", gmtSup='" + gmtSup + '\'' +
+            ", factoryNum=" + factoryNum +
+            ", factoryName='" + factoryName + '\'' +
+            ", operatorId=" + operatorId +
+            ", operatorName='" + operatorName + '\'' +
+            ", professorId=" + professorId +
+            ", supervisorId=" + supervisorId +
+            ", remark='" + remark + '\'' +
+            ", ispassCheck=" + ispassCheck +
+            ", upassReason='" + upassReason + '\'' +
+            ", ispassSup=" + ispassSup +
+            ", supervisorName='" + supervisorName + '\'' +
+            ", professorName='" + professorName + '\'' +
+            ", diagnosisTime='" + diagnosisTime + '\'' +
+            ", startTime='" + startTime + '\'' +
+            ", endTime='" + endTime + '\'' +
+            ", buildingNum=" + buildingNum +
+            ", earTag='" + earTag + '\'' +
+            ", page=" + page +
+            ", size=" + size +
+            ", factoryList=" + factoryList +
+            '}';
   }
 }

@@ -11,6 +11,7 @@ import com.deep.api.request.UserRequest;
 import com.deep.api.response.Professor;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
+import com.deep.api.response.UserResponse;
 import com.deep.domain.model.AgentModel;
 import com.deep.domain.model.FactoryModel;
 import com.deep.domain.model.UserModel;
@@ -81,7 +82,7 @@ public class UserResource {
             return Responses.errorResponse("错误");
         }
         if (which == 0 || which == 2) {
-            List<UserModel> userLists = userService.getAllUserOfFactoryOrAgent(uid, which, upage, usize);
+            List<UserResponse> userLists = userService.getAllUserOfFactoryOrAgent(uid, which, upage, usize);
             if (userLists == null) {
                 return Responses.errorResponse("error");
             } else {
@@ -95,10 +96,10 @@ public class UserResource {
         } else if (which == 1) {
             System.out.println("this is agent");
             // 所有的子代理
-            Map<Long, List<Integer>> agents = AgentUtil.getAllSubordinateAgent(id);
+            Map<Long, List<Integer> > agents = AgentUtil.getAllSubordinateAgent(id);
             // 所有的子羊场
             Map<Long, List<Long> > factories = AgentUtil.getAllSubordinateFactory(id);
-            List<UserModel> models = new ArrayList<>(userService.getAllUserOfFactoryOrAgent(uid, which, upage*usize, usize));
+            List<UserResponse> models = new ArrayList<>(userService.getAllUserOfFactoryOrAgent(uid, which, upage*usize, usize));
             if (agents != null && factories != null) {
                 // direct agent people
                 List<Integer> directAgents = agents.get((long) -1);
@@ -176,9 +177,7 @@ public class UserResource {
     @GetMapping(value = "user/detail/{username}")
     public Response getUserOneDetail(@PathVariable("username") String id, HttpServletRequest request) {
         logger.info("invoke getUserOneDetail{}, url is user/detail/{}", id);
-        System.out.println("1111111111110000000000001111111111111111111111");
         long uid = StringToLongUtil.stringToLong(id);
-        System.out.println("11111111111111122222222222222222222222222222222");
         if (uid < 0) {
             return Responses.errorResponse("错误");
         }
@@ -187,7 +186,7 @@ public class UserResource {
             // 这时候是羊场
             which = -1;
         }
-        UserModel userModel = userService.getOneUser(uid);
+        UserResponse userModel = userService.getOneUserResponse(uid);
         logger.info("===========  {}",userModel);
         if (userModel == null) {
             return Responses.errorResponse("系统中该用户不存在");
@@ -200,11 +199,6 @@ public class UserResource {
             // 如果是代理
             which = userService.getAgentRank(userModel.getUserFactory());
         }
-
-        // 前端不需要的字段
-        userModel.setUserPermit("0");
-        userModel.setUserPwd("0");
-//        userModel.setUserRole(0);
 
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();

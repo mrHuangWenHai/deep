@@ -372,24 +372,21 @@ public class RepellentPlanResource {
      * @param repellentPlanModel 驱虫类
      * @return 更新结果
      */
-    @Permit(authorities = "experts_review deworming_implementation_control_files")
+    @Permit(authorities = "experts_review_deworming_implementation_control_files")
     @RequestMapping(value = "/p/{id}",method = RequestMethod.PATCH)
     public Response professorUpdate(@PathVariable(value = "id") long id,
                                     @RequestBody RepellentPlanModel repellentPlanModel) {
-
         logger.info("invoke /rp/p/id {} {}",id, repellentPlanModel);
         repellentPlanModel.setId(id);
         if (repellentPlanModel.getProfessor() == null ||
             repellentPlanModel.getIspassCheck() == null ||
             repellentPlanModel.getFactoryNum() == null) {
-
             return Responses.errorResponse("Lack param");
         } else {
+            repellentPlanModel.setProfessor(repellentPlanModel.getName());
           int row = repellentPlanService.updateRepellentPlanModelByProfessor(repellentPlanModel);
           if (row == 1) {
-
             String professorKey = this.factoryService.getAgentIDByFactoryNumber(repellentPlanModel.getFactoryNum().toString()) + "_professor";
-
             JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
           }
           return JudgeUtil.JudgeUpdate(row);
@@ -415,10 +412,10 @@ public class RepellentPlanResource {
             repellentPlanModel.getIspassSup() == null) {
             return Responses.errorResponse("Lack Item");
         } else {
+            repellentPlanModel.setSupervisor(repellentPlanModel.getName());
           int row = repellentPlanService.updateRepellentPlanModelBySupervisor(repellentPlanModel);
           if (row == 1) {
             String supervisorKey = repellentPlanModel.getFactoryNum().toString() + "_supervisor";
-
             JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey);
           }
           return JudgeUtil.JudgeUpdate(row);
@@ -493,13 +490,16 @@ public class RepellentPlanResource {
             return Responses.errorResponse("Wrong id");
         }
         RepellentPlanModel repellentPlanModel = this.repellentPlanService.getRepellentPlanModelById(id);
-        String filePath = pathPre + repellentPlanModel.getFactoryNum().toString() + "/repellentEartag/" + repellentPlanModel.getRepellentEartag();
-        int row = repellentPlanService.deleteRepellentPlanModelByid(id);
-        if (FileUtil.deleteFile(filePath) && row == 1){
-            return JudgeUtil.JudgeDelete(row);
+        if ("2".equals(repellentPlanModel.getIspassCheck()) && "2".equals(repellentPlanModel.getIspassSup())) {
+            String filePath = pathPre + repellentPlanModel.getFactoryNum().toString() + "/repellentEartag/" + repellentPlanModel.getRepellentEartag();
+            int row = repellentPlanService.deleteRepellentPlanModelByid(id);
+            if (FileUtil.deleteFile(filePath) && row == 1) {
+                return JudgeUtil.JudgeDelete(row);
+            } else {
+                return Responses.errorResponse("delete wrong");
+            }
         } else {
-            return Responses.errorResponse("delete wrong");
+            return Responses.errorResponse("该记录已经被审核过，不能删除！");
         }
-
     }
 }

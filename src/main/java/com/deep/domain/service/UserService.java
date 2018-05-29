@@ -3,6 +3,7 @@ package com.deep.domain.service;
 import com.deep.api.Utils.JedisUtil;
 import com.deep.api.authorization.tools.RoleAndPermit;
 import com.deep.api.response.Professor;
+import com.deep.api.response.UserResponse;
 import com.deep.domain.model.AgentModel;
 import com.deep.domain.model.FactoryModel;
 import com.deep.domain.model.UserModel;
@@ -189,6 +190,16 @@ public class UserService {
     /**
      * 根据主键获取单个用户的信息
      */
+    public UserResponse getOneUserResponse(Long id) {
+        UserResponse userResponse = userMapper.queryUserResponseById(id);
+        if (userResponse != null) {
+            System.out.println(userResponse.toString());
+        } else {
+            System.out.println("userResponse is null");
+        }
+        return userResponse;
+    }
+
     public UserModel getOneUser(Long id) {
         return userMapper.queryUserById(id);
     }
@@ -384,8 +395,8 @@ public class UserService {
      * @param  which  which
      * @return 手机号
      */
-    public List<UserModel> getAllUserOfFactoryOrAgent(Long factory, Byte which, Long page, Byte size) {
-        return userMapper.getAllUsersOfOneFactoryOrOneAgent(factory, which, page, size);
+    public List<UserResponse> getAllUserOfFactoryOrAgent(Long factory, Byte which, Long page, Byte size) {
+        return userMapper.queryUserResponsesById(factory, which, page, size);
     }
 
     /**
