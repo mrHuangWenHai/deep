@@ -29,46 +29,37 @@ public interface BreedingPlanAnotherMapper {
         @Result(property = "id", column = "id"),
         @Result(property = "gmtCreate", column = "gmt_create"),
         @Result(property = "gmtModify", column = "gmt_modify"),
-        @Result(property = "stageFlag", column = "stage_flag"),
-        // 第一阶段的信息
+        @Result(property = "breedingTime", column = "breeding_time"),
         @Result(property = "buildingAfterBreeding", column = "building_after_breeding"),
-        @Result(property = "buildingOld", column = "building_old"),
         @Result(property = "ramSheepTrademark", column = "ram_sheep_trademark"),
         @Result(property = "eweSheepTrademark", column = "ewe_sheep_trademark"),
-        @Result(property = "breedingTime", column = "breeding_time"),
-        @Result(property = "pregnancyTime", column = "pregnancy_time"),
-        @Result(property = "operatorTimeFirst", column = "operator_time_first"),
-        @Result(property = "operatorIdFirst", column = "operator_id_first"),
-        @Result(property = "operatorNameFirst", column = "operator_name_first"),
-        @Result(property = "isPassSupFirst", column = "is_pass_sup_first"),
-        @Result(property = "supervisorTimeFirst", column = "supervisor_time_first"),
-        @Result(property = "supervisorIdFirst", column = "supervisor_id_first"),
-        @Result(property = "supervisorNameFirst", column = "supervisor_name_first"),
-        @Result(property = "isPassCheckFirst", column = "is_pass_check_first"),
-        @Result(property = "professorTimeFirst", column = "professor_time_first"),
-        @Result(property = "professorIdFirst", column = "professor_id_first"),
-        @Result(property = "professorNameFirst", column = "professor_name_first"),
-        @Result(property = "remarkFirst", column = "remark_first"),
-        // 第二阶段的信息
+        @Result(property = "manageFlag", column = "manage_flag"),
+        @Result(property = "manageAverageTime", column = "manage_average_time"),
+        @Result(property = "nutritionBeforePregnancy", column = "nutrition_before_pregnancy"),
+        @Result(property = "isPregnancy", column = "is_pregnancy"),
+        @Result(property = "nutritionAfterPregnancy", column = "nutrition_after_pregnancy"),
+        @Result(property = "prenatalImmunityType", column = "prenatal_immunity_type"),
+        @Result(property = "prenatalImmunityTime", column = "prenatal_immunity_time"),
         @Result(property = "buildingToBeRelocated", column = "building_to_be_relocated"),
+        @Result(property = "nutritionBeforeLambing", column = "nutrition_before_lambing"),
         @Result(property = "lambingTime", column = "lambing_time"),
         @Result(property = "lambingNumber", column = "lambing_number"),
-        @Result(property = "operatorTimeSecond", column = "operator_time_second"),
-        @Result(property = "operatorIdSecond", column = "operator_id_second"),
-        @Result(property = "operatorNameSecond", column = "operator_name_second"),
-        @Result(property = "isPassSupSecond", column = "is_pass_sup_second"),
-        @Result(property = "supervisorTimeSecond", column = "supervisor_time_second"),
-        @Result(property = "supervisorIdSecond", column = "supervisor_id_second"),
-        @Result(property = "supervisorNameSecond", column = "supervisor_name_second"),
-        @Result(property = "isPassCheckSecond", column = "is_pass_check_second"),
-        @Result(property = "professorTimeSecond", column = "professor_time_second"),
-        @Result(property = "professorIdSecond", column = "professor_id_second"),
-        @Result(property = "professorNameSecond", column = "professor_name_second"),
-        @Result(property = "remarkSecond", column = "remark_second"),
-        @Result(property = "factoryNumber", column = "factory_number"),
-        @Result(property = "factoryName", column = "factory_name"),
-        @Result(property = "prenatalImmunityType", column = "prenatal_immunity_type"),
-        @Result(property = "prenatalImmunityTime", column = "prenatal_immunity_time")
+        @Result(property = "nutritionBreastFeeding", column = "nutrition_breast_feeding"),
+        @Result(property = "nutritionInsteadBreastFeeding", column = "nutrition_instead_breast_feeding"),
+        @Result(property = "nutritionBeforeCutBreastFeeding", column = "nutrition_before_cut_breast_feeding"),
+        @Result(property = "nutritionCutBreastFeeding", column = "nutrition_cut_breast_feeding"),
+        @Result(property = "operatorTime", column = "operator_time"),
+        @Result(property = "operatorId", column = "operator_id"),
+        @Result(property = "operatorName", column = "operator_name"),
+        @Result(property = "ispassSup", column = "is_pass_up"),
+        @Result(property = "supervisorTime", column = "supervisor_time"),
+        @Result(property = "supervisorId", column = "supervisor_id"),
+        @Result(property = "supervisorName", column = "supervisor_name"),
+        @Result(property = "ispassCheck", column = "is_pass_check"),
+        @Result(property = "professorTime", column = "professor_time"),
+        @Result(property = "professorId", column = "professor_id"),
+        @Result(property = "professorName", column = "professor_name"),
+        @Result(property = "remark", column = "remark")
     })
     List<BreedingPlanAnotherModel> findAllRecords(@Param("factoryNumber") Long factoryNumber, @Param("stageFlag") Byte stageFlag, @Param("start") Long start, @Param("size") Byte size);
 
@@ -79,49 +70,40 @@ public interface BreedingPlanAnotherMapper {
      */
     @Select("select * from breeding_plan_another where id = #{id}")
     @Results ({
-        @Result(property = "id", column = "id"),
-        @Result(property = "gmtCreate", column = "gmt_create"),
-        @Result(property = "gmtModify", column = "gmt_modify"),
-        @Result(property = "stageFlag", column = "stage_flag"),
-        // 第一阶段的信息
-        @Result(property = "buildingAfterBreeding", column = "building_after_breeding"),
-        @Result(property = "buildingOld", column = "building_old"),
-        @Result(property = "ramSheepTrademark", column = "ram_sheep_trademark"),
-        @Result(property = "eweSheepTrademark", column = "ewe_sheep_trademark"),
-        @Result(property = "breedingTime", column = "breeding_time"),
-        @Result(property = "pregnancyTime", column = "pregnancy_time"),
-        @Result(property = "operatorTimeFirst", column = "operator_time_first"),
-        @Result(property = "operatorIdFirst", column = "operator_id_first"),
-        @Result(property = "operatorNameFirst", column = "operator_name_first"),
-        @Result(property = "isPassSupFirst", column = "is_pass_sup_first"),
-        @Result(property = "supervisorTimeFirst", column = "supervisor_time_first"),
-        @Result(property = "supervisorIdFirst", column = "supervisor_id_first"),
-        @Result(property = "supervisorNameFirst", column = "supervisor_name_first"),
-        @Result(property = "isPassCheckFirst", column = "is_pass_check_first"),
-        @Result(property = "professorTimeFirst", column = "professor_time_first"),
-        @Result(property = "professorIdFirst", column = "professor_id_first"),
-        @Result(property = "professorNameFirst", column = "professor_name_first"),
-        @Result(property = "remarkFirst", column = "remark_first"),
-        // 第二阶段的信息
-        @Result(property = "buildingToBeRelocated", column = "building_to_be_relocated"),
-        @Result(property = "lambingTime", column = "lambing_time"),
-        @Result(property = "lambingNumber", column = "lambing_number"),
-        @Result(property = "operatorTimeSecond", column = "operator_time_second"),
-        @Result(property = "operatorIdSecond", column = "operator_id_second"),
-        @Result(property = "operatorNameSecond", column = "operator_name_second"),
-        @Result(property = "isPassSupSecond", column = "is_pass_sup_second"),
-        @Result(property = "supervisorTimeSecond", column = "supervisor_time_second"),
-        @Result(property = "supervisorIdSecond", column = "supervisor_id_second"),
-        @Result(property = "supervisorNameSecond", column = "supervisor_name_second"),
-        @Result(property = "isPassCheckSecond", column = "is_pass_check_second"),
-        @Result(property = "professorTimeSecond", column = "professor_time_second"),
-        @Result(property = "professorIdSecond", column = "professor_id_second"),
-        @Result(property = "professorNameSecond", column = "professor_name_second"),
-        @Result(property = "remarkSecond", column = "remark_second"),
-        @Result(property = "factoryNumber", column = "factory_number"),
-        @Result(property = "factoryName", column = "factory_name"),
-        @Result(property = "prenatalImmunityType", column = "prenatal_immunity_type"),
-        @Result(property = "prenatalImmunityTime", column = "prenatal_immunity_time")
+            @Result(property = "id", column = "id"),
+            @Result(property = "gmtCreate", column = "gmt_create"),
+            @Result(property = "gmtModify", column = "gmt_modify"),
+            @Result(property = "breedingTime", column = "breeding_time"),
+            @Result(property = "buildingAfterBreeding", column = "building_after_breeding"),
+            @Result(property = "ramSheepTrademark", column = "ram_sheep_trademark"),
+            @Result(property = "eweSheepTrademark", column = "ewe_sheep_trademark"),
+            @Result(property = "manageFlag", column = "manage_flag"),
+            @Result(property = "manageAverageTime", column = "manage_average_time"),
+            @Result(property = "nutritionBeforePregnancy", column = "nutrition_before_pregnancy"),
+            @Result(property = "isPregnancy", column = "is_pregnancy"),
+            @Result(property = "nutritionAfterPregnancy", column = "nutrition_after_pregnancy"),
+            @Result(property = "prenatalImmunityType", column = "prenatal_immunity_type"),
+            @Result(property = "prenatalImmunityTime", column = "prenatal_immunity_time"),
+            @Result(property = "buildingToBeRelocated", column = "building_to_be_relocated"),
+            @Result(property = "nutritionBeforeLambing", column = "nutrition_before_lambing"),
+            @Result(property = "lambingTime", column = "lambing_time"),
+            @Result(property = "lambingNumber", column = "lambing_number"),
+            @Result(property = "nutritionBreastFeeding", column = "nutrition_breast_feeding"),
+            @Result(property = "nutritionInsteadBreastFeeding", column = "nutrition_instead_breast_feeding"),
+            @Result(property = "nutritionBeforeCutBreastFeeding", column = "nutrition_before_cut_breast_feeding"),
+            @Result(property = "nutritionCutBreastFeeding", column = "nutrition_cut_breast_feeding"),
+            @Result(property = "operatorTime", column = "operator_time"),
+            @Result(property = "operatorId", column = "operator_id"),
+            @Result(property = "operatorName", column = "operator_name"),
+            @Result(property = "ispassSup", column = "is_pass_up"),
+            @Result(property = "supervisorTime", column = "supervisor_time"),
+            @Result(property = "supervisorId", column = "supervisor_id"),
+            @Result(property = "supervisorName", column = "supervisor_name"),
+            @Result(property = "ispassCheck", column = "is_pass_check"),
+            @Result(property = "professorTime", column = "professor_time"),
+            @Result(property = "professorId", column = "professor_id"),
+            @Result(property = "professorName", column = "professor_name"),
+            @Result(property = "remark", column = "remark")
     })
     BreedingPlanAnotherModel findARecords(Long id);
 
@@ -133,85 +115,72 @@ public interface BreedingPlanAnotherMapper {
     @Insert("insert into breeding_plan_another(" +
             "gmt_create, " +
             "gmt_modify, " +
-            "stage_flag, " +
+            "breeding_time, " +
             "building_after_breeding, " +
-            "building_old, " +
             "ram_sheep_trademark, " +
             "ewe_sheep_trademark, " +
-            "breeding_time, " +
-            "pregnancy_time, " +
-            "operator_time_first, " +
-            "operator_id_first, " +
-            "operator_name_first, " +
-            "is_pass_sup_first, " +
-            "supervisor_time_first, " +
-            "supervisor_id_first, " +
-            "supervisor_name_first, " +
-            "is_pass_check_first, " +
-            "professor_time_first, " +
-            "professor_id_first, " +
-            "professor_name_first, " +
-            "remark_first, " +
+            "manage_flag, " +
+            "manage_average_time, " +
+            "nutrition_before_pregnancy, " +
+            "is_pregnancy, " +
+            "nutrition_after_pregnancy, " +
+            "prenatal_immunity_type, " +
+            "prenatal_immunity_time, " +
             "building_to_be_relocated, " +
+            "nutrition_before_lambing, " +
             "lambing_time, " +
             "lambing_number, " +
-            "operator_time_second, " +
-            "operator_id_second, " +
-            "operator_name_second, " +
-            "is_pass_sup_second, " +
-            "supervisor_time_second, " +
-            "supervisor_id_second, " +
-            "supervisor_name_second, " +
-            "is_pass_check_second, " +
-            "professor_time_second, " +
-            "professor_id_second, " +
-            "professor_name_second, " +
-            "remark_second, " +
-            "factory_number, " +
-            "factory_name, " +
-            "prenatal_immunity_type, " +
-            "prenatal_immunity_time" +
+            "nutrition_breast_feeding, " +
+            "nutrition_instead_breast_feeding, " +
+            "nutrition_before_cut_breast_feeding, " +
+            "nutrition_cut_breast_feeding, " +
+            "operator_time, " +
+            "operator_id, " +
+            "operator_name, " +
+            "is_pass_up, " +
+            "supervisor_time, " +
+            "supervisor_id, " +
+            "supervisor_name, " +
+            "is_pass_check, " +
+            "professor_time, " +
+            "professor_id, " +
+            "professor_name, " +
+            "remark " +
             " ) values(" +
+            "#{id}," +
             "#{gmtCreate}," +
-            "#{getModify}," +
-            "#{stageFlag}," +
+            "#{gmtModify}," +
+            "#{breedingTime}," +
             "#{buildingAfterBreeding}," +
-            "#{buildingOld}," +
             "#{ramSheepTrademark}," +
             "#{eweSheepTrademark}," +
-            "#{breedingTime}," +
-            "#{pregnancyTime}," +
-            "#{operatorTimeFirst}," +
-            "#{operatorIdFirst}," +
-            "#{operatorNameFirst}," +
-            "#{isPassSupFirst}," +
-            "#{supervisorTimeFirst}," +
-            "#{supervisorIdFirst}," +
-            "#{supervisorNameFirst}," +
-            "#{isPassCheckFirst}," +
-            "#{professorTimeFirst}," +
-            "#{professorIdFirst}," +
-            "#{professorNameFirst}," +
-            "#{remarkFirst}," +
+            "#{manageFlag}," +
+            "#{manageAverageTime}," +
+            "#{nutritionBeforePregnancy}," +
+            "#{isPregnancy}," +
+            "#{nutritionAfterPregnancy}," +
+            "#{prenatalImmunityType}," +
+            "#{prenatalImmunityTime}," +
             "#{buildingToBeRelocated}," +
+            "#{nutritionBeforeLambing}," +
             "#{lambingTime}," +
             "#{lambingNumber}," +
-            "#{operatorTimeSecond}," +
-            "#{operatorIdSecond}," +
-            "#{operatorNameSecond}," +
-            "#{isPassSupSecond}," +
-            "#{supervisorTimeSecond}," +
-            "#{supervisorIdSecond}," +
-            "#{supervisorNameSecond}," +
-            "#{isPassCheckSecond}," +
-            "#{professorTimeSecond}," +
-            "#{professorIdSecond}," +
-            "#{professorNameSecond}," +
-            "#{remarkSecond}," +
-            "#{factoryNumber}," +
-            "#{factoryName}," +
-            "#{prenatalImmunityType}," +
-            "#{prenatalImmunityTime}" +
+            "#{nutritionBreastFeeding}," +
+            "#{nutritionInsteadBreastFeeding}," +
+            "#{nutritionBeforeCutBreastFeeding}," +
+            "#{nutritionCutBreastFeeding}," +
+            "#{operatorTime}," +
+            "#{operatorId}," +
+            "#{operatorName}," +
+            "#{ispassSup}," +
+            "#{supervisorTime}," +
+            "#{supervisorId}," +
+            "#{supervisorName}," +
+            "#{ispassCheck}," +
+            "#{professorTime}," +
+            "#{professorId}," +
+            "#{professorName}," +
+            "#{remark}" +
             ")")
     Long addARecord(BreedingPlanAnotherModel breedingPlanAnotherModel);
 
@@ -303,28 +272,12 @@ public interface BreedingPlanAnotherMapper {
      */
     @Update("update breeding_plan_another set " +
             "gmt_modify = #{gmtModify}, " +
-            "is_pass_sup_first = #{ispassSup}, " +
-            "supervisor_time_first = #{supervisorTimeFirst}, " +
-            "supervisor_id_first = #{supervisorId}, " +
-            "supervisor_name_first = #{supervisorName}" +
+            "is_pass_sup = #{ispassSup}, " +
+            "supervisor_time = #{supervisorTimeFirst}, " +
+            "supervisor_id = #{supervisorId}, " +
+            "supervisor_name = #{supervisorName} " +
             "where id = #{id}")
     Long updateARecordFirstBySupervisor(@Param("id") Long id, @Param("gmtModify") Timestamp gmtModify, @Param("supervisorTimeFirst") Timestamp supervisorTimeFirst, @Param("ispassSup") Byte ispassSup, @Param("supervisorId") Integer supervisorId, @Param("supervisorName") String supervisorName);
-
-    /**
-     * 第二阶段监督员审核一条记录
-     * @param id 记录主键
-     * @param gmtModify 修改时间
-     * @param supervisorTimeFirst 审核时间
-     * @return 是否修改成功标记
-     */
-    @Update("update breeding_plan_another set " +
-            "gmt_modify = #{gmtModify}, " +
-            "is_pass_sup_second = #{ispassSup}, " +
-            "supervisor_time_second = #{supervisorTimeFirst}, " +
-            "supervisor_id_second = #{supervisorId}, " +
-            "supervisor_name_second = #{supervisorName}" +
-            "where id = #{id}")
-    Long updateARecordSecondBySupervisor(@Param("id") Long id, @Param("gmtModify") Timestamp gmtModify, @Param("supervisorTimeFirst") Timestamp supervisorTimeFirst, @Param("ispassSup") Byte ispassSup, @Param("supervisorId") Integer supervisorId, @Param("supervisorName") String supervisorName);
 
     /**
      * 第一阶段技术员审核一条记录
@@ -335,30 +288,12 @@ public interface BreedingPlanAnotherMapper {
      */
     @Update("update breeding_plan_another set " +
             "gmt_modify = #{gmtModify}, " +
-            "is_pass_check_first = #{ispassCheck}, " +
-            "professor_time_first = #{professorTimeFirst}, " +
-            "professor_id_first = #{professorId}, " +
-            "professor_name_first = #{professorName}," +
-            "stage_flag = 1" +
+            "is_pass_check = #{ispassCheck}, " +
+            "professor_time = #{professorTimeFirst}, " +
+            "professor_id = #{professorId}, " +
+            "professor_name = #{professorName} " +
             "where id = #{id}")
     Long updateARecordFirstByProfessor(@Param("id") Long id, @Param("gmtModify") Timestamp gmtModify, @Param("professorTimeFirst") Timestamp professorTimeFirst, @Param("ispassCheck") Byte ispassCheck, @Param("professorId") Integer professorId, @Param("professorName") String professorName);
-
-    /**
-     * 第二阶段技术员审核一条记录
-     * @param id 记录主键
-     * @param gmtModify 修改时间
-     * @param professorTimeFirst 审核时间
-     * @return 是否修改成功标记
-     */
-    @Update("update breeding_plan_another set " +
-            "gmt_modify = #{gmtModify}, " +
-            "is_pass_check_second = #{ispassCheck}, " +
-            "professor_time_second = #{professorTimeFirst}, " +
-            "professor_id_second = #{professorId}, " +
-            "professor_name_second = #{professorName}" +
-            "where id = #{id}")
-    Long updateARecordSecondByProfessor(@Param("id") Long id, @Param("gmtModify") Timestamp gmtModify, @Param("professorTimeFirst") Timestamp professorTimeFirst, @Param("ispassCheck") Byte ispassCheck, @Param("professorId") Integer professorId, @Param("professorName") String professorName);
-
     /**
      * 删除一条记录
      * @param id 代理主键

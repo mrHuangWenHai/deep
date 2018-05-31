@@ -6,47 +6,37 @@ public class BreedingPlanAnotherModel {
     private Integer id;
     private Timestamp gmtCreate;
     private Timestamp gmtModify;
-
-    private Byte stageFlag;
-
-    // 第一阶段
+    private Timestamp breedingTime;
     private String buildingAfterBreeding;
-    private String buildingOld;
     private String ramSheepTrademark;
     private String eweSheepTrademark;
-    private Timestamp breedingTime;
-    private Timestamp pregnancyTime;
-    private Timestamp operatorTimeFirst;
-    private Integer operatorIdFirst;
-    private String operatorNameFirst;
-    private Byte isPassSupFirst;
-    private Timestamp supervisorTimeFirst;
-    private Integer supervisorIdFirst;
-    private String supervisorNameFirst;
-    private Byte isPassCheckFirst;
-    private Timestamp professorTimeFirst;
-    private Integer professorIdFirst;
-    private String professorNameFirst;
-    private String remarkFirst;
-
-    // 第二阶段
-    private String buildingToBeRelocated;
-    private Timestamp lambingTime;
-    private Integer lambingNumber;
-    private Timestamp operatorTimeSecond;
-    private Integer operatorIdSecond;
-    private String operatorNameSecond;
-    private Byte isPassSupSecond;
-    private Timestamp supervisorTimeSecond;
-    private Integer supervisorIdSecond;
-    private String supervisorNameSecond;
-    private Byte isPassCheckSecond;
-    private Timestamp professorTimeSecond;
-    private Integer professorIdSecond;
-    private String professorNameSecond;
-    private String remarkSecond;
+    private Byte manageFlag;
+    private Timestamp manageAverageTime;
+    private Timestamp nutritionBeforePregnancy;
+    private String isPregnancy;
+    private Timestamp nutritionAfterPregnancy;
     private String prenatalImmunityType;
     private String prenatalImmunityTime;
+    private String buildingToBeRelocated;
+    private Timestamp nutritionBeforeLambing;
+    private Timestamp lambingTime;
+    private Integer lambingNumber;
+    private Timestamp nutritionBreastFeeding;
+    private Timestamp nutritionInsteadBreastFeeding;
+    private Timestamp nutritionBeforeCutBreastFeeding;
+    private Timestamp nutritionCutBreastFeeding;
+    private Timestamp operatorTime;
+    private Integer operatorId;
+    private String operatorName;
+    private Byte ispassSup;
+    private Timestamp supervisorTime;
+    private Integer supervisorId;
+    private String supervisorName;
+    private Byte ispassCheck;
+    private Timestamp professorTime;
+    private Integer professorId;
+    private String professorName;
+    private String remark;
 
     // 羊场信息
     private Integer factoryNumber;
@@ -76,12 +66,12 @@ public class BreedingPlanAnotherModel {
         this.gmtModify = gmtModify;
     }
 
-    public Byte getStageFlag() {
-        return stageFlag;
+    public Timestamp getBreedingTime() {
+        return breedingTime;
     }
 
-    public void setStageFlag(Byte stageFlag) {
-        this.stageFlag = stageFlag;
+    public void setBreedingTime(Timestamp breedingTime) {
+        this.breedingTime = breedingTime;
     }
 
     public String getBuildingAfterBreeding() {
@@ -90,14 +80,6 @@ public class BreedingPlanAnotherModel {
 
     public void setBuildingAfterBreeding(String buildingAfterBreeding) {
         this.buildingAfterBreeding = buildingAfterBreeding;
-    }
-
-    public String getBuildingOld() {
-        return buildingOld;
-    }
-
-    public void setBuildingOld(String buildingOld) {
-        this.buildingOld = buildingOld;
     }
 
     public String getRamSheepTrademark() {
@@ -116,236 +98,44 @@ public class BreedingPlanAnotherModel {
         this.eweSheepTrademark = eweSheepTrademark;
     }
 
-    public Timestamp getBreedingTime() {
-        return breedingTime;
+    public Byte getManageFlag() {
+        return manageFlag;
     }
 
-    public void setBreedingTime(Timestamp breedingTime) {
-        this.breedingTime = breedingTime;
+    public void setManageFlag(Byte manageFlag) {
+        this.manageFlag = manageFlag;
     }
 
-    public Timestamp getPregnancyTime() {
-        return pregnancyTime;
+    public Timestamp getManageAverageTime() {
+        return manageAverageTime;
     }
 
-    public void setPregnancyTime(Timestamp pregnancyTime) {
-        this.pregnancyTime = pregnancyTime;
+    public void setManageAverageTime(Timestamp manageAverageTime) {
+        this.manageAverageTime = manageAverageTime;
     }
 
-    public Timestamp getOperatorTimeFirst() {
-        return operatorTimeFirst;
+    public Timestamp getNutritionBeforePregnancy() {
+        return nutritionBeforePregnancy;
     }
 
-    public void setOperatorTimeFirst(Timestamp operatorTimeFirst) {
-        this.operatorTimeFirst = operatorTimeFirst;
+    public void setNutritionBeforePregnancy(Timestamp nutritionBeforePregnancy) {
+        this.nutritionBeforePregnancy = nutritionBeforePregnancy;
     }
 
-    public Integer getOperatorIdFirst() {
-        return operatorIdFirst;
+    public String getIsPregnancy() {
+        return isPregnancy;
     }
 
-    public void setOperatorIdFirst(Integer operatorIdFirst) {
-        this.operatorIdFirst = operatorIdFirst;
+    public void setIsPregnancy(String isPregnancy) {
+        this.isPregnancy = isPregnancy;
     }
 
-    public String getOperatorNameFirst() {
-        return operatorNameFirst;
+    public Timestamp getNutritionAfterPregnancy() {
+        return nutritionAfterPregnancy;
     }
 
-    public void setOperatorNameFirst(String operatorNameFirst) {
-        this.operatorNameFirst = operatorNameFirst;
-    }
-
-    public Byte getIsPassSupFirst() {
-        return isPassSupFirst;
-    }
-
-    public void setIsPassSupFirst(Byte isPassSupFirst) {
-        this.isPassSupFirst = isPassSupFirst;
-    }
-
-    public Timestamp getSupervisorTimeFirst() {
-        return supervisorTimeFirst;
-    }
-
-    public void setSupervisorTimeFirst(Timestamp supervisorTimeFirst) {
-        this.supervisorTimeFirst = supervisorTimeFirst;
-    }
-
-    public Integer getSupervisorIdFirst() {
-        return supervisorIdFirst;
-    }
-
-    public void setSupervisorIdFirst(Integer supervisorIdFirst) {
-        this.supervisorIdFirst = supervisorIdFirst;
-    }
-
-    public String getSupervisorNameFirst() {
-        return supervisorNameFirst;
-    }
-
-    public void setSupervisorNameFirst(String supervisorNameFirst) {
-        this.supervisorNameFirst = supervisorNameFirst;
-    }
-
-    public Byte getIsPassCheckFirst() {
-        return isPassCheckFirst;
-    }
-
-    public void setIsPassCheckFirst(Byte isPassCheckFirst) {
-        this.isPassCheckFirst = isPassCheckFirst;
-    }
-
-    public Timestamp getProfessorTimeFirst() {
-        return professorTimeFirst;
-    }
-
-    public void setProfessorTimeFirst(Timestamp professorTimeFirst) {
-        this.professorTimeFirst = professorTimeFirst;
-    }
-
-    public Integer getProfessorIdFirst() {
-        return professorIdFirst;
-    }
-
-    public void setProfessorIdFirst(Integer professorIdFirst) {
-        this.professorIdFirst = professorIdFirst;
-    }
-
-    public String getProfessorNameFirst() {
-        return professorNameFirst;
-    }
-
-    public void setProfessorNameFirst(String professorNameFirst) {
-        this.professorNameFirst = professorNameFirst;
-    }
-
-    public String getRemarkFirst() {
-        return remarkFirst;
-    }
-
-    public void setRemarkFirst(String remarkFirst) {
-        this.remarkFirst = remarkFirst;
-    }
-
-    public String getBuildingToBeRelocated() {
-        return buildingToBeRelocated;
-    }
-
-    public void setBuildingToBeRelocated(String buildingToBeRelocated) {
-        this.buildingToBeRelocated = buildingToBeRelocated;
-    }
-
-    public Timestamp getLambingTime() {
-        return lambingTime;
-    }
-
-    public void setLambingTime(Timestamp lambingTime) {
-        this.lambingTime = lambingTime;
-    }
-
-    public Integer getLambingNumber() {
-        return lambingNumber;
-    }
-
-    public void setLambingNumber(Integer lambingNumber) {
-        this.lambingNumber = lambingNumber;
-    }
-
-    public Timestamp getOperatorTimeSecond() {
-        return operatorTimeSecond;
-    }
-
-    public void setOperatorTimeSecond(Timestamp operatorTimeSecond) {
-        this.operatorTimeSecond = operatorTimeSecond;
-    }
-
-    public Integer getOperatorIdSecond() {
-        return operatorIdSecond;
-    }
-
-    public void setOperatorIdSecond(Integer operatorIdSecond) {
-        this.operatorIdSecond = operatorIdSecond;
-    }
-
-    public String getOperatorNameSecond() {
-        return operatorNameSecond;
-    }
-
-    public void setOperatorNameSecond(String operatorNameSecond) {
-        this.operatorNameSecond = operatorNameSecond;
-    }
-
-    public Byte getIsPassSupSecond() {
-        return isPassSupSecond;
-    }
-
-    public void setIsPassSupSecond(Byte isPassSupSecond) {
-        this.isPassSupSecond = isPassSupSecond;
-    }
-
-    public Timestamp getSupervisorTimeSecond() {
-        return supervisorTimeSecond;
-    }
-
-    public void setSupervisorTimeSecond(Timestamp supervisorTimeSecond) {
-        this.supervisorTimeSecond = supervisorTimeSecond;
-    }
-
-    public Integer getSupervisorIdSecond() {
-        return supervisorIdSecond;
-    }
-
-    public void setSupervisorIdSecond(Integer supervisorIdSecond) {
-        this.supervisorIdSecond = supervisorIdSecond;
-    }
-
-    public String getSupervisorNameSecond() {
-        return supervisorNameSecond;
-    }
-
-    public void setSupervisorNameSecond(String supervisorNameSecond) {
-        this.supervisorNameSecond = supervisorNameSecond;
-    }
-
-    public Byte getIsPassCheckSecond() {
-        return isPassCheckSecond;
-    }
-
-    public void setIsPassCheckSecond(Byte isPassCheckSecond) {
-        this.isPassCheckSecond = isPassCheckSecond;
-    }
-
-    public Timestamp getProfessorTimeSecond() {
-        return professorTimeSecond;
-    }
-
-    public void setProfessorTimeSecond(Timestamp professorTimeSecond) {
-        this.professorTimeSecond = professorTimeSecond;
-    }
-
-    public Integer getProfessorIdSecond() {
-        return professorIdSecond;
-    }
-
-    public void setProfessorIdSecond(Integer professorIdSecond) {
-        this.professorIdSecond = professorIdSecond;
-    }
-
-    public String getProfessorNameSecond() {
-        return professorNameSecond;
-    }
-
-    public void setProfessorNameSecond(String professorNameSecond) {
-        this.professorNameSecond = professorNameSecond;
-    }
-
-    public String getRemarkSecond() {
-        return remarkSecond;
-    }
-
-    public void setRemarkSecond(String remarkSecond) {
-        this.remarkSecond = remarkSecond;
+    public void setNutritionAfterPregnancy(Timestamp nutritionAfterPregnancy) {
+        this.nutritionAfterPregnancy = nutritionAfterPregnancy;
     }
 
     public String getPrenatalImmunityType() {
@@ -364,6 +154,166 @@ public class BreedingPlanAnotherModel {
         this.prenatalImmunityTime = prenatalImmunityTime;
     }
 
+    public String getBuildingToBeRelocated() {
+        return buildingToBeRelocated;
+    }
+
+    public void setBuildingToBeRelocated(String buildingToBeRelocated) {
+        this.buildingToBeRelocated = buildingToBeRelocated;
+    }
+
+    public Timestamp getNutritionBeforeLambing() {
+        return nutritionBeforeLambing;
+    }
+
+    public void setNutritionBeforeLambing(Timestamp nutritionBeforeLambing) {
+        this.nutritionBeforeLambing = nutritionBeforeLambing;
+    }
+
+    public Timestamp getLambingTime() {
+        return lambingTime;
+    }
+
+    public void setLambingTime(Timestamp lambingTime) {
+        this.lambingTime = lambingTime;
+    }
+
+    public Integer getLambingNumber() {
+        return lambingNumber;
+    }
+
+    public void setLambingNumber(Integer lambingNumber) {
+        this.lambingNumber = lambingNumber;
+    }
+
+    public Timestamp getNutritionBreastFeeding() {
+        return nutritionBreastFeeding;
+    }
+
+    public void setNutritionBreastFeeding(Timestamp nutritionBreastFeeding) {
+        this.nutritionBreastFeeding = nutritionBreastFeeding;
+    }
+
+    public Timestamp getNutritionInsteadBreastFeeding() {
+        return nutritionInsteadBreastFeeding;
+    }
+
+    public void setNutritionInsteadBreastFeeding(Timestamp nutritionInsteadBreastFeeding) {
+        this.nutritionInsteadBreastFeeding = nutritionInsteadBreastFeeding;
+    }
+
+    public Timestamp getNutritionBeforeCutBreastFeeding() {
+        return nutritionBeforeCutBreastFeeding;
+    }
+
+    public void setNutritionBeforeCutBreastFeeding(Timestamp nutritionBeforeCutBreastFeeding) {
+        this.nutritionBeforeCutBreastFeeding = nutritionBeforeCutBreastFeeding;
+    }
+
+    public Timestamp getNutritionCutBreastFeeding() {
+        return nutritionCutBreastFeeding;
+    }
+
+    public void setNutritionCutBreastFeeding(Timestamp nutritionCutBreastFeeding) {
+        this.nutritionCutBreastFeeding = nutritionCutBreastFeeding;
+    }
+
+    public Timestamp getOperatorTime() {
+        return operatorTime;
+    }
+
+    public void setOperatorTime(Timestamp operatorTime) {
+        this.operatorTime = operatorTime;
+    }
+
+    public Integer getOperatorId() {
+        return operatorId;
+    }
+
+    public void setOperatorId(Integer operatorId) {
+        this.operatorId = operatorId;
+    }
+
+    public String getOperatorName() {
+        return operatorName;
+    }
+
+    public void setOperatorName(String operatorName) {
+        this.operatorName = operatorName;
+    }
+
+    public Byte getIspassSup() {
+        return ispassSup;
+    }
+
+    public void setIspassSup(Byte ispassSup) {
+        this.ispassSup = ispassSup;
+    }
+
+    public Timestamp getSupervisorTime() {
+        return supervisorTime;
+    }
+
+    public void setSupervisorTime(Timestamp supervisorTime) {
+        this.supervisorTime = supervisorTime;
+    }
+
+    public Integer getSupervisorId() {
+        return supervisorId;
+    }
+
+    public void setSupervisorId(Integer supervisorId) {
+        this.supervisorId = supervisorId;
+    }
+
+    public String getSupervisorName() {
+        return supervisorName;
+    }
+
+    public void setSupervisorName(String supervisorName) {
+        this.supervisorName = supervisorName;
+    }
+
+    public Byte getIspassCheck() {
+        return ispassCheck;
+    }
+
+    public void setIspassCheck(Byte ispassCheck) {
+        this.ispassCheck = ispassCheck;
+    }
+
+    public Timestamp getProfessorTime() {
+        return professorTime;
+    }
+
+    public void setProfessorTime(Timestamp professorTime) {
+        this.professorTime = professorTime;
+    }
+
+    public Integer getProfessorId() {
+        return professorId;
+    }
+
+    public void setProfessorId(Integer professorId) {
+        this.professorId = professorId;
+    }
+
+    public String getProfessorName() {
+        return professorName;
+    }
+
+    public void setProfessorName(String professorName) {
+        this.professorName = professorName;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     public Integer getFactoryNumber() {
         return factoryNumber;
     }
@@ -378,5 +328,47 @@ public class BreedingPlanAnotherModel {
 
     public void setFactoryName(String factoryName) {
         this.factoryName = factoryName;
+    }
+
+    @Override
+    public String toString() {
+        return "BreedingPlanAnotherModel{" +
+                "id=" + id +
+                ", gmtCreate=" + gmtCreate +
+                ", gmtModify=" + gmtModify +
+                ", breedingTime=" + breedingTime +
+                ", buildingAfterBreeding='" + buildingAfterBreeding + '\'' +
+                ", ramSheepTrademark='" + ramSheepTrademark + '\'' +
+                ", eweSheepTrademark='" + eweSheepTrademark + '\'' +
+                ", manageFlag=" + manageFlag +
+                ", manageAverageTime=" + manageAverageTime +
+                ", nutritionBeforePregnancy=" + nutritionBeforePregnancy +
+                ", isPregnancy='" + isPregnancy + '\'' +
+                ", nutritionAfterPregnancy=" + nutritionAfterPregnancy +
+                ", prenatalImmunityType='" + prenatalImmunityType + '\'' +
+                ", prenatalImmunityTime='" + prenatalImmunityTime + '\'' +
+                ", buildingToBeRelocated='" + buildingToBeRelocated + '\'' +
+                ", nutritionBeforeLambing=" + nutritionBeforeLambing +
+                ", lambingTime=" + lambingTime +
+                ", lambingNumber=" + lambingNumber +
+                ", nutritionBreastFeeding=" + nutritionBreastFeeding +
+                ", nutritionInsteadBreastFeeding=" + nutritionInsteadBreastFeeding +
+                ", nutritionBeforeCutBreastFeeding=" + nutritionBeforeCutBreastFeeding +
+                ", nutritionCutBreastFeeding=" + nutritionCutBreastFeeding +
+                ", operatorTime=" + operatorTime +
+                ", operatorId=" + operatorId +
+                ", operatorName='" + operatorName + '\'' +
+                ", ispassSup=" + ispassSup +
+                ", supervisorTime=" + supervisorTime +
+                ", supervisorId=" + supervisorId +
+                ", supervisorName='" + supervisorName + '\'' +
+                ", ispassCheck=" + ispassCheck +
+                ", professorTime=" + professorTime +
+                ", professorId=" + professorId +
+                ", professorName='" + professorName + '\'' +
+                ", remark='" + remark + '\'' +
+                ", factoryNumber=" + factoryNumber +
+                ", factoryName='" + factoryName + '\'' +
+                '}';
     }
 }

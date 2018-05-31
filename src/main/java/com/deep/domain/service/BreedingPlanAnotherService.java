@@ -78,20 +78,6 @@ public class BreedingPlanAnotherService {
     }
 
     /**
-     * 审核员完成第二阶段审核
-     * @param id 记录主键
-     * @param gmtModify 修改时间
-     * @param supervisorTimeFirst 审核时间
-     * @param ispassSup 是否通过0表示不通过， 1 表示通过， 2表示未审核
-     * @param supervisorId 审核员ID
-     * @param supervisorName 审核员姓名
-     * @return 修改成功标志
-     */
-    public Long updateARecordSecondBySupervisor(Long id, Timestamp gmtModify, Timestamp supervisorTimeFirst, Byte ispassSup, Integer supervisorId, String supervisorName) {
-        return breedingPlanAnotherMapper.updateARecordSecondBySupervisor(id,gmtModify, supervisorTimeFirst, ispassSup, supervisorId, supervisorName);
-    }
-
-    /**
      * 技术员完成第一阶段审核
      * @param id 记录主键
      * @param gmtModify 修改时间
@@ -103,20 +89,6 @@ public class BreedingPlanAnotherService {
      */
     public Long updateARecordFirstByProfessor(Long id, Timestamp gmtModify, Timestamp professorTimeFirst, Byte ispassCheck, Integer professorId, String professorName) {
         return breedingPlanAnotherMapper.updateARecordFirstByProfessor(id,gmtModify, professorTimeFirst, ispassCheck, professorId, professorName);
-    }
-
-    /**
-     * 技术员完成第二阶段审核
-     * @param id 记录主键
-     * @param gmtModify 修改时间
-     * @param professorTimeFirst 审核时间
-     * @param ispassCheck 是否通过0表示不通过， 1 表示通过， 2表示未审核
-     * @param professorId 审核员ID
-     * @param professorName 审核员姓名
-     * @return 修改成功标志
-     */
-    public Long updateARecordSecondByProfessor(Long id, Timestamp gmtModify, Timestamp professorTimeFirst, Byte ispassCheck, Integer professorId, String professorName) {
-        return breedingPlanAnotherMapper.updateARecordSecondByProfessor(id,gmtModify, professorTimeFirst, ispassCheck, professorId, professorName);
     }
 
     /**
