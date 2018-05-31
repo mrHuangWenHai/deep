@@ -6,6 +6,7 @@ import com.deep.domain.model.NutritionPlanWithBLOBs;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
+import java.util.Date;
 import java.util.List;
 
 public interface NutritionPlanMapper {
@@ -40,4 +41,6 @@ public interface NutritionPlanMapper {
     int updateByPrimaryKeyWithBLOBs(NutritionPlanWithBLOBs record);
 
     int updateByPrimaryKey(NutritionPlan record);
+
+    List<NutritionPlanWithBLOBs> selectByTwoDate(@Param("date1") Date date1, @Param("date2") Date date2, @Param("number") Integer number);
 }

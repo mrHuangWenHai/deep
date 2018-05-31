@@ -4,6 +4,7 @@ import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 public class BreedingModifyRequest {
+    // 记录修改时间，前端不传
     private Timestamp gmtModify;
     @NotNull(message = "配种时间不能为空")
     private Timestamp breedingTime;

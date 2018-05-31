@@ -2,6 +2,7 @@ package com.deep.api.resource;
 
 import com.deep.api.Utils.AgentUtil;
 import com.deep.api.Utils.StringToLongUtil;
+import com.deep.api.Utils.TimeUtil;
 import com.deep.api.Utils.TokenAnalysis;
 import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.authorization.tools.Constants;
@@ -9,7 +10,9 @@ import com.deep.api.request.*;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.BreedingPlanAnotherModel;
+import com.deep.domain.model.NutritionPlanWithBLOBs;
 import com.deep.domain.service.BreedingPlanAnotherService;
+import com.deep.domain.service.NutritionPlanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
@@ -19,10 +22,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/b")
@@ -30,6 +30,8 @@ public class BreedingAnotherResource {
     private final Logger logger = LoggerFactory.getLogger(BreedingAnotherResource.class);
     @Resource
     private BreedingPlanAnotherService breedingPlanAnotherService;
+    @Resource
+    private NutritionPlanService nutritionPlanService;
 
     /**
      * 查询某个羊场或者某个代理下面的所有记录（包括子代理）
@@ -128,9 +130,82 @@ public class BreedingAnotherResource {
         if (model == null) {
             return Responses.errorResponse("错误！");
         }
+
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
         data.put("model", model);
+
+        Date date = null, nextDate = null;
+        // 获取执行妊娠前期营养标准
+        Timestamp beforePregnancy = model.getNutritionBeforePregnancy();
+        if (beforePregnancy != null) {
+            date = TimeUtil.Translate(beforePregnancy);
+            nextDate = TimeUtil.getNextDay(date);
+            List<NutritionPlanWithBLOBs> nutritionBeforePregnancy = nutritionPlanService.findPlanBetweenTimes(date, nextDate, model.getFactoryNumber());
+            data.put("beforePregnancy", nutritionBeforePregnancy);
+            data.put("beforePregnancySize", nutritionBeforePregnancy.size());
+        }
+
+        // 获取执行妊娠后期营养标准
+        Timestamp afterPregnancy = model.getNutritionAfterPregnancy();
+        if (afterPregnancy != null) {
+            date = TimeUtil.Translate(afterPregnancy);
+            nextDate = TimeUtil.getNextDay(date);
+            List<NutritionPlanWithBLOBs> nutritionAfterPregnancy = nutritionPlanService.findPlanBetweenTimes(date, nextDate, model.getFactoryNumber());
+            data.put("afterPregnancy", nutritionAfterPregnancy);
+            data.put("afterPregnancySize", nutritionAfterPregnancy.size());
+        }
+
+        // 执行产前营养标准
+        Timestamp beforeLambing = model.getNutritionBeforeLambing();
+        if (beforeLambing != null) {
+            date = TimeUtil.Translate(beforeLambing);
+            nextDate = TimeUtil.getNextDay(date);
+            List<NutritionPlanWithBLOBs> nutritionBeforeLambing = nutritionPlanService.findPlanBetweenTimes(date, nextDate, model.getFactoryNumber());
+            data.put("beforeLambing", nutritionBeforeLambing);
+            data.put("beforeLambingSize", nutritionBeforeLambing.size());
+        }
+
+        // 执行哺乳期营养标准（产后一周）
+        Timestamp breastFeeding = model.getNutritionBreastFeeding();
+        if (breastFeeding != null) {
+            date = TimeUtil.Translate(breastFeeding);
+            nextDate = TimeUtil.getNextDay(date);
+            List<NutritionPlanWithBLOBs> nutritionBreastFeeding = nutritionPlanService.findPlanBetweenTimes(date, nextDate, model.getFactoryNumber());
+            data.put("breastFeeding", nutritionBreastFeeding);
+            data.put("breastFeedingSize", nutritionBreastFeeding.size());
+        }
+
+        // 执行羔羊代乳料营养标准（羔羊一月龄）
+        Timestamp insteadBreastFeeding = model.getNutritionInsteadBreastFeeding();
+        if (insteadBreastFeeding != null) {
+            date = TimeUtil.Translate(insteadBreastFeeding);
+            nextDate = TimeUtil.getNextDay(date);
+            List<NutritionPlanWithBLOBs> nutritionInsteadBreastFeeding = nutritionPlanService.findPlanBetweenTimes(date, nextDate, model.getFactoryNumber());
+            data.put("insteadBreastFeeding", nutritionInsteadBreastFeeding);
+            data.put("insteadBreastFeedingSize", nutritionInsteadBreastFeeding.size());
+        }
+
+        // 执行断奶前母羊营养标准
+        Timestamp beforeCutBreastFeeding = model.getNutritionBeforeCutBreastFeeding();
+        if (beforeCutBreastFeeding != null) {
+            date = TimeUtil.Translate(beforeCutBreastFeeding);
+            nextDate = TimeUtil.getNextDay(date);
+            List<NutritionPlanWithBLOBs> nutritionBeforeCutBreastFeeding = nutritionPlanService.findPlanBetweenTimes(date, nextDate, model.getFactoryNumber());
+            data.put("beforeCutBreastFeeding", nutritionBeforeCutBreastFeeding);
+            data.put("beforeCutBreastFeedingSize", nutritionBeforeCutBreastFeeding.size());
+        }
+
+        // 执行羔羊断奶期营养标准
+        Timestamp cutBreastFeeding = model.getNutritionCutBreastFeeding();
+        if (cutBreastFeeding != null) {
+            date = TimeUtil.Translate(cutBreastFeeding);
+            nextDate = TimeUtil.getNextDay(date);
+            List<NutritionPlanWithBLOBs> nutritionCutBreastFeeding = nutritionPlanService.findPlanBetweenTimes(date, nextDate, model.getFactoryNumber());
+            data.put("CutBreastFeeding", nutritionCutBreastFeeding);
+            data.put("CutBreastFeedingSize", nutritionCutBreastFeeding.size());
+        }
+
         response.setData(data);
         return response;
     }
@@ -263,7 +338,6 @@ public class BreedingAnotherResource {
             return Responses.successResponse(data);
         }
     }
-
 
     /**
      * 技术员审核一条记录
