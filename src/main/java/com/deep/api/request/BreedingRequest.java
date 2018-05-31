@@ -1,14 +1,17 @@
-package com.deep.domain.model;
+package com.deep.api.request;
 
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
-public class BreedingPlanAnotherModel {
-    private Integer id;
+public class BreedingRequest {
     private Timestamp gmtCreate;
     private Timestamp gmtModify;
+    @NotNull(message = "配种时间不能为空")
     private Timestamp breedingTime;
     private String buildingAfterBreeding;
+    @NotNull(message = "母羊商标耳牌不能为空")
     private String ramSheepTrademark;
+    @NotNull(message = "公羊商标耳牌不能为空")
     private String eweSheepTrademark;
     private Byte manageFlag;
     private Timestamp manageAverageTime;
@@ -25,31 +28,15 @@ public class BreedingPlanAnotherModel {
     private Timestamp nutritionInsteadBreastFeeding;
     private Timestamp nutritionBeforeCutBreastFeeding;
     private Timestamp nutritionCutBreastFeeding;
-    private Timestamp operatorTime;
-    private Integer operatorId;
-    private String operatorName;
-    private Byte ispassSup;
-    private Timestamp supervisorTime;
-    private Integer supervisorId;
-    private String supervisorName;
-    private Byte ispassCheck;
-    private Timestamp professorTime;
-    private Integer professorId;
-    private String professorName;
-    private String professorNotPassReason;
-    private String remark;
 
+    private String remark;
     // 羊场信息
     private Integer factoryNumber;
     private String factoryName;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    private Timestamp operatorTime;
+    private Integer operatorId;
+    private String operatorName;
 
     public Timestamp getGmtCreate() {
         return gmtCreate;
@@ -219,94 +206,6 @@ public class BreedingPlanAnotherModel {
         this.nutritionCutBreastFeeding = nutritionCutBreastFeeding;
     }
 
-    public Timestamp getOperatorTime() {
-        return operatorTime;
-    }
-
-    public void setOperatorTime(Timestamp operatorTime) {
-        this.operatorTime = operatorTime;
-    }
-
-    public Integer getOperatorId() {
-        return operatorId;
-    }
-
-    public void setOperatorId(Integer operatorId) {
-        this.operatorId = operatorId;
-    }
-
-    public String getOperatorName() {
-        return operatorName;
-    }
-
-    public void setOperatorName(String operatorName) {
-        this.operatorName = operatorName;
-    }
-
-    public Byte getIspassSup() {
-        return ispassSup;
-    }
-
-    public void setIspassSup(Byte ispassSup) {
-        this.ispassSup = ispassSup;
-    }
-
-    public Timestamp getSupervisorTime() {
-        return supervisorTime;
-    }
-
-    public void setSupervisorTime(Timestamp supervisorTime) {
-        this.supervisorTime = supervisorTime;
-    }
-
-    public Integer getSupervisorId() {
-        return supervisorId;
-    }
-
-    public void setSupervisorId(Integer supervisorId) {
-        this.supervisorId = supervisorId;
-    }
-
-    public String getSupervisorName() {
-        return supervisorName;
-    }
-
-    public void setSupervisorName(String supervisorName) {
-        this.supervisorName = supervisorName;
-    }
-
-    public Byte getIspassCheck() {
-        return ispassCheck;
-    }
-
-    public void setIspassCheck(Byte ispassCheck) {
-        this.ispassCheck = ispassCheck;
-    }
-
-    public Timestamp getProfessorTime() {
-        return professorTime;
-    }
-
-    public void setProfessorTime(Timestamp professorTime) {
-        this.professorTime = professorTime;
-    }
-
-    public Integer getProfessorId() {
-        return professorId;
-    }
-
-    public void setProfessorId(Integer professorId) {
-        this.professorId = professorId;
-    }
-
-    public String getProfessorName() {
-        return professorName;
-    }
-
-    public void setProfessorName(String professorName) {
-        this.professorName = professorName;
-    }
-
     public String getRemark() {
         return remark;
     }
@@ -331,19 +230,34 @@ public class BreedingPlanAnotherModel {
         this.factoryName = factoryName;
     }
 
-    public String getProfessorNotPassReason() {
-        return professorNotPassReason;
+    public Timestamp getOperatorTime() {
+        return operatorTime;
     }
 
-    public void setProfessorNotPassReason(String professorNotPassReason) {
-        this.professorNotPassReason = professorNotPassReason;
+    public void setOperatorTime(Timestamp operatorTime) {
+        this.operatorTime = operatorTime;
+    }
+
+    public Integer getOperatorId() {
+        return operatorId;
+    }
+
+    public void setOperatorId(Integer operatorId) {
+        this.operatorId = operatorId;
+    }
+
+    public String getOperatorName() {
+        return operatorName;
+    }
+
+    public void setOperatorName(String operatorName) {
+        this.operatorName = operatorName;
     }
 
     @Override
     public String toString() {
-        return "BreedingPlanAnotherModel{" +
-                "id=" + id +
-                ", gmtCreate=" + gmtCreate +
+        return "BreedingRequest{" +
+                "gmtCreate=" + gmtCreate +
                 ", gmtModify=" + gmtModify +
                 ", breedingTime=" + breedingTime +
                 ", buildingAfterBreeding='" + buildingAfterBreeding + '\'' +
@@ -364,21 +278,12 @@ public class BreedingPlanAnotherModel {
                 ", nutritionInsteadBreastFeeding=" + nutritionInsteadBreastFeeding +
                 ", nutritionBeforeCutBreastFeeding=" + nutritionBeforeCutBreastFeeding +
                 ", nutritionCutBreastFeeding=" + nutritionCutBreastFeeding +
-                ", operatorTime=" + operatorTime +
-                ", operatorId=" + operatorId +
-                ", operatorName='" + operatorName + '\'' +
-                ", ispassSup=" + ispassSup +
-                ", supervisorTime=" + supervisorTime +
-                ", supervisorId=" + supervisorId +
-                ", supervisorName='" + supervisorName + '\'' +
-                ", ispassCheck=" + ispassCheck +
-                ", professorTime=" + professorTime +
-                ", professorId=" + professorId +
-                ", professorName='" + professorName + '\'' +
-                ", professorNotPassReason='" + professorNotPassReason + '\'' +
                 ", remark='" + remark + '\'' +
                 ", factoryNumber=" + factoryNumber +
                 ", factoryName='" + factoryName + '\'' +
+                ", operatorTime=" + operatorTime +
+                ", operatorId=" + operatorId +
+                ", operatorName='" + operatorName + '\'' +
                 '}';
     }
 }

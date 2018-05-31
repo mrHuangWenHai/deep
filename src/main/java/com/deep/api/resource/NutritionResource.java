@@ -284,7 +284,6 @@ public class NutritionResource {
         byte pass = StringToLongUtil.stringToByte(ispassCheck);
         Long factoryOrAgentID = StringToLongUtil.stringToLong(id);
         Byte which = StringToLongUtil.stringToByte(TokenAnalysis.getFlag(request.getHeader(Constants.AUTHORIZATION)));
-
         if (which == 0) {
             NutritionPlanExample nutritionPlanExample = new NutritionPlanExample();
             NutritionPlanExample.Criteria criteria = nutritionPlanExample.createCriteria();

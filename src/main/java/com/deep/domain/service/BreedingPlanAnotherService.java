@@ -1,12 +1,8 @@
 package com.deep.domain.service;
 
-import com.deep.api.request.BreedingOperatorFirst;
-import com.deep.api.request.BreedingOperatorSecond;
-import com.deep.api.request.SupervisorRequest;
+import com.deep.api.request.*;
 import com.deep.domain.model.BreedingPlanAnotherModel;
 import com.deep.infra.persistence.sql.mapper.BreedingPlanAnotherMapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.poi.hssf.eventmodel.ERFListener;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -29,11 +25,11 @@ public class BreedingPlanAnotherService {
 
     /**
      * 操作员添加一条记录信息
-     * @param breedingOperatorFirst 对象模型
+     * @param breedingRequest 对象模型
      * @return response相关信息
      */
-    public Long addARecordByOperator(BreedingOperatorFirst breedingOperatorFirst) {
-        return breedingPlanAnotherMapper.addARecordByOperator(breedingOperatorFirst);
+    public Long addARecordByOperator(BreedingRequest breedingRequest) {
+        return breedingPlanAnotherMapper.addARecordByOperator(breedingRequest);
     }
 
     /**
@@ -47,48 +43,39 @@ public class BreedingPlanAnotherService {
 
     /**
      * 修改一条记录
-     * @param breedingOperatorFirst 修改对象模型
+     * @param breedingModifyRequest 修改对象模型
      * @return 是否修改成功标志
      */
-    public Long updateARecordFirstByOperator(BreedingOperatorFirst breedingOperatorFirst, Long id) {
-        return breedingPlanAnotherMapper.updateARecord(breedingOperatorFirst, id);
+    public Long updateARecordFirstByOperator(BreedingModifyRequest breedingModifyRequest, Long id) {
+        return breedingPlanAnotherMapper.updateARecord(breedingModifyRequest, id);
     }
 
     /**
-     * 操作员在第二阶段修改一条记录
-     * @param breedingOperatorSecond 修改对象模型
-     * @return 是否修改成功标志
-     */
-    public Long updateARecordByOperator(BreedingOperatorSecond breedingOperatorSecond) {
-        return breedingPlanAnotherMapper.updateARecordByOperator(breedingOperatorSecond);
-    }
-
-    /**
-     * 审核员完成第一阶段审核
+     * 审核员完成审核
      * @param id 记录主键
-     * @param gmtModify 修改时间
-     * @param supervisorTimeFirst 审核时间
-     * @param ispassSup 是否通过0表示不通过， 1 表示通过， 2表示未审核
-     * @param supervisorId 审核员ID
-     * @param supervisorName 审核员姓名
+     * @param modify 修改时间
+     * @param time 审核时间
+     * @param pass 是否通过0表示不通过， 1 表示通过， 2表示未审核
+     * @param supervisor 审核员ID
+     * @param name 审核员姓名
      * @return 修改成功标志
      */
-    public Long updateARecordFirstBySupervisor(Long id, Timestamp gmtModify, Timestamp supervisorTimeFirst, Byte ispassSup, Integer supervisorId, String supervisorName) {
-        return breedingPlanAnotherMapper.updateARecordFirstBySupervisor(id,gmtModify, supervisorTimeFirst, ispassSup, supervisorId, supervisorName);
+    public Long updateARecordBySupervisor(Long id, Timestamp modify, Timestamp time, Byte pass, Integer supervisor, String name) {
+        return breedingPlanAnotherMapper.updateARecordBySupervisor(id, modify, time, pass, supervisor, name);
     }
 
     /**
-     * 技术员完成第一阶段审核
+     * 技术员完成审核
      * @param id 记录主键
-     * @param gmtModify 修改时间
-     * @param professorTimeFirst 审核时间
-     * @param ispassCheck 是否通过0表示不通过， 1 表示通过， 2表示未审核
-     * @param professorId 审核员ID
-     * @param professorName 审核员姓名
+     * @param modify 修改时间
+     * @param time 审核时间
+     * @param pass 是否通过0表示不通过， 1 表示通过， 2表示未审核
+     * @param professor 审核员ID
+     * @param name 审核员姓名
      * @return 修改成功标志
      */
-    public Long updateARecordFirstByProfessor(Long id, Timestamp gmtModify, Timestamp professorTimeFirst, Byte ispassCheck, Integer professorId, String professorName) {
-        return breedingPlanAnotherMapper.updateARecordFirstByProfessor(id,gmtModify, professorTimeFirst, ispassCheck, professorId, professorName);
+    public Long updateARecordByProfessor(Long id, Timestamp modify, Timestamp time, Byte pass, Integer professor, String name, String reason) {
+        return breedingPlanAnotherMapper.updateARecordByProfessor(id, modify, time, pass, professor, name, reason);
     }
 
     /**
@@ -103,21 +90,17 @@ public class BreedingPlanAnotherService {
     /**
      * 查找某个厂家的记录
      * @param factoryNumber 羊场主键
-     * @param stageFlag 阶段标志， 0为阶段1， 1为阶段二， 默认为阶段1
-     * @param start 开始记录数目
-     * @param size 每页条数
      * @return 记录列表
      */
-    public List<BreedingPlanAnotherModel> findAllRecords(Long factoryNumber, Byte stageFlag, Long start, Byte size) {
-        return breedingPlanAnotherMapper.findAllRecords(factoryNumber, stageFlag, start, size);
+    public List<BreedingPlanAnotherModel> findAllRecords(Long factoryNumber) {
+        return breedingPlanAnotherMapper.findAllRecords(factoryNumber);
     }
 
     /**
-     * 查找某个阶段的所有数据
-     * @param stageFlag 阶段标志
+     * @param factory 羊场标志
      * @return 记录数目
      */
-    public Long queryCount(Byte stageFlag) {
-        return breedingPlanAnotherMapper.queryCount(stageFlag);
+    public Long queryCount(Long factory) {
+        return breedingPlanAnotherMapper.queryCount(factory);
     }
 }

@@ -1,7 +1,7 @@
 package com.deep.infra.persistence.sql.mapper;
 
-import com.deep.api.request.BreedingOperatorFirst;
-import com.deep.api.request.BreedingOperatorSecond;
+import com.deep.api.request.BreedingModifyRequest;
+import com.deep.api.request.BreedingRequest;
 import com.deep.domain.model.BreedingPlanAnotherModel;
 import org.apache.ibatis.annotations.*;
 
@@ -12,19 +12,18 @@ import java.util.List;
 public interface BreedingPlanAnotherMapper {
     /**
      * 查找某一个阶段的记录条数
-     * @param stageFlag 阶段标志
+     * @param factoryNumber 阶段标志
      * @return 记录条数
      */
-    @Select("select count(*) from breeding_plan_another where stage_flag = #{stageFlag}")
-    Long queryCount(Byte stageFlag);
+    @Select("select count(*) from breeding_plan_another where factory_number = #{factoryNumber}")
+    Long queryCount(Long factoryNumber);
 
     /**
      * 查找某个阶段，某个羊场的所有记录
      * @param factoryNumber 羊场编号
-     * @param stageFlag 阶段标志
      * @return 所有记录信息
      */
-    @Select("select * from breeding_plan_another where stage_flag = #{stageFlag} and factory_number = #{factoryNumber} limit #{start}, #{size}")
+    @Select("select * from breeding_plan_another where factory_number = #{factoryNumber}")
     @Results ({
         @Result(property = "id", column = "id"),
         @Result(property = "gmtCreate", column = "gmt_create"),
@@ -59,9 +58,12 @@ public interface BreedingPlanAnotherMapper {
         @Result(property = "professorTime", column = "professor_time"),
         @Result(property = "professorId", column = "professor_id"),
         @Result(property = "professorName", column = "professor_name"),
-        @Result(property = "remark", column = "remark")
+        @Result(property = "remark", column = "remark"),
+        @Result(property = "factoryNumber", column = "factory_number"),
+        @Result(property = "factoryName", column = "factory_name"),
+        @Result(property = "professorNotPassReason", column = "professor_not_pass_reason")
     })
-    List<BreedingPlanAnotherModel> findAllRecords(@Param("factoryNumber") Long factoryNumber, @Param("stageFlag") Byte stageFlag, @Param("start") Long start, @Param("size") Byte size);
+    List<BreedingPlanAnotherModel> findAllRecords(@Param("factoryNumber") Long factoryNumber);
 
     /**
      * 根据ID获取单条记录
@@ -95,7 +97,7 @@ public interface BreedingPlanAnotherMapper {
             @Result(property = "operatorTime", column = "operator_time"),
             @Result(property = "operatorId", column = "operator_id"),
             @Result(property = "operatorName", column = "operator_name"),
-            @Result(property = "ispassSup", column = "is_pass_up"),
+            @Result(property = "ispassSup", column = "is_pass_sup"),
             @Result(property = "supervisorTime", column = "supervisor_time"),
             @Result(property = "supervisorId", column = "supervisor_id"),
             @Result(property = "supervisorName", column = "supervisor_name"),
@@ -103,7 +105,10 @@ public interface BreedingPlanAnotherMapper {
             @Result(property = "professorTime", column = "professor_time"),
             @Result(property = "professorId", column = "professor_id"),
             @Result(property = "professorName", column = "professor_name"),
-            @Result(property = "remark", column = "remark")
+            @Result(property = "remark", column = "remark"),
+            @Result(property = "factoryNumber", column = "factory_number"),
+            @Result(property = "factoryName", column = "factory_name"),
+            @Result(property = "professorNotPassReason", column = "professor_not_pass_reason")
     })
     BreedingPlanAnotherModel findARecords(Long id);
 
@@ -186,114 +191,140 @@ public interface BreedingPlanAnotherMapper {
 
     /**
      * 操作员添加一条记录
-     * @param breedingOperatorFirst 对象数据模型
+     * @param breedingRequest 对象数据模型
      * @return 是否添加成功标志
      */
     @Insert("insert into breeding_plan_another(" +
             "gmt_create, " +
             "gmt_modify, " +
+            "breeding_time, " +
             "building_after_breeding, " +
-            "building_old, " +
             "ram_sheep_trademark, " +
             "ewe_sheep_trademark, " +
-            "breeding_time, " +
-            "pregnancy_time, " +
-            "operator_time_first, " +
-            "operator_id_first, " +
-            "operator_name_first, " +
-            "remark_first, " +
+            "manage_flag, " +
+            "manage_average_time, " +
+            "nutrition_before_pregnancy, " +
+            "is_pregnancy, " +
+            "nutrition_after_pregnancy, " +
+            "prenatal_immunity_type, " +
+            "prenatal_immunity_time, " +
+            "building_to_be_relocated, " +
+            "nutrition_before_lambing, " +
+            "lambing_time, " +
+            "lambing_number, " +
+            "nutrition_breast_feeding, " +
+            "nutrition_instead_breast_feeding, " +
+            "nutrition_before_cut_breast_feeding, " +
+            "nutrition_cut_breast_feeding, " +
+            "operator_time, " +
+            "operator_id, " +
+            "operator_name, " +
+            "remark, " +
             "factory_number, " +
             "factory_name," +
-            "stage_flag" +
+            "is_pass_sup," +
+            "is_pass_check " +
             " ) values(" +
-            "#{gmtCreate}," +
-            "#{gmtModify}," +
-            "#{buildingAfterBreeding}," +
-            "#{buildingOld}," +
-            "#{ramSheepTrademark}," +
-            "#{eweSheepTrademark}," +
-            "#{breedingTime}," +
-            "#{pregnancyTime}," +
-            "#{operatorTimeFirst}," +
-            "#{operatorIdFirst}," +
-            "#{operatorNameFirst}," +
-            "#{remarkFirst}," +
-            "#{factoryNumber}," +
+            "#{gmtCreate}, " +
+            "#{gmtModify}, " +
+            "#{breedingTime}, " +
+            "#{buildingAfterBreeding}, " +
+            "#{ramSheepTrademark}, " +
+            "#{eweSheepTrademark}, " +
+            "#{manageFlag}, " +
+            "#{manageAverageTime}, " +
+            "#{nutritionBeforePregnancy}, " +
+            "#{isPregnancy}, " +
+            "#{nutritionAfterPregnancy}, " +
+            "#{prenatalImmunityType}, " +
+            "#{prenatalImmunityTime}, " +
+            "#{buildingToBeRelocated}, " +
+            "#{nutritionBeforeLambing}, " +
+            "#{lambingTime}, " +
+            "#{lambingNumber}, " +
+            "#{nutritionBreastFeeding}, " +
+            "#{nutritionInsteadBreastFeeding}, " +
+            "#{nutritionBeforeCutBreastFeeding}, " +
+            "#{nutritionCutBreastFeeding}, " +
+            "#{operatorTime}, " +
+            "#{operatorId}, " +
+            "#{operatorName}, " +
+            "#{remark}, " +
+            "#{factoryNumber}, " +
             "#{factoryName}," +
-            "0" +
+            "2," +
+            "2" +
             ")")
-    Long addARecordByOperator(BreedingOperatorFirst breedingOperatorFirst);
+    Long addARecordByOperator(BreedingRequest breedingRequest);
 
     /**
      * 修改一条记录
-     * @param breedingOperatorFirst 对象模型
+     * @param breedingModifyRequest 对象模型
      * @return 修改是否成功标志
      */
     @Update("update breeding_plan_another set " +
-            "gmt_modify = #{breedingOperatorFirst.gmtModify}, " +
-            "building_after_breeding = #{breedingOperatorFirst.buildingAfterBreeding}, " +
-            "building_old = #{breedingOperatorFirst.buildingOld}, " +
-            "ram_sheep_trademark = #{breedingOperatorFirst.ramSheepTrademark}, " +
-            "ewe_sheep_trademark = #{breedingOperatorFirst.eweSheepTrademark}, " +
-            "breeding_time = #{breedingOperatorFirst.breedingTime}, " +
-            "pregnancy_time = #{breedingOperatorFirst.pregnancyTime}, " +
-            "operator_time_first = #{breedingOperatorFirst.operatorTimeFirst}, " +
-            "operator_id_first = #{breedingOperatorFirst.operatorIdFirst}, " +
-            "operator_name_first = #{breedingOperatorFirst.operatorNameFirst}, " +
-            "remark_first = #{breedingOperatorFirst.remarkFirst} " +
+            "gmt_modify = #{breedingModifyRequest.gmtModify}, " +
+            "breeding_time = #{breedingModifyRequest.breedingTime}, " +
+            "building_after_breeding = #{breedingModifyRequest.buildingAfterBreeding}, " +
+            "ram_sheep_trademark = #{breedingModifyRequest.ramSheepTrademark}, " +
+            "ewe_sheep_trademark = #{breedingModifyRequest.eweSheepTrademark}, " +
+            "manage_flag = #{breedingModifyRequest.manageFlag}, " +
+            "manage_average_time = #{breedingModifyRequest.manageAverageTime}, " +
+            "nutrition_before_pregnancy = #{breedingModifyRequest.nutritionBeforePregnancy}, " +
+            "is_pregnancy = #{breedingModifyRequest.isPregnancy}, " +
+            "nutrition_after_pregnancy = #{breedingModifyRequest.nutritionAfterPregnancy}, " +
+            "prenatal_immunity_type = #{breedingModifyRequest.prenatalImmunityType}, " +
+            "prenatal_immunity_time = #{breedingModifyRequest.prenatalImmunityTime}, " +
+            "building_to_be_relocated = #{breedingModifyRequest.buildingToBeRelocated}, " +
+            "nutrition_before_lambing = #{breedingModifyRequest.nutritionBeforeLambing}, " +
+            "lambing_time = #{breedingModifyRequest.lambingTime}, " +
+            "lambing_number = #{breedingModifyRequest.lambingNumber}, " +
+            "nutrition_breast_feeding = #{breedingModifyRequest.nutritionBreastFeeding}, " +
+            "nutrition_instead_breast_feeding = #{breedingModifyRequest.nutritionInsteadBreastFeeding}, " +
+            "nutrition_before_cut_breast_feeding = #{breedingModifyRequest.nutritionBeforeCutBreastFeeding}, " +
+            "nutrition_cut_breast_feeding = #{breedingModifyRequest.nutritionCutBreastFeeding}, " +
+            "remark = #{breedingModifyRequest.remark}, " +
+            "operator_time = #{breedingModifyRequest.operatorTime}, " +
+            "operator_id = #{breedingModifyRequest.operatorId}, " +
+            "operator_name = #{breedingModifyRequest.operatorName}, " +
+            "is_pass_check = 2," +
+            "is_pass_sup = 2 " +
             "where id = #{id}")
-    Long updateARecord(@Param("breedingOperatorFirst") BreedingOperatorFirst breedingOperatorFirst, @Param("id") Long id);
+    Long updateARecord(@Param("breedingModifyRequest") BreedingModifyRequest breedingModifyRequest , @Param("id") Long id);
 
     /**
-     * 操作员修改记录作为第二阶段记录
-     * @param breedingOperatorSecond 第二阶段对象模型
-     * @return 是否成功的标志
-     */
-    @Update("update breeding_plan_another set " +
-            "gmt_modify = #{gmtModify}, " +
-            "building_to_be_relocated = #{buildingToBeRelocated}, " +
-            "lambing_time = #{lambingTime}, " +
-            "lambing_number = #{lambingNumber}, " +
-            "operator_time_second = #{operatorTimeSecond}, " +
-            "operator_id_second = #{operatorIdSecond}, " +
-            "operator_name_second = #{operatorNameSecond}, " +
-            "remark_second = #{remarkSecond}, " +
-            "prenatal_immunity_type = #{prenatalImmunityType}, " +
-            "prenatal_immunity_time = #{prenatalImmunityTime} " +
-            "where id = #{id}")
-    Long updateARecordByOperator(BreedingOperatorSecond breedingOperatorSecond);
-
-    /**
-     * 第一阶段监督员审核一条记录
+     * 监督员审核一条记录
      * @param id 记录主键
-     * @param gmtModify 修改时间
-     * @param supervisorTimeFirst 审核时间
+     * @param modify 修改时间
+     * @param time 审核时间
      * @return 是否修改成功标记
      */
     @Update("update breeding_plan_another set " +
-            "gmt_modify = #{gmtModify}, " +
-            "is_pass_sup = #{ispassSup}, " +
-            "supervisor_time = #{supervisorTimeFirst}, " +
-            "supervisor_id = #{supervisorId}, " +
-            "supervisor_name = #{supervisorName} " +
+            "gmt_modify = #{modify}, " +
+            "is_pass_sup = #{pass}, " +
+            "supervisor_time = #{time}, " +
+            "supervisor_id = #{supervisor}, " +
+            "supervisor_name = #{name} " +
             "where id = #{id}")
-    Long updateARecordFirstBySupervisor(@Param("id") Long id, @Param("gmtModify") Timestamp gmtModify, @Param("supervisorTimeFirst") Timestamp supervisorTimeFirst, @Param("ispassSup") Byte ispassSup, @Param("supervisorId") Integer supervisorId, @Param("supervisorName") String supervisorName);
+    Long updateARecordBySupervisor(@Param("id") Long id, @Param("modify") Timestamp modify, @Param("time") Timestamp time, @Param("pass") Byte pass, @Param("supervisor") Integer supervisor, @Param("name") String name);
 
     /**
-     * 第一阶段技术员审核一条记录
+     * 技术员审核一条记录
      * @param id 记录主键
-     * @param gmtModify 修改时间
-     * @param professorTimeFirst 审核时间
+     * @param modify 修改时间
+     * @param time 审核时间
      * @return 是否修改成功标记
      */
     @Update("update breeding_plan_another set " +
-            "gmt_modify = #{gmtModify}, " +
-            "is_pass_check = #{ispassCheck}, " +
-            "professor_time = #{professorTimeFirst}, " +
-            "professor_id = #{professorId}, " +
-            "professor_name = #{professorName} " +
+            "gmt_modify = #{modify}, " +
+            "is_pass_check = #{pass}, " +
+            "professor_time = #{time}, " +
+            "professor_id = #{professor}, " +
+            "professor_name = #{name}," +
+            "professor_not_pass_reason = #{reason} " +
             "where id = #{id}")
-    Long updateARecordFirstByProfessor(@Param("id") Long id, @Param("gmtModify") Timestamp gmtModify, @Param("professorTimeFirst") Timestamp professorTimeFirst, @Param("ispassCheck") Byte ispassCheck, @Param("professorId") Integer professorId, @Param("professorName") String professorName);
+    Long updateARecordByProfessor(@Param("id") Long id, @Param("modify") Timestamp modify, @Param("time") Timestamp time, @Param("pass") Byte pass, @Param("professor") Integer professor, @Param("name") String name, @Param("reason") String reason);
+
     /**
      * 删除一条记录
      * @param id 代理主键
