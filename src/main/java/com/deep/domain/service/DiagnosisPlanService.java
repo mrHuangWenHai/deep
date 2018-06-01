@@ -46,11 +46,4 @@ public class DiagnosisPlanService {
     public List<DiagnosisPlanModel> selectDiagnosisPlanModelByDiagnosisRequest(DiagnosisRequest diagnosisRequest) {
         return this.diagnosisPlanMapper.selectDiagnosisPlanModelByDiagnosisRequest(diagnosisRequest);
     }
-
-//    public List<DiagnosisPlanModel> professorFindPlan(long factoryNum,
-//                                                      int ispassSup,
-//                                                      RowBounds rowBounds) {
-//
-//    }
-
 }

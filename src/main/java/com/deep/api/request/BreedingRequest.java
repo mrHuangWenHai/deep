@@ -1,6 +1,8 @@
 package com.deep.api.request;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 
 public class BreedingRequest {
@@ -18,10 +20,14 @@ public class BreedingRequest {
 
     // 母羊商标耳牌
     @NotNull(message = "母羊商标耳牌不能为空")
+    @Size(min = 6, max = 6)
+    @Pattern(regexp = "M+^[0-9]+$", message = "母羊免疫耳牌由M+5位数字组成")
     private String ramSheepTrademark;
 
     // 公羊商标耳牌
     @NotNull(message = "公羊商标耳牌不能为空")
+    @Size(min = 6, max = 6)
+    @Pattern(regexp = "G+^[0-9]+$", message = "公羊免疫耳牌由G+5位数字组成")
     private String eweSheepTrademark;
 
     // 管理批次（int类型）

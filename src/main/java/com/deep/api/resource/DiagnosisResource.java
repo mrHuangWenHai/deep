@@ -177,13 +177,16 @@ public class DiagnosisResource {
         }
 
         diagnosisPlanModel.setId(id);
-
         logger.info("invoke diagnosis/update {}", diagnosisPlanModel);
-        int isSuccess = diagnosisPlanService.updateDiagnosisPlanModel(diagnosisPlanModel);
-        if (isSuccess == 0) {
-            return Responses.errorResponse("修改失败");
+        DiagnosisPlanModel waitToModify = diagnosisPlanService.findPlanById(id);
+        if (waitToModify != null && waitToModify.getIspassCheck() != 1 && waitToModify.getIspassSup() != 1) {
+            int isSuccess = diagnosisPlanService.updateDiagnosisPlanModel(diagnosisPlanModel);
+            if (isSuccess == 0) {
+                return Responses.errorResponse("修改失败");
+            }
+            return Responses.successResponse();
         }
-        return Responses.successResponse();
+        return Responses.errorResponse("该条记录已被审核过，不能修改！");
     }
 
     /**

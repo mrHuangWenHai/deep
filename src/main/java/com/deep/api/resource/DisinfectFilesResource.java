@@ -52,7 +52,6 @@ public class DisinfectFilesResource {
      * 返回插入结果
      * 成功：success
      * 失败：返回对应失败错误
-     *
      * 同时 若累计未审核超过50条（自定义）
      * 3天内未通知对应专家/审核员
      * 则通知 不然返回已发送
@@ -74,7 +73,6 @@ public class DisinfectFilesResource {
             response.setData(map);
             return response;
         }
-
         logger.info("invoke Post /df {}", disinfectFilesModel);
         if( disinfectEartagFile.isEmpty() ) {
             return Responses.errorResponse("Lack Item");
@@ -424,7 +422,6 @@ public class DisinfectFilesResource {
     /**
      * 操作员在审核前想修改数据的接口
      * 或处理被退回操作的接口
-     *
      * 行为1 与redis数据库无关
      * 行为2 redis对应数据字段+1
      * @param disinfectFilesModel 消毒类
@@ -447,7 +444,13 @@ public class DisinfectFilesResource {
 
         logger.info("invoke operatorUpdate {}", disinfectFilesModel);
         disinfectFilesModel.setId(id);
-        if (disinfectEartagFile != null) {
+        DisinfectFilesModel temp = this.disinfectFilesService.getDisinfectFilesModelById(id);
+        if ("1".equals(temp.getIspassCheck()) || "1".equals(temp.getIspassSup())) {
+            return Responses.errorResponse("该条数据已被审核,无法修改");
+        }
+            disinfectFilesModel.setIspassCheck("2");
+            disinfectFilesModel.setIspassSup("2");
+            if (disinfectEartagFile != null) {
             String filePath = pathPre + disinfectFilesModel.getFactoryNum().toString() + "/disinfectEartag/";
             String fileName = disinfectEartagFile.getOriginalFilename();
             try {
@@ -458,6 +461,7 @@ public class DisinfectFilesResource {
 
             String oldPath = filePath + disinfectFilesModel.getDisinfectEartag();
             disinfectFilesModel.setDisinfectEartag(fileName);
+
             int row = this.disinfectFilesService.updateDisinfectFilesModelByOperatorName(disinfectFilesModel);
             if (row == 1) {
                 File file = new File(oldPath);

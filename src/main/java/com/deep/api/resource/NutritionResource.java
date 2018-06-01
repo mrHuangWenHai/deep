@@ -216,48 +216,61 @@ public class NutritionResource {
             if (uid <= 0) {
                 return Responses.errorResponse("错误!");
             }
-            //将planModel部分变量拆分传递给对象operator
-            NutritionPlanWithBLOBs operator = new NutritionPlanWithBLOBs();
-            operator.setId(uid);
-            operator.setFactoryNum(planModel.getFactoryNum());
-            operator.setFactoryName(planModel.getFactoryName());
-            operator.setBuilding(planModel.getBuilding());
-            operator.setNutritionT(planModel.getNutritionT());
-            operator.setQuantity(planModel.getQuantity());
-            operator.setAverage(planModel.getAverage());
-            operator.setPeriod(planModel.getPeriod());
-            operator.setWater(planModel.getWater());
-            operator.setOperatorName(planModel.getOperatorName());
-            operator.setOperatorId(planModel.getOperatorId());
+
+            // 查询数据库相关记录
+            NutritionPlanWithBLOBs waitToModify = nutritionPlanService.findPlanById(uid);
+            if (waitToModify != null) {
+                if (waitToModify.getIspassSup() == '1' || waitToModify.getIspassCheck() == '1') {
+                    return Responses.errorResponse("该条记录已被审核，不能进行修改！");
+                }
 
 
-            operator.setMaterialA(planModel.getMaterialA());
-            operator.setMaterialM(planModel.getMaterialM());
-            operator.setMaterialO(planModel.getMaterialO());
-            operator.setMaterialWM(planModel.getMaterialWM());
-            operator.setMaterialWO(planModel.getMaterialWO());
-            operator.setRoughageP(planModel.getRoughageP());
-            operator.setRoughageD(planModel.getRoughageD());
-            operator.setRoughageO(planModel.getRoughageO());
-
-            operator.setRoughageWP(planModel.getRoughageWP());
-            operator.setRoughageWD(planModel.getRoughageWD());
-            operator.setRoughageWO(planModel.getRoughageWO());
-            operator.setPickingM(planModel.getPickingM());
-            operator.setPickingR(planModel.getPickingR());
-            operator.setPickingO(planModel.getPickingO());
-            operator.setNutritionT(planModel.getNutritionT());
+                //将planModel部分变量拆分传递给对象operator
+                NutritionPlanWithBLOBs operator = new NutritionPlanWithBLOBs();
+                operator.setId(uid);
+                operator.setFactoryNum(planModel.getFactoryNum());
+                operator.setFactoryName(planModel.getFactoryName());
+                operator.setBuilding(planModel.getBuilding());
+                operator.setNutritionT(planModel.getNutritionT());
+                operator.setQuantity(planModel.getQuantity());
+                operator.setAverage(planModel.getAverage());
+                operator.setPeriod(planModel.getPeriod());
+                operator.setWater(planModel.getWater());
+                operator.setOperatorName(planModel.getOperatorName());
+                operator.setOperatorId(planModel.getOperatorId());
 
 
-            int success = nutritionPlanService.changePlanSelective(operator);
-            if (success <= 0) {
-                return Responses.errorResponse("操作员审核失败");
+                operator.setMaterialA(planModel.getMaterialA());
+                operator.setMaterialM(planModel.getMaterialM());
+                operator.setMaterialO(planModel.getMaterialO());
+                operator.setMaterialWM(planModel.getMaterialWM());
+                operator.setMaterialWO(planModel.getMaterialWO());
+                operator.setRoughageP(planModel.getRoughageP());
+                operator.setRoughageD(planModel.getRoughageD());
+                operator.setRoughageO(planModel.getRoughageO());
+
+                operator.setRoughageWP(planModel.getRoughageWP());
+                operator.setRoughageWD(planModel.getRoughageWD());
+                operator.setRoughageWO(planModel.getRoughageWO());
+                operator.setPickingM(planModel.getPickingM());
+                operator.setPickingR(planModel.getPickingR());
+                operator.setPickingO(planModel.getPickingO());
+                operator.setNutritionT(planModel.getNutritionT());
+
+
+                int success = nutritionPlanService.changePlanSelective(operator);
+                if (success <= 0) {
+                    return Responses.errorResponse("操作员审核失败");
+                }
+                Response response = Responses.successResponse();
+                HashMap<String, Object> data = new HashMap<>();
+                data.put("success",success);
+                response.setData(data);
+                return response;
+
+            } else {
+                return Responses.errorResponse("无此记录信息，请检查后重试！");
             }
-            Response response = Responses.successResponse();
-            HashMap<String, Object> data = new HashMap<>();
-            data.put("success",success);
-            response.setData(data);
-            return response;
         }
     }
 

@@ -290,18 +290,18 @@ public class BreedingAnotherResource {
         }
         // 首先查询是否符合修改信息的条件
         BreedingPlanAnotherModel model = breedingPlanAnotherService.findARecord(uid);
-        if (model == null || model.getIspassCheck() == 1 || model.getIspassSup() == 1) {
-            return Responses.errorResponse("the record has been checked, can not be deleted!");
+        if (model != null && model.getIspassCheck() == 2 && model.getIspassSup() == 2) {
+            long success = breedingPlanAnotherService.deleteARecord(uid);
+            if (success <= 0) {
+                return Responses.errorResponse("删除失败");
+            }
+            Response response = Responses.successResponse();
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("success", success);
+            response.setData(data);
+            return response;
         }
-        long success = breedingPlanAnotherService.deleteARecord(uid);
-        if (success <= 0) {
-            return Responses.errorResponse("删除失败");
-        }
-        Response response = Responses.successResponse();
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("success", success);
-        response.setData(data);
-        return response;
+        return Responses.errorResponse("the record has been checked, can not be deleted!");
     }
 
     /**

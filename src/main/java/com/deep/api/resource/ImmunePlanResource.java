@@ -456,6 +456,10 @@ public class ImmunePlanResource {
              return response;
            }
       immunePlanModel.setId(id);
+          ImmunePlanModel temp = this.immunePlanService.getImmunePlanModelById(id);
+          if ("1".equals(temp.getIspassCheck()) || "1".equals(temp.getIspassSup())){
+              return Responses.errorResponse("该条数据已被审核,无法修改");
+          }
       if (immuneEartagFile != null) {
 
         String filePath = pathPre + immunePlanModel.getFactoryNum().toString() + "/immuneEartag/";
@@ -466,7 +470,8 @@ public class ImmunePlanResource {
         } catch (Exception e) {
           return Responses.errorResponse("update file error");
         }
-
+        immunePlanModel.setIspassCheck("2");
+        immunePlanModel.setIspassSup("2");
         String oldPath = filePath + immunePlanModel.getImmuneEartag();
         immunePlanModel.setImmuneEartag(fileName);
         int row = this.immunePlanService.updateImmunePlanModelByOperator(immunePlanModel);
