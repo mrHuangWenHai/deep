@@ -49,7 +49,7 @@ public class BreedingRequest {
     private String prenatalImmunityType;
 
     // 产前免疫时间
-    private String prenatalImmunityTime;
+    private Timestamp prenatalImmunityTime;
 
     // 移至待产栏栋
     private String buildingToBeRelocated;
@@ -188,11 +188,11 @@ public class BreedingRequest {
         this.prenatalImmunityType = prenatalImmunityType;
     }
 
-    public String getPrenatalImmunityTime() {
+    public Timestamp getPrenatalImmunityTime() {
         return prenatalImmunityTime;
     }
 
-    public void setPrenatalImmunityTime(String prenatalImmunityTime) {
+    public void setPrenatalImmunityTime(Timestamp prenatalImmunityTime) {
         this.prenatalImmunityTime = prenatalImmunityTime;
     }
 
@@ -323,7 +323,7 @@ public class BreedingRequest {
                 ", isPregnancy='" + isPregnancy + '\'' +
                 ", nutritionAfterPregnancy=" + nutritionAfterPregnancy +
                 ", prenatalImmunityType='" + prenatalImmunityType + '\'' +
-                ", prenatalImmunityTime='" + prenatalImmunityTime + '\'' +
+                ", prenatalImmunityTime=" + prenatalImmunityTime +
                 ", buildingToBeRelocated='" + buildingToBeRelocated + '\'' +
                 ", nutritionBeforeLambing=" + nutritionBeforeLambing +
                 ", lambingTime=" + lambingTime +

@@ -312,6 +312,7 @@ public class NutritionResource {
             response.setData(data);
             return response;
         } else if (which == 1) {
+            int count = 0;
             // user is a agent user
             NutritionPlanExample nutritionPlanExample = new NutritionPlanExample();
             NutritionPlanExample.Criteria criteria = nutritionPlanExample.createCriteria();
@@ -328,30 +329,41 @@ public class NutritionResource {
                 return Responses.errorResponse("request error!");
             }
             List<NutritionPlanWithBLOBs> plans = new ArrayList<>();
+
             // not direct people
             List<Long> allFactories = factories.get((long) 0);
             List<NutritionPlanWithBLOBs> theOne = new ArrayList<>();
             if (allFactories != null) {
                 for (Long allFactory : allFactories) {
                     criteria.andFactoryNumEqualTo(allFactory);
-                    theOne.addAll(nutritionPlanService.findPlanSelective(nutritionPlanExample, new RowBounds(upage, usize)));
+                    theOne.addAll(nutritionPlanService.findPlanSelective(nutritionPlanExample, new RowBounds(0, 100000)));
                 }
             }
+            count += theOne.size();
+
             // direct people
             List<Long> directFactories = factories.get((long) -1);
             List<NutritionPlanWithBLOBs> theOther = new ArrayList<>();
             if (directFactories != null) {
                 for (Long directFactory : directFactories) {
                     criteria1.andFactoryNumEqualTo(directFactory);
-                    theOther.addAll(nutritionPlanService.findPlanSelective(nutritionPlanExample1, new RowBounds(upage, usize)));
+                    theOther.addAll(nutritionPlanService.findPlanSelective(nutritionPlanExample1, new RowBounds(0, 100000)));
                 }
             }
+            count += theOther.size();
+
             plans.addAll(theOther);
             plans.addAll(theOne);
+
+            List<NutritionPlanWithBLOBs> results = new ArrayList<>();
+            for (int i = upage*usize; i < plans.size() && i < upage*usize + usize; i++) {
+                results.add(plans.get(i));
+            }
+
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("List",plans);
-            data.put("size", plans.size());
+            data.put("List",results);
+            data.put("size", count);
             data.put("directSize", theOther.size());
             response.setData(data);
             return response;
@@ -472,155 +484,4 @@ public class NutritionResource {
             return response;
         }
     }
-
-    //    /**
-//     * 按条件查询接口：/nutritionSelective
-//     * 按条件查询方法名：findPlanSelective()
-//     * 接收的参数：前端的各参数，以及两个("s_nutritionT1")("s_nutritionT2")时间字符串（所有参数可以选填）
-//     * @param planModel
-//     * @param bindingResult
-//     * @return
-//     * @throws ParseException
-//     */
-//
-//    @PostMapping(value = "/selective")
-//    public Response findPlanSelective(@RequestBody @Valid NutritionPlanModel planModel, BindingResult bindingResult) throws ParseException {
-//        logger.info("invoke findPlanSelective {}, url is nutrition/selective", planModel);
-//
-//        if (bindingResult.hasErrors()) {
-//            return Responses.errorResponse("营养实施档案(根据条件)查询失败");
-//        }else {
-//            //将planModel部分变量拆分传递给对象nutritionPlanWithBLOBs
-//            NutritionPlanWithBLOBs nutritionPlanWithBLOBs = new NutritionPlanWithBLOBs();
-//            nutritionPlanWithBLOBs.setId(planModel.getId());
-//            nutritionPlanWithBLOBs.setGmtCreate(planModel.getGmtCreate());
-//            nutritionPlanWithBLOBs.setGmtModified(planModel.getGmtModified());
-//            nutritionPlanWithBLOBs.setSupervisorName(planModel.getSupervisorName());
-//            nutritionPlanWithBLOBs.setFactoryNum(planModel.getFactoryNum());
-//            nutritionPlanWithBLOBs.setBuilding(planModel.getBuilding());
-//            nutritionPlanWithBLOBs.setNutritionT(planModel.getNutritionT());
-//            nutritionPlanWithBLOBs.setQuantity(planModel.getQuantity());
-//            nutritionPlanWithBLOBs.setAverage(planModel.getAverage());
-//            nutritionPlanWithBLOBs.setPeriod(planModel.getPeriod());
-//            nutritionPlanWithBLOBs.setWater(planModel.getWater());
-//            nutritionPlanWithBLOBs.setOperatorName(planModel.getOperatorName());
-//            nutritionPlanWithBLOBs.setProfessorName(planModel.getProfessorName());
-//            nutritionPlanWithBLOBs.setSupervisorName(planModel.getSupervisorName());
-//            nutritionPlanWithBLOBs.setRemark(planModel.getRemark());
-//            nutritionPlanWithBLOBs.setIspassCheck(planModel.getIspassCheck());
-//            nutritionPlanWithBLOBs.setUpassReason(planModel.getUpassReason());
-//            nutritionPlanWithBLOBs.setIspassSup(planModel.getIspassSup());
-//            nutritionPlanWithBLOBs.setMaterialA(planModel.getMaterialA());
-//            nutritionPlanWithBLOBs.setMaterialM(planModel.getMaterialM());
-//            nutritionPlanWithBLOBs.setMaterialO(planModel.getMaterialO());
-//            nutritionPlanWithBLOBs.setMaterialWM(planModel.getMaterialWM());
-//            nutritionPlanWithBLOBs.setMaterialWO(planModel.getMaterialWO());
-//            nutritionPlanWithBLOBs.setRoughageP(planModel.getRoughageP());
-//            nutritionPlanWithBLOBs.setRoughageD(planModel.getRoughageD());
-//            nutritionPlanWithBLOBs.setRoughageWP(planModel.getRoughageWP());
-//            nutritionPlanWithBLOBs.setRoughageWD(planModel.getRoughageWD());
-//            nutritionPlanWithBLOBs.setRoughageWO(planModel.getRoughageWO());
-//            nutritionPlanWithBLOBs.setPickingM(planModel.getPickingM());
-//            nutritionPlanWithBLOBs.setPickingR(planModel.getPickingR());
-//            nutritionPlanWithBLOBs.setPickingO(planModel.getPickingO());
-//
-//            //将planModel部分变量拆分传递给对象otherTime
-//            OtherTime otherTime = new OtherTime();
-//            otherTime.setSearch_string(planModel.getSearch_string());
-//            otherTime.setS_breedingT(planModel.getS_breedingT());
-//            System.out.println(otherTime.getS_breedingT());
-//            otherTime.setS_gestationT(planModel.getS_gestationT());
-//            System.out.println(otherTime.getS_gestationT());
-//            otherTime.setS_prenatalIT(planModel.getS_prenatalIT());
-//            System.out.println(otherTime.getS_prenatalIT());
-//            otherTime.setS_cubT(planModel.getS_cubT());
-//            System.out.println(otherTime.getS_cubT());
-//            otherTime.setS_diagnosisT(planModel.getS_diagnosisT());
-//            otherTime.setS_nutritionT(planModel.getS_nutritionT());
-//            otherTime.setS_gmtCreate1(planModel.getS_gmtCreate1());
-//            otherTime.setS_gmtCreate2(planModel.getS_gmtCreate2());
-//            otherTime.setS_gmtModified1(planModel.getS_gmtModified1());
-//            otherTime.setS_gmtModified2(planModel.getS_gmtModified2());
-//            otherTime.setS_breedingT1(planModel.getS_breedingT1());
-//            otherTime.setS_breedingT2(planModel.getS_breedingT2());
-//            otherTime.setS_prenatalIT1(planModel.getS_prenatalIT1());
-//            otherTime.setS_prenatalIT2(planModel.getS_prenatalIT2());
-//            otherTime.setS_gestationT1(planModel.getS_gestationT1());
-//            otherTime.setS_gestationT2(planModel.getS_gestationT2());
-//            otherTime.setS_cubT1(planModel.getS_cubT1());
-//            otherTime.setS_cubT2(planModel.getS_cubT2());
-//            otherTime.setS_diagnosisT1(planModel.getS_diagnosisT1());
-//            otherTime.setS_diagnosisT2(planModel.getS_diagnosisT2());
-//            otherTime.setS_nutritionT1(planModel.getS_nutritionT1());
-//            otherTime.setS_nutritionT2(planModel.getS_nutritionT2());
-//            otherTime.setDownloadPath(planModel.getDownloadPath());
-//            otherTime.setPage(planModel.getPage());
-//            otherTime.setSize(planModel.getSize());
-//
-//            Date nutritionT1 = null;
-//            Date nutritionT2 = null;
-//            SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd HH:mm:SS");
-//            NutritionPlanExample nutritionPlanExample = new NutritionPlanExample();
-//            NutritionPlanExample.Criteria criteria = nutritionPlanExample.createCriteria();
-//
-//            if (otherTime.getS_nutritionT1() != null && !otherTime.getS_nutritionT1().isEmpty() && otherTime.getS_nutritionT2() != null && !otherTime.getS_nutritionT2().isEmpty()){
-//                nutritionT1 =  formatter.parse(otherTime.getS_nutritionT1());
-//                nutritionT2 =  formatter.parse(otherTime.getS_nutritionT2());
-//            }
-//            if(nutritionT1 != null && nutritionT2 != null){
-//                criteria.andNutritionTBetween(nutritionT1,nutritionT2);
-//            }
-//            if(nutritionPlanWithBLOBs.getId() != null && !nutritionPlanWithBLOBs.getId().toString().isEmpty()){
-//                criteria.andIdEqualTo(nutritionPlanWithBLOBs.getId());
-//            }
-//            if(nutritionPlanWithBLOBs.getFactoryNum() != null && !nutritionPlanWithBLOBs.getFactoryNum().toString().isEmpty()){
-//                criteria.andFactoryNumEqualTo(nutritionPlanWithBLOBs.getFactoryNum());
-//            }
-//            if(nutritionPlanWithBLOBs.getBuilding() != null && !nutritionPlanWithBLOBs.getBuilding().isEmpty()){
-//                criteria.andBuildingEqualTo(nutritionPlanWithBLOBs.getBuilding());
-//            }
-//            if(nutritionPlanWithBLOBs.getQuantity() != null && !nutritionPlanWithBLOBs.getQuantity().toString().isEmpty()){
-//                criteria.andQuantityEqualTo(nutritionPlanWithBLOBs.getQuantity());
-//            }
-//            if(nutritionPlanWithBLOBs.getAverage() != null && !nutritionPlanWithBLOBs.getAverage().isEmpty()){
-//                criteria.andAverageGreaterThanOrEqualTo(nutritionPlanWithBLOBs.getAverage());
-//            }
-//            if (nutritionPlanWithBLOBs.getPeriod()!= null && !nutritionPlanWithBLOBs.getPeriod().isEmpty()){
-//                criteria.andPeriodEqualTo(nutritionPlanWithBLOBs.getPeriod());
-//            }
-//            if (nutritionPlanWithBLOBs.getWater()!= null && !nutritionPlanWithBLOBs.getWater().isEmpty()){
-//                criteria.andWaterEqualTo(nutritionPlanWithBLOBs.getWater());
-//            }
-//            if(nutritionPlanWithBLOBs.getOperatorName() != null && !nutritionPlanWithBLOBs.getOperatorName().isEmpty()){
-//                criteria.andOperatorNameEqualTo(nutritionPlanWithBLOBs.getOperatorName());
-//            }
-//            if(nutritionPlanWithBLOBs.getProfessorName() != null && !nutritionPlanWithBLOBs.getProfessorName().isEmpty()){
-//                criteria.andProfessorNameEqualTo(nutritionPlanWithBLOBs.getProfessorName());
-//            }
-//            if(nutritionPlanWithBLOBs.getSupervisorName() != null && !nutritionPlanWithBLOBs.getSupervisorName().isEmpty()){
-//                criteria.andSupervisorNameEqualTo(nutritionPlanWithBLOBs.getSupervisorName());
-//            }
-//            if(nutritionPlanWithBLOBs.getIspassCheck() != null && !nutritionPlanWithBLOBs.getIspassCheck().toString().isEmpty()){
-//                criteria.andIsPassCheckEqualTo(nutritionPlanWithBLOBs.getIspassCheck());
-//            }
-//            if(nutritionPlanWithBLOBs.getUpassReason() != null && !nutritionPlanWithBLOBs.getUpassReason().isEmpty()){
-//                criteria.andUpassReasonLike(nutritionPlanWithBLOBs.getUpassReason());
-//            }
-//            if(nutritionPlanWithBLOBs.getIspassSup() != null && !nutritionPlanWithBLOBs.getIspassSup().toString().isEmpty()){
-//                criteria.andIsPassSupEqualTo(nutritionPlanWithBLOBs.getIspassSup());
-//            }
-//            List<NutritionPlanWithBLOBs> select = nutritionPlanService.findPlanSelective(nutritionPlanExample,new RowBounds(otherTime.getPage(),otherTime.getSize()));
-//
-//            if (select == null) {
-//                return Responses.errorResponse("错误");
-//            }
-//            Response response = Responses.successResponse();
-//            HashMap<String, Object> data = new HashMap<>();
-//            data.put("List", select);
-//            data.put("size", select.size());
-//
-//            response.setData(data);
-//            return response;
-//        }
-//    }
 }

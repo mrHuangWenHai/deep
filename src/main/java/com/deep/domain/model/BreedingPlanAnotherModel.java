@@ -16,7 +16,7 @@ public class BreedingPlanAnotherModel {
     private String isPregnancy;
     private Timestamp nutritionAfterPregnancy;
     private String prenatalImmunityType;
-    private String prenatalImmunityTime;
+    private Timestamp prenatalImmunityTime;
     private String buildingToBeRelocated;
     private Timestamp nutritionBeforeLambing;
     private Timestamp lambingTime;
@@ -147,11 +147,12 @@ public class BreedingPlanAnotherModel {
         this.prenatalImmunityType = prenatalImmunityType;
     }
 
-    public String getPrenatalImmunityTime() {
+
+    public Timestamp getPrenatalImmunityTime() {
         return prenatalImmunityTime;
     }
 
-    public void setPrenatalImmunityTime(String prenatalImmunityTime) {
+    public void setPrenatalImmunityTime(Timestamp prenatalImmunityTime) {
         this.prenatalImmunityTime = prenatalImmunityTime;
     }
 
@@ -355,7 +356,7 @@ public class BreedingPlanAnotherModel {
                 ", isPregnancy='" + isPregnancy + '\'' +
                 ", nutritionAfterPregnancy=" + nutritionAfterPregnancy +
                 ", prenatalImmunityType='" + prenatalImmunityType + '\'' +
-                ", prenatalImmunityTime='" + prenatalImmunityTime + '\'' +
+                ", prenatalImmunityTime=" + prenatalImmunityTime +
                 ", buildingToBeRelocated='" + buildingToBeRelocated + '\'' +
                 ", nutritionBeforeLambing=" + nutritionBeforeLambing +
                 ", lambingTime=" + lambingTime +
