@@ -36,8 +36,8 @@ public class OperationFileService {
     return operationFileMapper.addOperationFile(operationFile);
   }
 
-  public int updateCheckStatus(int id, short checkStatus) {
-    return operationFileMapper.updateCheckStatus(id, checkStatus);
+  public int updateCheckStatus(int id, short checkStatus, String upassReson) {
+    return operationFileMapper.updateCheckStatus(id, checkStatus, upassReson);
   }
 
   public int updateSupStatus(int id, short supStatus) {
