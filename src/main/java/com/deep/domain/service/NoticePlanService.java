@@ -23,16 +23,16 @@ public class NoticePlanService {
 
     /**
      * 查询所有的通知公告
-     * @return
+     * @return 所有通知公告
      */
-    public List<NoticePlan> getAll() {
-        return noticeMapper.queryAllNotice();
+    public List<NoticePlan> getAll(Integer start, Byte size) {
+        return noticeMapper.queryAllNotice(start, size);
     }
 
     /**
      * 根据通知公告的ID获取单条通知
-     * @param id
-     * @return
+     * @param id 通知公告ID
+     * @return 单条通知
      */
     public NoticePlan getOneNotice(int id) {
         return noticeMapper.queryNoticeById(id);
@@ -40,17 +40,17 @@ public class NoticePlanService {
 
     /**
      * 根据类型获取所有的发布信息
-     * @param type
-     * @return
+     * @param type 公告发布类型
+     * @return 通知列表
      */
-    public List<NoticePlan> getNoticesByOneType(String type) {
-        return noticeMapper.queryAllNoticeByType(type);
+    public List<NoticePlan> getNoticesByOneType(String type, Integer start, Byte size) {
+        return noticeMapper.queryAllNoticeByType(type, start, size);
     }
 
     /**
      * 插入一个通知公告
-     * @param plan
-     * @return
+     * @param plan 通知公告模型
+     * @return 是否成功
      */
     public int insertNoticePlan(NoticePlan plan) {
         return noticeMapper.insertNotice(plan);
@@ -58,17 +58,17 @@ public class NoticePlanService {
 
     /**
      * 修改一个通知公告
-     * @param noticePlan
-     * @return
+     * @param noticePlan 通知公告模型
+     * @return 是否成功
      */
     public int updateNoticePlan(NoticePlan noticePlan) {
         return noticeMapper.updateNoticePlan(noticePlan);
     }
 
     /**
-     * 删除羊场的信息
-     * @param id
-     * @return
+     * 删除通知公告的信息
+     * @param id 通知公告ID
+     * @return 是否成功
      */
     public int deleteNoticePlan(Long id) {
         return noticeMapper.deleteNoticePlan(id);
@@ -76,10 +76,27 @@ public class NoticePlanService {
 
     /**
      * 站内搜索接口
-     * @return
+     * @return 所有通知公告
      */
     public List<NoticePlan> selectInSite(String content) {
         return noticeMapper.selectNotice(content);
+    }
+
+    /**
+     * 所有通知公告条数
+     * @return 条数
+     */
+    public Integer findAllNoticeCount() {
+        return noticeMapper.queryAllNoticeCount();
+    }
+
+    /**
+     * 查询某种类型的通知公告条数
+     * @param type 某种类型
+     * @return 条数
+     */
+    public Integer findATypeCount(String type) {
+        return noticeMapper.queryAllNoticeByTypeCount(type);
     }
 
     /**

@@ -75,21 +75,26 @@ public class UserResource {
     ) {
         logger.info("invoke userList, url is user/{id} {}", id);
         Long uid = StringToLongUtil.stringToLong(id);
-        Long upage = StringToLongUtil.stringToLong(page);
+        Integer upage = StringToLongUtil.stringToInt(page);
         Byte usize = StringToLongUtil.stringToByte(size);
         Byte which = StringToLongUtil.stringToByte(TokenAnalysis.getFlag(request.getHeader(Constants.AUTHORIZATION)));
+        int count = 0;          // 记录的总条数
         if (uid < 0 || upage < 0 || usize < 0) {
             return Responses.errorResponse("错误");
         }
         if (which == 0 || which == 2) {
-            List<UserResponse> userLists = userService.getAllUserOfFactoryOrAgent(uid, which, upage, usize);
+            List<UserResponse> userLists = userService.getAllUserOfFactoryOrAgent(uid, which, (long)0, (long)100000);
             if (userLists == null) {
                 return Responses.errorResponse("error");
             } else {
+                List<UserResponse> result = new ArrayList<>();
+                for (int i = upage*usize; i < userLists.size() && i < upage*usize+usize; i++) {
+                    result.add(userLists.get(i));
+                }
                 Response response = Responses.successResponse();
                 Map<String, Object> data = new HashMap<>();
-                data.put("List", userLists);
-                data.put("size", userService.getCountsOfOneFactoryOrOneAgent(uid, which));
+                data.put("List", result);
+                data.put("size", userLists.size());
                 response.setData(data);
                 return response;
             }
@@ -99,14 +104,16 @@ public class UserResource {
             Map<Long, List<Integer> > agents = AgentUtil.getAllSubordinateAgent(id);
             // 所有的子羊场
             Map<Long, List<Long> > factories = AgentUtil.getAllSubordinateFactory(id);
-            List<UserResponse> models = new ArrayList<>(userService.getAllUserOfFactoryOrAgent(uid, which, upage*usize, usize));
+            List<UserResponse> models = new ArrayList<>(userService.getAllUserOfFactoryOrAgent(uid, which, (long)0, (long)100000));
+            count += models.size();
             if (agents != null && factories != null) {
                 // direct agent people
                 List<Integer> directAgents = agents.get((long) -1);
                 if (directAgents != null) {
                     for (Integer directFactory : directAgents) {
                         System.out.println("directFactory = " + directFactory);
-                        models.addAll(userService.getAllUserOfFactoryOrAgent(Long.parseLong(directFactory.toString()), which, upage*usize, usize));
+                        models.addAll(userService.getAllUserOfFactoryOrAgent(Long.parseLong(directFactory.toString()), which, (long)0, (long)100000));
+                        count += userService.getCountsOfOneFactoryOrOneAgent(Long.parseLong(directFactory.toString()), which);
                     }
                 }
 
@@ -114,7 +121,8 @@ public class UserResource {
                 List<Long> directFactories = factories.get((long)-1);
                 if (directFactories != null) {
                     for (Long directFactory : directFactories) {
-                        models.addAll(userService.getAllUserOfFactoryOrAgent(Long.parseLong(directFactory.toString()), (byte)0, upage*usize, usize));
+                        models.addAll(userService.getAllUserOfFactoryOrAgent(Long.parseLong(directFactory.toString()), (byte)0, (long)0, (long)100000));
+                        count += userService.getCountsOfOneFactoryOrOneAgent(Long.parseLong(directFactory.toString()), (byte)0);
                     }
                 }
 
@@ -122,7 +130,8 @@ public class UserResource {
                 List<Integer> undirectAgents = agents.get((long) 0);
                 if (undirectAgents != null) {
                     for (Integer undirectFactory : undirectAgents) {
-                        models.addAll(userService.getAllUserOfFactoryOrAgent(Long.parseLong(undirectFactory.toString()), which, upage*usize, usize));
+                        models.addAll(userService.getAllUserOfFactoryOrAgent(Long.parseLong(undirectFactory.toString()), which, (long)0, (long)100000));
+                        count += userService.getCountsOfOneFactoryOrOneAgent(Long.parseLong(undirectFactory.toString()), which);
                     }
                 }
 
@@ -130,14 +139,19 @@ public class UserResource {
                 List<Long> undirectFactories = factories.get((long)0);
                 if (directFactories != null) {
                     for (Long undirectFactory : undirectFactories) {
-                        models.addAll(userService.getAllUserOfFactoryOrAgent(Long.parseLong(undirectFactory.toString()), (byte)0, upage*usize, usize));
+                        models.addAll(userService.getAllUserOfFactoryOrAgent(Long.parseLong(undirectFactory.toString()), (byte)0, (long)0, (long)100000));
+                        count += userService.getCountsOfOneFactoryOrOneAgent(Long.parseLong(undirectFactory.toString()), (byte)0);
                     }
                 }
             }
+            List<UserResponse> result = new ArrayList<>();
+            for (int i = usize*upage; i < models.size() && i < usize*upage+usize; i++) {
+                result.add(models.get(i));
+            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("List", models);
-            data.put("size", models.size());
+            data.put("List", result);
+            data.put("size", count);
             response.setData(data);
             return response;
         } else {
@@ -289,7 +303,7 @@ public class UserResource {
         } else {
             // 添加用户的校验信息
             if (!userService.verifyOnlyOnePkUserid(userRequest.getUsername())) {
-                Response response = Responses.errorResponse("添加用户信息失败");
+                Response response = Responses.errorResponse("该用户名已经存在");
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("errorMessage", "用户名已经被使用过");
                 response.setData(data);

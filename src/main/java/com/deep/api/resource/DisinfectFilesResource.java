@@ -198,11 +198,16 @@ public class DisinfectFilesResource {
           factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
           System.out.println(factoryMap);
           List<Long> factoryList = new ArrayList<>();
-          factoryList.addAll(factoryMap.get(new Long(-1)));
-          factoryList.addAll(factoryMap.get(new Long(0)));
+          assert factoryMap != null;
+          factoryList.addAll(factoryMap.get((long) -1));
+          factoryList.addAll(factoryMap.get(0L));
           disinfectRequest.setFactoryList(factoryList);
         } else {
           return Responses.errorResponse("你没有权限");
+        }
+
+        if (disinfectRequest.getFactoryList().size() == 0) {
+            return Responses.errorResponse("本级代理还没有发展羊场及代理！");
         }
 
         List<DisinfectFilesModel> totalList = disinfectFilesService.getDisinfectFilesModel(disinfectRequest);

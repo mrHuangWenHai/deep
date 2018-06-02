@@ -25,7 +25,7 @@ import java.sql.Timestamp;
 import java.util.*;
 
 @RestController
-@RequestMapping(value = "/b")
+@RequestMapping(value = "/breeding")
 public class BreedingAnotherResource {
     private final Logger logger = LoggerFactory.getLogger(BreedingAnotherResource.class);
     @Resource
@@ -80,6 +80,13 @@ public class BreedingAnotherResource {
                 long directCount = 0, undirectCount = 0;         // record number
                 // direct factories
                 List<Long> directFactories = factories.get((long)-1);
+                // undirect factories
+                List<Long> undirectFactories = factories.get((long)0);
+
+                if (directFactories == null && undirectFactories == null) {
+                    return Responses.errorResponse("该代理没有发展羊场和代理！");
+                }
+
                 List<BreedingPlanAnotherModel> directModels = new ArrayList<>();
                 if (directFactories != null) {
                     for (Long directFactory : directFactories) {
@@ -88,8 +95,6 @@ public class BreedingAnotherResource {
                     }
                 }
 
-                // undirect factories
-                List<Long> undirectFactories = factories.get((long)0);
                 List<BreedingPlanAnotherModel> undirectModels = new ArrayList<>();
                 if (undirectFactories != null) {
                     for (Long undirectFactory : undirectFactories) {

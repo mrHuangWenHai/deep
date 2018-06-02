@@ -26,36 +26,28 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     }
 
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
       File directory = new File("");//参数为空
       try {
-
         String directoryPath = directory.getCanonicalPath() ;
-
         String picturePath = directoryPath + "/picture/";
         File pictureFile = new File(picturePath);
         if (!pictureFile.exists()) {
           pictureFile.mkdirs();
         }
-
         System.out.println(picturePath);
-
         String videoPath = directoryPath + "/video/";
         File videoFile  = new File(videoPath);
         if (!videoFile.exists()) {
           videoFile.mkdirs();
         }
-
         String picPath = directoryPath + "/pic/";
         File picFile  = new File(picPath);
         if (!picFile.exists()) {
           picFile.mkdirs();
         }
-
         registry.addResourceHandler("/picture/**").addResourceLocations("file://"+picturePath);
         registry.addResourceHandler("/movie/**").addResourceLocations("file://"+videoPath);
         registry.addResourceHandler("/pic/**").addResourceLocations("file://"+picPath);
-
         System.out.println("this is the ResourceHandler");
       } catch (Exception e) {
         System.out.println(e);

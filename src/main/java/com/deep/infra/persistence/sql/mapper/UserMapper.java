@@ -92,10 +92,11 @@ public interface UserMapper {
      * @param userId 用户ID
      * @return 单个用户的信息
      */
-    @Select("select user_manage.factory_name, user_manage.pk_userid, user_manage.user_realname, user_manage.user_role, " +
+    @Select("select user_manage.id, user_manage.factory_name, user_manage.pk_userid, user_manage.user_realname, user_manage.user_role, " +
             "user_manage.user_telephone, user_manage.official_phone, user_manage.qq, user_manage.msn, user_manage.is_factory, " +
             "user_manage.user_factory, role_user.type_name from user_manage, role_user where user_manage.id = #{id} and user_manage.user_role = role_user.id")
     @Results({
+            @Result(property = "id", column = "id"),
             @Result(property = "factoryName", column = "factory_name"),
             @Result(property = "pkUserid", column = "pk_userid"),
             @Result(property = "userRealname", column = "user_realname"),
@@ -429,7 +430,7 @@ public interface UserMapper {
             @Result(property = "isFactory", column = "is_factory"),
             @Result(property = "userFactory", column = "user_factory"),
     })
-    List<UserResponse> queryUserResponsesById(@Param("factory") Long factory, @Param("which") Byte which, @Param("page") Long page, @Param("size") Byte size);
+    List<UserResponse> queryUserResponsesById(@Param("factory") Long factory, @Param("which") Byte which, @Param("page") Long page, @Param("size") Long size);
 
     /**
      * 查找某一个羊场或者一个代理的所有用户

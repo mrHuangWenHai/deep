@@ -212,6 +212,10 @@ public class RepellentPlanResource {
 
       logger.info("invoke rp/{} {}",id, repellentRequest);
 
+      if (repellentRequest.getFactoryList().size() == 0) {
+          return Responses.errorResponse("本级代理没有发展羊场和代理！");
+      }
+
       List<RepellentPlanModel> totalList = repellentPlanService.getRepellentPlanModel(repellentRequest);
 
       int size = totalList.size();

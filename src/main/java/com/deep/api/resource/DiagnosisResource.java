@@ -299,11 +299,17 @@ public class DiagnosisResource {
         } else if (role == 1) {
             factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
             List<Long> factoryList = new ArrayList<>();
-            factoryList.addAll(factoryMap.get(new Long(-1)));
-            factoryList.addAll(factoryMap.get(new Long(0)));
+            assert factoryMap != null;
+            factoryList.addAll(factoryMap.get((long) -1));
+            factoryList.addAll(factoryMap.get(0L));
             diagnosisRequest.setFactoryList(factoryList);
         } else {
             return Responses.errorResponse("你没有权限");
+        }
+
+        System.out.println("list.size () = " + diagnosisRequest.getFactoryList().size());
+        if (diagnosisRequest.getFactoryList().size() == 0) {
+            return Responses.errorResponse("本级代理还没有发展羊场及代理！");
         }
 
         List<DiagnosisPlanModel> totalList = diagnosisPlanService.selectDiagnosisPlanModelByDiagnosisRequest(diagnosisRequest);
@@ -318,7 +324,7 @@ public class DiagnosisResource {
             List<DiagnosisPlanModel> factorylist = new ArrayList<>();
             List<DiagnosisPlanModel> direct = new ArrayList<>();
             List<DiagnosisPlanModel> others = new ArrayList<>();
-            List<Long> directId = factoryMap.get(new Long(-1));
+            List<Long> directId = factoryMap.get((long) -1);
             for (DiagnosisPlanModel diagnosisPlanModel : diagnosisPlanModels) {
                 if (directId.contains(diagnosisPlanModel.getFactoryNum())) {
                     direct.add(diagnosisPlanModel);

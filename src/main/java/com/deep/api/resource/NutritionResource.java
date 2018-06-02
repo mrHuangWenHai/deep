@@ -332,6 +332,13 @@ public class NutritionResource {
 
             // not direct people
             List<Long> allFactories = factories.get((long) 0);
+            // direct people
+            List<Long> directFactories = factories.get((long) -1);
+
+            if (allFactories == null && directFactories == null) {
+                return Responses.errorResponse("该代理没有发展羊场和代理！");
+            }
+
             List<NutritionPlanWithBLOBs> theOne = new ArrayList<>();
             if (allFactories != null) {
                 for (Long allFactory : allFactories) {
@@ -341,8 +348,6 @@ public class NutritionResource {
             }
             count += theOne.size();
 
-            // direct people
-            List<Long> directFactories = factories.get((long) -1);
             List<NutritionPlanWithBLOBs> theOther = new ArrayList<>();
             if (directFactories != null) {
                 for (Long directFactory : directFactories) {

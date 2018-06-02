@@ -7,20 +7,11 @@ import java.util.List;
 
 @Mapper
 public interface NoticeMapper {
-    @Select("select * from notice_plan")
-    @Results({
-            @Result(property = "id", column = "id"),
-            @Result(property = "gmtCreate", column = "gmt_create"),
-            @Result(property = "gmtModified", column = "gmt_modified"),
-            @Result(property = "type", column = "type"),
-            @Result(property = "title", column = "title"),
-            @Result(property = "content", column = "content"),
-            @Result(property = "operatorName", column = "operator_name"),
-            @Result(property = "operatorId", column = "operator_id")
-    })
-    List<NoticePlan> queryAllNotice();
 
-    @Select("select * from notice_plan where type = #{type}")
+    @Select("select count(*) from notice_plan")
+    Integer queryAllNoticeCount();
+
+    @Select("select * from notice_plan limit #{start}, #{size}")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "gmtCreate", column = "gmt_create"),
@@ -31,7 +22,23 @@ public interface NoticeMapper {
             @Result(property = "operatorName", column = "operator_name"),
             @Result(property = "operatorId", column = "operator_id")
     })
-    List<NoticePlan> queryAllNoticeByType(String type);
+    List<NoticePlan> queryAllNotice(@Param("start") Integer start, @Param("size") Byte size);
+
+    @Select("select count(*) from notice_plan where type = #{type}")
+    Integer queryAllNoticeByTypeCount(String type);
+
+    @Select("select * from notice_plan where type = #{type} limit #{start}, #{size}")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "gmtCreate", column = "gmt_create"),
+            @Result(property = "gmtModified", column = "gmt_modified"),
+            @Result(property = "type", column = "type"),
+            @Result(property = "title", column = "title"),
+            @Result(property = "content", column = "content"),
+            @Result(property = "operatorName", column = "operator_name"),
+            @Result(property = "operatorId", column = "operator_id")
+    })
+    List<NoticePlan> queryAllNoticeByType(@Param("type") String type, @Param("start") Integer start, @Param("size") Byte size);
 
     @Select("select * from notice_plan where id = #{id}")
     @Results({
@@ -80,8 +87,8 @@ public interface NoticeMapper {
 
     /**
      * 修改一个代理
-     * @param plan
-     * @return
+     * @param plan 代理对象
+     * @return 修改是否成功
      */
     @Update("update notice_plan set " +
             "gmt_create = #{gmtCreate}, " +
@@ -95,9 +102,9 @@ public interface NoticeMapper {
     int updateNoticePlan(NoticePlan plan);
 
     /**
-     * 删除一个代理
-     * @param id
-     * @return
+     * 删除一个通告发布
+     * @param id 通告ID
+     * @return 删除是否成功
      */
     @Delete("delete from notice_plan where id = #{id}")
     int deleteNoticePlan(Long id);
