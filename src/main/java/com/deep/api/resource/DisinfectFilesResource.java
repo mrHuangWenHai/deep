@@ -201,13 +201,12 @@ public class DisinfectFilesResource {
           assert factoryMap != null;
           factoryList.addAll(factoryMap.get((long) -1));
           factoryList.addAll(factoryMap.get(0L));
+            if (factoryList.size() == 0) {
+                return Responses.errorResponse("本级代理没有发展羊场和代理！");
+            }
           disinfectRequest.setFactoryList(factoryList);
         } else {
           return Responses.errorResponse("你没有权限");
-        }
-
-        if (disinfectRequest.getFactoryList().size() == 0) {
-            return Responses.errorResponse("本级代理还没有发展羊场及代理！");
         }
 
         List<DisinfectFilesModel> totalList = disinfectFilesService.getDisinfectFilesModel(disinfectRequest);

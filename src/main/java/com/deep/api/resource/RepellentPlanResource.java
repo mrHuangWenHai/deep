@@ -202,8 +202,12 @@ public class RepellentPlanResource {
 
         factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
         List<Long> factoryList = new ArrayList<>();
-        factoryList.addAll(factoryMap.get(new Long(-1)));
-        factoryList.addAll(factoryMap.get(new Long(0)));
+          assert factoryMap != null;
+          factoryList.addAll(factoryMap.get((long) -1));
+        factoryList.addAll(factoryMap.get(0L));
+          if (factoryList.size() == 0) {
+              return Responses.errorResponse("本级代理没有发展羊场和代理！");
+          }
         repellentRequest.setFactoryList(factoryList);
 
       } else {
@@ -211,10 +215,6 @@ public class RepellentPlanResource {
       }
 
       logger.info("invoke rp/{} {}",id, repellentRequest);
-
-      if (repellentRequest.getFactoryList().size() == 0) {
-          return Responses.errorResponse("本级代理没有发展羊场和代理！");
-      }
 
       List<RepellentPlanModel> totalList = repellentPlanService.getRepellentPlanModel(repellentRequest);
 
