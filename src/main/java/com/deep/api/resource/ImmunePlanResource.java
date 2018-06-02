@@ -215,16 +215,15 @@ public class ImmunePlanResource {
       } else if (role == 1) {
         factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
         List<Long> factoryList = new ArrayList<>();
-          assert factoryMap != null;
-          factoryList.addAll(factoryMap.get((long) -1));
+        assert factoryMap != null;
+        factoryList.addAll(factoryMap.get((long) -1));
         factoryList.addAll(factoryMap.get(0L));
+        if (factoryList.size() == 0) {
+            return Responses.errorResponse("本级代理没有发展羊场和代理！");
+        }
         immuneRequest.setFactoryList(factoryList);
       } else {
         return Responses.errorResponse("你没有权限");
-      }
-
-      if (immuneRequest.getFactoryList().size() == 0) {
-          return Responses.errorResponse("本级代理没有发展羊场和代理！");
       }
 
       List<ImmunePlanModel> totalList = immunePlanService.getImmunePlanModel(immuneRequest);

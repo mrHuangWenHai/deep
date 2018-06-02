@@ -44,8 +44,8 @@ public class DiagnosisPlanModel {
     private String buildingNum;
 
     @NotBlank
-    @Size(min = 6, max = 6, message = "eartag need size:15 ")
-    @Pattern(regexp = "^[0-9]+$", message = "商标耳牌由数字组成15位")
+    @Size(min = 6, max = 6, message = "eartag need size:6 ")
+    @Pattern(regexp = "^[GM][0-9]{5}+$", message = "商标耳牌由数字组成6位")
     private String earTag;
 
     private String supervisorName;

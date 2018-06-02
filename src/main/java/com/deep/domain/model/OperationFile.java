@@ -53,11 +53,11 @@ public class OperationFile {
   private String factoryName;
   @Min(0)
   private int supervisorId;
-  @NotBlank
+
   private String supervisorName;
   @Min(0)
   private int professorId;
-  @NotBlank
+
   private String professorName;
   private String upassReason;
 

@@ -83,12 +83,12 @@ public class OperationFileResource {
         assert factoryMap != null;
         factoryList.addAll(factoryMap.get((long) -1));
         factoryList.addAll(factoryMap.get(0L));
+        if (factoryList.size() == 0) {
+          return Responses.errorResponse("本级代理没有发展羊场和代理！");
+        }
         operationCoditionRequest.setFactoryList(factoryList);
       } else {
         return Responses.errorResponse("你没有权限");
-      }
-      if (operationCoditionRequest.getFactoryList().size() == 0) {
-        return Responses.errorResponse("该代理没有发展羊场和代理！");
       }
       logger.info("invoke Get /of {}",operationCoditionRequest);
       List<OperationFile> totalList = operationFileService.getOperationFile(operationCoditionRequest);
