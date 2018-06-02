@@ -60,8 +60,6 @@ public class OperationFile {
   @NotBlank
   private String professorName;
   private String upassReason;
-
-
   int ispassCheck;
   int ispassSup;
 
