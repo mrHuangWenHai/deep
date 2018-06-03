@@ -322,9 +322,6 @@
       <if test="quantity != null" >
         #{quantity,jdbcType=BIGINT},
       </if>
-      <!--<if test="average != null" >-->
-        <!--#{average,jdbcType=VARCHAR},-->
-      <!--</if>-->
       <if test="period != null" >
         #{period,jdbcType=VARCHAR},
       </if>
@@ -808,6 +805,18 @@
     SELECT *
     FROM nutrition_plan
     WHERE (nutrition_t BETWEEN #{date1} AND #{date2}) AND (factory_num = #{number})
+  </select>
+
+  <select resultMap="ResultMapWithBLOBs" parameterType="com.deep.domain.model.NutritionPlanExample" id="findAllRecords">
+    SELECT *
+    FROM nutrition_plan
+    WHERE factory_num = #{factory} AND ispass_check = #{pass}
+  </select>
+
+  <select resultMap="ResultMapWithBLOBs" parameterType="com.deep.domain.model.NutritionPlanExample" id="getAll">
+    SELECT *
+    FROM nutrition_plan
+    WHERE factory_num = #{factory}
   </select>
 
   <select resultMap="BaseResultMap" parameterType="com.deep.domain.model.NutritionPlanExample" id="selectByExampleWithRowbounds" >

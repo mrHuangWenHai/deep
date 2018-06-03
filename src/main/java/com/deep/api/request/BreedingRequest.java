@@ -4,6 +4,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
+import java.util.List;
 
 public class BreedingRequest {
     // 记录创建时间，前端不传
@@ -13,7 +14,7 @@ public class BreedingRequest {
 
     // 配种时间
     @NotNull(message = "配种时间不能为空")
-    private Timestamp breedingTime;
+    private String breedingTime;
 
     // 配种后待移至栏栋，可以为空
     private String buildingAfterBreeding;
@@ -21,29 +22,29 @@ public class BreedingRequest {
     // 母羊商标耳牌
     @NotNull(message = "母羊商标耳牌不能为空")
     @Size(min = 6, max = 6)
-    @Pattern(regexp = "M+^[0-9]+$", message = "母羊免疫耳牌由M+5位数字组成")
+    @Pattern(regexp = "^M[0-9]{5}+$", message = "母羊免疫耳牌由M+5位数字组成")
     private String ramSheepTrademark;
 
     // 公羊商标耳牌
     @NotNull(message = "公羊商标耳牌不能为空")
     @Size(min = 6, max = 6)
-    @Pattern(regexp = "G+^[0-9]+$", message = "公羊免疫耳牌由G+5位数字组成")
+    @Pattern(regexp = "^G[0-9]{5}+$", message = "公羊免疫耳牌由G+5位数字组成")
     private String eweSheepTrademark;
 
     // 管理批次（int类型）
     private Byte manageFlag;
 
     // 批次平均配种时间（TimeStamp格式，可以用其他模块的时间控件）
-    private Timestamp manageAverageTime;
+    private String manageAverageTime;
 
     // 获取执行妊娠前期营养标准
-    private Timestamp nutritionBeforePregnancy;
+    private String nutritionBeforePregnancy;
 
     // 确定妊娠
     private String isPregnancy;
 
     // 获取执行妊娠后期营养标准
-    private Timestamp nutritionAfterPregnancy;
+    private String nutritionAfterPregnancy;
 
     // 产前免疫种类
     private String prenatalImmunityType;
@@ -55,31 +56,31 @@ public class BreedingRequest {
     private String buildingToBeRelocated;
 
     // 执行产前营养标准
-    private Timestamp nutritionBeforeLambing;
+    private String nutritionBeforeLambing;
 
     // 产羔时间
-    private Timestamp lambingTime;
+    private String lambingTime;
 
     // 产羔数量
     private Integer lambingNumber;
 
     // 执行哺乳期营养标准（产后一周）
-    private Timestamp nutritionBreastFeeding;
+    private String nutritionBreastFeeding;
 
     // 执行羔羊代乳料营养标准（羔羊一月龄）
-    private Timestamp nutritionInsteadBreastFeeding;
+    private String nutritionInsteadBreastFeeding;
 
     // 执行断奶前母羊营养标准
-    private Timestamp nutritionBeforeCutBreastFeeding;
+    private String nutritionBeforeCutBreastFeeding;
 
     // 执行羔羊断奶期营养标准
-    private Timestamp nutritionCutBreastFeeding;
+    private String nutritionCutBreastFeeding;
 
     // 备注
     private String remark;
 
     // 羊场编号，Userdetail接口返回的FactoryNumber字段
-    private Integer factoryNumber;
+    private Integer factoryNum;
     // 羊场名称，Userdetail接口返回的FactoryName字段
     private String factoryName;
 
@@ -108,11 +109,11 @@ public class BreedingRequest {
         this.gmtModify = gmtModify;
     }
 
-    public Timestamp getBreedingTime() {
+    public String getBreedingTime() {
         return breedingTime;
     }
 
-    public void setBreedingTime(Timestamp breedingTime) {
+    public void setBreedingTime(String breedingTime) {
         this.breedingTime = breedingTime;
     }
 
@@ -148,19 +149,19 @@ public class BreedingRequest {
         this.manageFlag = manageFlag;
     }
 
-    public Timestamp getManageAverageTime() {
+    public String getManageAverageTime() {
         return manageAverageTime;
     }
 
-    public void setManageAverageTime(Timestamp manageAverageTime) {
+    public void setManageAverageTime(String manageAverageTime) {
         this.manageAverageTime = manageAverageTime;
     }
 
-    public Timestamp getNutritionBeforePregnancy() {
+    public String getNutritionBeforePregnancy() {
         return nutritionBeforePregnancy;
     }
 
-    public void setNutritionBeforePregnancy(Timestamp nutritionBeforePregnancy) {
+    public void setNutritionBeforePregnancy(String nutritionBeforePregnancy) {
         this.nutritionBeforePregnancy = nutritionBeforePregnancy;
     }
 
@@ -172,29 +173,15 @@ public class BreedingRequest {
         this.isPregnancy = isPregnancy;
     }
 
-    public Timestamp getNutritionAfterPregnancy() {
+    public String getNutritionAfterPregnancy() {
         return nutritionAfterPregnancy;
     }
 
-    public void setNutritionAfterPregnancy(Timestamp nutritionAfterPregnancy) {
+    public void setNutritionAfterPregnancy(String nutritionAfterPregnancy) {
         this.nutritionAfterPregnancy = nutritionAfterPregnancy;
     }
 
-    public String getPrenatalImmunityType() {
-        return prenatalImmunityType;
-    }
 
-    public void setPrenatalImmunityType(String prenatalImmunityType) {
-        this.prenatalImmunityType = prenatalImmunityType;
-    }
-
-    public String getPrenatalImmunityTime() {
-        return prenatalImmunityTime;
-    }
-
-    public void setPrenatalImmunityTime(String prenatalImmunityTime) {
-        this.prenatalImmunityTime = prenatalImmunityTime;
-    }
 
     public String getBuildingToBeRelocated() {
         return buildingToBeRelocated;
@@ -204,19 +191,19 @@ public class BreedingRequest {
         this.buildingToBeRelocated = buildingToBeRelocated;
     }
 
-    public Timestamp getNutritionBeforeLambing() {
+    public String getNutritionBeforeLambing() {
         return nutritionBeforeLambing;
     }
 
-    public void setNutritionBeforeLambing(Timestamp nutritionBeforeLambing) {
+    public void setNutritionBeforeLambing(String nutritionBeforeLambing) {
         this.nutritionBeforeLambing = nutritionBeforeLambing;
     }
 
-    public Timestamp getLambingTime() {
+    public String getLambingTime() {
         return lambingTime;
     }
 
-    public void setLambingTime(Timestamp lambingTime) {
+    public void setLambingTime(String lambingTime) {
         this.lambingTime = lambingTime;
     }
 
@@ -228,35 +215,35 @@ public class BreedingRequest {
         this.lambingNumber = lambingNumber;
     }
 
-    public Timestamp getNutritionBreastFeeding() {
+    public String getNutritionBreastFeeding() {
         return nutritionBreastFeeding;
     }
 
-    public void setNutritionBreastFeeding(Timestamp nutritionBreastFeeding) {
+    public void setNutritionBreastFeeding(String nutritionBreastFeeding) {
         this.nutritionBreastFeeding = nutritionBreastFeeding;
     }
 
-    public Timestamp getNutritionInsteadBreastFeeding() {
+    public String getNutritionInsteadBreastFeeding() {
         return nutritionInsteadBreastFeeding;
     }
 
-    public void setNutritionInsteadBreastFeeding(Timestamp nutritionInsteadBreastFeeding) {
+    public void setNutritionInsteadBreastFeeding(String nutritionInsteadBreastFeeding) {
         this.nutritionInsteadBreastFeeding = nutritionInsteadBreastFeeding;
     }
 
-    public Timestamp getNutritionBeforeCutBreastFeeding() {
+    public String getNutritionBeforeCutBreastFeeding() {
         return nutritionBeforeCutBreastFeeding;
     }
 
-    public void setNutritionBeforeCutBreastFeeding(Timestamp nutritionBeforeCutBreastFeeding) {
+    public void setNutritionBeforeCutBreastFeeding(String nutritionBeforeCutBreastFeeding) {
         this.nutritionBeforeCutBreastFeeding = nutritionBeforeCutBreastFeeding;
     }
 
-    public Timestamp getNutritionCutBreastFeeding() {
+    public String getNutritionCutBreastFeeding() {
         return nutritionCutBreastFeeding;
     }
 
-    public void setNutritionCutBreastFeeding(Timestamp nutritionCutBreastFeeding) {
+    public void setNutritionCutBreastFeeding(String nutritionCutBreastFeeding) {
         this.nutritionCutBreastFeeding = nutritionCutBreastFeeding;
     }
 
@@ -266,14 +253,6 @@ public class BreedingRequest {
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public Integer getFactoryNumber() {
-        return factoryNumber;
-    }
-
-    public void setFactoryNumber(Integer factoryNumber) {
-        this.factoryNumber = factoryNumber;
     }
 
     public String getFactoryName() {
@@ -308,32 +287,56 @@ public class BreedingRequest {
         this.operatorName = operatorName;
     }
 
+    public String getPrenatalImmunityType() {
+        return prenatalImmunityType;
+    }
+
+    public void setPrenatalImmunityType(String prenatalImmunityType) {
+        this.prenatalImmunityType = prenatalImmunityType;
+    }
+
+    public String getPrenatalImmunityTime() {
+        return prenatalImmunityTime;
+    }
+
+    public void setPrenatalImmunityTime(String prenatalImmunityTime) {
+        this.prenatalImmunityTime = prenatalImmunityTime;
+    }
+
+    public Integer getFactoryNum() {
+        return factoryNum;
+    }
+
+    public void setFactoryNum(Integer factoryNum) {
+        this.factoryNum = factoryNum;
+    }
+
     @Override
     public String toString() {
         return "BreedingRequest{" +
                 "gmtCreate=" + gmtCreate +
                 ", gmtModify=" + gmtModify +
-                ", breedingTime=" + breedingTime +
+                ", breedingTime='" + breedingTime + '\'' +
                 ", buildingAfterBreeding='" + buildingAfterBreeding + '\'' +
                 ", ramSheepTrademark='" + ramSheepTrademark + '\'' +
                 ", eweSheepTrademark='" + eweSheepTrademark + '\'' +
                 ", manageFlag=" + manageFlag +
-                ", manageAverageTime=" + manageAverageTime +
-                ", nutritionBeforePregnancy=" + nutritionBeforePregnancy +
+                ", manageAverageTime='" + manageAverageTime + '\'' +
+                ", nutritionBeforePregnancy='" + nutritionBeforePregnancy + '\'' +
                 ", isPregnancy='" + isPregnancy + '\'' +
-                ", nutritionAfterPregnancy=" + nutritionAfterPregnancy +
+                ", nutritionAfterPregnancy='" + nutritionAfterPregnancy + '\'' +
                 ", prenatalImmunityType='" + prenatalImmunityType + '\'' +
                 ", prenatalImmunityTime='" + prenatalImmunityTime + '\'' +
                 ", buildingToBeRelocated='" + buildingToBeRelocated + '\'' +
-                ", nutritionBeforeLambing=" + nutritionBeforeLambing +
-                ", lambingTime=" + lambingTime +
+                ", nutritionBeforeLambing='" + nutritionBeforeLambing + '\'' +
+                ", lambingTime='" + lambingTime + '\'' +
                 ", lambingNumber=" + lambingNumber +
-                ", nutritionBreastFeeding=" + nutritionBreastFeeding +
-                ", nutritionInsteadBreastFeeding=" + nutritionInsteadBreastFeeding +
-                ", nutritionBeforeCutBreastFeeding=" + nutritionBeforeCutBreastFeeding +
-                ", nutritionCutBreastFeeding=" + nutritionCutBreastFeeding +
+                ", nutritionBreastFeeding='" + nutritionBreastFeeding + '\'' +
+                ", nutritionInsteadBreastFeeding='" + nutritionInsteadBreastFeeding + '\'' +
+                ", nutritionBeforeCutBreastFeeding='" + nutritionBeforeCutBreastFeeding + '\'' +
+                ", nutritionCutBreastFeeding='" + nutritionCutBreastFeeding + '\'' +
                 ", remark='" + remark + '\'' +
-                ", factoryNumber=" + factoryNumber +
+                ", factoryNumber=" + factoryNum +
                 ", factoryName='" + factoryName + '\'' +
                 ", operatorTime=" + operatorTime +
                 ", operatorId=" + operatorId +

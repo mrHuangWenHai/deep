@@ -153,18 +153,6 @@
 
     </select>
 
-    <!--<select id="getDisinfectFilesModelByFactoryList" resultMap="DisinfectFiles">-->
-        <!--SELECT-->
-        <!--*-->
-        <!--FROM-->
-        <!--disinfect_files-->
-        <!--WHERE-->
-        <!--1=1-->
-        <!---->
-        <!---->
-
-    <!--</select>-->
-
     <select id="getDisinfectFilesModelByTradeMarkEarTag" resultMap="DisinfectFiles">
 
         SELECT
@@ -228,8 +216,6 @@
         </if>
     </select>
 
-
-
     <update id="updateDisinfectFilesModelByProfessor">
         UPDATE disinfect_files
         SET  professor = #{disinfectRequest.professor},
@@ -280,18 +266,16 @@
             <if test="disinfectFilesModel.remark != null">
                 remark = #{disinfectFilesModel.remark},
             </if>
-
         </set>
         WHERE
-        id = #{disinfectFilesModel.id} and ispass_check = 2 and ispass_sup = 2
+        id = #{disinfectFilesModel.id} and ispass_check != 1
     </update>
 
     <delete id="deleteDisinfectFilesModelById" >
-
         DELETE FROM
         disinfect_files
         WHERE
-        id = #{id}
+        id = #{id} AND ispass_check != 1
     </delete>
 
 </mapper>

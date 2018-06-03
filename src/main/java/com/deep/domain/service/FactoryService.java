@@ -79,9 +79,8 @@ public class FactoryService {
      * @param factoryNumber 羊场编号
      * @return
      */
-    public Short getAgentIDByFactoryNumber(String factoryNumber) {
+    public Short getAgentIDByFactoryNumber(Long factoryNumber) {
         return factoryMapper.queryOneAgentByFactoryID(factoryNumber);
-
     }
 
     /**

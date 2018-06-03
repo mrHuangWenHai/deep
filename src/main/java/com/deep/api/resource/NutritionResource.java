@@ -107,8 +107,8 @@ public class NutritionResource {
             if (success <= 0) {
                 return Responses.errorResponse("插入失败");
             }
-
-            short agentID = this.factoryService.queryOneAgentByID(planModel.getFactoryNum().longValue());
+//         TODO 再详细检查一下Redis
+            short agentID = this.factoryService.queryOneAgentByID(planModel.getFactoryNum());
             String professorKey = agentID + "_professor";
             String supervisorKey = planModel.getFactoryNum().toString() + "_supervisor";
 
@@ -122,7 +122,6 @@ public class NutritionResource {
                 if( JedisUtil.redisJudgeTime(professorKey) ) {
                     System.out.println("in redis:");
                     List<String> phone = userService.getProfessorTelephoneByFactoryNum(BigInteger.valueOf(planModel.getFactoryNum()));
-
                     StringBuffer phoneList = new StringBuffer("");
 
                     for (String aPhone : phone) {
@@ -180,7 +179,7 @@ public class NutritionResource {
         if (uid == -1) {
             return Responses.errorResponse("错误");
         }
-        if (selectById.getIspassCheck() == 2 && selectById.getIspassSup() == 2) {
+        if (selectById.getIspassCheck() != 1) {
             int success = nutritionPlanService.dropPlan(uid);
             if (success <= 0) {
                 return Responses.errorResponse("删除失败");
@@ -220,11 +219,9 @@ public class NutritionResource {
             // 查询数据库相关记录
             NutritionPlanWithBLOBs waitToModify = nutritionPlanService.findPlanById(uid);
             if (waitToModify != null) {
-                if (waitToModify.getIspassSup() == '1' || waitToModify.getIspassCheck() == '1') {
+                if (waitToModify.getIspassCheck() == '1') {
                     return Responses.errorResponse("该条记录已被审核，不能进行修改！");
                 }
-
-
                 //将planModel部分变量拆分传递给对象operator
                 NutritionPlanWithBLOBs operator = new NutritionPlanWithBLOBs();
                 operator.setId(uid);
@@ -256,6 +253,7 @@ public class NutritionResource {
                 operator.setPickingR(planModel.getPickingR());
                 operator.setPickingO(planModel.getPickingO());
                 operator.setNutritionT(planModel.getNutritionT());
+                operator.setIspassCheck(Byte.valueOf(String.valueOf(2)));
 
 
                 int success = nutritionPlanService.changePlanSelective(operator);
@@ -291,7 +289,6 @@ public class NutritionResource {
         if (size == null || page == null) {
             return Responses.errorResponse("失败");
         }
-
         int usize = StringToLongUtil.stringToInt(size);
         int upage = StringToLongUtil.stringToInt(page);
         byte pass = StringToLongUtil.stringToByte(ispassCheck);
@@ -304,10 +301,16 @@ public class NutritionResource {
             if (pass != -1) {
                 criteria.andIsPassCheckEqualTo(pass);
             }
-            List<NutritionPlanWithBLOBs> select = nutritionPlanService.findPlanSelective(nutritionPlanExample,new RowBounds(upage, usize));
+            List<NutritionPlanWithBLOBs> select = nutritionPlanService.findPlanSelective(nutritionPlanExample,new RowBounds(0, 1000000));
+
+            List<NutritionPlanWithBLOBs> results = new ArrayList<>();
+            for (int i = upage*usize; i < select.size() && i < upage*usize + usize; i++) {
+                results.add(select.get(i));
+            }
+
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
-            data.put("List",select);
+            data.put("List",results);
             data.put("size", select.size());
             response.setData(data);
             return response;
@@ -316,11 +319,9 @@ public class NutritionResource {
             // user is a agent user
             NutritionPlanExample nutritionPlanExample = new NutritionPlanExample();
             NutritionPlanExample.Criteria criteria = nutritionPlanExample.createCriteria();
-            NutritionPlanExample nutritionPlanExample1 = new NutritionPlanExample();
-            NutritionPlanExample.Criteria criteria1 = nutritionPlanExample1.createCriteria();
+
             if (pass != -1) {
                 criteria.andIsPassCheckEqualTo(pass);
-                criteria1.andIsPassCheckEqualTo(pass);
             }
             // It's agent message
             // find his all subordinate factory
@@ -342,24 +343,38 @@ public class NutritionResource {
             List<NutritionPlanWithBLOBs> theOne = new ArrayList<>();
             if (allFactories != null) {
                 for (Long allFactory : allFactories) {
-                    criteria.andFactoryNumEqualTo(allFactory);
-                    theOne.addAll(nutritionPlanService.findPlanSelective(nutritionPlanExample, new RowBounds(0, 100000)));
+                    List<NutritionPlanWithBLOBs> temp = new ArrayList<>();
+                    if (pass != -1) {
+                        temp = nutritionPlanService.findAllRecords(allFactory, pass);
+                    } else {
+                        temp = nutritionPlanService.getAll(allFactory);
+                    }
+                    System.out.println("temp = " + temp.size());
+                    theOne.addAll(temp);
                 }
             }
+            System.out.println("--------------------------------------------------------------------------------------------");
             count += theOne.size();
 
             List<NutritionPlanWithBLOBs> theOther = new ArrayList<>();
             if (directFactories != null) {
                 for (Long directFactory : directFactories) {
-                    criteria1.andFactoryNumEqualTo(directFactory);
-                    theOther.addAll(nutritionPlanService.findPlanSelective(nutritionPlanExample1, new RowBounds(0, 100000)));
+                    List<NutritionPlanWithBLOBs> temp = new ArrayList<>();
+                    if (pass != -1) {
+                        temp = nutritionPlanService.findAllRecords(directFactory, pass);
+                    } else {
+                        temp = nutritionPlanService.getAll(directFactory);
+                    }
+                    System.out.println("temp = " + temp.size());
+                    theOther.addAll(temp);
                 }
             }
             count += theOther.size();
 
+            System.out.println("new count = " + count);
+
             plans.addAll(theOther);
             plans.addAll(theOne);
-
             List<NutritionPlanWithBLOBs> results = new ArrayList<>();
             for (int i = upage*usize; i < plans.size() && i < upage*usize + usize; i++) {
                 results.add(plans.get(i));
@@ -433,11 +448,11 @@ public class NutritionResource {
             if (success <= 0) {
                 return Responses.errorResponse("错误");
             }
-            String professorKey = this.factoryService.getAgentIDByFactoryNumber(professorRequest.getFactoryNum().toString()) + "_professor";;
+            String professorKey = this.factoryService.getAgentIDByFactoryNumber(Long.valueOf(professorRequest.getFactoryNum().toString())) + "_professor";;
             JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
-//            if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
-//                return Responses.errorResponse("cancel error");
-//            }
+            if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
+                return Responses.errorResponse("cancel error");
+            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("success", success);
@@ -479,9 +494,9 @@ public class NutritionResource {
             }
             String supervisorKey = supervisorRequest.getFactoryNum().toString() + "_supervisor";
             JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey);
-//            if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
-//                return Responses.errorResponse("cancel error");
-//            }
+            if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
+                return Responses.errorResponse("cancel error");
+            }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("success", success);

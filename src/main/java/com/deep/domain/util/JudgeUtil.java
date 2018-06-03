@@ -37,7 +37,7 @@ public class JudgeUtil {
     public static Response JudgeUpdate(int row) {
 
         if (0 == row) {
-            return Responses.errorResponse("update error");
+            return Responses.errorResponse("审核失败");
         } else {
             HashMap<String,Object> data = new HashMap<>();
             data.put("success",row);
@@ -94,7 +94,7 @@ public class JudgeUtil {
      * @param o
      * @return
      */
-    public static Response JudgeSuccess(String details,Object o) {
+    public static Response JudgeSuccess(String details, Object o) {
         HashMap<String,Object> data = new HashMap<>();
         data.put(details,o);
         return Responses.successResponse(data);

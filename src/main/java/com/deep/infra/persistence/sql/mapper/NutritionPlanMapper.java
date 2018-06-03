@@ -43,4 +43,8 @@ public interface NutritionPlanMapper {
     int updateByPrimaryKey(NutritionPlan record);
 
     List<NutritionPlanWithBLOBs> selectByTwoDate(@Param("date1") Date date1, @Param("date2") Date date2, @Param("number") Integer number);
+
+    List<NutritionPlanWithBLOBs> findAllRecords(@Param("factory") Long factory, @Param("pass") Byte pass);
+
+    List<NutritionPlanWithBLOBs> getAll(Long factory);
 }

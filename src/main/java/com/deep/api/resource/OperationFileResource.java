@@ -193,11 +193,17 @@ public class OperationFileResource {
   public Response update(@RequestBody OperationFile operationFile,
                          @PathVariable(value = "id") int id) {
     operationFile.setId(id);
+
+    OperationFile model = operationFileService.getOperationFileById(id);
+    if (model.getIspassCheck() == 1 || model.getIspassSup() == 1) {
+      return Responses.errorResponse("记录已经审核过，不能进行修改");
+    }
+
     int isSuccess = operationFileService.updateOperationFileByOperationFile(operationFile);
     if (isSuccess == 1) {
       return Responses.successResponse();
     } else {
-      return Responses.errorResponse("add error");
+      return Responses.errorResponse("修改失败！");
     }
   }
 
