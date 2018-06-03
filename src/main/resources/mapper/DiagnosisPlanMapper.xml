@@ -171,7 +171,7 @@
         dose = #{diagnosisPlanModel.dose}
       </if>
     </set>
-    where id = #{diagnosisPlanModel.id} and ispass_check = 2
+    where id = #{diagnosisPlanModel.id} and ispass_check != 1
   </update>
 
   <update id="checkDiagnosisPlanModelById" >

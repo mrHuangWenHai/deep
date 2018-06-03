@@ -92,7 +92,9 @@ public class DisinfectFilesResource {
 
                 disinfectFilesService.setDisinfectFilesModel(disinfectFilesModel);
 
-                //System.out.println("pppppppppppppppppppppppppppp  "+ disinfectFilesModel.getId());
+//                return Responses.successResponse();
+//
+//                //　TODO Ｒｅｄｉｓ需要重新检查
                 //数据插入redis
                 //professor字段为 代理ID + _professor
                 //supervisor字段为 工厂号 + _supervisor
@@ -102,55 +104,45 @@ public class DisinfectFilesResource {
 
                 String testSendProfessor = agentID + "_professor_AlreadySend";
                 String testSendSupervisor = disinfectFilesModel.getFactoryNum().toString() + "_supervisor_AlreadySend";
-
                 JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
                 JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
-
-
-
                 System.out.println("插入后,审核前");
                 System.out.println("pk+"+professorKey+" "+"pv:"+JedisUtil.getCertainKeyValue(professorKey));
                 System.out.println("sk+"+supervisorKey+" "+"sv:"+JedisUtil.getCertainKeyValue(supervisorKey));
                 System.out.println("tpk+"+testSendProfessor+" "+"tpv:"+JedisUtil.getCertainKeyValue(testSendProfessor));
                 System.out.println("tsk+"+testSendSupervisor+" "+"tsv:"+JedisUtil.getCertainKeyValue(testSendSupervisor));
-
                 //发送短信后 testSendProfessor存放在redis中 过期时间为ExpireTime
                 if( !("1".equals(JedisUtil.getCertainKeyValue(testSendProfessor)))) {
                     //System.out.println("testSendProfessorValue:"+jedisUtil.getCertainKeyValue(testSendProfessor));
                     if( JedisUtil.redisJudgeTime(professorKey) ) {
-
                         System.out.println("in redis:");
-
                         List<String> phone = userService.getProfessorTelephoneByFactoryNum(disinfectFilesModel.getFactoryNum());
-
-                        //需完成:userModels.getTelephone()赋值给String
+                        //  需完成:userModels.getTelephone()赋值给String
                         // 获得StringBuffer手机号
                         StringBuffer phoneList = new StringBuffer("");
-
+                        System.out.println("Here");
                         for (String aPhone : phone) {
                             phoneList = phoneList.append(aPhone).append(",");
+                            System.out.println("Phone: " + aPhone);
                         }
-
                         if (phoneList.length() != 0) {
                             if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
                                 JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
                             }
                         }
-
-
                     }
                 }
 
                 if( !("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
                     if(JedisUtil.redisJudgeTime(supervisorKey)) {
                         List<String> phone = userService.getSuperiorTelephoneByFactoryNum(disinfectFilesModel.getFactoryNum());
-
                         StringBuffer phoneList = new StringBuffer("");
-
                         for (String aPhone : phone) {
                             phoneList = phoneList.append(aPhone).append(",");
+                            System.out.println("Phone:" + aPhone);
                         }
-
+                        System.out.println("here:");
+                        System.out.println("PhoneList':" + phoneList.length());
                         if (phoneList.length() != 0) {
 
                             if( JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
@@ -165,8 +157,7 @@ public class DisinfectFilesResource {
                 e.printStackTrace();
             }
         }
-        return Responses.errorResponse("Exception");
-
+        return Responses.errorResponse("数据录入成功, 短信服务器异常!");
     }
 
     /**
@@ -222,7 +213,7 @@ public class DisinfectFilesResource {
           List<DisinfectFilesModel> factorylist = new ArrayList<>();
           List<DisinfectFilesModel> direct = new ArrayList<>();
           List<DisinfectFilesModel> others = new ArrayList<>();
-          List<Long> directId = factoryMap.get(new Long(-1));
+          List<Long> directId = factoryMap.get((long) -1);
           for (DisinfectFilesModel disinfectFilesModel : disinfectFilesModels) {
             if (directId.contains(disinfectFilesModel.getFactoryNum())) {
               direct.add(disinfectFilesModel);
@@ -275,63 +266,6 @@ public class DisinfectFilesResource {
         return JudgeUtil.JudgeFind(list,list.size());
     }
 
-//    /**
-//     * 查看某专家负责的工厂
-//     * @param agentId 代理ID
-//     * @param factoryNum 工厂号
-//     * @param page 页号
-//     * @param size 页数
-//     * @return 查询结果
-//     */
-//    @RequestMapping(value = "/professor",method = RequestMethod.GET)
-//    public Response pFind(@RequestParam("agentId") Long agentId,
-//                          @RequestParam(value = "factoryNum",required = false)BigInteger factoryNum,
-//                          @RequestParam(value = "ispassCheck",required = false)String ispassCheck,
-//                          @RequestParam(value = "page" , defaultValue = "0") int page,
-//                          @RequestParam(value = "size" , defaultValue = "10") int size) {
-//        logger.info(" invoke pFind{agentId, factoryNum, ispassCheck ,page ,size} {}" , agentId, factoryNum, ispassCheck, page ,size);
-//        List<DisinfectFilesModel> list = new ArrayList<>();
-//        if (factoryNum == null) {
-//            //未指定factoryNum 查询出负责的所有的factoryID
-//            long[] factoryId = AgentUtil.getFactory(agentId.toString());
-//            if (factoryId == null) {
-//                return Responses.errorResponse("find no factory");
-//            }
-//            for (long factory : factoryId) {
-//                list.addAll(this.disinfectFilesService.getDisinfectFilesModelByFactoryNumAndIsPassCheck(BigInteger.valueOf(factory), ispassCheck, new RowBounds(page * size ,size)));
-//            }
-//            return JudgeUtil.JudgeFind(list , list.size());
-//            //指定查询的factoryNum
-//        } else {
-//            System.out.println("11");
-//            list.addAll(this.disinfectFilesService.getDisinfectFilesModelByFactoryNumAndIsPassCheck(factoryNum, ispassCheck, new RowBounds(page * size ,size)));
-//            return JudgeUtil.JudgeFind(list , list.size());
-//        }
-//
-//    }
-
-//    /**
-//     * 查看某监督员负责的工厂
-//     * @param factoryNum 工厂号
-//     * @param ispassSup  审核
-//     * @param page  页
-//     * @param size  条
-//     * @return  查询结果
-//     */
-//    @RequestMapping(value = "/supervisor",method = RequestMethod.GET)
-//    public Response sFind(@RequestParam(value = "factoryNum")BigInteger factoryNum,
-//                          @RequestParam(value = "ispassSup",required = false)String ispassSup,
-//                          @RequestParam(value = "page" , defaultValue = "0") int page,
-//                          @RequestParam(value = "size" , defaultValue = "10") int size){
-//        logger.info(" invoke sFind{factoryNum, ispassSup, page, size } {}" , factoryNum, ispassSup, page ,size);
-//        List<DisinfectFilesModel> list = this.disinfectFilesService.getDisinfectFilesModelByFactoryNumAndIsPassSup(factoryNum, ispassSup, new RowBounds(page * size , size));
-//        return JudgeUtil.JudgeFind(list, list.size());
-//    }
-
-
-
-
-
     /**
      * 下载文件 并保存到自定义路径
      * @param response  HttpServletResponse
@@ -380,11 +314,12 @@ public class DisinfectFilesResource {
             disinfectRequest.setProfessor(disinfectRequest.getName());
             int row = disinfectFilesService.updateDisinfectFilesModelByProfessor(disinfectRequest);
             if (row == 1) {
-                String professorKey = this.factoryService.getAgentIDByFactoryNumber(disinfectRequest.getFactoryNum().toString()) + "_professor";
+                String professorKey = this.factoryService.getAgentIDByFactoryNumber(disinfectRequest.getFactoryNum()) + "_professor";
                 JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
-//                if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
-//                    return Responses.errorResponse("cancel error");
-//                }
+                // TODO
+                if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
+                    return Responses.errorResponse("审核成功, 短信服务器异常");
+                }
             }
             return JudgeUtil.JudgeUpdate(row);
         }
@@ -407,7 +342,7 @@ public class DisinfectFilesResource {
         if ( disinfectRequest.getFactoryNum() == null
             || disinfectRequest.getSupervisor() == null
             || disinfectRequest.getIspassSup() == null) {
-            return Responses.errorResponse("Lack Item");
+            return Responses.errorResponse("请完善表单信息");
         } else {
             disinfectRequest.setSupervisor(disinfectRequest.getName());
             int row = disinfectFilesService.updateDisinfectFilesModelBySupervisor(disinfectRequest);
@@ -415,9 +350,9 @@ public class DisinfectFilesResource {
                 String supervisorKey = disinfectRequest.getFactoryNum().toString() + "_supervisor";
                 JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey);
                 // TODO
-//                if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
-//                    return Responses.errorResponse("cancel error");
-//                }
+                if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
+                    return Responses.errorResponse("审核成功, 短信服务器异常");
+                }
             }
             return JudgeUtil.JudgeUpdate(row);
         }
@@ -449,11 +384,10 @@ public class DisinfectFilesResource {
         logger.info("invoke operatorUpdate {}", disinfectFilesModel);
         disinfectFilesModel.setId(id);
         DisinfectFilesModel temp = this.disinfectFilesService.getDisinfectFilesModelById(id);
-        if ("1".equals(temp.getIspassCheck()) || "1".equals(temp.getIspassSup())) {
+        if ("1".equals(temp.getIspassCheck())) {
             return Responses.errorResponse("该条数据已被审核,无法修改");
         }
             disinfectFilesModel.setIspassCheck("2");
-            disinfectFilesModel.setIspassSup("2");
             if (disinfectEartagFile != null) {
             String filePath = pathPre + disinfectFilesModel.getFactoryNum().toString() + "/disinfectEartag/";
             String fileName = disinfectEartagFile.getOriginalFilename();
@@ -495,7 +429,7 @@ public class DisinfectFilesResource {
             return Responses.errorResponse("Wrong id");
         }
         DisinfectFilesModel disinfectFilesModel = this.disinfectFilesService.getDisinfectFilesModelById(id);
-        if ("2".equals(disinfectFilesModel.getIspassCheck()) && "2".equals(disinfectFilesModel.getIspassSup())) {
+        if ("2".equals(disinfectFilesModel.getIspassCheck())) {
             String filePath = pathPre + disinfectFilesModel.getFactoryNum() + "/disinfectEartag/" + disinfectFilesModel.getDisinfectEartag();
             int row = this.disinfectFilesService.deleteDisinfectFilesModelById(id);
             if (FileUtil.deleteFile(filePath) && row == 1) {

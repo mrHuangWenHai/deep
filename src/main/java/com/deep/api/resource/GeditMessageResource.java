@@ -24,27 +24,27 @@ public class GeditMessageResource {
 
     @Permit(authorities = "edit_messages")
     @RequestMapping(value = "/gedit",method = RequestMethod.GET)
-    public Response Gedit(@RequestParam(value = "message",defaultValue = "") String message,
-                          @RequestParam(value = "expireTime",defaultValue = "") String expireTime,
-                          @RequestParam(value = "pressureTips",defaultValue = "") String pressureTips){
+    public Response Gedit(@RequestParam(value = "message", required = false) String message,
+                          @RequestParam(value = "expireTime", required = false) String expireTime,
+                          @RequestParam(value = "pressureTips", required = false) String pressureTips){
         logger.info("invoke Gedit {}", message, expireTime, pressureTips);
         //message未设置
-        if ("".equals(message)) {
-            //redis中一定存在Message字段
-            System.out.println(JedisUtil.getCertainKeyValue("Message"));
-        } else {
+        if (message != null) {
             JedisUtil.setCertainKeyValue("Message",message);
         }
-        if ("".equals(expireTime)) {
-            System.out.println(JedisUtil.getCertainKeyValue("ExpireTime"));
-        } else {
+
+        if (expireTime != null) {
             JedisUtil.setCertainKeyValue("ExpireTime",expireTime);
         }
-        if ("".equals(pressureTips)) {
-            System.out.println(JedisUtil.getCertainKeyValue("PressureTips"));
-        } else {
+
+        if (pressureTips != null) {
             JedisUtil.setCertainKeyValue("PressureTips",pressureTips);
         }
+
+        System.out.println("message: " + message + " " + JedisUtil.getCertainKeyValue("Message"));
+        System.out.println("expiretime: " + expireTime + " " + JedisUtil.getCertainKeyValue("ExpireTime"));
+        System.out.println("pressuretips: " + pressureTips + " " + JedisUtil.getCertainKeyValue("PressureTips"));
+
         return JudgeUtil.JudgeSuccess("setting","success");
     }
 }

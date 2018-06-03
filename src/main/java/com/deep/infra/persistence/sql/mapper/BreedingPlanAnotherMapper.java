@@ -250,7 +250,7 @@ public interface BreedingPlanAnotherMapper {
             "#{operatorId}, " +
             "#{operatorName}, " +
             "#{remark}, " +
-            "#{factoryNumber}, " +
+            "#{factoryNum}, " +
             "#{factoryName}," +
             "2," +
             "2" +

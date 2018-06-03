@@ -269,7 +269,7 @@
             </if>
         </set>
         WHERE
-        id = #{repellentPlanModel.id} and ispass_check = 2 and ispass_sup = 2
+        id = #{repellentPlanModel.id} and ispass_check != 1
     </update>
 
 
@@ -278,6 +278,6 @@
         DELETE FROM
         repellent_plan
         WHERE
-        id = #{id}
+        id = #{id} AND ispass_check != 1
     </delete>
 </mapper>

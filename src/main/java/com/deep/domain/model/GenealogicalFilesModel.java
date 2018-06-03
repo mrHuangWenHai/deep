@@ -21,7 +21,7 @@ public class GenealogicalFilesModel {
     @NotEmpty
     @NotNull
     @Size(min = 6, max = 6, message = "trademarkEartag need size:6 ")
-    @Pattern(regexp = "G+[0-9]+$|M+[0-9]+$", message = "商标耳牌由字母+数字组成6位")
+    @Pattern(regexp = "^[GM][0-9]{5}+$", message = "商标耳牌由字母+数字组成6位")
     private String tradeMarkEartag;  //商标耳牌
     @NotEmpty
     @NotNull
@@ -45,32 +45,32 @@ public class GenealogicalFilesModel {
     @NotEmpty
     @NotNull
     @Size(min = 6, max = 6, message = "trademarkEartag need size:6 ")
-    @Pattern(regexp = "G+[0-9]", message = "父耳牌由字母+数字组成6位")
+    @Pattern(regexp = "^[G][0-9]{5}+$", message = "父耳牌由字母+数字组成6位")
     private String eartagOfFather;  //父耳牌
     @NotEmpty
     @NotNull
     @Size(min = 6, max = 6, message = "trademarkEartag need size:6 ")
-    @Pattern(regexp = "M+[0-9]", message = "母耳牌由字母+数字组成6位")
+    @Pattern(regexp = "^[M][0-9]{5}+$", message = "母耳牌由字母+数字组成6位")
     private String eartagOfMother;  //母耳牌
     @NotEmpty
     @NotNull
     @Size(min = 6, max = 6, message = "trademarkEartag need size:6 ")
-    @Pattern(regexp = "G+[0-9]", message = "父父耳牌由字母+数字组成6位")
+    @Pattern(regexp = "^[G][0-9]{5}+$", message = "父父耳牌由字母+数字组成6位")
     private String eartagOfFathersFather;  //父父耳牌
     @NotEmpty
     @NotNull
     @Size(min = 6, max = 6, message = "trademarkEartag need size:6 ")
-    @Pattern(regexp = "M+[0-9]", message = "父母耳牌由字母+数字组成6位")
+    @Pattern(regexp = "^[M][0-9]{5}+$", message = "父母耳牌由字母+数字组成6位")
     private String eartagOfFathersMother;  //父母耳牌
     @NotEmpty
     @NotNull
     @Size(min = 6, max = 6, message = "trademarkEartag need size:6 ")
-    @Pattern(regexp = "G+[0-9]", message = "母父耳牌由字母+数字组成6位")
+    @Pattern(regexp = "^[G][0-9]{5}+$", message = "母父耳牌由字母+数字组成6位")
     private String eartagOfMothersFather;  //母父耳牌
     @NotEmpty
     @NotNull
     @Size(min = 6, max = 6, message = "trademarkEartag need size:6 ")
-    @Pattern(regexp = "M+[0-9]", message = "母母耳牌由字母+数字组成6位")
+    @Pattern(regexp = "^[M][0-9]{5}+$", message = "母母耳牌由字母+数字组成6位")
     private String eartagOfMothersMother;  //母母耳牌
     @Min(0)
     private int operatorId;
@@ -110,8 +110,6 @@ public class GenealogicalFilesModel {
       this.remark = genealogicalFilesModel.getRemark();
       this.gmtCreate = genealogicalFilesModel.getGmtCreate();
       this.gmtModified = genealogicalFilesModel.getGmtModified();
-
-
     }
 
 

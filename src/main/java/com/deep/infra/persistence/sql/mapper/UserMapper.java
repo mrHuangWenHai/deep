@@ -144,14 +144,14 @@ public interface UserMapper {
 
     /**
      * 获取羊场监督者的所有信息
-     * @param agentID 羊场ID或者代理ID
+     * @param factoryNumber 羊场ID或者代理ID
      * @return 相关信息
      */
-    @Select("select user_telephone from user_manage where is_factory = 0 and user_factory = #{agentID} and user_role = 20")
+    @Select("select user_telephone from user_manage where is_factory = 0 and user_factory = #{factoryNumber} and user_role = 20")
     @Results({
             @Result(property = "userTelephone", column = "user_telephone"),
     })
-    List<String> querySuperiorTelephoneByAgentAndRole(short agentID);
+    List<String> querySuperiorTelephoneByAgentAndRole(Long factoryNumber);
 
 
     /**

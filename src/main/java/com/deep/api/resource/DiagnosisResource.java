@@ -23,10 +23,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.math.BigInteger;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static com.deep.domain.util.JedisUtil.getCertainKeyValue;
 
 
 /**
@@ -58,7 +57,6 @@ public class DiagnosisResource {
     @PostMapping(value = "")
     public Response addPlan(@RequestBody @Valid DiagnosisPlanModel diagnosisPlanModel,
                             BindingResult bindingResult) throws ParseException {
-
         logger.info("invoke diagnosis/insert {}", diagnosisPlanModel);
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("param is error");
@@ -69,57 +67,55 @@ public class DiagnosisResource {
         } else {
             int isSuccess = diagnosisPlanService.addPlan(diagnosisPlanModel);
             if (isSuccess <= 0) {
-
                 return Responses.errorResponse("插入错误");
             }
+            // TODO　Ｒｅｄｉｓ需要修改
             short agentID = this.factoryService.queryOneAgentByID(diagnosisPlanModel.getFactoryNum().longValue());
+
             String professorKey = agentID + "_professor";
             String supervisorKey = diagnosisPlanModel.getFactoryNum().toString() + "_supervisor";
-
             String testSendProfessor = agentID + "_professor_AlreadySend";
             String testSendSupervisor = diagnosisPlanModel.getFactoryNum().toString() + "_supervisor_AlreadySend";
 
             JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
             JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
 
-            if( !("1".equals(JedisUtil.getCertainKeyValue(testSendProfessor)))) {
+            System.out.println(testSendProfessor);
+            System.out.println(professorKey);
+
+            if( !("1".equals(getCertainKeyValue(testSendProfessor)))) {
                 if( JedisUtil.redisJudgeTime(professorKey) ) {
                     System.out.println("in redis:");
                     List<String> phone = userService.getProfessorTelephoneByFactoryNum(BigInteger.valueOf(diagnosisPlanModel.getFactoryNum()));
-
+                    if (phone == null) {
+                        return Responses.errorResponse("添加记录成功，但是发送消息失败，请联系管理员");
+                    }
                     StringBuffer phoneList = new StringBuffer("");
-
                     for (String aPhone : phone) {
                         phoneList = phoneList.append(aPhone).append(",");
                     }
-
+                    System.out.println("phoneList = " + phoneList);
                     if (phoneList.length() != 0) {
-                        if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
-                            JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
+                        if (JedisUtil.redisSendMessage(phoneList.toString(), getCertainKeyValue("Message"))) {
+                            JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(Objects.requireNonNull(getCertainKeyValue("ExpireTime"))) * 24 * 60 * 60);
                         }
                     }
                 }
             }
-
-            if( !("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
+            if( !("1".equals(getCertainKeyValue(testSendSupervisor)))) {
                 if(JedisUtil.redisJudgeTime(supervisorKey)) {
                     List<String> phone = userService.getSuperiorTelephoneByFactoryNum(BigInteger.valueOf(diagnosisPlanModel.getFactoryNum()));
-
                     StringBuffer phoneList = new StringBuffer("");
-
                     for (String aPhone : phone) {
                         phoneList = phoneList.append(aPhone).append(",");
                     }
-
                     if (phoneList.length() != 0) {
-
-                        if( JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
-                            JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime"))*24*60*60);
+                        if( JedisUtil.redisSendMessage(phoneList.toString(), getCertainKeyValue("Message"))) {
+                            JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",Integer.parseInt(Objects.requireNonNull(getCertainKeyValue("ExpireTime")))*24*60*60);
                         }
                     }
                 }
             }
-
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("id",diagnosisPlanModel.getId());
@@ -139,7 +135,7 @@ public class DiagnosisResource {
         logger.info("invoke diagnosis/{}", id);
         // 首先查询该条数据
         DiagnosisPlanModel diagnosisPlanModel = diagnosisPlanService.findPlanById(id);
-        if (diagnosisPlanModel.getIspassSup() == 2 && diagnosisPlanModel.getIspassCheck() == 2) {
+        if (diagnosisPlanModel.getIspassCheck() != 1) {
             int isSuccess =  diagnosisPlanService.dropPlan(id);
             if (isSuccess == 0) {
                 return Responses.errorResponse("删除失败");
@@ -167,7 +163,6 @@ public class DiagnosisResource {
         if (id < 0) {
           return Responses.errorResponse("id is invalide");
         }
-
         if (bindingResult.hasErrors()) {
           Response response = Responses.errorResponse("param is error");
           Map<String, Object> map = new HashMap<String, Object>();
@@ -179,7 +174,7 @@ public class DiagnosisResource {
         diagnosisPlanModel.setId(id);
         logger.info("invoke diagnosis/update {}", diagnosisPlanModel);
         DiagnosisPlanModel waitToModify = diagnosisPlanService.findPlanById(id);
-        if (waitToModify != null && waitToModify.getIspassCheck() != 1 && waitToModify.getIspassSup() != 1) {
+        if (waitToModify != null && waitToModify.getIspassCheck() != 1) {
             int isSuccess = diagnosisPlanService.updateDiagnosisPlanModel(diagnosisPlanModel);
             if (isSuccess == 0) {
                 return Responses.errorResponse("修改失败");
@@ -200,20 +195,19 @@ public class DiagnosisResource {
     public Response changePlanByProfessor(@PathVariable(value = "id") int id,
                                           @RequestBody ProfessorRequest professorRequest) {
         logger.info("invoke diagnosis/p/{} {}", id, professorRequest.toString());
-//        short ispassCheck = json.get("ispassCheck").shortValue();
-        if (professorRequest.getIspassCheck() == 2) {
+        if (professorRequest.getIspassCheck() != 2) {
             return Responses.errorResponse("已经审批过了");
         }
         int isSuccess =  diagnosisPlanService.checkDiagnosisPlanModelById(id, professorRequest.getIspassCheck(), professorRequest.getProfessor(), professorRequest.getName());
         if (isSuccess == 0) {
             return Responses.errorResponse("错误");
         }
-        String professorKey = this.factoryService.getAgentIDByFactoryNumber(professorRequest.getFactoryNum().toString()) + "_professor";
+        String professorKey = this.factoryService.getAgentIDByFactoryNumber(Long.valueOf(professorRequest.getFactoryNum().toString())) + "_professor";
         JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
 // TODO
-//        if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
-//            return Responses.errorResponse("cancel error");
-//        }
+        if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
+            return Responses.errorResponse("cancel error");
+        }
         return Responses.successResponse();
     }
 
@@ -228,7 +222,7 @@ public class DiagnosisResource {
     public Response changePlanBySupervisor(@PathVariable(value = "id") int id,
                                            @RequestBody SupervisorRequest supervisorRequest) {
         logger.info("invoke diagnosis/supdate/{} {}", id, supervisorRequest.toString());
-        if (supervisorRequest.getIspassSup() == 2) {
+        if (supervisorRequest.getIspassSup() != 2) {
             return Responses.errorResponse("已经审批过了");
         }
 
@@ -239,9 +233,9 @@ public class DiagnosisResource {
         String supervisorKey = supervisorRequest.getFactoryNum().toString() + "_supervisor";
         JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey);
 // TODO
-//   if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
-//            return Responses.errorResponse("cancel error");
-//        }
+        if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
+            return Responses.errorResponse("cancel error");
+        }
         return Responses.successResponse();
     }
 
@@ -280,7 +274,7 @@ public class DiagnosisResource {
      */
     @Permit(authorities = "check_disease_prevention_files")
     @GetMapping(value = "/{id}")
-    public Response findPlanSelective(@PathVariable(value = "id")long id,
+    public Response findPlanSelective(@PathVariable(value = "id")Long id,
                                       DiagnosisRequest diagnosisRequest,
                                       HttpServletRequest httpServletRequest) {
 
@@ -304,6 +298,9 @@ public class DiagnosisResource {
             factoryList.addAll(factoryMap.get(0L));
             if (factoryList.size() == 0) {
                 return Responses.errorResponse("本级代理没有发展羊场和代理！");
+            }
+            for (int i = 0; i < factoryList.size(); i++) {
+                System.out.println("factoryList[" + i + "]" + factoryList.get(i));
             }
             diagnosisRequest.setFactoryList(factoryList);
         } else {

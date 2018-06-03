@@ -233,7 +233,7 @@
             </if>
             gmt_modified = now()
         </set>
-        where id = #{operationFile.id} and ispass_check = 2 and ispass_sup = 2
+        where id = #{operationFile.id} and ispass_check ！= 1 and ispass_sup 1= 1
     </update>
 
     <delete id = "deleteOperationFile">

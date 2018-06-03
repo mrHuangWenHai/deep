@@ -157,7 +157,6 @@
     </select>
 
     <select id="getImmunePlanModelByTradeMarkEarTag" resultMap="ImmunePlan">
-
         SELECT
         *
         FROM
@@ -171,7 +170,6 @@
     </select>
 
     <select id="getImmunePlanModelById" resultMap="ImmunePlan">
-
         SELECT
         *
         FROM
@@ -182,7 +180,6 @@
 
 
     <select id="getImmunePlanModelByFactoryNum" resultMap="ImmunePlan">
-
         SELECT
         *
         FROM
@@ -192,13 +189,11 @@
     </select>
 
     <select id="getImmunePlanModelByFactoryNumAndIsPassCheck" resultMap="ImmunePlan">
-
         SELECT
         *
         FROM
         immune_plan
         WHERE
-
         factory_num = #{factoryNum}
         <if test="ispassCheck != null and ispassCheck != ''">
             AND ispass_check = #{ispassCheck}
@@ -283,7 +278,7 @@
             </if>
         </set>
         WHERE
-        id = #{immunePlanModel.id} and ispass_check = 2 and ispass_sup = 2
+        id = #{immunePlanModel.id} and ispass_check != 1
     </update>
 
     <delete id="deleteImmunePlanModelById" parameterType="Long">

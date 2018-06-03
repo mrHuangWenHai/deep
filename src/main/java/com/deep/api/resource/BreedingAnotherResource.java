@@ -12,7 +12,10 @@ import com.deep.api.response.Responses;
 import com.deep.domain.model.BreedingPlanAnotherModel;
 import com.deep.domain.model.NutritionPlanWithBLOBs;
 import com.deep.domain.service.BreedingPlanAnotherService;
+import com.deep.domain.service.FactoryService;
 import com.deep.domain.service.NutritionPlanService;
+import com.deep.domain.service.UserService;
+import com.deep.domain.util.JedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
@@ -21,8 +24,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.*;
+
+import static com.deep.domain.util.JedisUtil.getCertainKeyValue;
 
 @RestController
 @RequestMapping(value = "/breeding")
@@ -32,6 +38,11 @@ public class BreedingAnotherResource {
     private BreedingPlanAnotherService breedingPlanAnotherService;
     @Resource
     private NutritionPlanService nutritionPlanService;
+    @Resource
+    private FactoryService factoryService;
+    @Resource
+    private UserService userService;
+
 
     /**
      * 查询某个羊场或者某个代理下面的所有记录（包括子代理）
@@ -229,6 +240,7 @@ public class BreedingAnotherResource {
             response.setData(data);
             return response;
         }
+
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
         Date date = null, nextDate = null;
@@ -266,6 +278,51 @@ public class BreedingAnotherResource {
         Long success = breedingPlanAnotherService.addARecordByOperator(breedingRequest);
         if (success > 0) {
             data.put("success", success);
+            // TODO　Ｒｅｄｉｓ需要修改
+            short agentID = this.factoryService.queryOneAgentByID(breedingRequest.getFactoryNum().longValue());
+            String professorKey = agentID + "_professor";
+            String supervisorKey = breedingRequest.getFactoryNum().toString() + "_supervisor";
+            String testSendProfessor = agentID + "_professor_AlreadySend";
+            String testSendSupervisor = breedingRequest.getFactoryNum().toString() + "_supervisor_AlreadySend";
+            JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
+            JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
+            System.out.println(testSendProfessor);
+            System.out.println(professorKey);
+
+            if( !("1".equals(getCertainKeyValue(testSendProfessor)))) {
+                if( JedisUtil.redisJudgeTime(professorKey) ) {
+                    System.out.println("in redis:");
+                    List<String> phone = userService.getProfessorTelephoneByFactoryNum(BigInteger.valueOf(breedingRequest.getFactoryNum()));
+                    if (phone == null) {
+                        return Responses.errorResponse("添加记录成功，但是发送消息失败，请联系管理员");
+                    }
+                    StringBuffer phoneList = new StringBuffer("");
+                    for (String aPhone : phone) {
+                        phoneList = phoneList.append(aPhone).append(",");
+                    }
+                    System.out.println("phoneList = " + phoneList);
+                    if (phoneList.length() != 0) {
+                        if (JedisUtil.redisSendMessage(phoneList.toString(), getCertainKeyValue("Message"))) {
+                            JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(Objects.requireNonNull(getCertainKeyValue("ExpireTime"))) * 24 * 60 * 60);
+                        }
+                    }
+                }
+            }
+            if( !("1".equals(getCertainKeyValue(testSendSupervisor)))) {
+                if(JedisUtil.redisJudgeTime(supervisorKey)) {
+                    List<String> phone = userService.getSuperiorTelephoneByFactoryNum(BigInteger.valueOf(breedingRequest.getFactoryNum()));
+                    StringBuffer phoneList = new StringBuffer("");
+                    for (String aPhone : phone) {
+                        phoneList = phoneList.append(aPhone).append(",");
+                    }
+                    if (phoneList.length() != 0) {
+                        if( JedisUtil.redisSendMessage(phoneList.toString(), getCertainKeyValue("Message"))) {
+                            JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",Integer.parseInt(Objects.requireNonNull(getCertainKeyValue("ExpireTime")))*24*60*60);
+                        }
+                    }
+                }
+            }
+
             return Responses.successResponse(data);
         }
         return Responses.errorResponse("添加失败");
@@ -366,6 +423,12 @@ public class BreedingAnotherResource {
         if (success <= 0) {
             return Responses.errorResponse("监督员审核错误！");
         } else {
+            String supervisorKey = supervisorRequest.getFactoryNum().toString() + "_supervisor";
+            JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey);
+// TODO
+            if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
+                return Responses.errorResponse("审核成功,短信服务器错误");
+            }
             HashMap<String, Object> data = new HashMap<>();
             data.put("success", "监督员审核成功！");
             return Responses.successResponse(data);
@@ -401,6 +464,13 @@ public class BreedingAnotherResource {
         if (success <= 0) {
             return Responses.errorResponse("技术员审核错误！");
         } else {
+            String professorKey = this.factoryService.getAgentIDByFactoryNumber(Long.valueOf(professorRequest.getFactoryNum().toString())) + "_professor";
+            JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
+// TODO
+            if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
+                return Responses.errorResponse("审核成功,短信服务器错误");
+            }
+
             HashMap<String, Object> data = new HashMap<>();
             data.put("success", "技术员审核成功！");
             return Responses.successResponse(data);
