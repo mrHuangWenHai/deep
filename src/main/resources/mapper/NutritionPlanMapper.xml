@@ -803,6 +803,13 @@
       order by ${orderByClause}
     </if>
   </select>
+
+  <select resultMap="ResultMapWithBLOBs" parameterType="com.deep.domain.model.NutritionPlanExample" id="selectByTwoDate">
+    SELECT *
+    FROM nutrition_plan
+    WHERE (nutrition_t BETWEEN #{date1} AND #{date2}) AND (factory_num = #{number})
+  </select>
+
   <select resultMap="BaseResultMap" parameterType="com.deep.domain.model.NutritionPlanExample" id="selectByExampleWithRowbounds" >
     select
     <if test="distinct" >

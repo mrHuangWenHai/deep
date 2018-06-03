@@ -215,11 +215,16 @@ public class ImmunePlanResource {
       } else if (role == 1) {
         factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
         List<Long> factoryList = new ArrayList<>();
-        factoryList.addAll(factoryMap.get(new Long(-1)));
-        factoryList.addAll(factoryMap.get(new Long(0)));
+          assert factoryMap != null;
+          factoryList.addAll(factoryMap.get((long) -1));
+        factoryList.addAll(factoryMap.get(0L));
         immuneRequest.setFactoryList(factoryList);
       } else {
         return Responses.errorResponse("你没有权限");
+      }
+
+      if (immuneRequest.getFactoryList().size() == 0) {
+          return Responses.errorResponse("本级代理没有发展羊场和代理！");
       }
 
       List<ImmunePlanModel> totalList = immunePlanService.getImmunePlanModel(immuneRequest);
@@ -456,6 +461,10 @@ public class ImmunePlanResource {
              return response;
            }
       immunePlanModel.setId(id);
+          ImmunePlanModel temp = this.immunePlanService.getImmunePlanModelById(id);
+          if ("1".equals(temp.getIspassCheck()) || "1".equals(temp.getIspassSup())){
+              return Responses.errorResponse("该条数据已被审核,无法修改");
+          }
       if (immuneEartagFile != null) {
 
         String filePath = pathPre + immunePlanModel.getFactoryNum().toString() + "/immuneEartag/";
@@ -466,7 +475,8 @@ public class ImmunePlanResource {
         } catch (Exception e) {
           return Responses.errorResponse("update file error");
         }
-
+        immunePlanModel.setIspassCheck("2");
+        immunePlanModel.setIspassSup("2");
         String oldPath = filePath + immunePlanModel.getImmuneEartag();
         immunePlanModel.setImmuneEartag(fileName);
         int row = this.immunePlanService.updateImmunePlanModelByOperator(immunePlanModel);

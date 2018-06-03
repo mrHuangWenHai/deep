@@ -49,8 +49,18 @@ public class OperationFile {
   private String operatorName;
   @Min(0)
   private int factoryNum;
-  @NotNull
+  @NotBlank
   private String factoryName;
+  @Min(0)
+  private int supervisorId;
+  @NotBlank
+  private String supervisorName;
+  @Min(0)
+  private int professorId;
+  @NotBlank
+  private String professorName;
+  private String upassReason;
+
 
   int ispassCheck;
   int ispassSup;
@@ -240,6 +250,46 @@ public class OperationFile {
     this.operatorName = operatorName;
   }
 
+  public int getSupervisorId() {
+    return supervisorId;
+  }
+
+  public void setSupervisorId(int supervisorId) {
+    this.supervisorId = supervisorId;
+  }
+
+  public String getSupervisorName() {
+    return supervisorName;
+  }
+
+  public void setSupervisorName(String supervisorName) {
+    this.supervisorName = supervisorName;
+  }
+
+  public int getProfessorId() {
+    return professorId;
+  }
+
+  public void setProfessorId(int professorId) {
+    this.professorId = professorId;
+  }
+
+  public String getProfessorName() {
+    return professorName;
+  }
+
+  public void setProfessorName(String professorName) {
+    this.professorName = professorName;
+  }
+
+  public String getUpassReason() {
+    return upassReason;
+  }
+
+  public void setUpassReason(String upassReason) {
+    this.upassReason = upassReason;
+  }
+
   @Override
   public String toString() {
     return "OperationFile{" +
@@ -264,6 +314,11 @@ public class OperationFile {
         ", operatorName='" + operatorName + '\'' +
         ", factoryNum=" + factoryNum +
         ", factoryName='" + factoryName + '\'' +
+        ", supervisorId=" + supervisorId +
+        ", supervisorName='" + supervisorName + '\'' +
+        ", professorId=" + professorId +
+        ", professorName='" + professorName + '\'' +
+        ", upassReason='" + upassReason + '\'' +
         ", ispassCheck=" + ispassCheck +
         ", ispassSup=" + ispassSup +
         '}';

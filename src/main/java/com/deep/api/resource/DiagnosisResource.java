@@ -177,13 +177,16 @@ public class DiagnosisResource {
         }
 
         diagnosisPlanModel.setId(id);
-
         logger.info("invoke diagnosis/update {}", diagnosisPlanModel);
-        int isSuccess = diagnosisPlanService.updateDiagnosisPlanModel(diagnosisPlanModel);
-        if (isSuccess == 0) {
-            return Responses.errorResponse("修改失败");
+        DiagnosisPlanModel waitToModify = diagnosisPlanService.findPlanById(id);
+        if (waitToModify != null && waitToModify.getIspassCheck() != 1 && waitToModify.getIspassSup() != 1) {
+            int isSuccess = diagnosisPlanService.updateDiagnosisPlanModel(diagnosisPlanModel);
+            if (isSuccess == 0) {
+                return Responses.errorResponse("修改失败");
+            }
+            return Responses.successResponse();
         }
-        return Responses.successResponse();
+        return Responses.errorResponse("该条记录已被审核过，不能修改！");
     }
 
     /**
@@ -296,11 +299,17 @@ public class DiagnosisResource {
         } else if (role == 1) {
             factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
             List<Long> factoryList = new ArrayList<>();
-            factoryList.addAll(factoryMap.get(new Long(-1)));
-            factoryList.addAll(factoryMap.get(new Long(0)));
+            assert factoryMap != null;
+            factoryList.addAll(factoryMap.get((long) -1));
+            factoryList.addAll(factoryMap.get(0L));
             diagnosisRequest.setFactoryList(factoryList);
         } else {
             return Responses.errorResponse("你没有权限");
+        }
+
+        System.out.println("list.size () = " + diagnosisRequest.getFactoryList().size());
+        if (diagnosisRequest.getFactoryList().size() == 0) {
+            return Responses.errorResponse("本级代理还没有发展羊场及代理！");
         }
 
         List<DiagnosisPlanModel> totalList = diagnosisPlanService.selectDiagnosisPlanModelByDiagnosisRequest(diagnosisRequest);
@@ -315,7 +324,7 @@ public class DiagnosisResource {
             List<DiagnosisPlanModel> factorylist = new ArrayList<>();
             List<DiagnosisPlanModel> direct = new ArrayList<>();
             List<DiagnosisPlanModel> others = new ArrayList<>();
-            List<Long> directId = factoryMap.get(new Long(-1));
+            List<Long> directId = factoryMap.get((long) -1);
             for (DiagnosisPlanModel diagnosisPlanModel : diagnosisPlanModels) {
                 if (directId.contains(diagnosisPlanModel.getFactoryNum())) {
                     direct.add(diagnosisPlanModel);

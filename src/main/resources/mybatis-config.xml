@@ -25,9 +25,9 @@
         <mapper class="com.deep.infra.persistence.sql.mapper.UserMapper"/>
         <mapper class="com.deep.infra.persistence.sql.mapper.AgentMapper"/>
         <mapper class="com.deep.infra.persistence.sql.mapper.RoleMapper" />
-
         <mapper class="com.deep.infra.persistence.sql.mapper.NoticeMapper"/>
-        <mapper resource="mapper/BreedingPlanMapper.xml"/>
+        <mapper class="com.deep.infra.persistence.sql.mapper.BreedingPlanAnotherMapper"/>
+
         <mapper resource="mapper/DiagnosisPlanMapper.xml"/>
         <mapper resource="mapper/NutritionPlanMapper.xml"/>
         <!--<mapper resource="mapper/NoticePlanMapper.xml"/>-->

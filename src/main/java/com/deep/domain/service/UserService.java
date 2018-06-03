@@ -395,7 +395,7 @@ public class UserService {
      * @param  which  which
      * @return 手机号
      */
-    public List<UserResponse> getAllUserOfFactoryOrAgent(Long factory, Byte which, Long page, Byte size) {
+    public List<UserResponse> getAllUserOfFactoryOrAgent(Long factory, Byte which, Long page, Long size) {
         return userMapper.queryUserResponsesById(factory, which, page, size);
     }
 

@@ -2,17 +2,13 @@ package com.deep.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 /**
  * author: Created  By  Caojiawei
  * date: 2018/4/12  20:06
  */
 public class DiagnosisPlanModel {
-
     int id;
     @NotBlank
     private String diagnosisResult;
@@ -43,10 +39,12 @@ public class DiagnosisPlanModel {
     @NotBlank
     @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
     private String diagnosisTime;
-    @Min(0)
-    private int buildingNum = -1;
+
+    @NotBlank(message = "栋号不能为空！")
+    private String buildingNum;
+
     @NotBlank
-    @Size(min = 15, max = 15, message = "eartag need size:15 ")
+    @Size(min = 6, max = 6, message = "eartag need size:15 ")
     @Pattern(regexp = "^[0-9]+$", message = "商标耳牌由数字组成15位")
     private String earTag;
 
@@ -222,13 +220,7 @@ public class DiagnosisPlanModel {
     this.diagnosisTime = diagnosisTime;
   }
 
-  public int getBuildingNum() {
-    return buildingNum;
-  }
 
-  public void setBuildingNum(int buildingNum) {
-    this.buildingNum = buildingNum;
-  }
 
   public String getEarTag() {
     return earTag;
@@ -238,30 +230,40 @@ public class DiagnosisPlanModel {
     this.earTag = earTag;
   }
 
-  @Override
+    public String getBuildingNum() {
+        return buildingNum;
+    }
+
+    public void setBuildingNum(String buildingNum) {
+        this.buildingNum = buildingNum;
+    }
+
+    @Override
     public String toString() {
         return "DiagnosisPlanModel{" +
-            "id=" + id +
-            ", diagnosisResult='" + diagnosisResult + '\'' +
-            ", diagnosisMethod='" + diagnosisMethod + '\'' +
-            ", dose='" + dose + '\'' +
-            ", gmtCreate='" + gmtCreate + '\'' +
-            ", gmtModified='" + gmtModified + '\'' +
-            ", treatEffect='" + treatEffect + '\'' +
-            ", gmtSup='" + gmtSup + '\'' +
-            ", factoryNum=" + factoryNum +
-            ", factoryName='" + factoryName + '\'' +
-            ", operatorId=" + operatorId +
-            ", operatorName='" + operatorName + '\'' +
-            ", professorId=" + professorId +
-            ", supervisorId=" + supervisorId +
-            ", remark='" + remark + '\'' +
-            ", ispassCheck=" + ispassCheck +
-            ", upassReason='" + upassReason + '\'' +
-            ", ispassSup=" + ispassSup +
-            ", diagnosisTime='" + diagnosisTime + '\'' +
-            ", buildingNum=" + buildingNum +
-            ", earTag='" + earTag + '\'' +
-            '}';
+                "id=" + id +
+                ", diagnosisResult='" + diagnosisResult + '\'' +
+                ", diagnosisMethod='" + diagnosisMethod + '\'' +
+                ", dose='" + dose + '\'' +
+                ", gmtCreate='" + gmtCreate + '\'' +
+                ", gmtModified='" + gmtModified + '\'' +
+                ", treatEffect='" + treatEffect + '\'' +
+                ", gmtSup='" + gmtSup + '\'' +
+                ", factoryNum=" + factoryNum +
+                ", factoryName='" + factoryName + '\'' +
+                ", operatorId=" + operatorId +
+                ", operatorName='" + operatorName + '\'' +
+                ", professorId=" + professorId +
+                ", supervisorId=" + supervisorId +
+                ", remark='" + remark + '\'' +
+                ", ispassCheck=" + ispassCheck +
+                ", upassReason='" + upassReason + '\'' +
+                ", ispassSup=" + ispassSup +
+                ", diagnosisTime='" + diagnosisTime + '\'' +
+                ", buildingNum='" + buildingNum + '\'' +
+                ", earTag='" + earTag + '\'' +
+                ", supervisorName='" + supervisorName + '\'' +
+                ", professorName='" + professorName + '\'' +
+                '}';
     }
 }

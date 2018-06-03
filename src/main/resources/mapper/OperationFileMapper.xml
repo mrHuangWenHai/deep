@@ -29,6 +29,11 @@
         <result property="ispassSup" column="ispass_sup"/>
         <result property="factoryName" column="factory_name"/>
         <result property="factoryNum" column="factory_num"/>
+        <result property="supervisorId" column="supervisor_id"/>
+        <result property="supervisorName" column="supervisor_name"/>
+        <result property="professorId" column="professor_id"/>
+        <result property="professorName" column="professor_name"/>
+        <result property="upassReason" column="upass_reason"/>
     </resultMap>
 
     <select id="getOperationFile" resultMap="OperationFile" parameterType="com.deep.api.request.OperationCoditionRequest">
@@ -97,6 +102,10 @@
         car_disinfect,
         operator_id,
         operator_name,
+        supervisor_id,
+        supervisor_name,
+        professor_id,
+        professor_name,
         ispass_check,
         ispass_sup,
         gmt_create,
@@ -122,6 +131,10 @@
         #{operationFile.carDisinfect},
         #{operationFile.operatorId},
         #{operationFile.operatorName},
+        #{operationFile.supervisorId},
+        #{operationFile.supervisorName},
+        #{operationFile.professorId},
+        #{operationFile.professorName},
         2,
         2,
         now(),
@@ -135,6 +148,7 @@
         operation_file
         <set>
             ispass_check = #{ispassCheck},
+            upass_reason = #{upassReson},
             gmt_modified = now()
         </set>
         where  id = #{id} and ispass_check = 2

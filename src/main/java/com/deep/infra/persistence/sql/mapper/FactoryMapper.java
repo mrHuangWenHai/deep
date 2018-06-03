@@ -1,5 +1,6 @@
 package com.deep.infra.persistence.sql.mapper;
 
+import com.deep.api.response.FactoryResponse;
 import com.deep.domain.model.FactoryModel;
 import org.apache.ibatis.annotations.*;
 
@@ -56,7 +57,11 @@ public interface FactoryMapper {
      * @param id
      * @return
      */
-    @Select("select * from factory_manage where agent = #{id} limit #{start}, #{size}")
+    @Select("select factory_manage.id, factory_manage.gmt_create, factory_manage.gmt_modified" +
+            ", factory_manage.pk_number, factory_manage.breed_name, factory_manage.breed_location" +
+            ", factory_manage.breed_location_detail, factory_manage.create_time, factory_manage.responsible_person_id" +
+            ", factory_manage.responsible_person_name, factory_manage.remark, factory_manage.disinfect_p" +
+            ", factory_manage.agent, agent_factory.agent_name from factory_manage,agent_factory where factory_manage.agent = #{id} and factory_manage.agent = agent_factory.id limit #{start}, #{size}")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "gmtCreate", column = "gmt_create"),
@@ -70,9 +75,10 @@ public interface FactoryMapper {
             @Result(property = "responsiblePersonName", column = "responsible_person_name"),
             @Result(property = "remark", column = "remark"),
             @Result(property = "disinfectP", column = "disinfect_p"),
-            @Result(property = "agent", column = "agent")
+            @Result(property = "agent", column = "agent"),
+            @Result(property = "agentName", column = "agent_name")
     })
-    List<FactoryModel> queryFactoryByAgentIDPage(@Param("id") Long id, @Param("start") Long start, @Param("size") Byte size);
+    List<FactoryResponse> queryFactoryByAgentIDPage(@Param("id") Long id, @Param("start") Long start, @Param("size") Byte size);
 
 
     /**
@@ -97,7 +103,6 @@ public interface FactoryMapper {
             @Result(property = "agent", column = "agent")
     })
     List<FactoryModel> queryFactoryByAgentID(Long id);
-
 
     /**
      * 查找某个代理下的所有羊场的ID
@@ -167,6 +172,29 @@ public interface FactoryMapper {
             @Result(property = "agent", column = "agent")
     })
     FactoryModel queryFactoryByID(Long id);
+
+    @Select("select factory_manage.id, factory_manage.gmt_create, factory_manage.gmt_modified" +
+            ", factory_manage.pk_number, factory_manage.breed_name, factory_manage.breed_location" +
+            ", factory_manage.breed_location_detail, factory_manage.create_time, factory_manage.responsible_person_id" +
+            ", factory_manage.responsible_person_name, factory_manage.remark, factory_manage.disinfect_p" +
+            ", factory_manage.agent, agent_factory.agent_name from factory_manage,agent_factory where factory_manage.id = #{id} and factory_manage.agent = agent_factory.id")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "gmtCreate", column = "gmt_create"),
+            @Result(property = "gmtModified", column = "gmt_modified"),
+            @Result(property = "pkNumber", column = "pk_number"),
+            @Result(property = "breedName", column = "breed_name"),
+            @Result(property = "breedLocation", column = "breed_location"),
+            @Result(property = "breedLocationDetail", column = "breed_location_detail"),
+            @Result(property = "createTime", column = "create_time"),
+            @Result(property = "responsiblePersonId", column = "responsible_person_id"),
+            @Result(property = "responsiblePersonName", column = "responsible_person_name"),
+            @Result(property = "remark", column = "remark"),
+            @Result(property = "disinfectP", column = "disinfect_p"),
+            @Result(property = "agent", column = "agent"),
+            @Result(property = "agentName", column = "agent_name")
+    })
+    FactoryResponse queryFactoryAgentByID(Long id);
 
     /**
      * 插入一个羊场

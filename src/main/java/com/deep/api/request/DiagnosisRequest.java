@@ -36,7 +36,9 @@ public class DiagnosisRequest {
   private String startTime;
   @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
   private String endTime;
-  private Integer buildingNum;
+
+  private String buildingNum;
+
   private String earTag;
   private Integer page = 0;
   private Integer size = 10;
@@ -186,13 +188,6 @@ public class DiagnosisRequest {
     this.diagnosisTime = diagnosisTime;
   }
 
-  public Integer getBuildingNum() {
-    return buildingNum;
-  }
-
-  public void setBuildingNum(Integer buildingNum) {
-    this.buildingNum = buildingNum;
-  }
 
   public String getEarTag() {
     return earTag;
@@ -258,6 +253,14 @@ public class DiagnosisRequest {
     this.professorName = professorName;
   }
 
+  public String getBuildingNum() {
+    return buildingNum;
+  }
+
+  public void setBuildingNum(String buildingNum) {
+    this.buildingNum = buildingNum;
+  }
+
   @Override
   public String toString() {
     return "DiagnosisRequest{" +
@@ -283,7 +286,7 @@ public class DiagnosisRequest {
             ", diagnosisTime='" + diagnosisTime + '\'' +
             ", startTime='" + startTime + '\'' +
             ", endTime='" + endTime + '\'' +
-            ", buildingNum=" + buildingNum +
+            ", buildingNum='" + buildingNum + '\'' +
             ", earTag='" + earTag + '\'' +
             ", page=" + page +
             ", size=" + size +

@@ -1,55 +1,96 @@
-package com.deep.domain.model;
+package com.deep.api.request;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 
-public class BreedingPlanAnotherModel {
-    private Integer id;
+public class BreedingRequest {
+    // 记录创建时间，前端不传
     private Timestamp gmtCreate;
+    // 记录修改时间，前端不传
     private Timestamp gmtModify;
+
+    // 配种时间
+    @NotNull(message = "配种时间不能为空")
     private Timestamp breedingTime;
+
+    // 配种后待移至栏栋，可以为空
     private String buildingAfterBreeding;
+
+    // 母羊商标耳牌
+    @NotNull(message = "母羊商标耳牌不能为空")
+    @Size(min = 6, max = 6)
+    @Pattern(regexp = "M+^[0-9]+$", message = "母羊免疫耳牌由M+5位数字组成")
     private String ramSheepTrademark;
+
+    // 公羊商标耳牌
+    @NotNull(message = "公羊商标耳牌不能为空")
+    @Size(min = 6, max = 6)
+    @Pattern(regexp = "G+^[0-9]+$", message = "公羊免疫耳牌由G+5位数字组成")
     private String eweSheepTrademark;
+
+    // 管理批次（int类型）
     private Byte manageFlag;
+
+    // 批次平均配种时间（TimeStamp格式，可以用其他模块的时间控件）
     private Timestamp manageAverageTime;
+
+    // 获取执行妊娠前期营养标准
     private Timestamp nutritionBeforePregnancy;
+
+    // 确定妊娠
     private String isPregnancy;
+
+    // 获取执行妊娠后期营养标准
     private Timestamp nutritionAfterPregnancy;
+
+    // 产前免疫种类
     private String prenatalImmunityType;
+
+    // 产前免疫时间
     private String prenatalImmunityTime;
+
+    // 移至待产栏栋
     private String buildingToBeRelocated;
+
+    // 执行产前营养标准
     private Timestamp nutritionBeforeLambing;
+
+    // 产羔时间
     private Timestamp lambingTime;
+
+    // 产羔数量
     private Integer lambingNumber;
+
+    // 执行哺乳期营养标准（产后一周）
     private Timestamp nutritionBreastFeeding;
+
+    // 执行羔羊代乳料营养标准（羔羊一月龄）
     private Timestamp nutritionInsteadBreastFeeding;
+
+    // 执行断奶前母羊营养标准
     private Timestamp nutritionBeforeCutBreastFeeding;
+
+    // 执行羔羊断奶期营养标准
     private Timestamp nutritionCutBreastFeeding;
-    private Timestamp operatorTime;
-    private Integer operatorId;
-    private String operatorName;
-    private Byte ispassSup;
-    private Timestamp supervisorTime;
-    private Integer supervisorId;
-    private String supervisorName;
-    private Byte ispassCheck;
-    private Timestamp professorTime;
-    private Integer professorId;
-    private String professorName;
-    private String professorNotPassReason;
+
+    // 备注
     private String remark;
 
-    // 羊场信息
+    // 羊场编号，Userdetail接口返回的FactoryNumber字段
     private Integer factoryNumber;
+    // 羊场名称，Userdetail接口返回的FactoryName字段
     private String factoryName;
 
-    public Integer getId() {
-        return id;
-    }
+    // 操作员提交记录时间，前端不传
+    private Timestamp operatorTime;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    // 操作员ID，Userdetail接口返回的id字段
+    private Integer operatorId;
+
+    // 操作员姓名，Userdetail接口返回的UserRealname字段
+    private String operatorName;
 
     public Timestamp getGmtCreate() {
         return gmtCreate;
@@ -219,94 +260,6 @@ public class BreedingPlanAnotherModel {
         this.nutritionCutBreastFeeding = nutritionCutBreastFeeding;
     }
 
-    public Timestamp getOperatorTime() {
-        return operatorTime;
-    }
-
-    public void setOperatorTime(Timestamp operatorTime) {
-        this.operatorTime = operatorTime;
-    }
-
-    public Integer getOperatorId() {
-        return operatorId;
-    }
-
-    public void setOperatorId(Integer operatorId) {
-        this.operatorId = operatorId;
-    }
-
-    public String getOperatorName() {
-        return operatorName;
-    }
-
-    public void setOperatorName(String operatorName) {
-        this.operatorName = operatorName;
-    }
-
-    public Byte getIspassSup() {
-        return ispassSup;
-    }
-
-    public void setIspassSup(Byte ispassSup) {
-        this.ispassSup = ispassSup;
-    }
-
-    public Timestamp getSupervisorTime() {
-        return supervisorTime;
-    }
-
-    public void setSupervisorTime(Timestamp supervisorTime) {
-        this.supervisorTime = supervisorTime;
-    }
-
-    public Integer getSupervisorId() {
-        return supervisorId;
-    }
-
-    public void setSupervisorId(Integer supervisorId) {
-        this.supervisorId = supervisorId;
-    }
-
-    public String getSupervisorName() {
-        return supervisorName;
-    }
-
-    public void setSupervisorName(String supervisorName) {
-        this.supervisorName = supervisorName;
-    }
-
-    public Byte getIspassCheck() {
-        return ispassCheck;
-    }
-
-    public void setIspassCheck(Byte ispassCheck) {
-        this.ispassCheck = ispassCheck;
-    }
-
-    public Timestamp getProfessorTime() {
-        return professorTime;
-    }
-
-    public void setProfessorTime(Timestamp professorTime) {
-        this.professorTime = professorTime;
-    }
-
-    public Integer getProfessorId() {
-        return professorId;
-    }
-
-    public void setProfessorId(Integer professorId) {
-        this.professorId = professorId;
-    }
-
-    public String getProfessorName() {
-        return professorName;
-    }
-
-    public void setProfessorName(String professorName) {
-        this.professorName = professorName;
-    }
-
     public String getRemark() {
         return remark;
     }
@@ -331,19 +284,34 @@ public class BreedingPlanAnotherModel {
         this.factoryName = factoryName;
     }
 
-    public String getProfessorNotPassReason() {
-        return professorNotPassReason;
+    public Timestamp getOperatorTime() {
+        return operatorTime;
     }
 
-    public void setProfessorNotPassReason(String professorNotPassReason) {
-        this.professorNotPassReason = professorNotPassReason;
+    public void setOperatorTime(Timestamp operatorTime) {
+        this.operatorTime = operatorTime;
+    }
+
+    public Integer getOperatorId() {
+        return operatorId;
+    }
+
+    public void setOperatorId(Integer operatorId) {
+        this.operatorId = operatorId;
+    }
+
+    public String getOperatorName() {
+        return operatorName;
+    }
+
+    public void setOperatorName(String operatorName) {
+        this.operatorName = operatorName;
     }
 
     @Override
     public String toString() {
-        return "BreedingPlanAnotherModel{" +
-                "id=" + id +
-                ", gmtCreate=" + gmtCreate +
+        return "BreedingRequest{" +
+                "gmtCreate=" + gmtCreate +
                 ", gmtModify=" + gmtModify +
                 ", breedingTime=" + breedingTime +
                 ", buildingAfterBreeding='" + buildingAfterBreeding + '\'' +
@@ -364,21 +332,12 @@ public class BreedingPlanAnotherModel {
                 ", nutritionInsteadBreastFeeding=" + nutritionInsteadBreastFeeding +
                 ", nutritionBeforeCutBreastFeeding=" + nutritionBeforeCutBreastFeeding +
                 ", nutritionCutBreastFeeding=" + nutritionCutBreastFeeding +
-                ", operatorTime=" + operatorTime +
-                ", operatorId=" + operatorId +
-                ", operatorName='" + operatorName + '\'' +
-                ", ispassSup=" + ispassSup +
-                ", supervisorTime=" + supervisorTime +
-                ", supervisorId=" + supervisorId +
-                ", supervisorName='" + supervisorName + '\'' +
-                ", ispassCheck=" + ispassCheck +
-                ", professorTime=" + professorTime +
-                ", professorId=" + professorId +
-                ", professorName='" + professorName + '\'' +
-                ", professorNotPassReason='" + professorNotPassReason + '\'' +
                 ", remark='" + remark + '\'' +
                 ", factoryNumber=" + factoryNumber +
                 ", factoryName='" + factoryName + '\'' +
+                ", operatorTime=" + operatorTime +
+                ", operatorId=" + operatorId +
+                ", operatorName='" + operatorName + '\'' +
                 '}';
     }
 }

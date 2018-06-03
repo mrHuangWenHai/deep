@@ -29,7 +29,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
      * @param response 响应
      * @param handler 方法
      * @return true or false
-     * @throws Exception
+     * @throws Exception ex
      */
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 

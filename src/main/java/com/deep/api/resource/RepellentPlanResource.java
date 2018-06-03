@@ -212,6 +212,10 @@ public class RepellentPlanResource {
 
       logger.info("invoke rp/{} {}",id, repellentRequest);
 
+      if (repellentRequest.getFactoryList().size() == 0) {
+          return Responses.errorResponse("本级代理没有发展羊场和代理！");
+      }
+
       List<RepellentPlanModel> totalList = repellentPlanService.getRepellentPlanModel(repellentRequest);
 
       int size = totalList.size();
@@ -445,6 +449,11 @@ public class RepellentPlanResource {
 
         } else {
 
+            RepellentPlanModel temp = this.repellentPlanService.getRepellentPlanModelById(id);
+            if ("1".equals(temp.getIspassCheck()) || "1".equals(temp.getIspassSup())) {
+                return Responses.errorResponse("该条数据已被审核,无法修改");
+            }
+
           if (repellentEartag != null) {
             String filePath = pathPre + repellentPlanModel.getFactoryNum().toString() + "/repellentEartag/";
 
@@ -456,7 +465,8 @@ public class RepellentPlanResource {
               return Responses.errorResponse("update file error");
 
             }
-
+            repellentPlanModel.setIspassCheck("2");
+            repellentPlanModel.setIspassSup("2");
             String oldPath = filePath + repellentPlanModel.getRepellentEartag();
             repellentPlanModel.setRepellentEartag(fileName);
             int row = this.repellentPlanService.updateRepellentPlanModelByOperator(repellentPlanModel);

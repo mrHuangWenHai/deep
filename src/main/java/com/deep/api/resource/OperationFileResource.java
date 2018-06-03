@@ -8,10 +8,7 @@ import com.deep.api.request.OperationCoditionRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.OperationFile;
-import com.deep.domain.model.RepellentPlanModel;
 import com.deep.domain.service.OperationFileService;
-import com.deep.domain.util.JudgeUtil;
-import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
@@ -83,11 +80,15 @@ public class OperationFileResource {
       } else if (role == 1) {
         factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
         List<Long> factoryList = new ArrayList<>();
-        factoryList.addAll(factoryMap.get(new Long(-1)));
-        factoryList.addAll(factoryMap.get(new Long(0)));
+        assert factoryMap != null;
+        factoryList.addAll(factoryMap.get((long) -1));
+        factoryList.addAll(factoryMap.get(0L));
         operationCoditionRequest.setFactoryList(factoryList);
       } else {
         return Responses.errorResponse("你没有权限");
+      }
+      if (operationCoditionRequest.getFactoryList().size() == 0) {
+        return Responses.errorResponse("该代理没有发展羊场和代理！");
       }
       logger.info("invoke Get /of {}",operationCoditionRequest);
       List<OperationFile> totalList = operationFileService.getOperationFile(operationCoditionRequest);
@@ -168,14 +169,14 @@ public class OperationFileResource {
       return Responses.errorResponse("lock param ispassCheck");
     }
 
-//    short supStatus = json.get("ispassCheck").shortValue();
     short supStatus = Short.valueOf(json.get("ispassCheck"));
     if (id < 0 || supStatus < 0 || supStatus > 2) {
       return Responses.errorResponse("param is invalid");
     }
     logger.info("/of/p/{} {}",id,supStatus);
     try {
-      int isSuccess = operationFileService.updateCheckStatus(id, supStatus);
+      String upassReson = json.get("upassReson");
+      int isSuccess = operationFileService.updateCheckStatus(id, supStatus, upassReson);
       if (isSuccess == 1) {
         return Responses.successResponse();
       } else {

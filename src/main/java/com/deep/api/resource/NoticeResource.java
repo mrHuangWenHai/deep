@@ -77,15 +77,12 @@ public class NoticeResource {
     @Permit(authorities = "query_publishing")
     @DeleteMapping(value = "/{id}")
     public Response dropPlan(@PathVariable("id") String id) {
-
         logger.info("invoke deleteOne {}, url is notice/{id}", id);
-
         int uid = StringToLongUtil.stringToInt(id);
         System.out.println("uid is " + uid);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
         }
-
         int success = noticePlanService.deleteNoticePlan((long)uid);
         if (success <= 0) {
 
@@ -93,9 +90,7 @@ public class NoticeResource {
         }
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
-
         data.put("delete_id", success);
-
         response.setData(data);
         return response;
     }
@@ -179,15 +174,19 @@ public class NoticeResource {
      */
     @Permit(authorities = "query_publishing")
     @GetMapping(value = "")
-    public Response getAll() {
+    public Response getAll(@RequestParam(value = "page", defaultValue = "0") String page,
+                           @RequestParam(value = "size", defaultValue = "10") String size) {
         logger.info("invoke geAll, url is notice");
-        List<NoticePlan> all = noticePlanService.getAll();
-        if (all == null) {
-            return Responses.errorResponse("查询失败");
+        Integer upage = StringToLongUtil.stringToInt(page);
+        Byte usize = StringToLongUtil.stringToByte(size);
+        if (upage < 0 || usize < 0) {
+            return Responses.errorResponse("查询失败，参数错误");
         }
+        List<NoticePlan> all = noticePlanService.getAll(upage*usize, usize);
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
         data.put("List",all);
+        data.put("size", noticePlanService.findAllNoticeCount());
         response.setData(data);
         return response;
     }
@@ -199,19 +198,23 @@ public class NoticeResource {
      */
     @Permit(authorities = "query_publishing")
     @GetMapping(value = "/type/{type}")
-    public Response getAllOfOneType(@PathVariable("type") String type) {
+    public Response getAllOfOneType(@PathVariable("type") String type,
+                                    @RequestParam(value = "page", defaultValue = "0") String page,
+                                    @RequestParam(value = "size", defaultValue = "10") String size) {
         logger.info("invoke getAllOneType {}, url is notice/type/{type}", type);
+        Integer upage = StringToLongUtil.stringToInt(page);
+        Byte usize = StringToLongUtil.stringToByte(size);
         if (type == null || type.equals("")) {
             return Responses.errorResponse("error!");
         }
-        List<NoticePlan> all = noticePlanService.getNoticesByOneType(type);
+        List<NoticePlan> all = noticePlanService.getNoticesByOneType(type, upage*usize, usize);
         if (all == null) {
             return Responses.errorResponse("查询错误");
         }
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
         data.put("List", all);
-        data.put("size", all.size());
+        data.put("size", noticePlanService.findATypeCount(type));
         response.setData(data);
         return response;
     }
