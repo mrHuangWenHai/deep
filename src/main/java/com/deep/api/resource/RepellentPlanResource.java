@@ -389,11 +389,10 @@ public class RepellentPlanResource {
             if (!("2".equals(temp.getIspassCheck()))){
                 return Responses.errorResponse("该条数据已被审核,无法修改");
             }
-
           int row = repellentPlanService.updateRepellentPlanModelByProfessor(repellentPlanModel);
           if (row == 1) {
             String professorKey = this.factoryService.getAgentIDByFactoryNumber(Long.valueOf(repellentPlanModel.getFactoryNum().toString())) + "_professor";
-            if (JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)){
+            if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)){
                 return Responses.errorResponse("审核成功, 短信服务器异常");
             }
           }

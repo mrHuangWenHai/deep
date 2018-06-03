@@ -316,7 +316,6 @@ public class ImmunePlanResource {
               System.out.println("factoryNumber: " + immunePlanModel.getFactoryNum());
             String professorKey = this.factoryService.getAgentIDByFactoryNumber(Long.valueOf(immunePlanModel.getFactoryNum().toString())) + "_professor";
             System.out.println("professorKey" + professorKey);
-            JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
               if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
                 return Responses.errorResponse("审核成功, 短信服务器异常");
             }
@@ -347,7 +346,6 @@ public class ImmunePlanResource {
           int row = immunePlanService.updateImmunePlanModelBySupervisor(immunePlanModel);
           if (row == 1) {
             String supervisorKey = immunePlanModel.getFactoryNum().toString() + "_supervisor";
-              JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey);
             if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
                 return Responses.errorResponse("审核成功, 短信服务器异常");
             }
