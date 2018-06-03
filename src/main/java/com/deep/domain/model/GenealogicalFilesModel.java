@@ -11,7 +11,6 @@ public class GenealogicalFilesModel {
     private Integer id;
     @Min(0)
     private Long factoryNum;
-
     private String nativeEartag;  //原耳牌
     @Size(min = 15, max = 15, message = "immuneEartag need size:15 ")
     @Pattern(regexp = "^[0-9]+$", message = "免疫耳牌由数字组成15位")
