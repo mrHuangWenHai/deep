@@ -436,6 +436,11 @@ public class NutritionResource {
                 return Responses.errorResponse("error!");
             }
             NutritionPlanWithBLOBs professor = nutritionPlanService.findPlanById(uid);
+            if (professor == null) return Responses.errorResponse("该记录不存在");
+            if (professor.getIspassCheck() != 2) {
+                return Responses.errorResponse("已经审核!");
+            }
+
             // time of the professor modify
             professor.setId(uid);
             professor.setGmtModified(new Date());
@@ -449,9 +454,8 @@ public class NutritionResource {
                 return Responses.errorResponse("错误");
             }
             String professorKey = this.factoryService.getAgentIDByFactoryNumber(Long.valueOf(professorRequest.getFactoryNum().toString())) + "_professor";;
-            JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
             if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
-                return Responses.errorResponse("cancel error");
+                return Responses.errorResponse("审核成功,短信服务器错误!");
             }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
@@ -481,6 +485,7 @@ public class NutritionResource {
                 return Responses.errorResponse("error!");
             }
             NutritionPlanWithBLOBs supervisor = nutritionPlanService.findPlanById(uid);
+            if (supervisor == null) return Responses.errorResponse("该记录不存在");
             // modify the time of the supervised
             supervisor.setId(uid);
             supervisor.setGmtSupervised(new Date());
@@ -493,9 +498,8 @@ public class NutritionResource {
                 return Responses.errorResponse("失败");
             }
             String supervisorKey = supervisorRequest.getFactoryNum().toString() + "_supervisor";
-            JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey);
             if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
-                return Responses.errorResponse("cancel error");
+                return Responses.errorResponse("审核成功,短信服务器错误!");
             }
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();

@@ -130,6 +130,7 @@ public class JedisUtil {
                 System.out.println("before :"+"redis key:"+key+" redis value:"+jedis.get(key));
                 temValue = v.toString();
                 jedis.set(key, temValue);
+
                 return true;
             }
         } catch (Exception e ) {

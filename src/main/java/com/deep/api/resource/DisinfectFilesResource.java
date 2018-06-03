@@ -89,12 +89,9 @@ public class DisinfectFilesResource {
                 //System.out.println("mysql执行前");
 
                 disinfectFilesModel.setDisinfectEartag(fileName);
-
                 disinfectFilesService.setDisinfectFilesModel(disinfectFilesModel);
 
-//                return Responses.successResponse();
-//
-//                //　TODO Ｒｅｄｉｓ需要重新检查
+                //　TODO Ｒｅｄｉｓ需要重新检查
                 //数据插入redis
                 //professor字段为 代理ID + _professor
                 //supervisor字段为 工厂号 + _supervisor
@@ -315,7 +312,6 @@ public class DisinfectFilesResource {
             int row = disinfectFilesService.updateDisinfectFilesModelByProfessor(disinfectRequest);
             if (row == 1) {
                 String professorKey = this.factoryService.getAgentIDByFactoryNumber(disinfectRequest.getFactoryNum()) + "_professor";
-                JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
                 // TODO
                 if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
                     return Responses.errorResponse("审核成功, 短信服务器异常");
@@ -348,7 +344,6 @@ public class DisinfectFilesResource {
             int row = disinfectFilesService.updateDisinfectFilesModelBySupervisor(disinfectRequest);
             if (row == 1) {
                 String supervisorKey = disinfectRequest.getFactoryNum().toString() + "_supervisor";
-                JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey);
                 // TODO
                 if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
                     return Responses.errorResponse("审核成功, 短信服务器异常");

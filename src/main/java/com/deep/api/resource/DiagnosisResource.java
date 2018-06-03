@@ -185,7 +185,7 @@ public class DiagnosisResource {
     }
 
     /**
-     * 监督者使用按主键修改的接口：/diagnosisUpdateByProfessor
+     * 专家使用按主键修改的接口：/diagnosisUpdateByProfessor
      * 监督者使用按主键修改的方法名：changePlanByProfessor()
      * 监督者使用接收参数：整个表单信息（整型id必填，各参数选填）
      * @return Response
@@ -195,18 +195,18 @@ public class DiagnosisResource {
     public Response changePlanByProfessor(@PathVariable(value = "id") int id,
                                           @RequestBody ProfessorRequest professorRequest) {
         logger.info("invoke diagnosis/p/{} {}", id, professorRequest.toString());
-        if (professorRequest.getIspassCheck() != 2) {
-            return Responses.errorResponse("已经审批过了");
+        DiagnosisPlanModel diagnosisPlanModel = diagnosisPlanService.findPlanById(id);
+        if (diagnosisPlanModel == null) Responses.errorResponse("该记录不存在!");
+        if (diagnosisPlanModel != null && diagnosisPlanModel.getIspassCheck() != 2) {
+            return Responses.errorResponse("已经审批过了!");
         }
         int isSuccess =  diagnosisPlanService.checkDiagnosisPlanModelById(id, professorRequest.getIspassCheck(), professorRequest.getProfessor(), professorRequest.getName());
         if (isSuccess == 0) {
-            return Responses.errorResponse("错误");
+            return Responses.errorResponse("错误!");
         }
         String professorKey = this.factoryService.getAgentIDByFactoryNumber(Long.valueOf(professorRequest.getFactoryNum().toString())) + "_professor";
-        JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
-// TODO
         if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
-            return Responses.errorResponse("cancel error");
+            return Responses.errorResponse("审核成功,短信服务器错误!");
         }
         return Responses.successResponse();
     }
@@ -222,16 +222,16 @@ public class DiagnosisResource {
     public Response changePlanBySupervisor(@PathVariable(value = "id") int id,
                                            @RequestBody SupervisorRequest supervisorRequest) {
         logger.info("invoke diagnosis/supdate/{} {}", id, supervisorRequest.toString());
-        if (supervisorRequest.getIspassSup() != 2) {
+        DiagnosisPlanModel diagnosisPlanModel = diagnosisPlanService.findPlanById(id);
+        if (diagnosisPlanModel == null) Responses.errorResponse("该记录不存在!");
+        if (diagnosisPlanModel != null && diagnosisPlanModel.getIspassCheck() != 2) {
             return Responses.errorResponse("已经审批过了");
         }
-
         int isSuccess = diagnosisPlanService.supCheckDiagnosisPlanModelById(id, supervisorRequest.getIspassSup(), null, supervisorRequest.getSupervisor(), supervisorRequest.getName());
         if (isSuccess == 0) {
             return Responses.errorResponse("监督失败");
         }
         String supervisorKey = supervisorRequest.getFactoryNum().toString() + "_supervisor";
-        JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey);
 // TODO
         if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
             return Responses.errorResponse("cancel error");
