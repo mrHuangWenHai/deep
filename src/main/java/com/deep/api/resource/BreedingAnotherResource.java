@@ -65,14 +65,25 @@ public class BreedingAnotherResource {
         Long uid = StringToLongUtil.stringToLong(id);
         Integer upage = StringToLongUtil.stringToInt(page);
         Byte usize = StringToLongUtil.stringToByte(size);
+        Byte pass = StringToLongUtil.stringToByte(ispassCheck);
         Byte flag = Byte.valueOf(TokenAnalysis.getFlag(request.getHeader(Constants.AUTHORIZATION)));
         if (uid < 0 || upage < 0 || usize < 0) {
             return Responses.errorResponse("错误");
         }
         HashMap<String, Object> data = new HashMap<>();
         if (flag == 0) {
+            int count = 0;
+            List<BreedingPlanAnotherModel> models = null;
+            if (pass == -1) {
+                models = breedingPlanAnotherService.findAllRecords(uid);
+                count += breedingPlanAnotherService.queryCount(uid);
+            } else if (pass == 0 || pass == 1 || pass == 2) {
+                models = breedingPlanAnotherService.findAllRecordsByIsPassCheck(uid, pass);
+                count += breedingPlanAnotherService.queryCountByPass(uid, pass);
+            } else {
+                return Responses.errorResponse("参数错误!");
+            }
             // 如果是羊场
-            List<BreedingPlanAnotherModel> models = breedingPlanAnotherService.findAllRecords(uid);
             List<BreedingPlanAnotherModel> result = new ArrayList<>();
             if (models != null) {
                 for (int i = upage*usize; i < models.size() && i < upage*usize + usize; i++) {
@@ -80,8 +91,9 @@ public class BreedingAnotherResource {
                 }
             }
             data.put("List", result);
-            data.put("size", breedingPlanAnotherService.queryCount(uid));
+            data.put("size", count);
         } else if (flag == 1) {
+            if (pass  != -1 && pass != 0 && pass != 1 && pass != 2) return Responses.errorResponse("参数错误!");
             // 如果是代理，查询下级所有的羊场
             Map<Long, List<Long> > factories = AgentUtil.getAllSubordinateFactory(String.valueOf(uid));
             if (factories == null) {
@@ -101,16 +113,26 @@ public class BreedingAnotherResource {
                 List<BreedingPlanAnotherModel> directModels = new ArrayList<>();
                 if (directFactories != null) {
                     for (Long directFactory : directFactories) {
-                        directModels.addAll(breedingPlanAnotherService.findAllRecords(directFactory));
-                        directCount += breedingPlanAnotherService.queryCount(directFactory);
+                        if (pass == 1 || pass == 0 || pass == 2) {
+                            directModels.addAll(breedingPlanAnotherService.findAllRecordsByIsPassCheck(directFactory, pass));
+                            directCount += breedingPlanAnotherService.queryCountByPass(directFactory, pass);
+                        } else {
+                            directModels.addAll(breedingPlanAnotherService.findAllRecords(directFactory));
+                            directCount += breedingPlanAnotherService.queryCount(directFactory);
+                        }
                     }
                 }
 
                 List<BreedingPlanAnotherModel> undirectModels = new ArrayList<>();
                 if (undirectFactories != null) {
                     for (Long undirectFactory : undirectFactories) {
-                        undirectModels.addAll(breedingPlanAnotherService.findAllRecords(undirectFactory));
-                        undirectCount += breedingPlanAnotherService.queryCount(undirectFactory);
+                        if (pass == 1 || pass == 0 || pass == 2) {
+                            undirectModels.addAll(breedingPlanAnotherService.findAllRecordsByIsPassCheck(undirectFactory, pass));
+                            undirectCount += breedingPlanAnotherService.queryCountByPass(undirectFactory, pass);
+                        } else {
+                            undirectModels.addAll(breedingPlanAnotherService.findAllRecords(undirectFactory));
+                            undirectCount += breedingPlanAnotherService.queryCount(undirectFactory);
+                        }
                     }
                 }
                 models.addAll(directModels);
@@ -244,9 +266,11 @@ public class BreedingAnotherResource {
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
         Date date = null, nextDate = null;
+        if (breedingNutritionRequest.getTime() == null) {
+            return Responses.errorResponse("查询时间格式不对");
+        }
         // 获取执行妊娠前期营养标准
-        Timestamp before = breedingNutritionRequest.getTime();
-        date = TimeUtil.Translate(before);
+        date = TimeUtil.TranslateToDate(breedingNutritionRequest.getTime());
         nextDate = TimeUtil.getNextDay(date);
         List<NutritionPlanWithBLOBs> models = nutritionPlanService.findPlanBetweenTimes(date, nextDate, breedingNutritionRequest.getFactoryNumber());
         data.put("List", models);
@@ -352,8 +376,8 @@ public class BreedingAnotherResource {
         }
         // 首先查询是否符合修改信息的条件
         BreedingPlanAnotherModel model = breedingPlanAnotherService.findARecord(uid);
-        if (model == null || model.getIspassCheck() == 1 || model.getIspassSup() == 1) {
-            return Responses.errorResponse("not find this record or the record has been checked!");
+        if (model == null || model.getIspassCheck() == 1) {
+            return Responses.errorResponse("该条记录已经审核过!");
         }
         breedingModifyRequest.setGmtModify(new Timestamp(System.currentTimeMillis()));
         breedingModifyRequest.setOperatorTime(new Timestamp(System.currentTimeMillis()));
@@ -380,7 +404,7 @@ public class BreedingAnotherResource {
         }
         // 首先查询是否符合修改信息的条件
         BreedingPlanAnotherModel model = breedingPlanAnotherService.findARecord(uid);
-        if (model != null && model.getIspassCheck() == 2 && model.getIspassSup() == 2) {
+        if (model != null && model.getIspassCheck() != 1) {
             long success = breedingPlanAnotherService.deleteARecord(uid);
             if (success <= 0) {
                 return Responses.errorResponse("删除失败");

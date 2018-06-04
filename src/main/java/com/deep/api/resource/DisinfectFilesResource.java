@@ -12,7 +12,6 @@ import com.deep.domain.service.DisinfectFilesService;
 import com.deep.domain.service.FactoryService;
 import com.deep.domain.service.UserService;
 import com.deep.domain.util.*;
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +67,7 @@ public class DisinfectFilesResource {
                              HttpServletRequest request) {
 
         if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("param is error");
+            Response response = Responses.errorResponse("数据异常,请按照规范填写!");
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("param",bindingResult.getAllErrors());
             response.setData(map);
@@ -76,7 +75,7 @@ public class DisinfectFilesResource {
         }
         logger.info("invoke Post /df {}", disinfectFilesModel);
         if( disinfectEartagFile.isEmpty() ) {
-            return Responses.errorResponse("Lack Item");
+            return Responses.errorResponse("请完善表单信息!");
         } else {
             try {
                 //System.out.println("running");

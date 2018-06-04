@@ -266,7 +266,7 @@
             <if test="disinfectFilesModel.remark != null">
                 remark = #{disinfectFilesModel.remark},
             </if>
-            <if test="disinfectFilesModel.ispassCheck != null  and ispassCheck != ''">
+            <if test="disinfectFilesModel.ispassCheck != null  and disinfectFilesModel.ispassCheck != ''">
                 ispass_check = #{disinfectFilesModel.ispassCheck}
             </if>
         </set>

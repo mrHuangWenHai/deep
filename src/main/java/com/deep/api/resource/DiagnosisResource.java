@@ -225,9 +225,9 @@ public class DiagnosisResource {
         logger.info("invoke diagnosis/supdate/{} {}", id, supervisorRequest.toString());
         DiagnosisPlanModel diagnosisPlanModel = diagnosisPlanService.findPlanById(id);
         if (diagnosisPlanModel == null) Responses.errorResponse("该记录不存在!");
-        if (diagnosisPlanModel != null && diagnosisPlanModel.getIspassCheck() != 2) {
-            return Responses.errorResponse("已经审批过了");
-        }
+//        if (diagnosisPlanModel != null && diagnosisPlanModel.getIspassCheck() != 2) {
+//            return Responses.errorResponse("已经审批过了");
+//        }
         int isSuccess = diagnosisPlanService.supCheckDiagnosisPlanModelById(id, supervisorRequest.getIspassSup(), null, supervisorRequest.getSupervisor(), supervisorRequest.getName());
         if (isSuccess == 0) {
             return Responses.errorResponse("监督失败");

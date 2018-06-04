@@ -253,7 +253,8 @@ public class JedisUtil {
         }
         try {
             if ("Message".equals(key)){
-                if (jedis.get(key) == null){
+                System.out.println("key: " + jedis.get(key));
+                if (jedis.get(key) == null || "\"\"".equals(jedis.get(key))){
                     jedis.set(key, message);
                     return message;
                 } else {

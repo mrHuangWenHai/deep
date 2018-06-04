@@ -71,7 +71,7 @@ public class RepellentPlanResource {
                          @RequestParam("eartagFile") MultipartFile repellentEartagFile) {
 
         if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("param is invalid");
+            Response response = Responses.errorResponse("数据异常,请按照规范填写!");
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("error", bindingResult.getAllErrors());
             response.setData(data);
@@ -164,7 +164,7 @@ public class RepellentPlanResource {
             return JudgeUtil.JudgeSuccess("id", repellentPlanModel.getId());
         } catch (Exception e) {
             e.printStackTrace();
-            return Responses.errorResponse("Exception");
+            return Responses.errorResponse("内部异常,请重试!");
         }
     }
 
