@@ -175,6 +175,7 @@ public class DiagnosisResource {
         logger.info("invoke diagnosis/update {}", diagnosisPlanModel);
         DiagnosisPlanModel waitToModify = diagnosisPlanService.findPlanById(id);
         if (waitToModify != null && waitToModify.getIspassCheck() != 1) {
+            diagnosisPlanModel.setIspassCheck(2);
             int isSuccess = diagnosisPlanService.updateDiagnosisPlanModel(diagnosisPlanModel);
             if (isSuccess == 0) {
                 return Responses.errorResponse("修改失败");
@@ -205,7 +206,7 @@ public class DiagnosisResource {
             return Responses.errorResponse("错误!");
         }
         String professorKey = this.factoryService.getAgentIDByFactoryNumber(Long.valueOf(professorRequest.getFactoryNum().toString())) + "_professor";
-        if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
+        if (1 == professorRequest.getIspassCheck() && !JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
             return Responses.errorResponse("审核成功,短信服务器错误!");
         }
         return Responses.successResponse();

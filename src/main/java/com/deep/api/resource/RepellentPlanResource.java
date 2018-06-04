@@ -392,7 +392,7 @@ public class RepellentPlanResource {
           int row = repellentPlanService.updateRepellentPlanModelByProfessor(repellentPlanModel);
           if (row == 1) {
             String professorKey = this.factoryService.getAgentIDByFactoryNumber(Long.valueOf(repellentPlanModel.getFactoryNum().toString())) + "_professor";
-            if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)){
+            if ("1".equals(repellentPlanModel.getIspassCheck()) && !JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)){
                 return Responses.errorResponse("审核成功, 短信服务器异常");
             }
           }
@@ -462,7 +462,7 @@ public class RepellentPlanResource {
             if ("1".equals(temp.getIspassCheck())) {
                 return Responses.errorResponse("该条数据已被审核,无法修改");
             }
-
+            repellentPlanModel.setIspassCheck("2");
           if (repellentEartag != null) {
             String filePath = pathPre + repellentPlanModel.getFactoryNum().toString() + "/repellentEartag/";
 
@@ -474,8 +474,6 @@ public class RepellentPlanResource {
               return Responses.errorResponse("修改文件上传失败!");
 
             }
-            repellentPlanModel.setIspassCheck("2");
-            repellentPlanModel.setIspassSup("2");
             String oldPath = filePath + repellentPlanModel.getRepellentEartag();
             repellentPlanModel.setRepellentEartag(fileName);
             int row = this.repellentPlanService.updateRepellentPlanModelByOperator(repellentPlanModel);

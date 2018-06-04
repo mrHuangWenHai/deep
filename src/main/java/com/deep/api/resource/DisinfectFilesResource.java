@@ -12,6 +12,7 @@ import com.deep.domain.service.DisinfectFilesService;
 import com.deep.domain.service.FactoryService;
 import com.deep.domain.service.UserService;
 import com.deep.domain.util.*;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -306,19 +307,20 @@ public class DisinfectFilesResource {
         logger.info("invoke gf/p/{} {}",id, disinfectRequest);
         if( disinfectRequest.getIspassCheck() == null
             || disinfectRequest.getUnpassReason() == null) {
-            return Responses.errorResponse("Lack Item");
+            return Responses.errorResponse("请完善表单信息!");
         } else {
             disinfectRequest.setProfessor(disinfectRequest.getName());
             int row = disinfectFilesService.updateDisinfectFilesModelByProfessor(disinfectRequest);
             if (row == 1) {
                 String professorKey = this.factoryService.getAgentIDByFactoryNumber(disinfectRequest.getFactoryNum()) + "_professor";
                 // TODO
-                if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
+                if (1 == disinfectRequest.getIspassCheck() && !JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
                     return Responses.errorResponse("审核成功, 短信服务器异常");
                 }
             }
             return JudgeUtil.JudgeUpdate(row);
         }
+
     }
 
     /**
@@ -382,8 +384,10 @@ public class DisinfectFilesResource {
         if ("1".equals(temp.getIspassCheck())) {
             return Responses.errorResponse("该条数据已被审核,无法修改");
         }
-            disinfectFilesModel.setIspassCheck("2");
-            if (disinfectEartagFile != null) {
+
+        disinfectFilesModel.setIspassCheck("2");
+
+        if (disinfectEartagFile != null) {
             String filePath = pathPre + disinfectFilesModel.getFactoryNum().toString() + "/disinfectEartag/";
             String fileName = disinfectEartagFile.getOriginalFilename();
             try {

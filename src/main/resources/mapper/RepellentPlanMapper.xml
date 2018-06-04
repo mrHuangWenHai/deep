@@ -265,7 +265,11 @@
             </if>
 
             <if test="repellentPlanModel.remark != null and repellentPlanModel.remark != ''" >
-                remark = #{repellentPlanModel.remark}
+                remark = #{repellentPlanModel.remark},
+            </if>
+
+            <if test="repellentPlanModel.ispassCheck != null and repellentPlanModel.ispassCheck != ''" >
+                ispass_check = #{repellentPlanModel.ispassCheck}
             </if>
         </set>
         WHERE
