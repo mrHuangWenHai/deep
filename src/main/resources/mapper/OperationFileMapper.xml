@@ -235,9 +235,10 @@
             <if test="operationFile.carDisinfect != null">
                 car_disinfect = #{operationFile.carDisinfect},
             </if>
+            ispass_check = 2,
             gmt_modified = now()
         </set>
-        where id = #{operationFile.id} and ispass_check != 1
+        where id = #{operationFile.id} and (ispass_check != 1)
     </update>
 
     <delete id = "deleteOperationFile">
