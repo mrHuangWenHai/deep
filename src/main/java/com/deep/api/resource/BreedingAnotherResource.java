@@ -467,7 +467,7 @@ public class BreedingAnotherResource {
             String professorKey = this.factoryService.getAgentIDByFactoryNumber(Long.valueOf(professorRequest.getFactoryNum().toString())) + "_professor";
             JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
 // TODO
-            if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
+            if (1 == professorRequest.getIspassCheck() && !JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
                 return Responses.errorResponse("审核成功,短信服务器错误");
             }
 

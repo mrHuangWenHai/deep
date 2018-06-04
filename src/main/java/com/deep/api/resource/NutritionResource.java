@@ -454,7 +454,7 @@ public class NutritionResource {
                 return Responses.errorResponse("错误");
             }
             String professorKey = this.factoryService.getAgentIDByFactoryNumber(Long.valueOf(professorRequest.getFactoryNum().toString())) + "_professor";;
-            if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
+            if (1 == professorRequest.getIspassCheck() && !JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
                 return Responses.errorResponse("审核成功,短信服务器错误!");
             }
             Response response = Responses.successResponse();

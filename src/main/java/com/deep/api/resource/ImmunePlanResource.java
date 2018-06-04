@@ -316,7 +316,7 @@ public class ImmunePlanResource {
               System.out.println("factoryNumber: " + immunePlanModel.getFactoryNum());
             String professorKey = this.factoryService.getAgentIDByFactoryNumber(Long.valueOf(immunePlanModel.getFactoryNum().toString())) + "_professor";
             System.out.println("professorKey" + professorKey);
-              if (!JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
+              if ("1".equals(immunePlanModel.getIspassCheck()) && !JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
                 return Responses.errorResponse("审核成功, 短信服务器异常");
             }
           }

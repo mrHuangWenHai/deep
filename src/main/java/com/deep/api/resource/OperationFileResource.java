@@ -195,7 +195,7 @@ public class OperationFileResource {
     operationFile.setId(id);
 
     OperationFile model = operationFileService.getOperationFileById(id);
-    if (model.getIspassCheck() == 1 || model.getIspassSup() == 1) {
+    if (model.getIspassCheck() == 1) {
       return Responses.errorResponse("记录已经审核过，不能进行修改");
     }
 
