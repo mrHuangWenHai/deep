@@ -1,19 +1,20 @@
 package com.deep.api.request;
 
 import javax.validation.constraints.NotNull;
+import java.sql.Date;
 import java.sql.Timestamp;
 
 public class BreedingNutritionRequest {
     @NotNull(message = "查询时间不能为空")
-    private Timestamp time;
+    private String time;
     @NotNull(message = "羊场编号不能为空")
     private Integer factoryNumber;
 
-    public Timestamp getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Timestamp time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
@@ -28,7 +29,7 @@ public class BreedingNutritionRequest {
     @Override
     public String toString() {
         return "BreedingNutritionRequest{" +
-                "time=" + time +
+                "time='" + time + '\'' +
                 ", factoryNumber=" + factoryNumber +
                 '}';
     }

@@ -1,37 +1,46 @@
 package com.deep.domain.model;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 public class BreedingPlanAnotherModel {
     private Integer id;
     private Timestamp gmtCreate;
     private Timestamp gmtModify;
-    private Timestamp breedingTime;
+
+    private Date breedingTime;
     private String buildingAfterBreeding;
     private String ramSheepTrademark;
     private String eweSheepTrademark;
     private Byte manageFlag;
-    private Timestamp manageAverageTime;
-    private Timestamp nutritionBeforePregnancy;
+    private Date manageAverageTime;
+
+    private Date nutritionBeforePregnancy;
     private String isPregnancy;
-    private Timestamp nutritionAfterPregnancy;
+    private Date nutritionAfterPregnancy;
+
     private String prenatalImmunityType;
     private String prenatalImmunityTime;
     private String buildingToBeRelocated;
-    private Timestamp nutritionBeforeLambing;
-    private Timestamp lambingTime;
+
+    private Date nutritionBeforeLambing;
+    private Date lambingTime;
     private Integer lambingNumber;
-    private Timestamp nutritionBreastFeeding;
-    private Timestamp nutritionInsteadBreastFeeding;
-    private Timestamp nutritionBeforeCutBreastFeeding;
-    private Timestamp nutritionCutBreastFeeding;
+
+    private Date nutritionBreastFeeding;
+    private Date nutritionInsteadBreastFeeding;
+    private Date nutritionBeforeCutBreastFeeding;
+    private Date nutritionCutBreastFeeding;
+
     private Timestamp operatorTime;
     private Integer operatorId;
     private String operatorName;
+
     private Byte ispassSup;
     private Timestamp supervisorTime;
     private Integer supervisorId;
     private String supervisorName;
+
     private Byte ispassCheck;
     private Timestamp professorTime;
     private Integer professorId;
@@ -67,11 +76,11 @@ public class BreedingPlanAnotherModel {
         this.gmtModify = gmtModify;
     }
 
-    public Timestamp getBreedingTime() {
+    public Date getBreedingTime() {
         return breedingTime;
     }
 
-    public void setBreedingTime(Timestamp breedingTime) {
+    public void setBreedingTime(Date breedingTime) {
         this.breedingTime = breedingTime;
     }
 
@@ -107,19 +116,19 @@ public class BreedingPlanAnotherModel {
         this.manageFlag = manageFlag;
     }
 
-    public Timestamp getManageAverageTime() {
+    public Date getManageAverageTime() {
         return manageAverageTime;
     }
 
-    public void setManageAverageTime(Timestamp manageAverageTime) {
+    public void setManageAverageTime(Date manageAverageTime) {
         this.manageAverageTime = manageAverageTime;
     }
 
-    public Timestamp getNutritionBeforePregnancy() {
+    public Date getNutritionBeforePregnancy() {
         return nutritionBeforePregnancy;
     }
 
-    public void setNutritionBeforePregnancy(Timestamp nutritionBeforePregnancy) {
+    public void setNutritionBeforePregnancy(Date nutritionBeforePregnancy) {
         this.nutritionBeforePregnancy = nutritionBeforePregnancy;
     }
 
@@ -131,11 +140,11 @@ public class BreedingPlanAnotherModel {
         this.isPregnancy = isPregnancy;
     }
 
-    public Timestamp getNutritionAfterPregnancy() {
+    public Date getNutritionAfterPregnancy() {
         return nutritionAfterPregnancy;
     }
 
-    public void setNutritionAfterPregnancy(Timestamp nutritionAfterPregnancy) {
+    public void setNutritionAfterPregnancy(Date nutritionAfterPregnancy) {
         this.nutritionAfterPregnancy = nutritionAfterPregnancy;
     }
 
@@ -163,19 +172,19 @@ public class BreedingPlanAnotherModel {
         this.buildingToBeRelocated = buildingToBeRelocated;
     }
 
-    public Timestamp getNutritionBeforeLambing() {
+    public Date getNutritionBeforeLambing() {
         return nutritionBeforeLambing;
     }
 
-    public void setNutritionBeforeLambing(Timestamp nutritionBeforeLambing) {
+    public void setNutritionBeforeLambing(Date nutritionBeforeLambing) {
         this.nutritionBeforeLambing = nutritionBeforeLambing;
     }
 
-    public Timestamp getLambingTime() {
+    public Date getLambingTime() {
         return lambingTime;
     }
 
-    public void setLambingTime(Timestamp lambingTime) {
+    public void setLambingTime(Date lambingTime) {
         this.lambingTime = lambingTime;
     }
 
@@ -187,35 +196,35 @@ public class BreedingPlanAnotherModel {
         this.lambingNumber = lambingNumber;
     }
 
-    public Timestamp getNutritionBreastFeeding() {
+    public Date getNutritionBreastFeeding() {
         return nutritionBreastFeeding;
     }
 
-    public void setNutritionBreastFeeding(Timestamp nutritionBreastFeeding) {
+    public void setNutritionBreastFeeding(Date nutritionBreastFeeding) {
         this.nutritionBreastFeeding = nutritionBreastFeeding;
     }
 
-    public Timestamp getNutritionInsteadBreastFeeding() {
+    public Date getNutritionInsteadBreastFeeding() {
         return nutritionInsteadBreastFeeding;
     }
 
-    public void setNutritionInsteadBreastFeeding(Timestamp nutritionInsteadBreastFeeding) {
+    public void setNutritionInsteadBreastFeeding(Date nutritionInsteadBreastFeeding) {
         this.nutritionInsteadBreastFeeding = nutritionInsteadBreastFeeding;
     }
 
-    public Timestamp getNutritionBeforeCutBreastFeeding() {
+    public Date getNutritionBeforeCutBreastFeeding() {
         return nutritionBeforeCutBreastFeeding;
     }
 
-    public void setNutritionBeforeCutBreastFeeding(Timestamp nutritionBeforeCutBreastFeeding) {
+    public void setNutritionBeforeCutBreastFeeding(Date nutritionBeforeCutBreastFeeding) {
         this.nutritionBeforeCutBreastFeeding = nutritionBeforeCutBreastFeeding;
     }
 
-    public Timestamp getNutritionCutBreastFeeding() {
+    public Date getNutritionCutBreastFeeding() {
         return nutritionCutBreastFeeding;
     }
 
-    public void setNutritionCutBreastFeeding(Timestamp nutritionCutBreastFeeding) {
+    public void setNutritionCutBreastFeeding(Date nutritionCutBreastFeeding) {
         this.nutritionCutBreastFeeding = nutritionCutBreastFeeding;
     }
 
@@ -307,6 +316,14 @@ public class BreedingPlanAnotherModel {
         this.professorName = professorName;
     }
 
+    public String getProfessorNotPassReason() {
+        return professorNotPassReason;
+    }
+
+    public void setProfessorNotPassReason(String professorNotPassReason) {
+        this.professorNotPassReason = professorNotPassReason;
+    }
+
     public String getRemark() {
         return remark;
     }
@@ -329,14 +346,6 @@ public class BreedingPlanAnotherModel {
 
     public void setFactoryName(String factoryName) {
         this.factoryName = factoryName;
-    }
-
-    public String getProfessorNotPassReason() {
-        return professorNotPassReason;
-    }
-
-    public void setProfessorNotPassReason(String professorNotPassReason) {
-        this.professorNotPassReason = professorNotPassReason;
     }
 
     @Override

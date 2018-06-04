@@ -80,7 +80,7 @@ public class ImmunePlanResource {
         if (bindingResult.hasErrors()) {
             Response response = Responses.successResponse();
             Map<String, Object> data = new HashMap<String, Object>();
-            data.put("error",bindingResult.getAllErrors());
+            data.put("数据异常,请按照规范填写!!",bindingResult.getAllErrors());
             response.setData(data);
             return response;
         }
