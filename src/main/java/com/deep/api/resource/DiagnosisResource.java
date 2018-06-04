@@ -235,7 +235,7 @@ public class DiagnosisResource {
         String supervisorKey = supervisorRequest.getFactoryNum().toString() + "_supervisor";
 // TODO
         if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
-            return Responses.errorResponse("cancel error");
+            return Responses.errorResponse("审核成功,短信服务器错误");
         }
         return Responses.successResponse();
     }
