@@ -149,6 +149,8 @@
         <set>
             ispass_check = #{ispassCheck},
             upass_reason = #{upassReson},
+            professor_id = #{professorId},
+            professor_name = #{professorName},
             gmt_modified = now()
         </set>
         where  id = #{id} and ispass_check = 2
@@ -159,6 +161,8 @@
         operation_file
         <set>
             ispass_sup = #{supStatus},
+            supervisor_id = #{supervisorId},
+            supervisor_name = #{supervisorName},
             gmt_modified = now()
         </set>
         where  id = #{id} and ispass_sup = 2
