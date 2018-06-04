@@ -291,14 +291,16 @@ public class BreedingAnotherResource {
         logger.info("invoke addARecord {}", breedingRequest.toString());
         HashMap<String, Object> data = new HashMap<>();
         if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("添加失败！");
+            Response response = Responses.errorResponse("请规范表单信息！");
             data.put("errorMessage", bindingResult.getAllErrors());
             response.setData(data);
             return response;
         }
+
         breedingRequest.setGmtCreate(new Timestamp(System.currentTimeMillis()));
         breedingRequest.setGmtModify(new Timestamp(System.currentTimeMillis()));
         breedingRequest.setOperatorTime(new Timestamp(System.currentTimeMillis()));
+
         Long success = breedingPlanAnotherService.addARecordByOperator(breedingRequest);
         if (success > 0) {
             data.put("success", success);
@@ -448,8 +450,6 @@ public class BreedingAnotherResource {
             return Responses.errorResponse("监督员审核错误！");
         } else {
             String supervisorKey = supervisorRequest.getFactoryNum().toString() + "_supervisor";
-            JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey);
-// TODO
             if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
                 return Responses.errorResponse("审核成功,短信服务器错误");
             }
@@ -489,8 +489,6 @@ public class BreedingAnotherResource {
             return Responses.errorResponse("技术员审核错误！");
         } else {
             String professorKey = this.factoryService.getAgentIDByFactoryNumber(Long.valueOf(professorRequest.getFactoryNum().toString())) + "_professor";
-            JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
-// TODO
             if (1 == professorRequest.getIspassCheck() && !JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
                 return Responses.errorResponse("审核成功,短信服务器错误");
             }
