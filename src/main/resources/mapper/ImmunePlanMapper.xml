@@ -274,7 +274,11 @@
             </if>
 
             <if test="immunePlanModel.remark != null">
-                remark = #{immunePlanModel.remark}
+                remark = #{immunePlanModel.remark},
+            </if>
+
+            <if test="immunePlanModel.ispassCheck != null and immunePlanModel.ispassCheck">
+                ispass_check = #{immunePlanModel.ispassCheck}
             </if>
         </set>
         WHERE

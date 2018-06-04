@@ -168,7 +168,11 @@
       </if>
 
       <if test="diagnosisPlanModel.dose != null and diagnosisPlanModel.dose != ''" >
-        dose = #{diagnosisPlanModel.dose}
+        dose = #{diagnosisPlanModel.dose},
+      </if>
+
+      <if test="diagnosisPlanModel.ispassCheck != null and diagnosisPlanModel.ispassCheck != ''" >
+        ispass_check = #{diagnosisPlanModel.ispassCheck}
       </if>
     </set>
     where id = #{diagnosisPlanModel.id} and ispass_check != 1

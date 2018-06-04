@@ -391,7 +391,7 @@ public class BreedingAnotherResource {
             response.setData(data);
             return response;
         }
-        return Responses.errorResponse("the record has been checked, can not be deleted!");
+        return Responses.errorResponse("该记录已经审核过, 不能删除!");
     }
 
     /**
@@ -417,7 +417,7 @@ public class BreedingAnotherResource {
         // 首先查询是否符合修改信息的条件
         BreedingPlanAnotherModel model = breedingPlanAnotherService.findARecord(uid);
         if (model == null || model.getIspassSup() != 2) {
-            return Responses.errorResponse("this record has been checked!");
+            return Responses.errorResponse("该记录已经审核过!");
         }
         Long success = breedingPlanAnotherService.updateARecordBySupervisor(uid, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), supervisorRequest.getIspassSup(), supervisorRequest.getSupervisor(), supervisorRequest.getName());
         if (success <= 0) {
@@ -458,7 +458,7 @@ public class BreedingAnotherResource {
         // 首先查询是否符合修改信息的条件
         BreedingPlanAnotherModel model = breedingPlanAnotherService.findARecord(uid);
         if (model == null || model.getIspassCheck() != 2) {
-            return Responses.errorResponse("this record has been checked!");
+            return Responses.errorResponse("该记录已经审核过!");
         }
         Long success = breedingPlanAnotherService.updateARecordByProfessor(uid, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), professorRequest.getIspassCheck(), professorRequest.getProfessor(), professorRequest.getName(), professorRequest.getUpassReason());
         if (success <= 0) {

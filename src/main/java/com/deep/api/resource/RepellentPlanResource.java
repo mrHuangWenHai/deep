@@ -462,7 +462,7 @@ public class RepellentPlanResource {
             if ("1".equals(temp.getIspassCheck())) {
                 return Responses.errorResponse("该条数据已被审核,无法修改");
             }
-
+            repellentPlanModel.setIspassCheck("2");
           if (repellentEartag != null) {
             String filePath = pathPre + repellentPlanModel.getFactoryNum().toString() + "/repellentEartag/";
 
@@ -474,8 +474,6 @@ public class RepellentPlanResource {
               return Responses.errorResponse("修改文件上传失败!");
 
             }
-            repellentPlanModel.setIspassCheck("2");
-            repellentPlanModel.setIspassSup("2");
             String oldPath = filePath + repellentPlanModel.getRepellentEartag();
             repellentPlanModel.setRepellentEartag(fileName);
             int row = this.repellentPlanService.updateRepellentPlanModelByOperator(repellentPlanModel);

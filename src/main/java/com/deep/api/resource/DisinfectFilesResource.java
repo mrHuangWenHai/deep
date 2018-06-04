@@ -382,8 +382,10 @@ public class DisinfectFilesResource {
         if ("1".equals(temp.getIspassCheck())) {
             return Responses.errorResponse("该条数据已被审核,无法修改");
         }
-            disinfectFilesModel.setIspassCheck("2");
-            if (disinfectEartagFile != null) {
+
+        disinfectFilesModel.setIspassCheck("2");
+
+        if (disinfectEartagFile != null) {
             String filePath = pathPre + disinfectFilesModel.getFactoryNum().toString() + "/disinfectEartag/";
             String fileName = disinfectEartagFile.getOriginalFilename();
             try {

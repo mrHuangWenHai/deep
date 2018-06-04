@@ -175,6 +175,7 @@ public class DiagnosisResource {
         logger.info("invoke diagnosis/update {}", diagnosisPlanModel);
         DiagnosisPlanModel waitToModify = diagnosisPlanService.findPlanById(id);
         if (waitToModify != null && waitToModify.getIspassCheck() != 1) {
+            diagnosisPlanModel.setIspassCheck(2);
             int isSuccess = diagnosisPlanService.updateDiagnosisPlanModel(diagnosisPlanModel);
             if (isSuccess == 0) {
                 return Responses.errorResponse("修改失败");
