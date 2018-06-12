@@ -39,6 +39,4 @@ public class DisinfectionArchivesService {
     return disinfectionArchivesMapper.addDisinfectionArchives(list);
   }
 
-
-
 }

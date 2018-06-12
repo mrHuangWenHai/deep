@@ -33,7 +33,7 @@
         <result property="supervisorName" column="supervisor_name"/>
         <result property="professorId" column="professor_id"/>
         <result property="professorName" column="professor_name"/>
-        <result property="upassReason" column="upass_reason"/>
+        <result property="unpassReason" column="upass_reason"/>
     </resultMap>
 
     <select id="getOperationFile" resultMap="OperationFile" parameterType="com.deep.api.request.OperationCoditionRequest">
@@ -148,7 +148,7 @@
         operation_file
         <set>
             ispass_check = #{ispassCheck},
-            upass_reason = #{upassReson},
+            upass_reason = #{unpassReason},
             professor_id = #{professorId},
             professor_name = #{professorName},
             gmt_modified = now()
