@@ -151,6 +151,7 @@
             upass_reason = #{unpassReason},
             professor_id = #{professorId},
             professor_name = #{professorName},
+
             gmt_modified = now()
         </set>
         where  id = #{id} and ispass_check = 2

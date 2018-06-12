@@ -27,8 +27,8 @@ public class DiagnosisPlanService {
         return this.diagnosisPlanMapper.deleteByPrimaryKey(id);
     }
 
-    public int checkDiagnosisPlanModelById(int id, short isPassCheck, int professorId, String name) {
-        return this.diagnosisPlanMapper.checkDiagnosisPlanModelById(id, isPassCheck, professorId, name);
+    public int checkDiagnosisPlanModelById(int id, short isPassCheck, int professorId, String name, String upassReason) {
+        return this.diagnosisPlanMapper.checkDiagnosisPlanModelById(id, isPassCheck, professorId, name, upassReason);
     }
 
     public int supCheckDiagnosisPlanModelById(int id, short ispassSup, String upassReason, int supervisorId, String name) {

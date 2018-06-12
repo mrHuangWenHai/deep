@@ -311,6 +311,7 @@ public class ImmunePlanResource {
         } else {
           immunePlanModel.setId(id);
           immunePlanModel.setProfessor(immunePlanModel.getName());
+          immunePlanModel.setUpassReason(immunePlanModel.getUnpassReason());
           int row = immunePlanService.updateImmunePlanModelByProfessor(immunePlanModel);
           if (row == 1) {
               System.out.println("factoryNumber: " + immunePlanModel.getFactoryNum());

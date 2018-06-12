@@ -30,7 +30,8 @@ public interface DiagnosisPlanMapper {
     int checkDiagnosisPlanModelById(@Param("id") int id,
                                     @Param("ispassCheck") short ispassCheck,
                                     @Param("professorId") int professorId,
-                                    @Param("name") String name);
+                                    @Param("name") String name,
+                                    @Param("upassReason") String upassReason);
 
     int supCheckDiagnosisPlanModelById(@Param("id") int id,
                                        @Param("ispassSup") short ispassSup,

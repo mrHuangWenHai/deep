@@ -384,7 +384,7 @@ public class RepellentPlanResource {
             return Responses.errorResponse("请完善表单信息!");
         } else {
             repellentPlanModel.setProfessor(repellentPlanModel.getName());
-
+            repellentPlanModel.setUpassReason(repellentPlanModel.getUnpassReason());
             RepellentPlanModel temp = this.repellentPlanService.getRepellentPlanModelById(id);
             if (!("2".equals(temp.getIspassCheck()))){
                 return Responses.errorResponse("该条数据已被审核,无法修改");

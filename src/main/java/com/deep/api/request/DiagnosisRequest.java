@@ -15,6 +15,7 @@ public class DiagnosisRequest {
   private String gmtModified;
   @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
   private String gmtSup;
+  private String symptom;
   private Long factoryNum;
   private String factoryName;
   private Integer operatorId;
@@ -261,6 +262,14 @@ public class DiagnosisRequest {
     this.buildingNum = buildingNum;
   }
 
+  public String getSymptom() {
+    return symptom;
+  }
+
+  public void setSymptom(String symptom) {
+    this.symptom = symptom;
+  }
+
   @Override
   public String toString() {
     return "DiagnosisRequest{" +
@@ -271,6 +280,7 @@ public class DiagnosisRequest {
             ", gmtCreate='" + gmtCreate + '\'' +
             ", gmtModified='" + gmtModified + '\'' +
             ", gmtSup='" + gmtSup + '\'' +
+            ", symptom='" + symptom + '\'' +
             ", factoryNum=" + factoryNum +
             ", factoryName='" + factoryName + '\'' +
             ", operatorId=" + operatorId +

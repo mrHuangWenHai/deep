@@ -17,7 +17,7 @@ public class ProfessorRequest {
     @Min(value = 0)
     private Byte ispassCheck;           // 是否审核通过
 
-    private String upassReason;
+    private String unpassReason;
 
     private Long factoryNum;
 
@@ -45,12 +45,12 @@ public class ProfessorRequest {
         this.name = name;
     }
 
-    public String getUpassReason() {
-        return upassReason;
+    public String getUnpassReason() {
+        return unpassReason;
     }
 
-    public void setUpassReason(String upassReason) {
-        this.upassReason = upassReason;
+    public void setUnpassReason(String unpassReason) {
+        this.unpassReason = unpassReason;
     }
 
     public Byte getIspassCheck() {
@@ -67,7 +67,7 @@ public class ProfessorRequest {
                 "professor=" + professor +
                 ", name='" + name + '\'' +
                 ", ispassCheck=" + ispassCheck +
-                ", upassReason='" + upassReason + '\'' +
+                ", unpassReason='" + unpassReason + '\'' +
                 ", factoryNum=" + factoryNum +
                 '}';
     }

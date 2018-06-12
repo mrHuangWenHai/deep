@@ -484,7 +484,7 @@ public class BreedingAnotherResource {
         if (model == null || model.getIspassCheck() != 2) {
             return Responses.errorResponse("该记录已经审核过!");
         }
-        Long success = breedingPlanAnotherService.updateARecordByProfessor(uid, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), professorRequest.getIspassCheck(), professorRequest.getProfessor(), professorRequest.getName(), professorRequest.getUpassReason());
+        Long success = breedingPlanAnotherService.updateARecordByProfessor(uid, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), professorRequest.getIspassCheck(), professorRequest.getProfessor(), professorRequest.getName(), professorRequest.getUnpassReason());
         if (success <= 0) {
             return Responses.errorResponse("技术员审核错误！");
         } else {

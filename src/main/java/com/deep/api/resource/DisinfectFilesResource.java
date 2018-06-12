@@ -309,6 +309,7 @@ public class DisinfectFilesResource {
             return Responses.errorResponse("请完善表单信息!");
         } else {
             disinfectRequest.setProfessor(disinfectRequest.getName());
+            disinfectRequest.setUpassReason(disinfectRequest.getUnpassReason());
             int row = disinfectFilesService.updateDisinfectFilesModelByProfessor(disinfectRequest);
             if (row == 1) {
                 String professorKey = this.factoryService.getAgentIDByFactoryNumber(disinfectRequest.getFactoryNum()) + "_professor";

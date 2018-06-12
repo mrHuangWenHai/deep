@@ -181,6 +181,7 @@ public class OperationFileResource {
       int preofessorId = Integer.valueOf(json.get("professor"));
 
       int isSuccess = operationFileService.updateCheckStatus(id, supStatus, unpassReason, professorName, preofessorId);
+
       if (isSuccess == 1) {
         return Responses.successResponse();
       } else {
