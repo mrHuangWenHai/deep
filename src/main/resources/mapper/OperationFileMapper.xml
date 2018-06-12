@@ -149,6 +149,7 @@
         <set>
             ispass_check = #{ispassCheck},
             upass_reason = #{upassReson},
+            professor_name = #{professor},
             gmt_modified = now()
         </set>
         where  id = #{id} and ispass_check = 2

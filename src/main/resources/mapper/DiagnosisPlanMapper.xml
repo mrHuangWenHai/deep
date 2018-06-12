@@ -25,6 +25,7 @@
     <result column="tre_eff" property="treatEffect" />
     <result column="professor_name" property="professorName" />
     <result column="supervisor_name" property="supervisorName" />
+    <result column="symptom" property="symptom" />
   </resultMap>
 
   <sql id="Base_Column_List" >
@@ -50,7 +51,8 @@
     ispass_sup,
     tre_eff,
     professor_name,
-    supervisor_name
+    supervisor_name,
+    symptom
   </sql>
 
   <sql id="Blob_Column_List" >
@@ -75,7 +77,7 @@
     insert into diagnosis_plan (
     gmt_create,
     gmt_modified,
-      gmt_supervised,
+    gmt_supervised,
     factory_num,
     factory_name,
     diagnosis_t,
@@ -92,7 +94,8 @@
     dose,
     tre_eff,
     professor_name,
-    supervisor_name
+    supervisor_name,
+    symptom
     )
     values (
     now(),
@@ -114,7 +117,8 @@
     #{diagnosisPlanModel.dose},
     #{diagnosisPlanModel.treatEffect},
     #{diagnosisPlanModel.professorName},
-    #{diagnosisPlanModel.supervisorName}
+    #{diagnosisPlanModel.supervisorName},
+    #{diagnosisPlanModel.symptom}
     )
   </insert>
 
@@ -172,7 +176,11 @@
       </if>
 
       <if test="diagnosisPlanModel.ispassCheck != null and diagnosisPlanModel.ispassCheck != ''" >
-        ispass_check = #{diagnosisPlanModel.ispassCheck}
+        ispass_check = #{diagnosisPlanModel.ispassCheck},
+      </if>
+
+      <if test="diagnosisPlanModel.symptom != null">
+        symptom = #{diagnosisPlanModel.symptom}
       </if>
     </set>
     where id = #{diagnosisPlanModel.id} and ispass_check != 1
@@ -184,7 +192,8 @@
       gmt_modified = now(),
       ispass_check = #{ispassCheck},
       professor_id = #{professorId},
-      professor_name = #{name}
+      professor_name = #{name},
+      upass_reason = #{upassReason}
     </set>
     where id = #{id} and ispass_check = 2
   </update>
@@ -261,7 +270,9 @@
       AND diagnosis_t BETWEEN #{diagnosisRequest.startTime} AND #{diagnosisRequest.endTime}
     </if>
 
-
+    <if test="diagnosisRequest.symptom != null">
+      AND symptom = #{diagnosisRequest.symptom}
+    </if>
 
 
   </select>

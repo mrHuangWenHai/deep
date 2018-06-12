@@ -27,7 +27,7 @@ public class ImmuneRequest {
     private String supervisor;
     private String remark;
     private String ispassCheck;
-    private String unpassReason;
+    private String upassReason;
     private String ispassSup;
     private String gmtCreate;
     private String gmtModified;
@@ -129,12 +129,12 @@ public class ImmuneRequest {
         this.remark = remark;
     }
 
-    public String getUnpassReason() {
-        return unpassReason;
+    public String getUpassReason() {
+        return upassReason;
     }
 
-    public void setUnpassReason(String unpassReason) {
-        this.unpassReason = unpassReason;
+    public void setUpassReason(String upassReason) {
+        this.upassReason = upassReason;
     }
 
     public String getGmtCreate() {
@@ -260,33 +260,33 @@ public class ImmuneRequest {
     @Override
     public String toString() {
         return "ImmuneRequest{" +
-            "id=" + id +
-            ", factoryNum=" + factoryNum +
-            ", factoryName='" + factoryName + '\'' +
-            ", crowdNum='" + crowdNum + '\'' +
-            ", immuneEartag='" + immuneEartag + '\'' +
-            ", immuneTime='" + immuneTime + '\'' +
-            ", immuneKind='" + immuneKind + '\'' +
-            ", immuneWay='" + immuneWay + '\'' +
-            ", dose='" + dose + '\'' +
-            ", immuneDuring='" + immuneDuring + '\'' +
-            ", operatorId=" + operatorId +
-            ", operatorName='" + operatorName + '\'' +
-            ", professor='" + professor + '\'' +
-            ", supervisor='" + supervisor + '\'' +
-            ", remark='" + remark + '\'' +
-            ", ispassCheck='" + ispassCheck + '\'' +
-            ", unpassReason='" + unpassReason + '\'' +
-            ", ispassSup='" + ispassSup + '\'' +
-            ", gmtCreate='" + gmtCreate + '\'' +
-            ", gmtModified='" + gmtModified + '\'' +
-            ", gmtProfessor='" + gmtProfessor + '\'' +
-            ", gmtSupervise='" + gmtSupervise + '\'' +
-            ", startTime='" + startTime + '\'' +
-            ", endTime='" + endTime + '\'' +
-            ", page=" + page +
-            ", size=" + size +
-            ", factoryList=" + factoryList +
-            '}';
+                "id=" + id +
+                ", factoryNum=" + factoryNum +
+                ", factoryName='" + factoryName + '\'' +
+                ", crowdNum='" + crowdNum + '\'' +
+                ", immuneEartag='" + immuneEartag + '\'' +
+                ", immuneTime='" + immuneTime + '\'' +
+                ", immuneKind='" + immuneKind + '\'' +
+                ", immuneWay='" + immuneWay + '\'' +
+                ", dose='" + dose + '\'' +
+                ", immuneDuring='" + immuneDuring + '\'' +
+                ", operatorId=" + operatorId +
+                ", operatorName='" + operatorName + '\'' +
+                ", professor='" + professor + '\'' +
+                ", supervisor='" + supervisor + '\'' +
+                ", remark='" + remark + '\'' +
+                ", ispassCheck='" + ispassCheck + '\'' +
+                ", upassReason='" + upassReason + '\'' +
+                ", ispassSup='" + ispassSup + '\'' +
+                ", gmtCreate='" + gmtCreate + '\'' +
+                ", gmtModified='" + gmtModified + '\'' +
+                ", gmtProfessor='" + gmtProfessor + '\'' +
+                ", gmtSupervise='" + gmtSupervise + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", page=" + page +
+                ", size=" + size +
+                ", factoryList=" + factoryList +
+                '}';
     }
 }

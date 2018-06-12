@@ -164,21 +164,38 @@ public class UserResource {
      * @param id 获取用户的信息(简略信息)
      * @return response
      */
-    @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
+//    @Permit(authorities = {"query_user", "query_expert", "query_technician", "query_administrator"})
     @GetMapping(value = "user/find/{id}")
-    public Response getUserOne(@PathVariable("id")String id) {
+    public Response getUserOne(@PathVariable("id")String id, HttpServletRequest request) {
         logger.info("invoke getUserOne{}, url is user/{id}", id);
         long uid = StringToLongUtil.stringToLong(id);
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
         }
-        UserService.UserLogin userModel = userService.findOneUser(uid);
+
+        Byte which = StringToLongUtil.stringToByte(TokenAnalysis.getFlag(request.getHeader(Constants.AUTHORIZATION)));
+        if (which == 0) {
+            // 这时候是羊场
+            which = -1;
+        }
+        UserModel userModel = userService.getAOneUser(uid);
+        logger.info("===========  {}",userModel);
         if (userModel == null) {
-            return Responses.errorResponse("用户不存在");
+            return Responses.errorResponse("系统中该用户不存在");
+        }
+        if (userModel.getIsFactory() == 0) {
+            // 如果是羊场
+            which = -1;
+        } else if(userModel.getIsFactory() == 1) {
+            // 如果是代理
+            which = userService.getAgentRank(userModel.getUserFactory());
         }
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
         data.put("model", userModel);
+        data.put("agentRank", which);
+        data.put("agent", userService.getFatherAgent(userModel.getUserFactory(), userModel.getIsFactory()));
+        data.put("role", userModel.getIsFactory());
         response.setData(data);
         return response;
     }
@@ -208,7 +225,6 @@ public class UserResource {
         if (userModel.getIsFactory() == 0) {
             // 如果是羊场
             which = -1;
-
         } else if(userModel.getIsFactory() == 1) {
             // 如果是代理
             which = userService.getAgentRank(userModel.getUserFactory());
@@ -616,7 +632,7 @@ public class UserResource {
      * @param id id
      * @return 查询结果
      */
-    @Permit(authorities = "query_expert")
+//    @Permit(authorities = "query_expert")
     @GetMapping(value = "getExpert/{agent_id}")
     public Response getOnlineAncestors(@PathVariable("agent_id") String id) {
         logger.info("invoke getOnlineAncestors {}", id);

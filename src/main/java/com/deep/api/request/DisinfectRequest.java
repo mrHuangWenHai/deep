@@ -25,7 +25,8 @@ public class DisinfectRequest {
     private String name;
     private String remark;        //备注
     private Integer ispassCheck;       //是否通过审核 可空 默认为 0
-    private String unpassReason;   //未通过审核原因 可空 默认未 无
+    private String upassReason;   //未通过审核原因 可空 默认未 无
+    private String unpassReason;
     private Integer ispassSup;       //是否通过审核 可空 默认为 0
     private String gmtCreate;   //创建时间
     private String gmtModified;     //修改时间
@@ -146,12 +147,12 @@ public class DisinfectRequest {
         this.remark = remark;
     }
 
-    public String getUnpassReason() {
-        return unpassReason;
+    public String getUpassReason() {
+        return upassReason;
     }
 
-    public void setUnpassReason(String unpassReason) {
-        this.unpassReason = unpassReason;
+    public void setUpassReason(String upassReason) {
+        this.upassReason = upassReason;
     }
 
     public String getGmtCreate() {
@@ -250,34 +251,44 @@ public class DisinfectRequest {
         this.factoryList = factoryList;
     }
 
-  @Override
-  public String toString() {
-    return "DisinfectRequest{" +
-        "id=" + id +
-        ", disinfectEartag='" + disinfectEartag + '\'' +
-        ", factoryNum=" + factoryNum +
-        ", factoryName='" + factoryName + '\'' +
-        ", disinfectTime='" + disinfectTime + '\'' +
-        ", disinfectName='" + disinfectName + '\'' +
-        ", dose='" + dose + '\'' +
-        ", disinfectWay='" + disinfectWay + '\'' +
-        ", operatorId=" + operatorId +
-        ", operatorName='" + operatorName + '\'' +
-        ", professor='" + professor + '\'' +
-        ", supervisor='" + supervisor + '\'' +
-        ", remark='" + remark + '\'' +
-        ", ispassCheck=" + ispassCheck +
-        ", unpassReason='" + unpassReason + '\'' +
-        ", ispassSup=" + ispassSup +
-        ", gmtCreate='" + gmtCreate + '\'' +
-        ", gmtModified='" + gmtModified + '\'' +
-        ", gmtProfessor='" + gmtProfessor + '\'' +
-        ", gmtSupervise='" + gmtSupervise + '\'' +
-        ", startTime='" + startTime + '\'' +
-        ", endTime='" + endTime + '\'' +
-        ", page=" + page +
-        ", size=" + size +
-        ", factoryList=" + factoryList +
-        '}';
-  }
+    public String getUnpassReason() {
+        return unpassReason;
+    }
+
+    public void setUnpassReason(String unpassReason) {
+        this.unpassReason = unpassReason;
+    }
+
+    @Override
+    public String toString() {
+        return "DisinfectRequest{" +
+                "id=" + id +
+                ", disinfectEartag='" + disinfectEartag + '\'' +
+                ", factoryNum=" + factoryNum +
+                ", factoryName='" + factoryName + '\'' +
+                ", disinfectTime='" + disinfectTime + '\'' +
+                ", disinfectName='" + disinfectName + '\'' +
+                ", dose='" + dose + '\'' +
+                ", disinfectWay='" + disinfectWay + '\'' +
+                ", operatorId=" + operatorId +
+                ", operatorName='" + operatorName + '\'' +
+                ", professor='" + professor + '\'' +
+                ", supervisor='" + supervisor + '\'' +
+                ", name='" + name + '\'' +
+                ", remark='" + remark + '\'' +
+                ", ispassCheck=" + ispassCheck +
+                ", upassReason='" + upassReason + '\'' +
+                ", unpassReason='" + unpassReason + '\'' +
+                ", ispassSup=" + ispassSup +
+                ", gmtCreate='" + gmtCreate + '\'' +
+                ", gmtModified='" + gmtModified + '\'' +
+                ", gmtProfessor='" + gmtProfessor + '\'' +
+                ", gmtSupervise='" + gmtSupervise + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", page=" + page +
+                ", size=" + size +
+                ", factoryList=" + factoryList +
+                '}';
+    }
 }

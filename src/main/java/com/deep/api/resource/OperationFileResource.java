@@ -175,8 +175,9 @@ public class OperationFileResource {
     }
     logger.info("/of/p/{} {}",id,supStatus);
     try {
-      String upassReson = json.get("upassReson");
-      int isSuccess = operationFileService.updateCheckStatus(id, supStatus, upassReson);
+      String upassReson = json.get("unpassReason");
+      String professor = json.get("name");
+      int isSuccess = operationFileService.updateCheckStatus(id, supStatus, upassReson, professor);
       if (isSuccess == 1) {
         return Responses.successResponse();
       } else {

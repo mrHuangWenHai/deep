@@ -22,7 +22,7 @@
         <result property="remark" column="remark"/>
         <result property="ispassCheck" column="ispass_check"/>
 
-        <result property="unpassReason" column="upass_reason"/>
+        <result property="upassReason" column="upass_reason"/>
 
         <result property="ispassSup" column="ispass_sup"/>
         <result property="gmtCreate" column="gmt_create"/>
@@ -140,8 +140,8 @@
         <if test="repellentPlanModel.ispassCheck != null and repellentPlanModel.ispassCheck != '' ">
             AND ispass_check = #{repellentPlanModel.ispassCheck}
         </if>
-        <if test="repellentPlanModel.unpassReason != null and repellentPlanModel.unpassReason != '' ">
-            AND upass_reason = #{repellentPlanModel.unpassReason}
+        <if test="repellentPlanModel.upassReason != null and repellentPlanModel.upassReason != '' ">
+            AND upass_reason = #{repellentPlanModel.upassReason}
         </if>
         <if test="repellentPlanModel.ispassSup != null and repellentPlanModel.ispassSup != '' ">
             AND ispass_sup = #{repellentPlanModel.ispassSup}
@@ -215,8 +215,8 @@
         UPDATE repellent_plan
         SET  professor = #{repellentPlanModel.professor},
         ispass_check = #{repellentPlanModel.ispassCheck},
-        <if test="repellentPlanModel.unpassReason != null">
-            upass_reason = #{repellentPlanModel.unpassReason},
+        <if test="repellentPlanModel.upassReason != null">
+            upass_reason = #{repellentPlanModel.upassReason},
         </if>
         gmt_professor = now()
         WHERE

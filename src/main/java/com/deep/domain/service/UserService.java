@@ -493,4 +493,8 @@ public class UserService {
     public void deleteUserByFactoryNumber(Long factoryNumber, Byte isFactory) {
         userMapper.deleteUserByFactoryNumber(factoryNumber, isFactory);
     }
+
+    public UserModel getAOneUser(Long uid) {
+        return userMapper.queryUserById(uid);
+    }
 }

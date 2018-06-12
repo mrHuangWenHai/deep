@@ -446,7 +446,7 @@ public class NutritionResource {
             professor.setGmtModified(new Date());
             professor.setProfessorId(professorRequest.getProfessor().longValue());
             professor.setProfessorName(professorRequest.getName());
-            professor.setUpassReason(professorRequest.getUpassReason());
+            professor.setUpassReason(professorRequest.getUnpassReason());
             professor.setIspassCheck(professorRequest.getIspassCheck());
 
             int success = nutritionPlanService.changePlanSelective(professor);

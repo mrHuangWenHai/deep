@@ -24,7 +24,7 @@ public interface OperationFileMapper {
 
   int addOperationFile(@Param("operationFile")OperationFile operationFile);
 
-  int updateCheckStatus(@Param("id")int id, @Param("ispassCheck") short checkStatus, @Param("upassReson") String upassReson);
+  int updateCheckStatus(@Param("id")int id, @Param("ispassCheck") short checkStatus, @Param("upassReson") String upassReson, @Param("professor") String professor);
 
   int updateSupStatus(@Param("id")int id, @Param("supStatus") short supStatus);
 

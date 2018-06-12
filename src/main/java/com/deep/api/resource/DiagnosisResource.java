@@ -201,7 +201,7 @@ public class DiagnosisResource {
         if (diagnosisPlanModel != null && diagnosisPlanModel.getIspassCheck() != 2) {
             return Responses.errorResponse("已经审批过了!");
         }
-        int isSuccess =  diagnosisPlanService.checkDiagnosisPlanModelById(id, professorRequest.getIspassCheck(), professorRequest.getProfessor(), professorRequest.getName());
+        int isSuccess =  diagnosisPlanService.checkDiagnosisPlanModelById(id, professorRequest.getIspassCheck(), professorRequest.getProfessor(), professorRequest.getName(), professorRequest.getUnpassReason());
         if (isSuccess == 0) {
             return Responses.errorResponse("错误!");
         }
