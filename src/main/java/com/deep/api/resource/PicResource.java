@@ -40,6 +40,10 @@ public class PicResource {
                            @RequestParam("file")MultipartFile file) {
 
         logger.info("invoke /uploadFile/upload [{}]",pic);
+        if (!pic.isBrand())
+        {
+            return Responses.errorResponse("商标耳牌不符合规则");
+        }
         try {
             String Header = FileUtil.getFileHeader(file);
 
