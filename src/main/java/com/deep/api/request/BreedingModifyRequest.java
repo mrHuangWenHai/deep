@@ -7,27 +7,27 @@ public class BreedingModifyRequest {
     // 记录修改时间，前端不传
     private Timestamp gmtModify;
     @NotNull(message = "配种时间不能为空")
-    private Timestamp breedingTime;
+    private String breedingTime;
     private String buildingAfterBreeding;
     @NotNull(message = "母羊商标耳牌不能为空")
     private String ramSheepTrademark;
     @NotNull(message = "公羊商标耳牌不能为空")
     private String eweSheepTrademark;
     private Byte manageFlag;
-    private Timestamp manageAverageTime;
-    private Timestamp nutritionBeforePregnancy;
+    private String manageAverageTime;
+    private String nutritionBeforePregnancy;
     private String isPregnancy;
-    private Timestamp nutritionAfterPregnancy;
+    private String nutritionAfterPregnancy;
     private String prenatalImmunityType;
     private String prenatalImmunityTime;
     private String buildingToBeRelocated;
-    private Timestamp nutritionBeforeLambing;
-    private Timestamp lambingTime;
+    private String  nutritionBeforeLambing;
+    private String lambingTime;
     private Integer lambingNumber;
-    private Timestamp nutritionBreastFeeding;
-    private Timestamp nutritionInsteadBreastFeeding;
-    private Timestamp nutritionBeforeCutBreastFeeding;
-    private Timestamp nutritionCutBreastFeeding;
+    private String nutritionBreastFeeding;
+    private String nutritionInsteadBreastFeeding;
+    private String nutritionBeforeCutBreastFeeding;
+    private String nutritionCutBreastFeeding;
 
     private String remark;
 
@@ -43,11 +43,11 @@ public class BreedingModifyRequest {
         this.gmtModify = gmtModify;
     }
 
-    public Timestamp getBreedingTime() {
+    public String getBreedingTime() {
         return breedingTime;
     }
 
-    public void setBreedingTime(Timestamp breedingTime) {
+    public void setBreedingTime(String breedingTime) {
         this.breedingTime = breedingTime;
     }
 
@@ -83,19 +83,19 @@ public class BreedingModifyRequest {
         this.manageFlag = manageFlag;
     }
 
-    public Timestamp getManageAverageTime() {
+    public String getManageAverageTime() {
         return manageAverageTime;
     }
 
-    public void setManageAverageTime(Timestamp manageAverageTime) {
+    public void setManageAverageTime(String manageAverageTime) {
         this.manageAverageTime = manageAverageTime;
     }
 
-    public Timestamp getNutritionBeforePregnancy() {
+    public String getNutritionBeforePregnancy() {
         return nutritionBeforePregnancy;
     }
 
-    public void setNutritionBeforePregnancy(Timestamp nutritionBeforePregnancy) {
+    public void setNutritionBeforePregnancy(String nutritionBeforePregnancy) {
         this.nutritionBeforePregnancy = nutritionBeforePregnancy;
     }
 
@@ -107,11 +107,11 @@ public class BreedingModifyRequest {
         this.isPregnancy = isPregnancy;
     }
 
-    public Timestamp getNutritionAfterPregnancy() {
+    public String getNutritionAfterPregnancy() {
         return nutritionAfterPregnancy;
     }
 
-    public void setNutritionAfterPregnancy(Timestamp nutritionAfterPregnancy) {
+    public void setNutritionAfterPregnancy(String nutritionAfterPregnancy) {
         this.nutritionAfterPregnancy = nutritionAfterPregnancy;
     }
 
@@ -139,19 +139,19 @@ public class BreedingModifyRequest {
         this.buildingToBeRelocated = buildingToBeRelocated;
     }
 
-    public Timestamp getNutritionBeforeLambing() {
+    public String getNutritionBeforeLambing() {
         return nutritionBeforeLambing;
     }
 
-    public void setNutritionBeforeLambing(Timestamp nutritionBeforeLambing) {
+    public void setNutritionBeforeLambing(String nutritionBeforeLambing) {
         this.nutritionBeforeLambing = nutritionBeforeLambing;
     }
 
-    public Timestamp getLambingTime() {
+    public String getLambingTime() {
         return lambingTime;
     }
 
-    public void setLambingTime(Timestamp lambingTime) {
+    public void setLambingTime(String lambingTime) {
         this.lambingTime = lambingTime;
     }
 
@@ -163,35 +163,35 @@ public class BreedingModifyRequest {
         this.lambingNumber = lambingNumber;
     }
 
-    public Timestamp getNutritionBreastFeeding() {
+    public String getNutritionBreastFeeding() {
         return nutritionBreastFeeding;
     }
 
-    public void setNutritionBreastFeeding(Timestamp nutritionBreastFeeding) {
+    public void setNutritionBreastFeeding(String nutritionBreastFeeding) {
         this.nutritionBreastFeeding = nutritionBreastFeeding;
     }
 
-    public Timestamp getNutritionInsteadBreastFeeding() {
+    public String getNutritionInsteadBreastFeeding() {
         return nutritionInsteadBreastFeeding;
     }
 
-    public void setNutritionInsteadBreastFeeding(Timestamp nutritionInsteadBreastFeeding) {
+    public void setNutritionInsteadBreastFeeding(String nutritionInsteadBreastFeeding) {
         this.nutritionInsteadBreastFeeding = nutritionInsteadBreastFeeding;
     }
 
-    public Timestamp getNutritionBeforeCutBreastFeeding() {
+    public String getNutritionBeforeCutBreastFeeding() {
         return nutritionBeforeCutBreastFeeding;
     }
 
-    public void setNutritionBeforeCutBreastFeeding(Timestamp nutritionBeforeCutBreastFeeding) {
+    public void setNutritionBeforeCutBreastFeeding(String nutritionBeforeCutBreastFeeding) {
         this.nutritionBeforeCutBreastFeeding = nutritionBeforeCutBreastFeeding;
     }
 
-    public Timestamp getNutritionCutBreastFeeding() {
+    public String getNutritionCutBreastFeeding() {
         return nutritionCutBreastFeeding;
     }
 
-    public void setNutritionCutBreastFeeding(Timestamp nutritionCutBreastFeeding) {
+    public void setNutritionCutBreastFeeding(String nutritionCutBreastFeeding) {
         this.nutritionCutBreastFeeding = nutritionCutBreastFeeding;
     }
 
@@ -231,25 +231,25 @@ public class BreedingModifyRequest {
     public String toString() {
         return "BreedingModifyRequest{" +
                 "gmtModify=" + gmtModify +
-                ", breedingTime=" + breedingTime +
+                ", breedingTime='" + breedingTime + '\'' +
                 ", buildingAfterBreeding='" + buildingAfterBreeding + '\'' +
                 ", ramSheepTrademark='" + ramSheepTrademark + '\'' +
                 ", eweSheepTrademark='" + eweSheepTrademark + '\'' +
                 ", manageFlag=" + manageFlag +
-                ", manageAverageTime=" + manageAverageTime +
-                ", nutritionBeforePregnancy=" + nutritionBeforePregnancy +
+                ", manageAverageTime='" + manageAverageTime + '\'' +
+                ", nutritionBeforePregnancy='" + nutritionBeforePregnancy + '\'' +
                 ", isPregnancy='" + isPregnancy + '\'' +
-                ", nutritionAfterPregnancy=" + nutritionAfterPregnancy +
+                ", nutritionAfterPregnancy='" + nutritionAfterPregnancy + '\'' +
                 ", prenatalImmunityType='" + prenatalImmunityType + '\'' +
                 ", prenatalImmunityTime='" + prenatalImmunityTime + '\'' +
                 ", buildingToBeRelocated='" + buildingToBeRelocated + '\'' +
-                ", nutritionBeforeLambing=" + nutritionBeforeLambing +
-                ", lambingTime=" + lambingTime +
+                ", nutritionBeforeLambing='" + nutritionBeforeLambing + '\'' +
+                ", lambingTime='" + lambingTime + '\'' +
                 ", lambingNumber=" + lambingNumber +
-                ", nutritionBreastFeeding=" + nutritionBreastFeeding +
-                ", nutritionInsteadBreastFeeding=" + nutritionInsteadBreastFeeding +
-                ", nutritionBeforeCutBreastFeeding=" + nutritionBeforeCutBreastFeeding +
-                ", nutritionCutBreastFeeding=" + nutritionCutBreastFeeding +
+                ", nutritionBreastFeeding='" + nutritionBreastFeeding + '\'' +
+                ", nutritionInsteadBreastFeeding='" + nutritionInsteadBreastFeeding + '\'' +
+                ", nutritionBeforeCutBreastFeeding='" + nutritionBeforeCutBreastFeeding + '\'' +
+                ", nutritionCutBreastFeeding='" + nutritionCutBreastFeeding + '\'' +
                 ", remark='" + remark + '\'' +
                 ", operatorTime=" + operatorTime +
                 ", operatorId=" + operatorId +

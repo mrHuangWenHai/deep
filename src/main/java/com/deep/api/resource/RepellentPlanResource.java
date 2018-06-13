@@ -71,105 +71,101 @@ public class RepellentPlanResource {
                          @RequestParam("eartagFile") MultipartFile repellentEartagFile) {
 
         if (bindingResult.hasErrors()) {
-          Response response = Responses.errorResponse("param is invalid");
-          Map<String, Object> data = new HashMap<String, Object>();
-          data.put("error",bindingResult.getAllErrors());
-          response.setData(data);
-          return response;
+            Response response = Responses.errorResponse("数据异常,请按照规范填写!");
+            Map<String, Object> data = new HashMap<String, Object>();
+            data.put("error", bindingResult.getAllErrors());
+            response.setData(data);
+            return response;
         }
 
-        logger.info("invoke save {}",repellentPlanModel);
+        logger.info("invoke save {}", repellentPlanModel);
 
-                //上传文件
-                try {
+        //上传文件
+        try {
+            String fileName = repellentEartagFile.getOriginalFilename();
+            String filePath = pathPre + repellentPlanModel.getFactoryNum().toString() + "/repellentEartag/";
+            fileName = UploadUtil.uploadFile(repellentEartagFile.getBytes(), filePath, fileName);
+            repellentPlanModel.setRepellentEartag(fileName);
+            int issuccess = repellentPlanService.setRepellentPlanModel(repellentPlanModel);
+            if (issuccess == 0) {
+                return Responses.errorResponse("add error");
+            }
+            // TODO 需要重新检查一下Redis问题
+            short agentID = this.factoryService.queryOneAgentByID(repellentPlanModel.getFactoryNum().longValue());
+            String professorKey = agentID + "_professor";
+            String supervisorKey = repellentPlanModel.getFactoryNum().toString() + "_supervisor";
 
-                    String fileName = repellentEartagFile.getOriginalFilename();
-
-                    String filePath = pathPre + repellentPlanModel.getFactoryNum().toString() + "/repellentEartag/";
-
-                    fileName = UploadUtil.uploadFile(repellentEartagFile.getBytes(),filePath,fileName);
-                    repellentPlanModel.setRepellentEartag(fileName);
-                    int issuccess = repellentPlanService.setRepellentPlanModel(repellentPlanModel);
-
-                    if (issuccess == 0) {
-                      return Responses.errorResponse("add error");
-                    }
-                    short agentID = this.factoryService.queryOneAgentByID(repellentPlanModel.getFactoryNum().longValue());
-                    String professorKey = agentID + "_professor";
-                    String supervisorKey = repellentPlanModel.getFactoryNum().toString() + "_supervisor";
-
-                    String testSendProfessor = agentID + "_professor_AlreadySend";
-                    String testSendSupervisor = repellentPlanModel.getFactoryNum().toString() + "_supervisor_AlreadySend";
+            String testSendProfessor = agentID + "_professor_AlreadySend";
+            String testSendSupervisor = repellentPlanModel.getFactoryNum().toString() + "_supervisor_AlreadySend";
 
 
-                    JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
-                    JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
+            JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
+            JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
 
 
-                    System.out.println("插入后,审核前");
-                    System.out.println("pk+"+professorKey+" "+"pv:"+JedisUtil.getCertainKeyValue(professorKey));
-                    System.out.println("sk+"+supervisorKey+" "+"sv:"+JedisUtil.getCertainKeyValue(supervisorKey));
-                    System.out.println("tpk+"+testSendProfessor+" "+"tpv:"+JedisUtil.getCertainKeyValue(testSendProfessor));
-                    System.out.println("tsk+"+testSendSupervisor+" "+"tsv:"+JedisUtil.getCertainKeyValue(testSendSupervisor));
+            System.out.println("插入后,审核前");
+            System.out.println("pk+"+professorKey+" "+"pv:"+JedisUtil.getCertainKeyValue(professorKey));
+            System.out.println("sk+"+supervisorKey+" "+"sv:"+JedisUtil.getCertainKeyValue(supervisorKey));
+            System.out.println("tpk+"+testSendProfessor+" "+"tpv:"+JedisUtil.getCertainKeyValue(testSendProfessor));
+            System.out.println("tsk+"+testSendSupervisor+" "+"tsv:"+JedisUtil.getCertainKeyValue(testSendSupervisor));
 
-                    //若redis中 若干天未发送短信
-                    //若未完成超过50条
-                    if (!("1".equals(JedisUtil.getCertainKeyValue(testSendProfessor)))) {
-                        //System.out.println("testSendProfessorValue:" + JedisUtil.getCertainKeyValue(testSendProfessor));
-                        if (JedisUtil.redisJudgeTime(professorKey)) {
-                            //System.out.println(professorKey);
+            //若redis中 若干天未发送短信
+            //若未完成超过50条
+            if (!("1".equals(JedisUtil.getCertainKeyValue(testSendProfessor)))) {
+                //System.out.println("testSendProfessorValue:" + JedisUtil.getCertainKeyValue(testSendProfessor));
+                if (JedisUtil.redisJudgeTime(professorKey)) {
+                    //System.out.println(professorKey);
 
-                            List<String> phone = userService.getProfessorTelephoneByFactoryNum(repellentPlanModel.getFactoryNum());
-
-
-                            //需完成:userModels.getTelephone()赋值给String
-                            //获得StringBuffer手机号
-                            StringBuffer phoneList = new StringBuffer("");
+                    List<String> phone = userService.getProfessorTelephoneByFactoryNum(repellentPlanModel.getFactoryNum());
 
 
-                            for (String aPhone : phone) {
-                                phoneList = phoneList.append(aPhone).append(",");
-                            }
+                    //需完成:userModels.getTelephone()赋值给String
+                    //获得StringBuffer手机号
+                    StringBuffer phoneList = new StringBuffer("");
 
-                            if (phoneList.length() != 0) {
-                              //发送成功 更新redis中字段
-                              if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
-                                JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
-                              }
-                            }
 
-                        }
+                    for (String aPhone : phone) {
+                        phoneList = phoneList.append(aPhone).append(",");
                     }
 
-                    if (!("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
-                        if (JedisUtil.redisJudgeTime(supervisorKey)) {
-
-
-                            List<String> phone = userService.getSuperiorTelephoneByFactoryNum(repellentPlanModel.getFactoryNum());
-
-                            StringBuffer phoneList = new StringBuffer("");
-
-                            for (String aPhone : phone) {
-                                phoneList = phoneList.append(aPhone).append(",");
-                            }
-
-                            if (phoneList.length() != 0) {
-                              if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
-
-                                JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
-                                System.out.println("发送成功！");
-
-
-                              }
-                            }
-                        }
+                    if (phoneList.length() != 0) {
+                      //发送成功 更新redis中字段
+                      if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
+                        JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
+                      }
                     }
-                    return JudgeUtil.JudgeSuccess("id", repellentPlanModel.getId());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                   return Responses.errorResponse("Exception");
+
                 }
+            }
 
+            if (!("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
+                if (JedisUtil.redisJudgeTime(supervisorKey)) {
+
+
+                    List<String> phone = userService.getSuperiorTelephoneByFactoryNum(repellentPlanModel.getFactoryNum());
+
+                    StringBuffer phoneList = new StringBuffer("");
+
+                    for (String aPhone : phone) {
+                        phoneList = phoneList.append(aPhone).append(",");
+                    }
+
+                    if (phoneList.length() != 0) {
+                      if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
+
+                        JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
+                        System.out.println("发送成功！");
+
+
+                      }
+                    }
+                }
+            }
+            return JudgeUtil.JudgeSuccess("id", repellentPlanModel.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Responses.errorResponse("内部异常,请重试!");
+        }
     }
 
 
@@ -202,8 +198,12 @@ public class RepellentPlanResource {
 
         factoryMap = AgentUtil.getAllSubordinateFactory(String.valueOf(id));
         List<Long> factoryList = new ArrayList<>();
-        factoryList.addAll(factoryMap.get(new Long(-1)));
-        factoryList.addAll(factoryMap.get(new Long(0)));
+          assert factoryMap != null;
+          factoryList.addAll(factoryMap.get((long) -1));
+        factoryList.addAll(factoryMap.get(0L));
+          if (factoryList.size() == 0) {
+              return Responses.errorResponse("本级代理没有发展羊场和代理！");
+          }
         repellentRequest.setFactoryList(factoryList);
 
       } else {
@@ -211,10 +211,6 @@ public class RepellentPlanResource {
       }
 
       logger.info("invoke rp/{} {}",id, repellentRequest);
-
-      if (repellentRequest.getFactoryList().size() == 0) {
-          return Responses.errorResponse("本级代理没有发展羊场和代理！");
-      }
 
       List<RepellentPlanModel> totalList = repellentPlanService.getRepellentPlanModel(repellentRequest);
 
@@ -366,7 +362,7 @@ public class RepellentPlanResource {
         if (DownloadUtil.testDownload(response , filePath, fileName, outputStream)){
             return JudgeUtil.JudgeSuccess("download","Success");
         }else {
-            return Responses.errorResponse("download Error");
+            return Responses.errorResponse("下载失败");
         }
     }
 
@@ -385,13 +381,20 @@ public class RepellentPlanResource {
         if (repellentPlanModel.getProfessor() == null ||
             repellentPlanModel.getIspassCheck() == null ||
             repellentPlanModel.getFactoryNum() == null) {
-            return Responses.errorResponse("Lack param");
+            return Responses.errorResponse("请完善表单信息!");
         } else {
             repellentPlanModel.setProfessor(repellentPlanModel.getName());
+            repellentPlanModel.setUpassReason(repellentPlanModel.getUnpassReason());
+            RepellentPlanModel temp = this.repellentPlanService.getRepellentPlanModelById(id);
+            if (!("2".equals(temp.getIspassCheck()))){
+                return Responses.errorResponse("该条数据已被审核,无法修改");
+            }
           int row = repellentPlanService.updateRepellentPlanModelByProfessor(repellentPlanModel);
           if (row == 1) {
-            String professorKey = this.factoryService.getAgentIDByFactoryNumber(repellentPlanModel.getFactoryNum().toString()) + "_professor";
-            JedisUtil.redisCancelProfessorSupervisorWorks(professorKey);
+            String professorKey = this.factoryService.getAgentIDByFactoryNumber(Long.valueOf(repellentPlanModel.getFactoryNum().toString())) + "_professor";
+            if ("1".equals(repellentPlanModel.getIspassCheck()) && !JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)){
+                return Responses.errorResponse("审核成功, 短信服务器异常");
+            }
           }
           return JudgeUtil.JudgeUpdate(row);
         }
@@ -414,13 +417,19 @@ public class RepellentPlanResource {
         repellentPlanModel.setId(id);
         if( repellentPlanModel.getSupervisor() == null ||
             repellentPlanModel.getIspassSup() == null) {
-            return Responses.errorResponse("Lack Item");
+            return Responses.errorResponse("请完善表单信息!");
         } else {
+            RepellentPlanModel temp = this.repellentPlanService.getRepellentPlanModelById(id);
+            if (!("2".equals(temp.getIspassSup()))){
+                return Responses.errorResponse("该条数据已被审核,无法修改");
+            }
             repellentPlanModel.setSupervisor(repellentPlanModel.getName());
           int row = repellentPlanService.updateRepellentPlanModelBySupervisor(repellentPlanModel);
           if (row == 1) {
             String supervisorKey = repellentPlanModel.getFactoryNum().toString() + "_supervisor";
-            JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey);
+            if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)) {
+                return Responses.errorResponse("审核成功, 短信服务器异常");
+            }
           }
           return JudgeUtil.JudgeUpdate(row);
         }
@@ -445,15 +454,15 @@ public class RepellentPlanResource {
         logger.info("invoke operatorUpdate {}", repellentPlanModel);
         repellentPlanModel.setId(id);
         if (repellentPlanModel.getId() == null) {
-            return Responses.errorResponse("Operate wrong");
+            return Responses.errorResponse("无效的ID");
 
         } else {
 
             RepellentPlanModel temp = this.repellentPlanService.getRepellentPlanModelById(id);
-            if ("1".equals(temp.getIspassCheck()) || "1".equals(temp.getIspassSup())) {
+            if ("1".equals(temp.getIspassCheck())) {
                 return Responses.errorResponse("该条数据已被审核,无法修改");
             }
-
+            repellentPlanModel.setIspassCheck("2");
           if (repellentEartag != null) {
             String filePath = pathPre + repellentPlanModel.getFactoryNum().toString() + "/repellentEartag/";
 
@@ -462,11 +471,9 @@ public class RepellentPlanResource {
               fileName = UploadUtil.uploadFile(repellentEartag.getBytes(),filePath,fileName);
             } catch (Exception e) {
 
-              return Responses.errorResponse("update file error");
+              return Responses.errorResponse("修改文件上传失败!");
 
             }
-            repellentPlanModel.setIspassCheck("2");
-            repellentPlanModel.setIspassSup("2");
             String oldPath = filePath + repellentPlanModel.getRepellentEartag();
             repellentPlanModel.setRepellentEartag(fileName);
             int row = this.repellentPlanService.updateRepellentPlanModelByOperator(repellentPlanModel);
@@ -497,16 +504,16 @@ public class RepellentPlanResource {
     public Response delete(@Min(0) @PathVariable(value = "id") Long id) {
         logger.info("invoke delete {}", id);
         if ("0".equals(id.toString())) {
-            return Responses.errorResponse("Wrong id");
+            return Responses.errorResponse("无效的ID");
         }
         RepellentPlanModel repellentPlanModel = this.repellentPlanService.getRepellentPlanModelById(id);
-        if ("2".equals(repellentPlanModel.getIspassCheck()) && "2".equals(repellentPlanModel.getIspassSup())) {
+        if (!("1".equals(repellentPlanModel.getIspassCheck()))) {
             String filePath = pathPre + repellentPlanModel.getFactoryNum().toString() + "/repellentEartag/" + repellentPlanModel.getRepellentEartag();
             int row = repellentPlanService.deleteRepellentPlanModelByid(id);
             if (FileUtil.deleteFile(filePath) && row == 1) {
                 return JudgeUtil.JudgeDelete(row);
             } else {
-                return Responses.errorResponse("delete wrong");
+                return Responses.errorResponse("删除失败");
             }
         } else {
             return Responses.errorResponse("该记录已经被审核过，不能删除！");

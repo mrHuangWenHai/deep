@@ -25,7 +25,7 @@
         <result property="supervisor" column="supervisor"/>
         <result property="remark" column="remark"/>
         <result property="ispassCheck" column="ispass_check"/>
-        <result property="unpassReason" column="upass_reason"/>
+        <result property="upassReason" column="upass_reason"/>
         <result property="ispassSup" column="ispass_sup"/>
     </resultMap>
 
@@ -148,8 +148,8 @@
         <if test="immunePlanModel.ispassCheck != null and immunePlanModel.ispassCheck != '' ">
             AND ispass_check = #{immunePlanModel.ispassCheck}
         </if>
-        <if test="immunePlanModel.unpassReason != null and immunePlanModel.unpassReason != '' ">
-            AND upass_reason = #{immunePlanModel.unpassReason}
+        <if test="immunePlanModel.upassReason != null and immunePlanModel.upassReason != '' ">
+            AND upass_reason = #{immunePlanModel.upassReason}
         </if>
         <if test="immunePlanModel.ispassSup != null and immunePlanModel.ispassSup != '' ">
             AND ispass_sup = #{immunePlanModel.ispassSup}
@@ -157,7 +157,6 @@
     </select>
 
     <select id="getImmunePlanModelByTradeMarkEarTag" resultMap="ImmunePlan">
-
         SELECT
         *
         FROM
@@ -171,7 +170,6 @@
     </select>
 
     <select id="getImmunePlanModelById" resultMap="ImmunePlan">
-
         SELECT
         *
         FROM
@@ -182,7 +180,6 @@
 
 
     <select id="getImmunePlanModelByFactoryNum" resultMap="ImmunePlan">
-
         SELECT
         *
         FROM
@@ -192,13 +189,11 @@
     </select>
 
     <select id="getImmunePlanModelByFactoryNumAndIsPassCheck" resultMap="ImmunePlan">
-
         SELECT
         *
         FROM
         immune_plan
         WHERE
-
         factory_num = #{factoryNum}
         <if test="ispassCheck != null and ispassCheck != ''">
             AND ispass_check = #{ispassCheck}
@@ -221,8 +216,8 @@
         UPDATE immune_plan
         SET  professor = #{immunePlanModel.professor},
         ispass_check = #{immunePlanModel.ispassCheck},
-        <if test="immunePlanModel.unpassReason != null">
-        upass_reason = #{immunePlanModel.unpassReason},
+        <if test="immunePlanModel.upassReason != null">
+        upass_reason = #{immunePlanModel.upassReason},
         </if>
         gmt_professor = now()
         WHERE
@@ -279,11 +274,15 @@
             </if>
 
             <if test="immunePlanModel.remark != null">
-                remark = #{immunePlanModel.remark}
+                remark = #{immunePlanModel.remark},
+            </if>
+
+            <if test="immunePlanModel.ispassCheck != null and immunePlanModel.ispassCheck">
+                ispass_check = #{immunePlanModel.ispassCheck}
             </if>
         </set>
         WHERE
-        id = #{immunePlanModel.id} and ispass_check = 2 and ispass_sup = 2
+        id = #{immunePlanModel.id} and ispass_check != 1
     </update>
 
     <delete id="deleteImmunePlanModelById" parameterType="Long">

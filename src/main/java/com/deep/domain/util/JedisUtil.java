@@ -36,24 +36,18 @@ public class JedisUtil {
             return false;
         }
         try {
-            if (!jedis.exists(key)) {
-                return false;
-            } else {
-                String valuei = jedis.get(key);
-                String valuej = jedis.get("PressureTips");
-
-                if (valuei == null || valuei.equals("")) {
-                    jedis.set(key,"0");
-                }
-
-                if (valuej == null || valuej.equals("")) {
-                    jedis.set("PressureTips",pressureTips);
-                }
-
-                int i = Integer.parseInt(jedis.get(key));
-                int j = Integer.parseInt(jedis.get("PressureTips"));
-                return i > j;
+            String valuei = jedis.get(key);
+            String valuej = jedis.get("PressureTips");
+            if (valuei == null || valuei.equals("")) {
+                jedis.set(key,"0");
             }
+            if (valuej == null || valuej.equals("")) {
+                jedis.set("PressureTips", pressureTips);
+            }
+            int i = Integer.parseInt(jedis.get(key));
+            int j = Integer.parseInt(JedisUtil.getCertainKeyValue("PressureTips"));
+            System.out.println("Judge PressureTips:" + JedisUtil.getCertainKeyValue("PressureTips"));
+            return i > j;
         } catch (Exception ex) {
             logger.info("获取异常！", ex.getMessage());
         } finally {
@@ -70,7 +64,6 @@ public class JedisUtil {
 
 
     /**
-     *
      * 用户存储专家/监督员的剩余工作
      * key:"factory_num+模块名+专家/监督员"
      * value:未审核条数
@@ -85,20 +78,19 @@ public class JedisUtil {
             return;
         }
         try {
-            if (!jedis.exists(key)) {
-            } else {
+                System.out.println("key = " + key);
                 String temValue = jedis.get(key);
+                System.out.println("tmpValue = " + temValue);
                 if (temValue == null) {
-                    jedis.set(key,"1");
+                    jedis.set(key, "1");
                 } else {
-
                     Integer v = Integer.parseInt(temValue);
                     v += 1;
-
                     temValue = v.toString();
                     jedis.set(key,temValue);
                 }
-            }
+                System.out.println("new temp value = " + temValue);
+                System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
         } catch (Exception e ) {
             logger.info("获取异常 {}",e.getMessage());
             //   jedis.close();
@@ -128,21 +120,18 @@ public class JedisUtil {
             return false;
         }
         try {
-            if (!jedis.exists(key)) {
+            String temValue = jedis.get(key);
+            if (temValue == null || "0".equals(temValue)) {
                 return false;
-            } else {
-                String temValue = jedis.get(key);
-                if (temValue == null || "0".equals(temValue)) {
-                    return false;
-                }else {
-                    //System.out.println("断点1");
-                    Integer v = Integer.parseInt(temValue);
-                    v -= 1;
-                    System.out.println("before :"+"redis key:"+key+" redis value:"+jedis.get(key));
-                    temValue = v.toString();
-                    jedis.set(key, temValue);
-                    return true;
-                }
+            }else {
+                //System.out.println("断点1");
+                Integer v = Integer.parseInt(temValue);
+                v -= 1;
+                System.out.println("before :"+"redis key:"+key+" redis value:"+jedis.get(key));
+                temValue = v.toString();
+                jedis.set(key, temValue);
+
+                return true;
             }
         } catch (Exception e ) {
             logger.info("获取异常 {}",e.getMessage());
@@ -263,17 +252,30 @@ public class JedisUtil {
             return null;
         }
         try {
-            if (!jedis.exists(key)) {
-                return null;
-            } else {
-                String message = jedis.get(key);
-                if (message == null || message.length() == 0) {
-                    if (key.equals("Message")) {
-                        jedis.set(key, JedisUtil.message);
-                    } else if (key.equals("ExpireTime")) {
-                        jedis.set(key, JedisUtil.expireTime);
-                    }
+            if ("Message".equals(key)){
+                System.out.println("key: " + jedis.get(key));
+                if (jedis.get(key) == null || "\"\"".equals(jedis.get(key))){
+                    jedis.set(key, message);
+                    return message;
+                } else {
+                    return jedis.get(key);
                 }
+
+            } else if ("ExpireTime".equals(key)) {
+                if (jedis.get(key) == null){
+                    jedis.set(key, expireTime);
+                    return expireTime;
+                } else {
+                    return jedis.get(key);
+                }
+            } else if ("PressureTips".equals(key)){
+                if (jedis.get(key) == null){
+                    jedis.set(key, pressureTips);
+                    return pressureTips;
+                } else {
+                    return jedis.get(key);
+                }
+            } else {
                 return jedis.get(key);
             }
         }  catch (Exception e ) {
@@ -302,10 +304,7 @@ public class JedisUtil {
             return ;
         }
         try {
-            if (!jedis.exists(key)) {
-            } else {
                 jedis.set(key, value);
-            }
         } catch (Exception ex) {
             logger.info("获取异常{}", ex.getMessage());
         } finally {
@@ -332,11 +331,8 @@ public class JedisUtil {
             return ;
         }
         try {
-            if (!jedis.exists(key)) {
-            } else {
-                jedis.set(key, value);
-                jedis.expire(key,expireTime);
-            }
+            jedis.set(key, value);
+            jedis.expire(key,expireTime);
         } catch (Exception ex) {
             logger.info("获取异常 {}", ex.getMessage());
         } finally {
@@ -345,7 +341,6 @@ public class JedisUtil {
             } catch (Exception e) {
                 logger.info("关闭异常 {}",e.getMessage());
             }
-
         }
     }
 }

@@ -20,6 +20,8 @@ public class DiagnosisPlanModel {
     private String gmtModified;
     @NotBlank
     private String treatEffect;
+    @NotBlank
+    private String symptom;
     @JsonFormat(pattern = "yyy-MM-dd HH:mm:ss")
     private String gmtSup;
     @Min(0)
@@ -44,8 +46,8 @@ public class DiagnosisPlanModel {
     private String buildingNum;
 
     @NotBlank
-    @Size(min = 6, max = 6, message = "eartag need size:15 ")
-    @Pattern(regexp = "^[0-9]+$", message = "商标耳牌由数字组成15位")
+    @Size(min = 6, max = 6, message = "eartag need size:6 ")
+    @Pattern(regexp = "^[GM][0-9]{5}+$", message = "商标耳牌由数字组成6位")
     private String earTag;
 
     private String supervisorName;
@@ -72,163 +74,163 @@ public class DiagnosisPlanModel {
     return id;
   }
 
-  public void setId(int id) {
+    public void setId(int id) {
     this.id = id;
-  }
+    }
 
-  public String getDiagnosisResult() {
+    public String getDiagnosisResult() {
     return diagnosisResult;
-  }
+    }
 
-  public void setDiagnosisResult(String diagnosisResult) {
+    public void setDiagnosisResult(String diagnosisResult) {
     this.diagnosisResult = diagnosisResult;
-  }
+    }
 
-  public String getDiagnosisMethod() {
+    public String getDiagnosisMethod() {
     return diagnosisMethod;
-  }
+    }
 
-  public void setDiagnosisMethod(String diagnosisMethod) {
+    public void setDiagnosisMethod(String diagnosisMethod) {
     this.diagnosisMethod = diagnosisMethod;
-  }
+    }
 
-  public String getDose() {
+    public String getDose() {
     return dose;
-  }
+    }
 
-  public void setDose(String dose) {
+    public void setDose(String dose) {
     this.dose = dose;
-  }
+    }
 
-  public String getGmtCreate() {
+    public String getGmtCreate() {
     return gmtCreate;
-  }
+    }
 
-  public void setGmtCreate(String gmtCreate) {
+    public void setGmtCreate(String gmtCreate) {
     this.gmtCreate = gmtCreate;
-  }
+    }
 
-  public String getGmtModified() {
+    public String getGmtModified() {
     return gmtModified;
-  }
+    }
 
-  public void setGmtModified(String gmtModified) {
+    public void setGmtModified(String gmtModified) {
     this.gmtModified = gmtModified;
-  }
+    }
 
-  public String getTreatEffect() {
+    public String getTreatEffect() {
     return treatEffect;
-  }
+    }
 
-  public void setTreatEffect(String treatEffect) {
+    public void setTreatEffect(String treatEffect) {
     this.treatEffect = treatEffect;
-  }
+    }
 
-  public String getGmtSup() {
+    public String getGmtSup() {
     return gmtSup;
-  }
+    }
 
-  public void setGmtSup(String gmtSup) {
+    public void setGmtSup(String gmtSup) {
     this.gmtSup = gmtSup;
-  }
+    }
 
-  public Integer getFactoryNum() {
+    public Integer getFactoryNum() {
     return factoryNum;
-  }
+    }
 
-  public void setFactoryNum(Integer factoryNum) {
+    public void setFactoryNum(Integer factoryNum) {
     this.factoryNum = factoryNum;
-  }
+    }
 
-  public String getFactoryName() {
+    public String getFactoryName() {
     return factoryName;
-  }
+    }
 
-  public void setFactoryName(String factoryName) {
+    public void setFactoryName(String factoryName) {
     this.factoryName = factoryName;
-  }
+    }
 
-  public int getOperatorId() {
+    public int getOperatorId() {
     return operatorId;
-  }
+    }
 
-  public void setOperatorId(int operatorId) {
+    public void setOperatorId(int operatorId) {
     this.operatorId = operatorId;
-  }
+    }
 
-  public String getOperatorName() {
+    public String getOperatorName() {
     return operatorName;
-  }
+    }
 
-  public void setOperatorName(String operatorName) {
+    public void setOperatorName(String operatorName) {
     this.operatorName = operatorName;
-  }
+    }
 
-  public int getProfessorId() {
+    public int getProfessorId() {
     return professorId;
-  }
+    }
 
-  public void setProfessorId(int professorId) {
+    public void setProfessorId(int professorId) {
     this.professorId = professorId;
-  }
+    }
 
-  public int getSupervisorId() {
+    public int getSupervisorId() {
     return supervisorId;
-  }
+    }
 
-  public void setSupervisorId(int supervisorId) {
+    public void setSupervisorId(int supervisorId) {
     this.supervisorId = supervisorId;
-  }
+    }
 
-  public String getRemark() {
+    public String getRemark() {
     return remark;
-  }
+    }
 
-  public void setRemark(String remark) {
+    public void setRemark(String remark) {
     this.remark = remark;
-  }
+    }
 
-  public int getIspassCheck() {
+    public int getIspassCheck() {
     return ispassCheck;
-  }
+    }
 
-  public void setIspassCheck(int ispassCheck) {
+    public void setIspassCheck(int ispassCheck) {
     this.ispassCheck = ispassCheck;
-  }
+    }
 
-  public String getUpassReason() {
+    public String getUpassReason() {
     return upassReason;
-  }
+    }
 
-  public void setUpassReason(String upassReason) {
+    public void setUpassReason(String upassReason) {
     this.upassReason = upassReason;
-  }
+    }
 
-  public int getIspassSup() {
+    public int getIspassSup() {
     return ispassSup;
-  }
+    }
 
-  public void setIspassSup(int ispassSup) {
+    public void setIspassSup(int ispassSup) {
     this.ispassSup = ispassSup;
-  }
+    }
 
-  public String getDiagnosisTime() {
+    public String getDiagnosisTime() {
     return diagnosisTime;
-  }
+    }
 
-  public void setDiagnosisTime(String diagnosisTime) {
+    public void setDiagnosisTime(String diagnosisTime) {
     this.diagnosisTime = diagnosisTime;
-  }
+    }
 
 
 
-  public String getEarTag() {
+    public String getEarTag() {
     return earTag;
-  }
+    }
 
-  public void setEarTag(String earTag) {
+    public void setEarTag(String earTag) {
     this.earTag = earTag;
-  }
+    }
 
     public String getBuildingNum() {
         return buildingNum;
@@ -236,6 +238,14 @@ public class DiagnosisPlanModel {
 
     public void setBuildingNum(String buildingNum) {
         this.buildingNum = buildingNum;
+    }
+
+    public String getSymptom() {
+        return symptom;
+    }
+
+    public void setSymptom(String symptom) {
+        this.symptom = symptom;
     }
 
     @Override
@@ -248,6 +258,7 @@ public class DiagnosisPlanModel {
                 ", gmtCreate='" + gmtCreate + '\'' +
                 ", gmtModified='" + gmtModified + '\'' +
                 ", treatEffect='" + treatEffect + '\'' +
+                ", symptom='" + symptom + '\'' +
                 ", gmtSup='" + gmtSup + '\'' +
                 ", factoryNum=" + factoryNum +
                 ", factoryName='" + factoryName + '\'' +

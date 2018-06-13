@@ -37,7 +37,7 @@ public class DisinfectFilesModel {
     private String supervisor;       //监督员(监督操作员人员) 可空
     private String remark;        //备注
     private String ispassCheck;       //是否通过审核 可空 默认为 0
-    private String unpassReason;   //未通过审核原因 可空 默认未 无
+    private String upassReason;   //未通过审核原因 可空 默认未 无
     private String ispassSup;       //是否通过审核 可空 默认为 0
     private String gmtCreate;   //创建时间
     private String gmtModified;     //修改时间
@@ -109,12 +109,12 @@ public class DisinfectFilesModel {
         this.remark = remark;
     }
 
-    public String getUnpassReason() {
-        return unpassReason;
+    public String getUpassReason() {
+        return upassReason;
     }
 
-    public void setUnpassReason(String unpassReason) {
-        this.unpassReason = unpassReason;
+    public void setUpassReason(String upassReason) {
+        this.upassReason = upassReason;
     }
 
     public String getGmtCreate() {
@@ -218,27 +218,27 @@ public class DisinfectFilesModel {
     @Override
     public String toString() {
         return "DisinfectFilesModel{" +
-            "id=" + id +
-            ", factoryNum=" + factoryNum +
-            ", factoryName='" + factoryName + '\'' +
-            ", disinfectEartag='" + disinfectEartag + '\'' +
-            ", place='" + place + '\'' +
-            ", disinfectTime='" + disinfectTime + '\'' +
-            ", disinfectName='" + disinfectName + '\'' +
-            ", dose='" + dose + '\'' +
-            ", disinfectWay='" + disinfectWay + '\'' +
-            ", operatorId=" + operatorId +
-            ", operatorName='" + operatorName + '\'' +
-            ", professor='" + professor + '\'' +
-            ", supervisor='" + supervisor + '\'' +
-            ", remark='" + remark + '\'' +
-            ", ispassCheck='" + ispassCheck + '\'' +
-            ", unpassReason='" + unpassReason + '\'' +
-            ", ispassSup='" + ispassSup + '\'' +
-            ", gmtCreate='" + gmtCreate + '\'' +
-            ", gmtModified='" + gmtModified + '\'' +
-            ", gmtProfessor='" + gmtProfessor + '\'' +
-            ", gmtSupervise='" + gmtSupervise + '\'' +
-            '}';
+                "id=" + id +
+                ", place='" + place + '\'' +
+                ", factoryNum=" + factoryNum +
+                ", factoryName='" + factoryName + '\'' +
+                ", disinfectEartag='" + disinfectEartag + '\'' +
+                ", disinfectTime='" + disinfectTime + '\'' +
+                ", disinfectName='" + disinfectName + '\'' +
+                ", dose='" + dose + '\'' +
+                ", disinfectWay='" + disinfectWay + '\'' +
+                ", operatorId=" + operatorId +
+                ", operatorName='" + operatorName + '\'' +
+                ", professor='" + professor + '\'' +
+                ", supervisor='" + supervisor + '\'' +
+                ", remark='" + remark + '\'' +
+                ", ispassCheck='" + ispassCheck + '\'' +
+                ", upassReason='" + upassReason + '\'' +
+                ", ispassSup='" + ispassSup + '\'' +
+                ", gmtCreate='" + gmtCreate + '\'' +
+                ", gmtModified='" + gmtModified + '\'' +
+                ", gmtProfessor='" + gmtProfessor + '\'' +
+                ", gmtSupervise='" + gmtSupervise + '\'' +
+                '}';
     }
 }

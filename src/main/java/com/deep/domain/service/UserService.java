@@ -375,18 +375,17 @@ public class UserService {
      * @return  羊场对应专家的电话号码集合
      */
     public List<String> getProfessorTelephoneByFactoryNum(BigInteger factoryNumber) {
-        Short agentID = factoryService.getAgentIDByFactoryNumber(factoryNumber.toString());
+        Short agentID = factoryService.getAgentIDByFactoryNumber(Long.valueOf(String.valueOf(factoryNumber)));
         return agentID == null ? null : userMapper.queryTelephoneByAgentAndRole(agentID);
     }
 
     /**
      * 根据羊场获取监督者的信息
-     * @param factoryNum 羊场号码
+     * @param factoryNumber 羊场号码
      * @return 手机号字符串
      */
-    public List<String> getSuperiorTelephoneByFactoryNum(BigInteger factoryNum) {
-        Short agentID = factoryService.getAgentIDByFactoryNumber(factoryNum.toString());
-        return agentID == null ? null : userMapper.querySuperiorTelephoneByAgentAndRole(agentID);
+    public List<String> getSuperiorTelephoneByFactoryNum(BigInteger factoryNumber) {
+        return userMapper.querySuperiorTelephoneByAgentAndRole(Long.valueOf(String.valueOf(factoryNumber)));
     }
 
     /**
@@ -493,5 +492,9 @@ public class UserService {
      */
     public void deleteUserByFactoryNumber(Long factoryNumber, Byte isFactory) {
         userMapper.deleteUserByFactoryNumber(factoryNumber, isFactory);
+    }
+
+    public UserModel getAOneUser(Long uid) {
+        return userMapper.queryUserById(uid);
     }
 }

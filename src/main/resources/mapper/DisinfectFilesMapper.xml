@@ -24,7 +24,7 @@
         <result property="supervisor" column="supervisor"/>
         <result property="remark" column="remark"/>
         <result property="ispassCheck" column="ispass_check"/>
-        <result property="unpassReason" column="upass_reason"/>
+        <result property="upassReason" column="upass_reason"/>
         <result property="ispassSup" column="ispass_sup"/>
     </resultMap>
 
@@ -144,26 +144,14 @@
         <if test="disinfectFilesModel.ispassCheck != null">
             AND ispass_check = #{disinfectFilesModel.ispassCheck}
         </if>
-        <if test="disinfectFilesModel.unpassReason != null and disinfectFilesModel.unpassReason != '' ">
-            AND upass_reason = #{disinfectFilesModel.unpassReason}
+        <if test="disinfectFilesModel.upassReason != null and disinfectFilesModel.upassReason != '' ">
+            AND upass_reason = #{disinfectFilesModel.upassReason}
         </if>
         <if test="disinfectFilesModel.ispassSup != null and disinfectFilesModel.ispassSup != '' ">
             AND ispass_sup = #{disinfectFilesModel.ispassSup}
         </if>
 
     </select>
-
-    <!--<select id="getDisinfectFilesModelByFactoryList" resultMap="DisinfectFiles">-->
-        <!--SELECT-->
-        <!--*-->
-        <!--FROM-->
-        <!--disinfect_files-->
-        <!--WHERE-->
-        <!--1=1-->
-        <!---->
-        <!---->
-
-    <!--</select>-->
 
     <select id="getDisinfectFilesModelByTradeMarkEarTag" resultMap="DisinfectFiles">
 
@@ -228,13 +216,11 @@
         </if>
     </select>
 
-
-
     <update id="updateDisinfectFilesModelByProfessor">
         UPDATE disinfect_files
         SET  professor = #{disinfectRequest.professor},
         ispass_check = #{disinfectRequest.ispassCheck},
-        upass_reason = #{disinfectRequest.unpassReason},
+        upass_reason = #{disinfectRequest.upassReason},
         gmt_professor = now()
         WHERE
         id = #{disinfectRequest.id} and ispass_check = 2
@@ -280,18 +266,19 @@
             <if test="disinfectFilesModel.remark != null">
                 remark = #{disinfectFilesModel.remark},
             </if>
-
+            <if test="disinfectFilesModel.ispassCheck != null  and disinfectFilesModel.ispassCheck != ''">
+                ispass_check = #{disinfectFilesModel.ispassCheck}
+            </if>
         </set>
         WHERE
-        id = #{disinfectFilesModel.id} and ispass_check = 2 and ispass_sup = 2
+        id = #{disinfectFilesModel.id} and ispass_check != 1
     </update>
 
     <delete id="deleteDisinfectFilesModelById" >
-
         DELETE FROM
         disinfect_files
         WHERE
-        id = #{id}
+        id = #{id} AND ispass_check != 1
     </delete>
 
 </mapper>

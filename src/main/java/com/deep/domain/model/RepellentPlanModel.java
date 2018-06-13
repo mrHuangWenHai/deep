@@ -32,6 +32,7 @@ public class RepellentPlanModel {
     private String remark;
     private String ispassCheck;
     private String unpassReason;
+    private String upassReason;
     private String ispassSup;
     private String gmtCreate;
     private String gmtModified;
@@ -128,12 +129,12 @@ public class RepellentPlanModel {
         this.remark = remark;
     }
 
-    public String getUnpassReason() {
-        return unpassReason;
+    public String getUpassReason() {
+        return upassReason;
     }
 
-    public void setUnpassReason(String unpassReason) {
-        this.unpassReason = unpassReason;
+    public void setUpassReason(String upassReason) {
+        this.upassReason = upassReason;
     }
 
     public String getGmtCreate() {
@@ -218,30 +219,40 @@ public class RepellentPlanModel {
         this.ispassSup = ispassSup;
     }
 
+    public String getUnpassReason() {
+        return unpassReason;
+    }
+
+    public void setUnpassReason(String unpassReason) {
+        this.unpassReason = unpassReason;
+    }
+
     @Override
     public String toString() {
         return "RepellentPlanModel{" +
-            "id=" + id +
-            ", factoryNum=" + factoryNum +
-            ", factoryName='" + factoryName + '\'' +
-            ", crowdNum='" + crowdNum + '\'' +
-            ", repellentEartag='" + repellentEartag + '\'' +
-            ", repellentTime='" + repellentTime + '\'' +
-            ", repellentName='" + repellentName + '\'' +
-            ", repellentWay='" + repellentWay + '\'' +
-            ", dose='" + dose + '\'' +
-            ", operatorId=" + operatorId +
-            ", operatorName='" + operatorName + '\'' +
-            ", professor='" + professor + '\'' +
-            ", supervisor='" + supervisor + '\'' +
-            ", remark='" + remark + '\'' +
-            ", ispassCheck='" + ispassCheck + '\'' +
-            ", unpassReason='" + unpassReason + '\'' +
-            ", ispassSup='" + ispassSup + '\'' +
-            ", gmtCreate='" + gmtCreate + '\'' +
-            ", gmtModified='" + gmtModified + '\'' +
-            ", gmtProfessor='" + gmtProfessor + '\'' +
-            ", gmtSupervise='" + gmtSupervise + '\'' +
-            '}';
+                "id=" + id +
+                ", factoryNum=" + factoryNum +
+                ", factoryName='" + factoryName + '\'' +
+                ", crowdNum='" + crowdNum + '\'' +
+                ", repellentEartag='" + repellentEartag + '\'' +
+                ", repellentTime='" + repellentTime + '\'' +
+                ", repellentName='" + repellentName + '\'' +
+                ", repellentWay='" + repellentWay + '\'' +
+                ", dose='" + dose + '\'' +
+                ", operatorId=" + operatorId +
+                ", operatorName='" + operatorName + '\'' +
+                ", name='" + name + '\'' +
+                ", professor='" + professor + '\'' +
+                ", supervisor='" + supervisor + '\'' +
+                ", remark='" + remark + '\'' +
+                ", ispassCheck='" + ispassCheck + '\'' +
+                ", unpassReason='" + unpassReason + '\'' +
+                ", upassReason='" + upassReason + '\'' +
+                ", ispassSup='" + ispassSup + '\'' +
+                ", gmtCreate='" + gmtCreate + '\'' +
+                ", gmtModified='" + gmtModified + '\'' +
+                ", gmtProfessor='" + gmtProfessor + '\'' +
+                ", gmtSupervise='" + gmtSupervise + '\'' +
+                '}';
     }
 }

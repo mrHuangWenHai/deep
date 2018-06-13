@@ -141,14 +141,11 @@ public interface FactoryMapper {
 
     /**
      * 根据羊场的ID发展羊场的代理agent的ID
-     * @param pkNumber
+     * @param pkNumber 羊场主键
      * @return
      */
-    @Select("select agent from factory_manage where pk_number = #{pkNumber}")
-//    @Results({
-//            @Result(property = "agent", column = "agent")
-//    })
-    Short queryOneAgentByFactoryID(String pkNumber);
+    @Select("select agent from factory_manage where id = #{pkNumber}")
+    Short queryOneAgentByFactoryID(Long pkNumber);
 
     /**
      * 根据ID获取单个羊场

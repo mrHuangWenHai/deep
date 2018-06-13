@@ -67,7 +67,6 @@ public class OperationFileResource {
   Response getOperationFile(@PathVariable(value = "id")long id,
                             OperationCoditionRequest operationCoditionRequest,
                             HttpServletRequest httpServletRequest) {
-
     try {
       Map<Long, List<Long>> factoryMap = null;
       String roleString = TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION));
@@ -83,12 +82,12 @@ public class OperationFileResource {
         assert factoryMap != null;
         factoryList.addAll(factoryMap.get((long) -1));
         factoryList.addAll(factoryMap.get(0L));
+        if (factoryList.size() == 0) {
+          return Responses.errorResponse("本级代理没有发展羊场和代理！");
+        }
         operationCoditionRequest.setFactoryList(factoryList);
       } else {
         return Responses.errorResponse("你没有权限");
-      }
-      if (operationCoditionRequest.getFactoryList().size() == 0) {
-        return Responses.errorResponse("该代理没有发展羊场和代理！");
       }
       logger.info("invoke Get /of {}",operationCoditionRequest);
       List<OperationFile> totalList = operationFileService.getOperationFile(operationCoditionRequest);
@@ -141,7 +140,7 @@ public class OperationFileResource {
       return Responses.errorResponse("lock param ispassSup");
     }
 
-//    short checkStatus = json.get("ispassSup").shortValue();
+
     short checkStatus = Short.valueOf(json.get("ispassSup"));
     if (id < 0 || checkStatus < 0 || checkStatus > 2) {
       return Responses.errorResponse("param is invalid");
@@ -149,7 +148,9 @@ public class OperationFileResource {
     logger.info("/of/s/{} {}",id,checkStatus);
 
     try {
-      int isSuccess = operationFileService.updateSupStatus(id, checkStatus);
+      String supervisorName = json.get("name");
+      int supervisorId = Integer.valueOf(json.get("supervisor"));
+      int isSuccess = operationFileService.updateSupStatus(id, checkStatus,supervisorName, supervisorId);
       if (isSuccess == 1) {
           return Responses.successResponse();
       } else {
@@ -175,8 +176,12 @@ public class OperationFileResource {
     }
     logger.info("/of/p/{} {}",id,supStatus);
     try {
-      String upassReson = json.get("upassReson");
-      int isSuccess = operationFileService.updateCheckStatus(id, supStatus, upassReson);
+      String unpassReason = json.get("unpassReason");
+      String professorName = json.get("name");
+      int preofessorId = Integer.valueOf(json.get("professor"));
+
+      int isSuccess = operationFileService.updateCheckStatus(id, supStatus, unpassReason, professorName, preofessorId);
+
       if (isSuccess == 1) {
         return Responses.successResponse();
       } else {
@@ -193,11 +198,17 @@ public class OperationFileResource {
   public Response update(@RequestBody OperationFile operationFile,
                          @PathVariable(value = "id") int id) {
     operationFile.setId(id);
+
+    OperationFile model = operationFileService.getOperationFileById(id);
+    if (model.getIspassCheck() == 1) {
+      return Responses.errorResponse("记录已经审核过，不能进行修改");
+    }
+
     int isSuccess = operationFileService.updateOperationFileByOperationFile(operationFile);
     if (isSuccess == 1) {
       return Responses.successResponse();
     } else {
-      return Responses.errorResponse("add error");
+      return Responses.errorResponse("修改失败！");
     }
   }
 

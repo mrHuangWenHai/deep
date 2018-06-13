@@ -33,7 +33,8 @@ public class ImmunePlanModel {
     private String name;
     private String remark;      //备注
     private String ispassCheck;      //是否通过审核 默认 未审核 0
-    private String unpassReason;   //未通过审核原因
+    private String upassReason;   //未通过审核原因
+    private String unpassReason;
     private String ispassSup;      //是否通过监督 默认 未监督 0
     private String gmtCreate;    //创建时间
     private String gmtModified;  //修改时间
@@ -159,6 +160,14 @@ public class ImmunePlanModel {
         this.unpassReason = unpassReason;
     }
 
+    public String getUpassReason() {
+        return upassReason;
+    }
+
+    public void setUpassReason(String upassReason) {
+        this.upassReason = upassReason;
+    }
+
     public String getIspassCheck() {
         return ispassCheck;
     }
@@ -228,27 +237,30 @@ public class ImmunePlanModel {
     @Override
     public String toString() {
         return "ImmunePlanModel{" +
-            "id=" + id +
-            ", factoryNum=" + factoryNum +
-            ", crowdNum='" + crowdNum + '\'' +
-            ", immuneEartag='" + immuneEartag + '\'' +
-            ", immuneTime='" + immuneTime + '\'' +
-            ", immuneKind='" + immuneKind + '\'' +
-            ", immuneWay='" + immuneWay + '\'' +
-            ", dose='" + dose + '\'' +
-            ", immuneDuring='" + immuneDuring + '\'' +
-            ", operatorId=" + operatorId +
-            ", operatorName='" + operatorName + '\'' +
-            ", professor='" + professor + '\'' +
-            ", supervisor='" + supervisor + '\'' +
-            ", remark='" + remark + '\'' +
-            ", ispassCheck='" + ispassCheck + '\'' +
-            ", unpassReason='" + unpassReason + '\'' +
-            ", ispassSup='" + ispassSup + '\'' +
-            ", gmtCreate='" + gmtCreate + '\'' +
-            ", gmtModified='" + gmtModified + '\'' +
-            ", gmtProfessor='" + gmtProfessor + '\'' +
-            ", gmtSupervise='" + gmtSupervise + '\'' +
-            '}';
+                "id=" + id +
+                ", factoryNum=" + factoryNum +
+                ", factoryName='" + factoryName + '\'' +
+                ", crowdNum='" + crowdNum + '\'' +
+                ", immuneEartag='" + immuneEartag + '\'' +
+                ", immuneTime='" + immuneTime + '\'' +
+                ", immuneKind='" + immuneKind + '\'' +
+                ", immuneWay='" + immuneWay + '\'' +
+                ", dose='" + dose + '\'' +
+                ", immuneDuring='" + immuneDuring + '\'' +
+                ", operatorId=" + operatorId +
+                ", operatorName='" + operatorName + '\'' +
+                ", professor='" + professor + '\'' +
+                ", supervisor='" + supervisor + '\'' +
+                ", name='" + name + '\'' +
+                ", remark='" + remark + '\'' +
+                ", ispassCheck='" + ispassCheck + '\'' +
+                ", upassReason='" + upassReason + '\'' +
+                ", unpassReason='" + unpassReason + '\'' +
+                ", ispassSup='" + ispassSup + '\'' +
+                ", gmtCreate='" + gmtCreate + '\'' +
+                ", gmtModified='" + gmtModified + '\'' +
+                ", gmtProfessor='" + gmtProfessor + '\'' +
+                ", gmtSupervise='" + gmtSupervise + '\'' +
+                '}';
     }
 }

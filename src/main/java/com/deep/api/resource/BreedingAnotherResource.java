@@ -12,7 +12,10 @@ import com.deep.api.response.Responses;
 import com.deep.domain.model.BreedingPlanAnotherModel;
 import com.deep.domain.model.NutritionPlanWithBLOBs;
 import com.deep.domain.service.BreedingPlanAnotherService;
+import com.deep.domain.service.FactoryService;
 import com.deep.domain.service.NutritionPlanService;
+import com.deep.domain.service.UserService;
+import com.deep.domain.util.JedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
@@ -21,8 +24,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.*;
+
+import static com.deep.domain.util.JedisUtil.getCertainKeyValue;
 
 @RestController
 @RequestMapping(value = "/breeding")
@@ -32,6 +38,11 @@ public class BreedingAnotherResource {
     private BreedingPlanAnotherService breedingPlanAnotherService;
     @Resource
     private NutritionPlanService nutritionPlanService;
+    @Resource
+    private FactoryService factoryService;
+    @Resource
+    private UserService userService;
+
 
     /**
      * 查询某个羊场或者某个代理下面的所有记录（包括子代理）
@@ -54,14 +65,25 @@ public class BreedingAnotherResource {
         Long uid = StringToLongUtil.stringToLong(id);
         Integer upage = StringToLongUtil.stringToInt(page);
         Byte usize = StringToLongUtil.stringToByte(size);
+        Byte pass = StringToLongUtil.stringToByte(ispassCheck);
         Byte flag = Byte.valueOf(TokenAnalysis.getFlag(request.getHeader(Constants.AUTHORIZATION)));
         if (uid < 0 || upage < 0 || usize < 0) {
             return Responses.errorResponse("错误");
         }
         HashMap<String, Object> data = new HashMap<>();
         if (flag == 0) {
+            int count = 0;
+            List<BreedingPlanAnotherModel> models = null;
+            if (pass == -1) {
+                models = breedingPlanAnotherService.findAllRecords(uid);
+                count += breedingPlanAnotherService.queryCount(uid);
+            } else if (pass == 0 || pass == 1 || pass == 2) {
+                models = breedingPlanAnotherService.findAllRecordsByIsPassCheck(uid, pass);
+                count += breedingPlanAnotherService.queryCountByPass(uid, pass);
+            } else {
+                return Responses.errorResponse("参数错误!");
+            }
             // 如果是羊场
-            List<BreedingPlanAnotherModel> models = breedingPlanAnotherService.findAllRecords(uid);
             List<BreedingPlanAnotherModel> result = new ArrayList<>();
             if (models != null) {
                 for (int i = upage*usize; i < models.size() && i < upage*usize + usize; i++) {
@@ -69,8 +91,9 @@ public class BreedingAnotherResource {
                 }
             }
             data.put("List", result);
-            data.put("size", breedingPlanAnotherService.queryCount(uid));
+            data.put("size", count);
         } else if (flag == 1) {
+            if (pass  != -1 && pass != 0 && pass != 1 && pass != 2) return Responses.errorResponse("参数错误!");
             // 如果是代理，查询下级所有的羊场
             Map<Long, List<Long> > factories = AgentUtil.getAllSubordinateFactory(String.valueOf(uid));
             if (factories == null) {
@@ -90,16 +113,26 @@ public class BreedingAnotherResource {
                 List<BreedingPlanAnotherModel> directModels = new ArrayList<>();
                 if (directFactories != null) {
                     for (Long directFactory : directFactories) {
-                        directModels.addAll(breedingPlanAnotherService.findAllRecords(directFactory));
-                        directCount += breedingPlanAnotherService.queryCount(directFactory);
+                        if (pass == 1 || pass == 0 || pass == 2) {
+                            directModels.addAll(breedingPlanAnotherService.findAllRecordsByIsPassCheck(directFactory, pass));
+                            directCount += breedingPlanAnotherService.queryCountByPass(directFactory, pass);
+                        } else {
+                            directModels.addAll(breedingPlanAnotherService.findAllRecords(directFactory));
+                            directCount += breedingPlanAnotherService.queryCount(directFactory);
+                        }
                     }
                 }
 
                 List<BreedingPlanAnotherModel> undirectModels = new ArrayList<>();
                 if (undirectFactories != null) {
                     for (Long undirectFactory : undirectFactories) {
-                        undirectModels.addAll(breedingPlanAnotherService.findAllRecords(undirectFactory));
-                        undirectCount += breedingPlanAnotherService.queryCount(undirectFactory);
+                        if (pass == 1 || pass == 0 || pass == 2) {
+                            undirectModels.addAll(breedingPlanAnotherService.findAllRecordsByIsPassCheck(undirectFactory, pass));
+                            undirectCount += breedingPlanAnotherService.queryCountByPass(undirectFactory, pass);
+                        } else {
+                            undirectModels.addAll(breedingPlanAnotherService.findAllRecords(undirectFactory));
+                            undirectCount += breedingPlanAnotherService.queryCount(undirectFactory);
+                        }
                     }
                 }
                 models.addAll(directModels);
@@ -229,12 +262,15 @@ public class BreedingAnotherResource {
             response.setData(data);
             return response;
         }
+
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
         Date date = null, nextDate = null;
+        if (breedingNutritionRequest.getTime() == null) {
+            return Responses.errorResponse("查询时间格式不对");
+        }
         // 获取执行妊娠前期营养标准
-        Timestamp before = breedingNutritionRequest.getTime();
-        date = TimeUtil.Translate(before);
+        date = TimeUtil.TranslateToDate(breedingNutritionRequest.getTime());
         nextDate = TimeUtil.getNextDay(date);
         List<NutritionPlanWithBLOBs> models = nutritionPlanService.findPlanBetweenTimes(date, nextDate, breedingNutritionRequest.getFactoryNumber());
         data.put("List", models);
@@ -255,17 +291,64 @@ public class BreedingAnotherResource {
         logger.info("invoke addARecord {}", breedingRequest.toString());
         HashMap<String, Object> data = new HashMap<>();
         if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("添加失败！");
+            Response response = Responses.errorResponse("请规范表单信息！");
             data.put("errorMessage", bindingResult.getAllErrors());
             response.setData(data);
             return response;
         }
+
         breedingRequest.setGmtCreate(new Timestamp(System.currentTimeMillis()));
         breedingRequest.setGmtModify(new Timestamp(System.currentTimeMillis()));
         breedingRequest.setOperatorTime(new Timestamp(System.currentTimeMillis()));
+
         Long success = breedingPlanAnotherService.addARecordByOperator(breedingRequest);
         if (success > 0) {
             data.put("success", success);
+            // TODO　Ｒｅｄｉｓ需要修改
+            short agentID = this.factoryService.queryOneAgentByID(breedingRequest.getFactoryNum().longValue());
+            String professorKey = agentID + "_professor";
+            String supervisorKey = breedingRequest.getFactoryNum().toString() + "_supervisor";
+            String testSendProfessor = agentID + "_professor_AlreadySend";
+            String testSendSupervisor = breedingRequest.getFactoryNum().toString() + "_supervisor_AlreadySend";
+            JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
+            JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
+            System.out.println(testSendProfessor);
+            System.out.println(professorKey);
+
+            if( !("1".equals(getCertainKeyValue(testSendProfessor)))) {
+                if( JedisUtil.redisJudgeTime(professorKey) ) {
+                    System.out.println("in redis:");
+                    List<String> phone = userService.getProfessorTelephoneByFactoryNum(BigInteger.valueOf(breedingRequest.getFactoryNum()));
+                    if (phone == null) {
+                        return Responses.errorResponse("添加记录成功，但是发送消息失败，请联系管理员");
+                    }
+                    StringBuffer phoneList = new StringBuffer("");
+                    for (String aPhone : phone) {
+                        phoneList = phoneList.append(aPhone).append(",");
+                    }
+                    System.out.println("phoneList = " + phoneList);
+                    if (phoneList.length() != 0) {
+                        if (JedisUtil.redisSendMessage(phoneList.toString(), getCertainKeyValue("Message"))) {
+                            JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(Objects.requireNonNull(getCertainKeyValue("ExpireTime"))) * 24 * 60 * 60);
+                        }
+                    }
+                }
+            }
+            if( !("1".equals(getCertainKeyValue(testSendSupervisor)))) {
+                if(JedisUtil.redisJudgeTime(supervisorKey)) {
+                    List<String> phone = userService.getSuperiorTelephoneByFactoryNum(BigInteger.valueOf(breedingRequest.getFactoryNum()));
+                    StringBuffer phoneList = new StringBuffer("");
+                    for (String aPhone : phone) {
+                        phoneList = phoneList.append(aPhone).append(",");
+                    }
+                    if (phoneList.length() != 0) {
+                        if( JedisUtil.redisSendMessage(phoneList.toString(), getCertainKeyValue("Message"))) {
+                            JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",Integer.parseInt(Objects.requireNonNull(getCertainKeyValue("ExpireTime")))*24*60*60);
+                        }
+                    }
+                }
+            }
+
             return Responses.successResponse(data);
         }
         return Responses.errorResponse("添加失败");
@@ -295,8 +378,8 @@ public class BreedingAnotherResource {
         }
         // 首先查询是否符合修改信息的条件
         BreedingPlanAnotherModel model = breedingPlanAnotherService.findARecord(uid);
-        if (model == null || model.getIspassCheck() == 1 || model.getIspassSup() == 1) {
-            return Responses.errorResponse("not find this record or the record has been checked!");
+        if (model == null || model.getIspassCheck() == 1) {
+            return Responses.errorResponse("该条记录已经审核过!");
         }
         breedingModifyRequest.setGmtModify(new Timestamp(System.currentTimeMillis()));
         breedingModifyRequest.setOperatorTime(new Timestamp(System.currentTimeMillis()));
@@ -323,7 +406,7 @@ public class BreedingAnotherResource {
         }
         // 首先查询是否符合修改信息的条件
         BreedingPlanAnotherModel model = breedingPlanAnotherService.findARecord(uid);
-        if (model != null && model.getIspassCheck() == 2 && model.getIspassSup() == 2) {
+        if (model != null && model.getIspassCheck() != 1) {
             long success = breedingPlanAnotherService.deleteARecord(uid);
             if (success <= 0) {
                 return Responses.errorResponse("删除失败");
@@ -334,7 +417,7 @@ public class BreedingAnotherResource {
             response.setData(data);
             return response;
         }
-        return Responses.errorResponse("the record has been checked, can not be deleted!");
+        return Responses.errorResponse("该记录已经审核过, 不能删除!");
     }
 
     /**
@@ -360,12 +443,16 @@ public class BreedingAnotherResource {
         // 首先查询是否符合修改信息的条件
         BreedingPlanAnotherModel model = breedingPlanAnotherService.findARecord(uid);
         if (model == null || model.getIspassSup() != 2) {
-            return Responses.errorResponse("this record has been checked!");
+            return Responses.errorResponse("该记录已经审核过!");
         }
         Long success = breedingPlanAnotherService.updateARecordBySupervisor(uid, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), supervisorRequest.getIspassSup(), supervisorRequest.getSupervisor(), supervisorRequest.getName());
         if (success <= 0) {
             return Responses.errorResponse("监督员审核错误！");
         } else {
+            String supervisorKey = supervisorRequest.getFactoryNum().toString() + "_supervisor";
+            if (!JedisUtil.redisCancelProfessorSupervisorWorks(supervisorKey)){
+                return Responses.errorResponse("审核成功,短信服务器错误");
+            }
             HashMap<String, Object> data = new HashMap<>();
             data.put("success", "监督员审核成功！");
             return Responses.successResponse(data);
@@ -395,12 +482,17 @@ public class BreedingAnotherResource {
         // 首先查询是否符合修改信息的条件
         BreedingPlanAnotherModel model = breedingPlanAnotherService.findARecord(uid);
         if (model == null || model.getIspassCheck() != 2) {
-            return Responses.errorResponse("this record has been checked!");
+            return Responses.errorResponse("该记录已经审核过!");
         }
-        Long success = breedingPlanAnotherService.updateARecordByProfessor(uid, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), professorRequest.getIspassCheck(), professorRequest.getProfessor(), professorRequest.getName(), professorRequest.getUpassReason());
+        Long success = breedingPlanAnotherService.updateARecordByProfessor(uid, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), professorRequest.getIspassCheck(), professorRequest.getProfessor(), professorRequest.getName(), professorRequest.getUnpassReason());
         if (success <= 0) {
             return Responses.errorResponse("技术员审核错误！");
         } else {
+            String professorKey = this.factoryService.getAgentIDByFactoryNumber(Long.valueOf(professorRequest.getFactoryNum().toString())) + "_professor";
+            if (1 == professorRequest.getIspassCheck() && !JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
+                return Responses.errorResponse("审核成功,短信服务器错误");
+            }
+
             HashMap<String, Object> data = new HashMap<>();
             data.put("success", "技术员审核成功！");
             return Responses.successResponse(data);

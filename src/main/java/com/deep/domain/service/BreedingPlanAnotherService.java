@@ -97,10 +97,27 @@ public class BreedingPlanAnotherService {
     }
 
     /**
+     * 查找某个厂家的记录
+     * @param factoryNumber 羊场主键
+     * @return 记录列表
+     */
+    public List<BreedingPlanAnotherModel> findAllRecordsByIsPassCheck(Long factoryNumber, Byte pass) {
+        return breedingPlanAnotherMapper.findAllRecordsByPass(factoryNumber, pass);
+    }
+
+    /**
      * @param factory 羊场标志
      * @return 记录数目
      */
     public Long queryCount(Long factory) {
         return breedingPlanAnotherMapper.queryCount(factory);
+    }
+
+    /**
+     * @param factory 羊场标志
+     * @return 记录数目
+     */
+    public Long queryCountByPass(Long factory, Byte pass) {
+        return breedingPlanAnotherMapper.queryCountByCount(factory, pass);
     }
 }

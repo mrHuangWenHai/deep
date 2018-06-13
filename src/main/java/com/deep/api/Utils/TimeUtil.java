@@ -16,7 +16,7 @@ public class TimeUtil {
         return date;
     }
 
-    // 类型转换
+    // 将Timestamp类型转换为Date类型
     public static Date Translate(Timestamp timestamp) {
         // 将TimeStamp转化为字符串
         String tsStr = "";
@@ -36,5 +36,18 @@ public class TimeUtil {
             ex.printStackTrace();
         }
         return date;
+    }
+
+    // 将String类型转化为Date类型
+    public static Date TranslateToDate(String date) {
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date result = new Date();
+        try {
+            result = sdf.parse(date);
+            System.out.println("Result = " + result);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return result;
     }
 }

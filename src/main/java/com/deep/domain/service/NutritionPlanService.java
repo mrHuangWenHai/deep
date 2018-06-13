@@ -42,4 +42,12 @@ public class NutritionPlanService {
     public List<NutritionPlanWithBLOBs> findPlanBetweenTimes(Date date1, Date date2, Integer number) {
         return this.nutritionPlanMapper.selectByTwoDate(date1, date2, number);
     }
+
+    public List<NutritionPlanWithBLOBs> findAllRecords(Long factory, Byte pass) {
+        return this.nutritionPlanMapper.findAllRecords(factory, pass);
+    }
+
+    public List<NutritionPlanWithBLOBs> getAll(Long factory) {
+        return this.nutritionPlanMapper.getAll(factory);
+    }
 }
