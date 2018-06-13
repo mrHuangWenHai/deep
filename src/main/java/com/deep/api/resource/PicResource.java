@@ -40,10 +40,10 @@ public class PicResource {
                            @RequestParam("file")MultipartFile file) {
 
         logger.info("invoke /uploadFile/upload [{}]",pic);
-        if (!pic.isBrand())
-        {
-            return Responses.errorResponse("商标耳牌不符合规则");
-        }
+//        if (!pic.isBrand())
+//        {
+//            return Responses.errorResponse("商标耳牌不符合规则");
+//        }
         try {
             String Header = FileUtil.getFileHeader(file);
 
@@ -290,5 +290,17 @@ public class PicResource {
         data.put("size",size);
         response.setData(data);
         return response;
+    }
+    @ResponseBody
+    @RequestMapping(value = "/pic/delete/{id}",method = RequestMethod.DELETE)
+    public Response deletePicById(@PathVariable(value = "id")Integer id)
+    {
+        if (picService.deleteById(id) != 0 )
+        {
+            return Responses.successResponse();
+        }
+        else {
+            return Responses.errorResponse("删除失败");
+        }
     }
 }
