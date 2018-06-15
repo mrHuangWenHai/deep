@@ -201,15 +201,8 @@ public class Pic implements Serializable {
         this.filename = filename == null ? null : filename.trim();
     }
 
-    public static boolean isDate(String date) {
-        String regex = "^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$";
-        return Pattern.matches(regex, date);
-    }
-    public  boolean isBrand()
-    {
-        String regex = "^([G|M]\\d{5})$";
-        return Pattern.matches(regex,this.brand);
-    }
+
+
 
     @Override
     public String toString() {

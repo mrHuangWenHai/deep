@@ -7,6 +7,7 @@ import com.deep.domain.model.EnvironmentTraceModel;
 
 
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 /**
  * 用于判断的工具类
@@ -98,6 +99,11 @@ public class JudgeUtil {
         HashMap<String,Object> data = new HashMap<>();
         data.put(details,o);
         return Responses.successResponse(data);
+    }
+    public static boolean isBrand(String brand)
+    {
+        String regex = "^([G|M]\\d{5})$";
+        return Pattern.matches(regex,brand);
     }
 
 }
