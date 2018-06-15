@@ -40,6 +40,4 @@ public interface DiagnosisPlanMapper {
                                        @Param("name") String name);
 
     int updateDiagnosisPlanModel(@Param("diagnosisPlanModel") DiagnosisPlanModel diagnosisPlanModel);
-
-
 }

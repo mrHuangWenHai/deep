@@ -796,9 +796,10 @@
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
+    <!--<if test="orderByClause != null" >-->
+--       order by ${orderByClause}
+    <!--</if>-->
+    order by gmt_modified desc
   </select>
 
   <select resultMap="ResultMapWithBLOBs" parameterType="com.deep.domain.model.NutritionPlanExample" id="selectByTwoDate">
@@ -817,6 +818,7 @@
     SELECT *
     FROM nutrition_plan
     WHERE factory_num = #{factory}
+    ORDER BY gmt_modified DESC
   </select>
 
   <select resultMap="BaseResultMap" parameterType="com.deep.domain.model.NutritionPlanExample" id="selectByExampleWithRowbounds" >
@@ -829,8 +831,9 @@
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
+    <!--<if test="orderByClause != null" >-->
+--       order by ${orderByClause}
+    <!--</if>-->
+    order by gmt_modified desc
   </select>
 </mapper>

@@ -26,7 +26,7 @@ public interface BreedingPlanAnotherMapper {
      * @param factoryNumber 羊场编号
      * @return 所有记录信息
      */
-    @Select("select * from breeding_plan_another where factory_number = #{factoryNumber}")
+    @Select("select * from breeding_plan_another where factory_number = #{factoryNumber} order by id desc")
     @Results ({
         @Result(property = "id", column = "id"),
         @Result(property = "gmtCreate", column = "gmt_create"),
@@ -120,7 +120,7 @@ public interface BreedingPlanAnotherMapper {
      * @param factoryNumber 羊场编号
      * @return 所有记录信息
      */
-    @Select("select * from breeding_plan_another where factory_number = #{factoryNumber} and is_pass_check = #{pass}")
+    @Select("select * from breeding_plan_another where factory_number = #{factoryNumber} and is_pass_check = #{pass} order by id desc")
     @Results ({
             @Result(property = "id", column = "id"),
             @Result(property = "gmtCreate", column = "gmt_create"),

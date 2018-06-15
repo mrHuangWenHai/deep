@@ -93,6 +93,7 @@
         id = #{id}
     </select>
 
+
     <select id="getGenealogicalFilesModelByFactoryNum" resultMap="GenealogicalFiles">
         SELECT
         *
@@ -195,7 +196,7 @@
     </select>
 
 
-    <select id="getGenealogicalFilesModelByImmuneEartag">
+    <select id="getGenealogicalFilesModelByImmuneEartag" resultMap="GenealogicalFiles">
 
         SELECT
         *
@@ -207,7 +208,7 @@
     </select>
 
 
-    <select id="getGenealogicalFilesModelByTradeMarkEartag">
+    <select id="getGenealogicalFilesModelByTradeMarkEarTag" resultMap="GenealogicalFiles">
 
         SELECT
         *
@@ -217,7 +218,18 @@
         trademark_eartag = #{tradeMarkEartag}
     </select>
 
-    <select id="getGenealogicalFilesModelByNativeEartag">
+
+    <select id="getGenealogicalFilesModelByTradeMarkEartag" resultMap="GenealogicalFiles">
+
+        SELECT
+        *
+        FROM
+        genealogical_files
+        WHERE
+        trademark_eartag = #{tradeMarkEartag}
+    </select>
+
+    <select id="getGenealogicalFilesModelByNativeEartag" resultMap="GenealogicalFiles">
 
         SELECT
         *

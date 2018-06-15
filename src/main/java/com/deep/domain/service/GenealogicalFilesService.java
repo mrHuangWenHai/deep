@@ -28,6 +28,14 @@ public class  GenealogicalFilesService {
         return success;
     }
 
+    public GenealogicalFilesModel getGenealogicalFilesModelByTradeMarkEartag(String tradeMarkEartag){
+        return this.genealogicalFilesMapper.getGenealogicalFilesModelByTradeMarkEartag(tradeMarkEartag);
+    }
+
+    public List<GenealogicalFilesModel> getGenealogicalFilesModelByTradeMarkEarTag(String tradeMarkEartag) {
+        return this.genealogicalFilesMapper.getGenealogicalFilesModelByTradeMarkEarTag(tradeMarkEartag);
+    }
+
     public List<GenealogicalFilesModel> getGenealogicalFilesModel(GenealogicalRequest genealogicalFilesModel) {
         return this.genealogicalFilesMapper.getGenealogicalFilesModel(genealogicalFilesModel);
     }

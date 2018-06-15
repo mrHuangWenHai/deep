@@ -22,8 +22,9 @@ public interface GenealogicalFilesMapper {
 
     List<GenealogicalFilesModel> getGenealogicalFilesModelByFactoryNum(@Param("factoryNum") Long factoryNum);
 
-    GenealogicalFilesModel getGenealogicalFilesModelByImmuneEartag(@Param("immuneEartag") String immuneEartag);
+    List<GenealogicalFilesModel> getGenealogicalFilesModelByTradeMarkEarTag(@Param("tradeMarkEartag")String tradeMarkEartag);
 
+    GenealogicalFilesModel getGenealogicalFilesModelByImmuneEartag(@Param("immuneEartag") String immuneEartag);
 
     GenealogicalFilesModel getGenealogicalFilesModelByTradeMarkEartag(@Param("tradeMarkEartag")String tradeMarkEartag);
 

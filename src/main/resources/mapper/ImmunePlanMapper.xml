@@ -154,6 +154,9 @@
         <if test="immunePlanModel.ispassSup != null and immunePlanModel.ispassSup != '' ">
             AND ispass_sup = #{immunePlanModel.ispassSup}
         </if>
+
+        order by gmt_modified desc
+
     </select>
 
     <select id="getImmunePlanModelByTradeMarkEarTag" resultMap="ImmunePlan">
@@ -186,6 +189,7 @@
         immune_plan
         WHERE
         factory_num = #{factoryNum}
+        order by gmt_modified desc
     </select>
 
     <select id="getImmunePlanModelByFactoryNumAndIsPassCheck" resultMap="ImmunePlan">

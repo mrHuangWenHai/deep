@@ -146,6 +146,9 @@
         <if test="repellentPlanModel.ispassSup != null and repellentPlanModel.ispassSup != '' ">
             AND ispass_sup = #{repellentPlanModel.ispassSup}
         </if>
+
+        order by gmt_modified desc
+
     </select>
     <select id="getRepellentPlanModelByTradeMarkEarTag" resultMap="RepellentPlan">
 
@@ -180,6 +183,7 @@
         repellent_plan
         WHERE
         factory_num = #{factoryNum}
+        order by gmt_modified desc
     </select>
 
     <select id="getRepellentPlanModelByFactoryNumAndIsPassCheck" resultMap="RepellentPlan">

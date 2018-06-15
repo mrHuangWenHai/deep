@@ -151,10 +151,11 @@
             AND ispass_sup = #{disinfectFilesModel.ispassSup}
         </if>
 
+        order by gmt_modified desc
+
     </select>
 
     <select id="getDisinfectFilesModelByTradeMarkEarTag" resultMap="DisinfectFiles">
-
         SELECT
         *
         FROM
@@ -168,7 +169,6 @@
     </select>
 
     <select id="getDisinfectFilesModelById" resultMap="DisinfectFiles">
-
         SELECT
         *
         FROM
@@ -179,18 +179,15 @@
 
 
     <select id="getDisinfectFilesModelByFactoryNum" resultMap="DisinfectFiles">
-
         SELECT
         *
         FROM
         disinfect_files
-        WHERE
-
-        factory_num = #{factoryNum}
+        WHERE factory_num = #{factoryNum}
+        order by gmt_modified desc
     </select>
 
     <select id="getDisinfectFilesModelByFactoryNumAndIsPassCheck" resultMap="DisinfectFiles">
-
         SELECT
         *
         FROM

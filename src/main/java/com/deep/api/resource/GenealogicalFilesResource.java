@@ -115,27 +115,65 @@ public class GenealogicalFilesResource {
           return Responses.errorResponse("没有这种这种类型的商品");
       }
 
-      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-      String time = simpleDateFormat.format(new Timestamp(System.currentTimeMillis()));
-      genealogicalFilesModel.setGmtCreate(time);
-      genealogicalFilesModel.setGmtModified(time);
+      List<GenealogicalFilesModel> model = this.genealogicalFilesService.getGenealogicalFilesModelByTradeMarkEarTag(genealogicalFilesModel.getTradeMarkEartag());
+      if (model.size() == 0) {
+          SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+          String time = simpleDateFormat.format(new Timestamp(System.currentTimeMillis()));
+          genealogicalFilesModel.setGmtCreate(time);
+          genealogicalFilesModel.setGmtModified(time);
 
-      try {
           int id = genealogicalFilesService.insertGenealogicalFilesModel(genealogicalFilesModel);
           if (id == 0) {
               return Responses.errorResponse("添加数据失败");
           } else {
-              HashMap<String,Object> data = new HashMap<>();
-              data.put("id",genealogicalFilesModel.getId());
+              HashMap<String, Object> data = new HashMap<>();
+              data.put("id", genealogicalFilesModel.getId());
               return Responses.successResponse(data);
-          }
-      } catch (Exception e) {
-          e.printStackTrace();
-          return Responses.errorResponse("数据已经存在");
-      }
+              }
+      } else {
+          if (model.get(0).getEartagOfMother().equals(genealogicalFilesModel.getEartagOfMother()) &&
+                  model.get(0).getEartagOfFather().equals(genealogicalFilesModel.getEartagOfFather()) &&
+                  model.get(0).getEartagOfMothersFather().equals(genealogicalFilesModel.getEartagOfMothersFather()) &&
+                  model.get(0).getEartagOfMothersMother().equals(genealogicalFilesModel.getEartagOfMothersMother()) &&
+                  model.get(0).getEartagOfFathersMother().equals(genealogicalFilesModel.getEartagOfFathersMother()) &&
+                  model.get(0).getEartagOfFathersFather().equals(genealogicalFilesModel.getEartagOfFathersFather())) {
+              SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+              String time = simpleDateFormat.format(new Timestamp(System.currentTimeMillis()));
+              genealogicalFilesModel.setGmtCreate(time);
+              genealogicalFilesModel.setGmtModified(time);
 
+              int id = genealogicalFilesService.insertGenealogicalFilesModel(genealogicalFilesModel);
+              if (id == 0) {
+                  return Responses.errorResponse("添加数据失败");
+              } else {
+                  HashMap<String, Object> data = new HashMap<>();
+                  data.put("id", genealogicalFilesModel.getId());
+                  return Responses.successResponse(data);
+              }
+          } else {
+              return Responses.errorResponse("与原数据冲突,请修改插入数据！");
+          }
+      }
     }
 
+
+    @RequestMapping(value = "/tree", method = RequestMethod.GET)
+    public Response findInTree(@RequestParam("tradeMarkEartag") String tradeMarkEartag) {
+        GenealogicalFilesModel model = this.genealogicalFilesService.getGenealogicalFilesModelByTradeMarkEartag(tradeMarkEartag);
+        if (model == null) {
+            return Responses.errorResponse("无效的耳牌号！");
+        } else {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("self", tradeMarkEartag);
+            map.put("mother", model.getEartagOfMother());
+            map.put("father", model.getEartagOfFather());
+            map.put("mothersMother", model.getEartagOfMothersMother());
+            map.put("mothersFather", model.getEartagOfMothersFather());
+            map.put("fathersFather", model.getEartagOfFathersFather());
+            map.put("fathersMother", model.getEartagOfFathersMother());
+            return Responses.successResponse(map);
+        }
+    }
     /**
      * 用于条件查找
      * METHOD:POST

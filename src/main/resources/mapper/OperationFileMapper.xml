@@ -67,6 +67,8 @@
             AND ispass_sup = #{operationCoditionRequest.ispassSup}
         </if>
 
+        order by gmt_modified desc
+
     </select>
 
     <select id = "getOperationFileById" resultMap="OperationFile">
@@ -79,6 +81,7 @@
         select *
         from operation_file
         where factory_num = #{factoryNum}
+        order by gmt_modified desc
     </select>
 
     <insert id="addOperationFile" useGeneratedKeys="true" keyColumn="id" keyProperty="operationFile.id">
