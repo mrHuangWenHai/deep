@@ -109,7 +109,7 @@ front      realId      权限
 18-0            88          添加技术员 _______________ add_technician
 18-1            89          删除技术员 _______________ remove_technician
 18-2            90          查询技术员 _______________ query_technician
-18-3            91         修改技术员 _______________ modify_technician
+18-3            91          修改技术员 _______________ modify_technician
 91
 19-0            92         添加管理员 _______________ add_an_administrator
 19-1            93         删除管理员 _______________ remove_administrator

@@ -408,7 +408,7 @@ public class UserResource {
      * @param bindingResult bindingResult
      * @return response
      */
-    @Permit(authorities = {"modify_user", "modify_expert", "modify_technician", "modify_administrator"})
+//    @Permit(authorities = {"modify_user", "modify_expert", "modify_technician", "modify_administrator"})
     @PutMapping(value = "user/{id}")
     public Response modifyUser(@RequestBody @Valid UserModel userModel, @PathVariable("id") String id, BindingResult bindingResult, HttpServletRequest request) {
         logger.info("invoke modifyUser{}, url is user/{username}", userModel, id, bindingResult);
