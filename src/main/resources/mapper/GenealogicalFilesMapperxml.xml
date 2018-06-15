@@ -101,6 +101,7 @@
         genealogical_files
         WHERE
         factory_num = #{factoryNum}
+        order by gmt_modified desc
     </select>
 
     <select id="getGenealogicalFilesModel" resultMap="GenealogicalFiles">
@@ -193,6 +194,9 @@
             <if test="genealogicalFilesModel.eartagOfMothersMother != null and genealogicalFilesModel.eartagOfMothersMother != '' ">
                 AND eartag_of_mothermother = #{genealogicalFilesModel.eartagOfMothersMother}
             </if>
+
+            order by gmt_modified desc
+
     </select>
 
 
