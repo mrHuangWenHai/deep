@@ -59,9 +59,7 @@ public class OperationFile {
   private int professorId;
 
   private String professorName;
-  private String upassReason;
-
-
+  private String unpassReason;
   int ispassCheck;
   int ispassSup;
 
@@ -282,12 +280,12 @@ public class OperationFile {
     this.professorName = professorName;
   }
 
-  public String getUpassReason() {
-    return upassReason;
+  public String getUnpassReason() {
+    return unpassReason;
   }
 
-  public void setUpassReason(String upassReason) {
-    this.upassReason = upassReason;
+  public void setUnpassReason(String unpassReason) {
+    this.unpassReason = unpassReason;
   }
 
   @Override
@@ -318,7 +316,7 @@ public class OperationFile {
         ", supervisorName='" + supervisorName + '\'' +
         ", professorId=" + professorId +
         ", professorName='" + professorName + '\'' +
-        ", upassReason='" + upassReason + '\'' +
+        ", upassReason='" + unpassReason + '\'' +
         ", ispassCheck=" + ispassCheck +
         ", ispassSup=" + ispassSup +
         '}';

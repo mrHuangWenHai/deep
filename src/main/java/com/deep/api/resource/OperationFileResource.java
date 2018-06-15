@@ -67,7 +67,6 @@ public class OperationFileResource {
   Response getOperationFile(@PathVariable(value = "id")long id,
                             OperationCoditionRequest operationCoditionRequest,
                             HttpServletRequest httpServletRequest) {
-
     try {
       Map<Long, List<Long>> factoryMap = null;
       String roleString = TokenAnalysis.getFlag(httpServletRequest.getHeader(Constants.AUTHORIZATION));
@@ -141,7 +140,7 @@ public class OperationFileResource {
       return Responses.errorResponse("lock param ispassSup");
     }
 
-//    short checkStatus = json.get("ispassSup").shortValue();
+
     short checkStatus = Short.valueOf(json.get("ispassSup"));
     if (id < 0 || checkStatus < 0 || checkStatus > 2) {
       return Responses.errorResponse("param is invalid");
@@ -149,7 +148,9 @@ public class OperationFileResource {
     logger.info("/of/s/{} {}",id,checkStatus);
 
     try {
-      int isSuccess = operationFileService.updateSupStatus(id, checkStatus);
+      String supervisorName = json.get("name");
+      int supervisorId = Integer.valueOf(json.get("supervisor"));
+      int isSuccess = operationFileService.updateSupStatus(id, checkStatus,supervisorName, supervisorId);
       if (isSuccess == 1) {
           return Responses.successResponse();
       } else {
@@ -175,9 +176,12 @@ public class OperationFileResource {
     }
     logger.info("/of/p/{} {}",id,supStatus);
     try {
-      String upassReson = json.get("unpassReason");
-      String professor = json.get("name");
-      int isSuccess = operationFileService.updateCheckStatus(id, supStatus, upassReson, professor);
+      String unpassReason = json.get("unpassReason");
+      String professorName = json.get("name");
+      int preofessorId = Integer.valueOf(json.get("professor"));
+
+      int isSuccess = operationFileService.updateCheckStatus(id, supStatus, unpassReason, professorName, preofessorId);
+
       if (isSuccess == 1) {
         return Responses.successResponse();
       } else {
