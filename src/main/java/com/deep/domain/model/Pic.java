@@ -201,7 +201,6 @@ public class Pic implements Serializable {
         this.filename = filename == null ? null : filename.trim();
     }
 
-
     @Override
     public String toString() {
         return "Pic{" +

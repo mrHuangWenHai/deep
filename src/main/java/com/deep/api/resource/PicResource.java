@@ -8,6 +8,7 @@ import com.deep.domain.model.Pic;
 import com.deep.domain.model.PicExample;
 import com.deep.domain.service.PicService;
 import com.deep.api.Utils.FileUtil;
+import com.deep.domain.util.JudgeUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,6 +37,11 @@ public class PicResource {
                            @RequestParam("file")MultipartFile file) {
 
         logger.info("invoke /uploadFile/upload [{}]",pic);
+
+        if (!JudgeUtil.isBrand(pic.getBrand()))
+        {
+            return Responses.errorResponse("商标耳牌不符合规则");
+        }
 
         try {
             String Header = FileUtil.getFileHeader(file);
