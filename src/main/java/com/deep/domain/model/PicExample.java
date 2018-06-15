@@ -855,6 +855,66 @@ public class PicExample {
             return (Criteria) this;
         }
 
+        public Criteria andFiletypeIsNull() {
+            addCriterion("filetype is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFiletypeIsNotNull() {
+            addCriterion("filetype is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFiletypeEqualTo(Integer value) {
+            addCriterion("filetype =", value, "filetype");
+            return (Criteria) this;
+        }
+
+        public Criteria andFiletypeNotEqualTo(Integer value) {
+            addCriterion("filetype <>", value, "filetype");
+            return (Criteria) this;
+        }
+
+        public Criteria andFiletypeGreaterThan(Integer value) {
+            addCriterion("filetype >", value, "filetype");
+            return (Criteria) this;
+        }
+
+        public Criteria andFiletypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("filetype >=", value, "filetype");
+            return (Criteria) this;
+        }
+
+        public Criteria andFiletypeLessThan(Integer value) {
+            addCriterion("filetype <", value, "filetype");
+            return (Criteria) this;
+        }
+
+        public Criteria andFiletypeLessThanOrEqualTo(Integer value) {
+            addCriterion("filetype <=", value, "filetype");
+            return (Criteria) this;
+        }
+
+        public Criteria andFiletypeIn(List<Integer> values) {
+            addCriterion("filetype in", values, "filetype");
+            return (Criteria) this;
+        }
+
+        public Criteria andFiletypeNotIn(List<Integer> values) {
+            addCriterion("filetype not in", values, "filetype");
+            return (Criteria) this;
+        }
+
+        public Criteria andFiletypeBetween(Integer value1, Integer value2) {
+            addCriterion("filetype between", value1, value2, "filetype");
+            return (Criteria) this;
+        }
+
+        public Criteria andFiletypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("filetype not between", value1, value2, "filetype");
+            return (Criteria) this;
+        }
+
         public Criteria andAddressLikeInsensitive(String value) {
             addCriterion("upper(address) like", value.toUpperCase(), "address");
             return (Criteria) this;

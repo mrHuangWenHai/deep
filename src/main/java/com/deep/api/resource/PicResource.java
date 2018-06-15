@@ -6,16 +6,12 @@ import com.deep.api.response.Responses;
 import com.deep.constant.FileTypeEnum;
 import com.deep.domain.model.Pic;
 import com.deep.domain.model.PicExample;
-import com.deep.domain.model.RepellentPlanModel;
 import com.deep.domain.service.PicService;
 import com.deep.api.Utils.FileUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -40,6 +36,10 @@ public class PicResource {
                            @RequestParam("file")MultipartFile file) {
 
         logger.info("invoke /uploadFile/upload [{}]",pic);
+        if (!pic.isBrand())
+        {
+            return Responses.errorResponse("商标耳牌不符合规则");
+        }
         try {
             String Header = FileUtil.getFileHeader(file);
 
@@ -113,7 +113,17 @@ public class PicResource {
     public Response getAll(@RequestBody Pic pic) {
 
       logger.info("/searchfile/searchAll {}", pic);
-      List<Pic> sizeOfAll = picService.getAll();
+        List<Pic> sizeOfAll = null;
+      if(pic.getFiletype() != 2)
+      {
+          PicExample picExample = new PicExample();
+          PicExample.Criteria criteria = picExample.createCriteria();
+          criteria.andFiletypeEqualTo(pic.getFiletype());
+          sizeOfAll = picService.findPicSelective(picExample);
+      }
+      else{
+          sizeOfAll = picService.getAll();
+      }
       int size = sizeOfAll.size();
       int page = pic.getPageNumb();
       int pageSize = pic.getLimit();
@@ -141,8 +151,11 @@ public class PicResource {
 
         PicExample picExample = new PicExample();
         PicExample.Criteria criteria = picExample.createCriteria();
+        if(pic.getFiletype() != 2)
+        {
+            criteria.andFiletypeEqualTo(pic.getFiletype());
+        }
         criteria.andExpertLike("%"+pic.getExpert()+"%");
-
         List<Pic> sizeOfAll = picService.findPicSelective(picExample);
         int size = sizeOfAll.size();
         int page = pic.getPageNumb();
@@ -169,6 +182,10 @@ public class PicResource {
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
         criteria.andUdateBetween(pic.getSdate(),pic.getEdate());
+        if(pic.getFiletype() != 2)
+        {
+            criteria.andFiletypeEqualTo(pic.getFiletype());
+        }
         List<Pic> sizeOfAll = picService.findPicSelective(picExample);
 //        Integer size = sizeOfAll.size();
 //        List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
@@ -195,6 +212,10 @@ public class PicResource {
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
         criteria.andBrandLike("%"+pic.getBrand()+"%");
+        if(pic.getFiletype() != 2)
+        {
+            criteria.andFiletypeEqualTo(pic.getFiletype());
+        }
         List<Pic> sizeOfAll = picService.findPicSelective(picExample);
 //        Integer size = sizeOfAll.size();
 //        List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
@@ -221,6 +242,10 @@ public class PicResource {
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
         criteria.andVaccineLike("%"+pic.getVaccine()+"%");
+        if(pic.getFiletype() != 2)
+        {
+            criteria.andFiletypeEqualTo(pic.getFiletype());
+        }
         List<Pic> sizeOfAll = picService.findPicSelective(picExample);
 //        Integer size = sizeOfAll.size();
 //        List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
@@ -247,6 +272,10 @@ public class PicResource {
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
         criteria.andSymptomLike("%"+pic.getSymptom()+"%");
+        if(pic.getFiletype() != 2)
+        {
+            criteria.andFiletypeEqualTo(pic.getFiletype());
+        }
         List<Pic> sizeOfAll = picService.findPicSelective(picExample);
 //        Integer size = sizeOfAll.size();
 //        List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
@@ -272,6 +301,10 @@ public class PicResource {
         PicExample picExample=new PicExample();
         PicExample.Criteria criteria=picExample.createCriteria();
         criteria.andUploaderLike("%"+pic.getUploader()+"%");
+        if(pic.getFiletype() != 2)
+        {
+            criteria.andFiletypeEqualTo(pic.getFiletype());
+        }
         List<Pic> sizeOfAll = picService.findPicSelective(picExample);
 //        Integer size = sizeOfAll.size();
 //        List<Pic> select=picService.findPicSelectiveWithRowbounds(picExample,pic.getPageNumb(),pic.getLimit());
@@ -286,5 +319,17 @@ public class PicResource {
         data.put("size",size);
         response.setData(data);
         return response;
+    }
+    @ResponseBody
+    @RequestMapping(value = "/pic/delete/{id}",method = RequestMethod.DELETE)
+    public Response deletePicById(@PathVariable(value = "id")Integer id)
+    {
+        if (picService.deleteById(id) != 0 )
+        {
+            return Responses.successResponse();
+        }
+        else {
+            return Responses.errorResponse("删除失败");
+        }
     }
 }
