@@ -36,10 +36,7 @@ public class PicResource {
                            @RequestParam("file")MultipartFile file) {
 
         logger.info("invoke /uploadFile/upload [{}]",pic);
-        if (!pic.isBrand())
-        {
-            return Responses.errorResponse("商标耳牌不符合规则");
-        }
+
         try {
             String Header = FileUtil.getFileHeader(file);
 
@@ -320,6 +317,7 @@ public class PicResource {
         response.setData(data);
         return response;
     }
+
     @ResponseBody
     @RequestMapping(value = "/pic/delete/{id}",method = RequestMethod.DELETE)
     public Response deletePicById(@PathVariable(value = "id")Integer id)

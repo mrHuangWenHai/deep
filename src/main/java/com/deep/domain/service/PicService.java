@@ -16,16 +16,10 @@ public class PicService {
     @Resource
     private PicMapper picMapper;
 
-
     public int insertPic(Pic pic) {
-
-
         int flag=picMapper.insertSelective(pic);
-
         return flag;
-
     }
-
 
     public List<Pic> findPicSelective(PicExample picExample) {
         List<Pic>find=this.picMapper.selectByExample(picExample);
