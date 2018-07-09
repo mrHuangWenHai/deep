@@ -150,8 +150,8 @@
         order by gmt_modified desc
 
     </select>
-    <select id="getRepellentPlanModelByTradeMarkEarTag" resultMap="RepellentPlan">
 
+    <select id="getRepellentPlanModelByTradeMarkEarTag" resultMap="RepellentPlan">
         SELECT
         *
         FROM
@@ -165,13 +165,30 @@
     </select>
 
     <select id="getRepellentPlanModelById" resultMap="RepellentPlan">
-
         SELECT
         *
         FROM
         repellent_plan
         WHERE
+        id = #{id}
+    </select>
 
+
+    <select id="getRepellentPlanModelCount" >
+        SELECT
+        COUNT (*)
+        FROM
+        repellent_plan
+        WHERE
+        ispass_check = 0 AND factory_num = #{factoryNum}
+    </select>
+
+    <select id="getRepellentPlanModelOperator">
+        SELECT
+        operator_id
+        FROM
+        repellent_plan
+        WHERE
         id = #{id}
     </select>
 

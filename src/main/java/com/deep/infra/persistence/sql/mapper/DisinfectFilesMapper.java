@@ -22,6 +22,10 @@ public interface DisinfectFilesMapper {
 
     DisinfectFilesModel getDisinfectFilesModelById(@Param("id") Long id);
 
+    int getDisinfectFilesModelCount(@Param("factoryNum") BigInteger factoryNum);
+
+    Long getDisinfectFilesModelOperator(@Param("id") Long id);
+
     List<DisinfectFilesModel> getDisinfectFilesModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum);
 
     List<DisinfectFilesModel> getDisinfectFilesModelByFactoryNumAndIsPassCheck(@Param("factoryNum")BigInteger factoryNum,

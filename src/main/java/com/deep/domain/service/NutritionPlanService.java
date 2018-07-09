@@ -19,6 +19,14 @@ public class NutritionPlanService {
     @Resource
     private NutritionPlanMapper nutritionPlanMapper;
 
+    public int getNutritionPlanModelCount(Long factoryNum) {
+        return this.nutritionPlanMapper.getNutritionPlanModelCount(factoryNum);
+    }
+
+    public Long getImmunePlanModelOperator(Long id) {
+        return this.nutritionPlanMapper.getImmunePlanModelOperator(id);
+    }
+
     public int addPlan(NutritionPlanWithBLOBs nutritionPlanWithBLOBs){
         return this.nutritionPlanMapper.insert(nutritionPlanWithBLOBs);
     }

@@ -497,4 +497,8 @@ public class UserService {
     public UserModel getAOneUser(Long uid) {
         return userMapper.queryUserById(uid);
     }
+
+    public String getTelephoneById(Long id) {
+        return this.userMapper.getTelephoneById(id);
+    }
 }

@@ -40,6 +40,14 @@ public class OperationFileService {
     return operationFileMapper.updateCheckStatus(id, checkStatus, unpassReason, professorName, professorId);
   }
 
+  public int getOperationFileCount(BigInteger factoryNum) {
+    return this.operationFileMapper.getOperationFileCount(factoryNum);
+  }
+
+  public Long getOperationFileOperator(Long id) {
+    return this.operationFileMapper.getOperationFileOperator(id);
+  }
+
   public int updateSupStatus(int id, short supStatus, String supervisorName, int supervisorId) {
     return operationFileMapper.updateSupStatus(id, supStatus, supervisorName, supervisorId);
   }

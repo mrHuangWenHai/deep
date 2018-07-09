@@ -12,8 +12,6 @@ import java.util.List;
 public interface DiagnosisPlanMapper {
 
 
-
-
     int deleteByPrimaryKey(Integer id);
 
     int insert(@Param("diagnosisPlanModel") DiagnosisPlanModel diagnosisPlanModel);

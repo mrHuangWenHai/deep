@@ -4,6 +4,7 @@ package com.deep.domain.service;
 import com.deep.api.request.RepellentRequest;
 import com.deep.domain.model.RepellentPlanModel;
 import com.deep.infra.persistence.sql.mapper.RepellentPlanMapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +46,14 @@ public class RepellentPlanService {
     public List<RepellentPlanModel> getRepellentPlanModelByFactoryNumAndIsPassSup(BigInteger factoryNum ,String ispassSup, RowBounds bounds){
         return this.repellentPlanMapper.getRepellentPlanModelByFactoryNumAndIsPassSup(factoryNum, ispassSup, bounds);
 
+    }
+
+    public int getRepellentPlanModelCount(BigInteger factoryNum) {
+        return this.repellentPlanMapper.getRepellentPlanModelCount(factoryNum);
+    }
+
+    public int getRepellentPlanModelOperator (Long id) {
+        return this.repellentPlanMapper.getRepellentPlanModelOperator(id);
     }
 
     public int updateRepellentPlanModelByProfessor(RepellentPlanModel repellentPlanModel){

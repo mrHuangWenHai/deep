@@ -45,6 +45,13 @@ public class ImmunePlanService {
         return this.immunePlanMapper.getImmunePlanModelByFactoryNumAndIsPassSup(factoryNum , ispassSup, bounds);
     }
 
+    public int getImmunePlanModelCount(BigInteger factoryNum) {
+        return this.immunePlanMapper.getImmunePlanModelCount(factoryNum);
+    }
+
+    public Long getImmunePlanModelOperator(Long id) {
+        return this.immunePlanMapper.getImmunePlanModelOperator(id);
+    }
 
     public int updateImmunePlanModelByProfessor(ImmunePlanModel immunePlanModel){
 

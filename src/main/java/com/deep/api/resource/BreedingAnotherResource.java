@@ -43,7 +43,6 @@ public class BreedingAnotherResource {
     @Resource
     private UserService userService;
 
-
     /**
      * 查询某个羊场或者某个代理下面的所有记录（包括子代理）
      * @param page 页号
@@ -304,7 +303,6 @@ public class BreedingAnotherResource {
         Long success = breedingPlanAnotherService.addARecordByOperator(breedingRequest);
         if (success > 0) {
             data.put("success", success);
-            // TODO　Ｒｅｄｉｓ需要修改
             short agentID = this.factoryService.queryOneAgentByID(breedingRequest.getFactoryNum().longValue());
             String professorKey = agentID + "_professor";
             String supervisorKey = breedingRequest.getFactoryNum().toString() + "_supervisor";
@@ -319,16 +317,9 @@ public class BreedingAnotherResource {
                 if( JedisUtil.redisJudgeTime(professorKey) ) {
                     System.out.println("in redis:");
                     List<String> phone = userService.getProfessorTelephoneByFactoryNum(BigInteger.valueOf(breedingRequest.getFactoryNum()));
-                    if (phone == null) {
-                        return Responses.errorResponse("添加记录成功，但是发送消息失败，请联系管理员");
-                    }
-                    StringBuffer phoneList = new StringBuffer("");
-                    for (String aPhone : phone) {
-                        phoneList = phoneList.append(aPhone).append(",");
-                    }
-                    System.out.println("phoneList = " + phoneList);
-                    if (phoneList.length() != 0) {
-                        if (JedisUtil.redisSendMessage(phoneList.toString(), getCertainKeyValue("Message"))) {
+                    System.out.println("send");
+                    if (phone.size() != 0) {
+                        if (JedisUtil.redisSendMessage(phone, getCertainKeyValue("Message"))) {
                             JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(Objects.requireNonNull(getCertainKeyValue("ExpireTime"))) * 24 * 60 * 60);
                         }
                     }
@@ -337,15 +328,13 @@ public class BreedingAnotherResource {
             if( !("1".equals(getCertainKeyValue(testSendSupervisor)))) {
                 if(JedisUtil.redisJudgeTime(supervisorKey)) {
                     List<String> phone = userService.getSuperiorTelephoneByFactoryNum(BigInteger.valueOf(breedingRequest.getFactoryNum()));
-                    StringBuffer phoneList = new StringBuffer("");
-                    for (String aPhone : phone) {
-                        phoneList = phoneList.append(aPhone).append(",");
-                    }
-                    if (phoneList.length() != 0) {
-                        if( JedisUtil.redisSendMessage(phoneList.toString(), getCertainKeyValue("Message"))) {
+
+                    if (phone.size() != 0) {
+                        if( JedisUtil.redisSendMessage(phone, getCertainKeyValue("Message"))) {
                             JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",Integer.parseInt(Objects.requireNonNull(getCertainKeyValue("ExpireTime")))*24*60*60);
                         }
                     }
+                    System.out.println("send");
                 }
             }
 
@@ -488,11 +477,11 @@ public class BreedingAnotherResource {
         if (success <= 0) {
             return Responses.errorResponse("技术员审核错误！");
         } else {
+
             String professorKey = this.factoryService.getAgentIDByFactoryNumber(Long.valueOf(professorRequest.getFactoryNum().toString())) + "_professor";
             if (1 == professorRequest.getIspassCheck() && !JedisUtil.redisCancelProfessorSupervisorWorks(professorKey)) {
                 return Responses.errorResponse("审核成功,短信服务器错误");
             }
-
             HashMap<String, Object> data = new HashMap<>();
             data.put("success", "技术员审核成功！");
             return Responses.successResponse(data);

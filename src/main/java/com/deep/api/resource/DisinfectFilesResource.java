@@ -8,6 +8,7 @@ import com.deep.api.request.DisinfectRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.DisinfectFilesModel;
+import com.deep.domain.model.MobileAnnouncementModel;
 import com.deep.domain.service.DisinfectFilesService;
 import com.deep.domain.service.FactoryService;
 import com.deep.domain.service.UserService;
@@ -91,7 +92,7 @@ public class DisinfectFilesResource {
                 disinfectFilesModel.setDisinfectEartag(fileName);
                 disinfectFilesService.setDisinfectFilesModel(disinfectFilesModel);
 
-                //　TODO Ｒｅｄｉｓ需要重新检查
+                //　TODO Redis需要重新检查
                 //数据插入redis
                 //professor字段为 代理ID + _professor
                 //supervisor字段为 工厂号 + _supervisor
@@ -103,27 +104,15 @@ public class DisinfectFilesResource {
                 String testSendSupervisor = disinfectFilesModel.getFactoryNum().toString() + "_supervisor_AlreadySend";
                 JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
                 JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
-                System.out.println("插入后,审核前");
-                System.out.println("pk+"+professorKey+" "+"pv:"+JedisUtil.getCertainKeyValue(professorKey));
-                System.out.println("sk+"+supervisorKey+" "+"sv:"+JedisUtil.getCertainKeyValue(supervisorKey));
-                System.out.println("tpk+"+testSendProfessor+" "+"tpv:"+JedisUtil.getCertainKeyValue(testSendProfessor));
-                System.out.println("tsk+"+testSendSupervisor+" "+"tsv:"+JedisUtil.getCertainKeyValue(testSendSupervisor));
                 //发送短信后 testSendProfessor存放在redis中 过期时间为ExpireTime
                 if( !("1".equals(JedisUtil.getCertainKeyValue(testSendProfessor)))) {
                     //System.out.println("testSendProfessorValue:"+jedisUtil.getCertainKeyValue(testSendProfessor));
                     if( JedisUtil.redisJudgeTime(professorKey) ) {
                         System.out.println("in redis:");
                         List<String> phone = userService.getProfessorTelephoneByFactoryNum(disinfectFilesModel.getFactoryNum());
-                        //  需完成:userModels.getTelephone()赋值给String
-                        // 获得StringBuffer手机号
-                        StringBuffer phoneList = new StringBuffer("");
-                        System.out.println("Here");
-                        for (String aPhone : phone) {
-                            phoneList = phoneList.append(aPhone).append(",");
-                            System.out.println("Phone: " + aPhone);
-                        }
-                        if (phoneList.length() != 0) {
-                            if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
+
+                        if (phone.size() != 0) {
+                            if (JedisUtil.redisSendMessage(phone, JedisUtil.getCertainKeyValue("Message"))) {
                                 JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
                             }
                         }
@@ -133,16 +122,8 @@ public class DisinfectFilesResource {
                 if( !("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
                     if(JedisUtil.redisJudgeTime(supervisorKey)) {
                         List<String> phone = userService.getSuperiorTelephoneByFactoryNum(disinfectFilesModel.getFactoryNum());
-                        StringBuffer phoneList = new StringBuffer("");
-                        for (String aPhone : phone) {
-                            phoneList = phoneList.append(aPhone).append(",");
-                            System.out.println("Phone:" + aPhone);
-                        }
-                        System.out.println("here:");
-                        System.out.println("PhoneList':" + phoneList.length());
-                        if (phoneList.length() != 0) {
-
-                            if( JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
+                        if (phone.size() != 0) {
+                            if( JedisUtil.redisSendMessage(phone, JedisUtil.getCertainKeyValue("Message"))) {
                                 JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime"))*24*60*60);
                             }
                         }
@@ -170,7 +151,7 @@ public class DisinfectFilesResource {
     public Response findShow(@PathVariable(value = "id")long id,
                              DisinfectRequest disinfectRequest,
                              HttpServletRequest httpServletRequest) {
-        logger.info("invoke get /{} {}",id,disinfectRequest);
+        logger.info("invoke get /{} {}", id, disinfectRequest);
 
         Map<Long, List<Long>> factoryMap = null;
 
@@ -308,6 +289,17 @@ public class DisinfectFilesResource {
             || disinfectRequest.getUnpassReason() == null) {
             return Responses.errorResponse("请完善表单信息!");
         } else {
+            if (disinfectRequest.getIspassCheck() == 2) {
+                String telephone = userService.getTelephoneById(this.disinfectFilesService.getDisinfectFilesModelOperator((long) id));
+                MobileAnnouncementModel model = new MobileAnnouncementModel();
+                if (telephone != null) {
+                    model.setMobile(telephone);
+                    model.setMessage("您有一条记录被退回,请修改！");
+                    JedisUtil.oneMessageSendResult(model);
+                } else {
+                    return Responses.errorResponse("操作员ID无效！");
+                }
+            }
             disinfectRequest.setProfessor(disinfectRequest.getName());
             disinfectRequest.setUpassReason(disinfectRequest.getUnpassReason());
             int row = disinfectFilesService.updateDisinfectFilesModelByProfessor(disinfectRequest);

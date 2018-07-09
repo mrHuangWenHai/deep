@@ -24,6 +24,10 @@ public interface OperationFileMapper {
 
   int addOperationFile(@Param("operationFile")OperationFile operationFile);
 
+  int getOperationFileCount(@Param("factoryNum")BigInteger factoryNum);
+
+  Long getOperationFileOperator(@Param("id") Long id);
+
   int updateCheckStatus(@Param("id")int id,
                         @Param("ispassCheck") short checkStatus,
                         @Param("unpassReason") String unpassReason,

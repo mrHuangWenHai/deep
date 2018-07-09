@@ -29,6 +29,14 @@ public class DisinfectFilesService {
         return this.disinfectFilesMapper.getDisinfectFilesModelById(id);
     }
 
+    public int getDisinfectFilesModelCount(BigInteger factoryNum) {
+        return this.disinfectFilesMapper.getDisinfectFilesModelCount(factoryNum);
+    }
+
+    public Long getDisinfectFilesModelOperator(Long id) {
+        return this.disinfectFilesMapper.getDisinfectFilesModelOperator(id);
+    }
+
     public List<DisinfectFilesModel> getDisinfectFilesModelByTradeMarkEarTag(List<String[]> disinfectEartag, RowBounds bounds){
         return this.disinfectFilesMapper.getDisinfectFilesModelByTradeMarkEarTag(disinfectEartag,bounds);
     }

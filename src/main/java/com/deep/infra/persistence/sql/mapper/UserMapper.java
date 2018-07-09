@@ -438,4 +438,10 @@ public interface UserMapper {
      */
     @Select("select count(*) from user_manage where user_factory = #{factory} and is_factory = #{which}")
     Long getCountsOfOneFactoryOrOneAgent(@Param("factory") Long factory, @Param("which") Byte which);
+
+    @Select("select user_telephone from user_manage where id = #{id}")
+    String getTelephoneById(@Param("id") Long id);
+
+
+
 }

@@ -86,11 +86,10 @@ public class RepellentPlanResource {
             String filePath = pathPre + repellentPlanModel.getFactoryNum().toString() + "/repellentEartag/";
             fileName = UploadUtil.uploadFile(repellentEartagFile.getBytes(), filePath, fileName);
             repellentPlanModel.setRepellentEartag(fileName);
-            int issuccess = repellentPlanService.setRepellentPlanModel(repellentPlanModel);
-            if (issuccess == 0) {
+            int isSuccess = repellentPlanService.setRepellentPlanModel(repellentPlanModel);
+            if (isSuccess == 0) {
                 return Responses.errorResponse("add error");
             }
-            // TODO 需要重新检查一下Redis问题
             short agentID = this.factoryService.queryOneAgentByID(repellentPlanModel.getFactoryNum().longValue());
             String professorKey = agentID + "_professor";
             String supervisorKey = repellentPlanModel.getFactoryNum().toString() + "_supervisor";
@@ -102,35 +101,17 @@ public class RepellentPlanResource {
             JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
             JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
 
-
-            System.out.println("插入后,审核前");
-            System.out.println("pk+"+professorKey+" "+"pv:"+JedisUtil.getCertainKeyValue(professorKey));
-            System.out.println("sk+"+supervisorKey+" "+"sv:"+JedisUtil.getCertainKeyValue(supervisorKey));
-            System.out.println("tpk+"+testSendProfessor+" "+"tpv:"+JedisUtil.getCertainKeyValue(testSendProfessor));
-            System.out.println("tsk+"+testSendSupervisor+" "+"tsv:"+JedisUtil.getCertainKeyValue(testSendSupervisor));
-
             //若redis中 若干天未发送短信
             //若未完成超过50条
             if (!("1".equals(JedisUtil.getCertainKeyValue(testSendProfessor)))) {
                 //System.out.println("testSendProfessorValue:" + JedisUtil.getCertainKeyValue(testSendProfessor));
                 if (JedisUtil.redisJudgeTime(professorKey)) {
                     //System.out.println(professorKey);
-
                     List<String> phone = userService.getProfessorTelephoneByFactoryNum(repellentPlanModel.getFactoryNum());
 
-
-                    //需完成:userModels.getTelephone()赋值给String
-                    //获得StringBuffer手机号
-                    StringBuffer phoneList = new StringBuffer("");
-
-
-                    for (String aPhone : phone) {
-                        phoneList = phoneList.append(aPhone).append(",");
-                    }
-
-                    if (phoneList.length() != 0) {
+                    if (phone.size()!= 0) {
                       //发送成功 更新redis中字段
-                      if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
+                      if (JedisUtil.redisSendMessage(phone, JedisUtil.getCertainKeyValue("Message"))) {
                         JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
                       }
                     }
@@ -144,18 +125,10 @@ public class RepellentPlanResource {
 
                     List<String> phone = userService.getSuperiorTelephoneByFactoryNum(repellentPlanModel.getFactoryNum());
 
-                    StringBuffer phoneList = new StringBuffer("");
-
-                    for (String aPhone : phone) {
-                        phoneList = phoneList.append(aPhone).append(",");
-                    }
-
-                    if (phoneList.length() != 0) {
-                      if (JedisUtil.redisSendMessage(phoneList.toString(), JedisUtil.getCertainKeyValue("Message"))) {
-
+                    if (phone.size() != 0) {
+                      if (JedisUtil.redisSendMessage(phone, JedisUtil.getCertainKeyValue("Message"))) {
                         JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
                         System.out.println("发送成功！");
-
 
                       }
                     }
