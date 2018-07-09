@@ -1,4 +1,4 @@
-# Built application files and Maven
+# Build application files and Maven
 target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -8,6 +8,9 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
+
+# Static files
+
 
 # Compiled class files
 *.class
