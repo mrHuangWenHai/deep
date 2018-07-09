@@ -377,7 +377,6 @@ public class DisinfectFilesResource {
             response.setData(data);
             return response;
         }
-
         logger.info("invoke operatorUpdate {}", disinfectFilesModel);
         disinfectFilesModel.setId(id);
         DisinfectFilesModel temp = this.disinfectFilesService.getDisinfectFilesModelById(id);
