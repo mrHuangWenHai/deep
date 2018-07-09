@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--Mapper名称 对应infra中mapper类名-->
+<mapper namespace="com.deep.infra.persistence.sql.mapper.EnvironmentTraceMapper">
+
+    <resultMap id="EnvironmentTrace" type="com.deep.domain.model.EnvironmentTraceModel">
+        <id property="id" column="id"/>
+        <result property="time" column="time"/>
+        <result property="factoryNum" column="factory_num"/>
+        <result property="tempIndoor" column="temp_indoor"/>
+        <result property="tempWater" column="temp_water"/>
+        <result property="ph" column="ph"/>
+        <result property="hum" column="hum"/>
+        <result property="pm" column="pm"/>
+        <result property="nh3" column="nh3"/>
+    </resultMap>
+
+    <select id="getEnvironmentTraceModelLatestByFactoryNum" resultMap="EnvironmentTrace">
+        SELECT
+        *
+        FROM
+        env_trace
+        WHERE
+        factory_num = #{factoryNum}
+        ORDER BY id DESC limit 1
+    </select>
+
+    <select id="getEnvironmentTraceModelByFactoryNum" resultMap="EnvironmentTrace">
+        SELECT
+        *
+        FROM
+        env_trace
+        WHERE
+        factory_num = #{factoryNum}
+    </select>
+
+    <delete id="deleteEnvironmentTraceModel">
+        DELETE
+        *
+        FROM
+        env_trace
+    </delete>
+</mapper>

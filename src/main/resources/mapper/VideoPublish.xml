@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.deep.infra.persistence.sql.mapper.VideoPublicMapper">
+
+    <resultMap id="VideoPublish" type="com.deep.domain.model.VideoPublish">
+        <id property="id" column="id" />
+        <result property="fileName" column="file_name"/>
+        <result property="gmtCreate" column="gmt_create"/>
+        <result property="professorId" column="professor_id" />
+        <result property="professorName" column="professor_name"/>
+    </resultMap>
+
+    <insert id="addVideoPublish" useGeneratedKeys="true" keyProperty="videoPublish.id">
+        insert into video_publish(
+        id,
+        professor_name,
+        professor_id,
+        file_name,
+        gmt_create
+        ) values (
+        #{videoPublish.id},
+        #{videoPublish.professorName},
+        #{videoPublish.professorId},
+        #{videoPublish.fileName},
+        now()
+        )
+    </insert>
+
+    <select id="selectVideoFile" resultMap="VideoPublish">
+        select *
+        from video_publish
+        where 1 = 1
+        <if test="videoPublishRequest.fileName != null">
+            and file_name = #{videoPublishRequest.fileName}
+        </if>
+
+        <if test="videoPublishRequest.professorId != null">
+            and professor_id = #{videoPublishRequest.professorId}
+        </if>
+
+        <if test="videoPublishRequest.professorName != null">
+            and professor_name = #{videoPublishRequest.professorName}
+        </if>
+
+    </select>
+
+    <select id="allTotal" resultType="java.lang.Integer">
+        select count(*)
+        from video_publish
+    </select>
+
+    <delete id="deleteVideoFile">
+        delete from video_publish
+        where id = #{id}
+    </delete>
+
+</mapper>

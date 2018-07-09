@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--Mapper名称 对应infra中mapper类名-->
+<mapper namespace="com.deep.infra.persistence.sql.mapper.TempDataMapper">
+
+    <insert id="setTempData">
+        INSERT INTO temp_data(
+        dev_addr,
+        temp,
+        "time"
+        ) VALUE (
+        #{tempDataModel.devAddr},
+        #{tempDataModel.temp},
+        #{tempDataModel.time}
+        )
+    </insert>
+
+    <resultMap id="TempData" type="com.deep.domain.model.TempDataModel">
+        <result property="id" column="id"/>
+        <result property="devAddr" column="dev_addr"/>
+        <result property="temp" column="temp"/>
+        <result property="time" column="time"/>
+    </resultMap>
+
+    <select id="getTempDataLatest" resultMap="TempData">
+        SELECT
+        *
+        FROM
+        temp_data
+        ORDER BY id DESC limit 1
+    </select>
+
+    <select id="getTempDataByid" resultMap="TempData">
+        SELECT
+        *
+        FROM
+        temp_data
+        WHERE
+        id = #{id}
+    </select>
+
+    <select id="getTempDataBytime" resultMap="TempData">
+        SELECT
+        *
+        FROM
+        temp_data
+        WHERE
+        "time" BETWEEN #{timeStart} and #{timeEnd}
+    </select>
+
+    <delete id="deleteTempData">
+        DELETE
+        FROM
+        temp_data
+    </delete>
+
+
+</mapper>
