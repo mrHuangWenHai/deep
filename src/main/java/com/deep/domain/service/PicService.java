@@ -7,7 +7,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Date;
+import java.io.File;
 import java.util.List;
 
 @Service
@@ -16,16 +16,10 @@ public class PicService {
     @Resource
     private PicMapper picMapper;
 
-
     public int insertPic(Pic pic) {
-
-
         int flag=picMapper.insertSelective(pic);
-
         return flag;
-
     }
-
 
     public List<Pic> findPicSelective(PicExample picExample) {
         List<Pic>find=this.picMapper.selectByExample(picExample);
@@ -72,5 +66,15 @@ public class PicService {
 //    {
 //        return this.picMapper.selectByFilename(filename);
 //    }
+    public int deleteById(Integer id)
+    {
+        Pic pic = picMapper.selectByPrimaryKey(id.longValue());
+        File file = new File(pic.getAddress());
+        if(file.exists())
+        {
+            file.delete();
+        }
+        return picMapper.deleteByPrimaryKey(id.longValue());
+    }
 
 }

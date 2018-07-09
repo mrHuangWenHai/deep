@@ -31,7 +31,6 @@
         <mapper resource="mapper/DiagnosisPlanMapper.xml"/>
         <mapper resource="mapper/NutritionPlanMapper.xml"/>
         <!--<mapper resource="mapper/NoticePlanMapper.xml"/>-->
-
         <mapper resource="mapper/PicMapper.xml"/>
         <mapper resource="mapper/MessageMapper.xml"/>
         <mapper resource="mapper/GenealogicalFilesMapperxml.xml" />

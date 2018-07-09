@@ -15,6 +15,7 @@
     <result column="filename" property="filename" jdbcType="VARCHAR" />
     <result column="filetype" property="filetype" jdbcType="INTEGER"/>
   </resultMap>
+
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >
@@ -73,9 +74,11 @@
       </foreach>
     </where>
   </sql>
+
   <sql id="Base_Column_List" >
     id, address, brand, udate, expert, sex, solution, symptom, uploader, vaccine, filename
   </sql>
+
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.deep.domain.model.PicExample" >
     select
     <if test="distinct" >
@@ -145,11 +148,12 @@
     <!--</select>-->
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from pic
     where id = #{id,jdbcType=BIGINT}
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from pic
     where id = #{id,jdbcType=BIGINT}
@@ -163,15 +167,16 @@
   </delete>
 
   <insert id="insert" parameterType="com.deep.domain.model.Pic" useGeneratedKeys="true" keyProperty="returnId">
-    insert into pic (id, address, brand, 
-      udate, expert, sex, 
-      solution, symptom, uploader, 
+    insert into pic (id, address, brand,
+      udate, expert, sex,
+      solution, symptom, uploader,
       vaccine, filename, filetype)
-    values (#{id,jdbcType=BIGINT}, #{address,jdbcType=VARCHAR}, #{brand,jdbcType=VARCHAR}, 
-      #{udate,jdbcType=TIMESTAMP}, #{expert,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, 
-      #{solution,jdbcType=VARCHAR}, #{symptom,jdbcType=VARCHAR}, #{uploader,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{address,jdbcType=VARCHAR}, #{brand,jdbcType=VARCHAR},
+      #{udate,jdbcType=TIMESTAMP}, #{expert,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR},
+      #{solution,jdbcType=VARCHAR}, #{symptom,jdbcType=VARCHAR}, #{uploader,jdbcType=VARCHAR},
       #{vaccine,jdbcType=VARCHAR}, #{filename,jdbcType=VARCHAR}), #{filetype,jdbcType=INTEGER}
   </insert>
+
   <insert id="insertSelective" parameterType="com.deep.domain.model.Pic" >
     insert into pic
     <trim prefix="(" suffix=")" suffixOverrides="," >
