@@ -368,6 +368,7 @@ public class UserResource {
                     default:
                         userModel.setUserRole(0);
                 }
+                // 更新代理相关信息
                 AgentModel agentModel1 = agentService.getOneAgent(userRequest.getFactoryId());
                 agentModel1.setResponsibleId((long)2);
                 Long success = agentService.updateAgent(agentModel1);
@@ -376,6 +377,7 @@ public class UserResource {
                 }
             } else if (userRequest.getFlag() == 3) {
                 userModel.setIsFactory(which);
+                userModel.setUserRole(0);
             }
 
             userModel.setPkUserid(userRequest.getUsername());
@@ -388,7 +390,6 @@ public class UserResource {
                 userModel.setUserPermit("000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
             }
             userModel.setIsExtended((byte)0);
-            userModel.setUserRole(0);
             Long success = userService.addUser(userModel);
             if (success <= 0) {
                 return Responses.errorResponse("用户信息增加失败,请检查网络后重试");
