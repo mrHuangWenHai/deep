@@ -43,7 +43,15 @@ public class DisinfectFilesModel {
     private String gmtModified;     //修改时间
     private String gmtProfessor;     //审核时间 可空
     private String gmtSupervise;     //监督确认时间 可空
+    private String eartagFile;
 
+    public String getEartagFile() {
+        return eartagFile;
+    }
+
+    public void setEartagFile(String eartagFile) {
+        this.eartagFile = eartagFile;
+    }
 
     public Long getId() {
         return id;

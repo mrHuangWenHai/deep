@@ -64,7 +64,6 @@ public class DisinfectFilesResource {
     @PostMapping(value = "")
     public Response saveShow(@Valid DisinfectFilesModel disinfectFilesModel,
                              BindingResult bindingResult,
-                             @RequestParam(value = "eartagFile") MultipartFile disinfectEartagFile,
                              HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("数据异常,请按照规范填写!");
@@ -73,65 +72,61 @@ public class DisinfectFilesResource {
             response.setData(map);
             return response;
         }
+        // @RequestParam(value = "eartagFile") MultipartFile disinfectEartagFile,
         logger.info("invoke post /df {}", disinfectFilesModel);
-        if( disinfectEartagFile.isEmpty() ) {
-            return Responses.errorResponse("请完善表单信息!");
-        } else {
-            try {
-                //System.out.println("running");
-                String fileName = disinfectEartagFile.getOriginalFilename();
-                //目的路径
-                String filePath = pathPre + disinfectFilesModel.getFactoryNum().toString() + "/disinfectEartag/";
-                fileName = UploadUtil.uploadFile(disinfectEartagFile.getBytes(),filePath,fileName);
-                //System.out.println("save before");
+        try {
+//                //System.out.println("running");
+//                String fileName = disinfectEartagFile.getOriginalFilename();
+//                //目的路径
+//                String filePath = pathPre + disinfectFilesModel.getFactoryNum().toString() + "/disinfectEartag/";
+//                fileName = UploadUtil.uploadFile(disinfectEartagFile.getBytes(),filePath,fileName);
+            //System.out.println("save before");
 
-                //数据插入数据库
-                //System.out.println("mysql执行前");
+            //数据插入数据库
+            //System.out.println("mysql执行前");
 
-                disinfectFilesModel.setDisinfectEartag(fileName);
-                disinfectFilesService.setDisinfectFilesModel(disinfectFilesModel);
+            disinfectFilesModel.setDisinfectEartag(disinfectFilesModel.getEartagFile());
+            disinfectFilesService.setDisinfectFilesModel(disinfectFilesModel);
 
-                //数据插入redis
-                //professor字段为 代理ID + _professor
-                //supervisor字段为 工厂号 + _supervisor
-                short agentID = this.factoryService.queryOneAgentByID(disinfectFilesModel.getFactoryNum().longValue());
-                String professorKey = agentID + "_professor";
-                String supervisorKey = disinfectFilesModel.getFactoryNum().toString() + "_supervisor";
+            //数据插入redis
+            //professor字段为 代理ID + _professor
+            //supervisor字段为 工厂号 + _supervisor
+            short agentID = this.factoryService.queryOneAgentByID(disinfectFilesModel.getFactoryNum().longValue());
+            String professorKey = agentID + "_professor";
+            String supervisorKey = disinfectFilesModel.getFactoryNum().toString() + "_supervisor";
 
-                String testSendProfessor = agentID + "_professor_AlreadySend";
-                String testSendSupervisor = disinfectFilesModel.getFactoryNum().toString() + "_supervisor_AlreadySend";
-                JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
-                JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
+            String testSendProfessor = agentID + "_professor_AlreadySend";
+            String testSendSupervisor = disinfectFilesModel.getFactoryNum().toString() + "_supervisor_AlreadySend";
+            JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
+            JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
 
-                //发送短信后 testSendProfessor存放在redis中 过期时间为ExpireTime
-                if( !("1".equals(JedisUtil.getCertainKeyValue(testSendProfessor)))) {
-                    //System.out.println("testSendProfessorValue:"+jedisUtil.getCertainKeyValue(testSendProfessor));
-                    if( JedisUtil.redisJudgeTime(professorKey) ) {
-                        System.out.println("in redis:");
-                        List<String> phone = userService.getProfessorTelephoneByFactoryNum(disinfectFilesModel.getFactoryNum());
-                        if (phone.size() != 0) {
-                            if (JedisUtil.redisSendMessage(phone, JedisUtil.getCertainKeyValue("Message"))) {
-                                JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
-                            }
+            //发送短信后 testSendProfessor存放在redis中 过期时间为ExpireTime
+            if( !("1".equals(JedisUtil.getCertainKeyValue(testSendProfessor)))) {
+                //System.out.println("testSendProfessorValue:"+jedisUtil.getCertainKeyValue(testSendProfessor));
+                if( JedisUtil.redisJudgeTime(professorKey) ) {
+                    System.out.println("in redis:");
+                    List<String> phone = userService.getProfessorTelephoneByFactoryNum(disinfectFilesModel.getFactoryNum());
+                    if (phone.size() != 0) {
+                        if (JedisUtil.redisSendMessage(phone, JedisUtil.getCertainKeyValue("Message"))) {
+                            JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
                         }
                     }
                 }
-
-                if( !("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
-                    if(JedisUtil.redisJudgeTime(supervisorKey)) {
-                        List<String> phone = userService.getSuperiorTelephoneByFactoryNum(disinfectFilesModel.getFactoryNum());
-                        if (phone.size() != 0) {
-                            if( JedisUtil.redisSendMessage(phone, JedisUtil.getCertainKeyValue("Message"))) {
-                                JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime"))*24*60*60);
-                            }
-                        }
-                    }
-                }
-                return JudgeUtil.JudgeSuccess("id",disinfectFilesModel.getId());
-
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+
+            if( !("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
+                if(JedisUtil.redisJudgeTime(supervisorKey)) {
+                    List<String> phone = userService.getSuperiorTelephoneByFactoryNum(disinfectFilesModel.getFactoryNum());
+                    if (phone.size() != 0) {
+                        if( JedisUtil.redisSendMessage(phone, JedisUtil.getCertainKeyValue("Message"))) {
+                            JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime"))*24*60*60);
+                        }
+                    }
+                }
+            }
+            return JudgeUtil.JudgeSuccess("id",disinfectFilesModel.getId());
+        } catch (Exception ex) {
+            System.out.printf("this is out");
         }
         return Responses.errorResponse("数据录入成功, 短信服务器异常!");
     }
