@@ -22,6 +22,10 @@ public interface ImmunePlanMapper {
 
     ImmunePlanModel getImmunePlanModelById(@Param("id") Long id);
 
+    int getImmunePlanModelCount(@Param("factoryNum")BigInteger factoryNum);
+
+    Long getImmunePlanModelOperator(@Param("id") Long id);
+
     List<ImmunePlanModel> getImmunePlanModelByFactoryNum(@Param("factoryNum")BigInteger factoryNum);
 
     List<ImmunePlanModel> getImmunePlanModelByFactoryNumAndIsPassCheck(@Param("factoryNum")BigInteger factoryNum ,

@@ -150,12 +150,33 @@
     delete from nutrition_plan
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
   <delete id="deleteByExample" parameterType="com.deep.domain.model.NutritionPlanExample" >
     delete from nutrition_plan
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
+
+
+  <select id="getNutritionPlanModelCount">
+    SELECT
+    COUNT (*)
+    FROM
+    nutrition_plan
+    WHERE
+    ispass_check = 0 AND factory_num = #{factoryNum}
+  </select>
+
+  <select id="getImmunePlanModelOperator">
+    SELECT
+    operator_id
+    FROM
+    nutrition_plan
+    WHERE
+    id = #{id}
+  </select>
+
   <insert id="insert" parameterType="com.deep.domain.model.NutritionPlanWithBLOBs"
           useGeneratedKeys="true" keyProperty="id">
     insert into nutrition_plan (

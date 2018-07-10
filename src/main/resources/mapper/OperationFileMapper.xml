@@ -84,6 +84,24 @@
         order by gmt_modified desc
     </select>
 
+    <select id="getOperationFileCount">
+        SELECT
+        COUNT (*)
+        FROM
+        operation_file
+        WHERE
+        ispass_check = 0 AND factory_num = #{factoryNum}
+    </select>
+
+    <select id="getOperationFileOperator">
+        SELECT
+        operator_id
+        FROM
+        operation_file
+        WHERE
+        id = #{id}
+    </select>
+
     <insert id="addOperationFile" useGeneratedKeys="true" keyColumn="id" keyProperty="operationFile.id">
         insert into operation_file(
         id,

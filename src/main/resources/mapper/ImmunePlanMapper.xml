@@ -182,6 +182,24 @@
     </select>
 
 
+    <select id="getImmunePlanModelCount">
+        SELECT
+        COUNT (*)
+        FROM
+        immune_plan
+        WHERE
+        ispass_check = 0 AND factory_num = #{factoryNum}
+    </select>
+
+    <select id="getImmunePlanModelOperator">
+        SELECT
+        operator_id
+        FROM
+        immune_plan
+        WHERE
+        id = #{id}
+    </select>
+
     <select id="getImmunePlanModelByFactoryNum" resultMap="ImmunePlan">
         SELECT
         *

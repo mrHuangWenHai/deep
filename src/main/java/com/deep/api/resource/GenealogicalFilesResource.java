@@ -41,50 +41,10 @@ public class GenealogicalFilesResource {
     @Resource
     private TypeBriefService typeBriefService;
 
-
-    /**
-     * 用于存放羊品种以及简介
-     * @param typeBriefModel  品种简介类
-     * @param bindingResult   异常抛出类
-     * @return  插入/更新结果
-     */
-    @Permit(authorities = "add_sheep_type")
-    @RequestMapping(value = "/type",method = RequestMethod.POST)
-    public Response type(@RequestBody @Validated TypeBriefModel typeBriefModel,
-                         BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            System.out.println(bindingResult.getAllErrors());
-            Response response = Responses.errorResponse("param is error");
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("param",bindingResult.getAllErrors());
-            response.setData(map);
-            return response;
-       //     return ValidResponse.bindExceptionHandler();
-        } else {
-            int success = this.typeBriefService.setTypeBrief(typeBriefModel);
-            if (success == 1) {
-                return Responses.successResponse();
-            } else {
-                return Responses.errorResponse("add error");
-            }
-        }
-    }
-
 //    @Permit(authorities = "delete_sheep_type")
 //    @Permit(authorities = "select_sheep_type")
 //    @Permit(authorities = "modify_sheep_type")
 
-    /**
-     * 查询之前 需要返回给前端的数据
-     * 山羊品种对应的特征
-     * @return 种类
-     */
-    @Permit(authorities = "select_sheep_type")
-    @RequestMapping(value = "/types",method = RequestMethod.GET)
-    public Response beforeSave() {
-        logger.info("/gf/types");
-        return JudgeUtil.JudgeSuccess("type",this.typeBriefService.getAllType());
-    }
 
     /**
      * 返回插入结果
@@ -101,19 +61,6 @@ public class GenealogicalFilesResource {
     public Response saveShow(@RequestBody @Validated GenealogicalFilesModel genealogicalFilesModel) {
 
       logger.info("invoke save {}",genealogicalFilesModel);
-      //查看数据库中是否有这种羊的品种信息
-      List<TypeBriefModel> list = this.typeBriefService.getAllType();
-      int i = 0;
-      for (TypeBriefModel tempType : list) {
-          if (tempType.getTypename().equals(genealogicalFilesModel.getTypeName())) {
-              i = 1;
-              break;
-          }
-      }
-
-      if (i == 0) {
-          return Responses.errorResponse("没有这种这种类型的商品");
-      }
 
       List<GenealogicalFilesModel> model = this.genealogicalFilesService.getGenealogicalFilesModelByTradeMarkEarTag(genealogicalFilesModel.getTradeMarkEartag());
       if (model.size() == 0) {

@@ -440,5 +440,5 @@ public interface UserMapper {
     Long getCountsOfOneFactoryOrOneAgent(@Param("factory") Long factory, @Param("which") Byte which);
 
     @Select("select user_telephone from user_manage where id = #{id}")
-    String getUserTelephoneByUserID(Long id);
+    String getTelephoneById(@Param("id") Long id);
 }

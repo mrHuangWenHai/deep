@@ -87,16 +87,8 @@ public class DiagnosisResource {
                 if( JedisUtil.redisJudgeTime(professorKey) ) {
                     System.out.println("in redis:");
                     List<String> phone = userService.getProfessorTelephoneByFactoryNum(BigInteger.valueOf(diagnosisPlanModel.getFactoryNum()));
-                    if (phone == null) {
-                        return Responses.errorResponse("添加记录成功，但是发送消息失败，请联系管理员");
-                    }
-                    StringBuffer phoneList = new StringBuffer("");
-                    for (String aPhone : phone) {
-                        phoneList = phoneList.append(aPhone).append(",");
-                    }
-                    System.out.println("phoneList = " + phoneList);
-                    if (phoneList.length() != 0) {
-                        if (JedisUtil.redisSendMessage(phoneList.toString(), getCertainKeyValue("Message"))) {
+                    if (phone.size() != 0) {
+                        if (JedisUtil.redisSendMessage(phone, getCertainKeyValue("Message"))) {
                             JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(Objects.requireNonNull(getCertainKeyValue("ExpireTime"))) * 24 * 60 * 60);
                         }
                     }
@@ -105,12 +97,8 @@ public class DiagnosisResource {
             if( !("1".equals(getCertainKeyValue(testSendSupervisor)))) {
                 if(JedisUtil.redisJudgeTime(supervisorKey)) {
                     List<String> phone = userService.getSuperiorTelephoneByFactoryNum(BigInteger.valueOf(diagnosisPlanModel.getFactoryNum()));
-                    StringBuffer phoneList = new StringBuffer("");
-                    for (String aPhone : phone) {
-                        phoneList = phoneList.append(aPhone).append(",");
-                    }
-                    if (phoneList.length() != 0) {
-                        if( JedisUtil.redisSendMessage(phoneList.toString(), getCertainKeyValue("Message"))) {
+                    if (phone.size() != 0) {
+                        if( JedisUtil.redisSendMessage(phone, getCertainKeyValue("Message"))) {
                             JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor,"1",Integer.parseInt(Objects.requireNonNull(getCertainKeyValue("ExpireTime")))*24*60*60);
                         }
                     }

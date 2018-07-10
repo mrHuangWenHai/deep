@@ -12,15 +12,10 @@ public class GenealogicalFilesModel {
     @Min(0)
     private Long factoryNum;
     private String nativeEartag;  //原耳牌
-    @Size(min = 15, max = 15, message = "immuneEartag need size:15 ")
-    @Pattern(regexp = "^[0-9]+$", message = "免疫耳牌由数字组成15位")
     @NotEmpty
     @NotNull
-    private String immuneEartag;  //免疫耳牌
-    @NotEmpty
-    @NotNull
-    @Size(min = 6, max = 6, message = "trademarkEartag need size:6 ")
-    @Pattern(regexp = "^[GM][0-9]{5}+$", message = "商标耳牌由字母+数字组成6位")
+    @Size(min = 7, max = 7, message = "trademarkEartag need size:7 ")
+    @Pattern(regexp = "^[GM][0-9]{6}+$", message = "商标耳牌由字母+数字组成7位")
     private String tradeMarkEartag;  //商标耳牌
     @NotEmpty
     @NotNull
@@ -43,33 +38,33 @@ public class GenealogicalFilesModel {
 
     @NotEmpty
     @NotNull
-    @Size(min = 6, max = 6, message = "trademarkEartag need size:6 ")
-    @Pattern(regexp = "^[G][0-9]{5}+$", message = "父耳牌由字母+数字组成6位")
+    @Size(min = 7, max = 7, message = "trademarkEartag need size:7 ")
+    @Pattern(regexp = "^[G][0-9]{6}+$", message = "父耳牌由字母+数字组成7位")
     private String eartagOfFather;  //父耳牌
     @NotEmpty
     @NotNull
-    @Size(min = 6, max = 6, message = "trademarkEartag need size:6 ")
-    @Pattern(regexp = "^[M][0-9]{5}+$", message = "母耳牌由字母+数字组成6位")
+    @Size(min = 7, max = 7, message = "trademarkEartag need size:7 ")
+    @Pattern(regexp = "^[M][0-9]{6}+$", message = "母耳牌由字母+数字组成7位")
     private String eartagOfMother;  //母耳牌
     @NotEmpty
     @NotNull
-    @Size(min = 6, max = 6, message = "trademarkEartag need size:6 ")
-    @Pattern(regexp = "^[G][0-9]{5}+$", message = "父父耳牌由字母+数字组成6位")
+    @Size(min = 7, max = 7, message = "trademarkEartag need size:7 ")
+    @Pattern(regexp = "^[G][0-9]{6}+$", message = "父父耳牌由字母+数字组成7位")
     private String eartagOfFathersFather;  //父父耳牌
     @NotEmpty
     @NotNull
-    @Size(min = 6, max = 6, message = "trademarkEartag need size:6 ")
-    @Pattern(regexp = "^[M][0-9]{5}+$", message = "父母耳牌由字母+数字组成6位")
+    @Size(min = 7, max = 7, message = "trademarkEartag need size:7 ")
+    @Pattern(regexp = "^[M][0-9]{6}+$", message = "父母耳牌由字母+数字组成7位")
     private String eartagOfFathersMother;  //父母耳牌
     @NotEmpty
     @NotNull
-    @Size(min = 6, max = 6, message = "trademarkEartag need size:6 ")
-    @Pattern(regexp = "^[G][0-9]{5}+$", message = "母父耳牌由字母+数字组成6位")
+    @Size(min = 7, max = 7, message = "trademarkEartag need size:7 ")
+    @Pattern(regexp = "^[G][0-9]{6}+$", message = "母父耳牌由字母+数字组成7位")
     private String eartagOfMothersFather;  //母父耳牌
     @NotEmpty
     @NotNull
-    @Size(min = 6, max = 6, message = "trademarkEartag need size:6 ")
-    @Pattern(regexp = "^[M][0-9]{5}+$", message = "母母耳牌由字母+数字组成6位")
+    @Size(min = 7, max = 7, message = "trademarkEartag need size:7 ")
+    @Pattern(regexp = "^[M][0-9]{6}+$", message = "母母耳牌由字母+数字组成7位")
     private String eartagOfMothersMother;  //母母耳牌
     @Min(0)
     private int operatorId;
@@ -92,7 +87,6 @@ public class GenealogicalFilesModel {
     public GenealogicalFilesModel(GenealogicalFilesModel genealogicalFilesModel) {
 
       this.id = genealogicalFilesModel.getId();
-      this.immuneEartag = genealogicalFilesModel.getImmuneEartag();
       this.nativeEartag = genealogicalFilesModel.getNativeEartag();
       this.tradeMarkEartag = genealogicalFilesModel.getTradeMarkEartag();
       this.breedingSheepBase = genealogicalFilesModel.getBreedingSheepBase();
@@ -135,14 +129,6 @@ public class GenealogicalFilesModel {
 
     public void setNativeEartag(String nativeEartag) {
         this.nativeEartag = nativeEartag;
-    }
-
-    public String getImmuneEartag() {
-        return immuneEartag;
-    }
-
-    public void setImmuneEartag(String immuneEartag) {
-        this.immuneEartag = immuneEartag;
     }
 
     public String getTradeMarkEartag() {
@@ -307,7 +293,6 @@ public class GenealogicalFilesModel {
         return "GenealogicalFilesModel{" +
             "id=" + id +
             ", nativeEartag='" + nativeEartag + '\'' +
-            ", immuneEartag='" + immuneEartag + '\'' +
             ", tradeMarkEartag='" + tradeMarkEartag + '\'' +
             ", breedingSheepBase='" + breedingSheepBase + '\'' +
             ", birthTime='" + birthTime + '\'' +

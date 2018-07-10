@@ -178,6 +178,25 @@
     </select>
 
 
+    <select id="getDisinfectFilesModelCount">
+        SELECT
+        COUNT (*)
+        FROM
+        disinfect_files
+        WHERE
+        ispass_check = 0 AND factory_num = #{factoryNum}
+    </select>
+
+    <select id="getDisinfectFilesModelOperator">
+        SELECT
+        operator_id
+        FROM
+        disinfect_files
+        WHERE
+        id = #{id}
+    </select>
+
+
     <select id="getDisinfectFilesModelByFactoryNum" resultMap="DisinfectFiles">
         SELECT
         *

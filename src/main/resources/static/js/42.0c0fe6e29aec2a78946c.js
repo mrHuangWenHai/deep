@@ -1,2 +1,0 @@
-webpackJsonp([42],{tsA4:function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var l={components:{Plan:n("1+a6").a}},r={render:function(){var e=this.$createElement,t=this._self._c||e;return t("div",[t("plan",{attrs:{"release-type":"immune"}})],1)},staticRenderFns:[]},s=n("VU/8")(l,r,!1,null,null,null);t.default=s.exports}});
-//# sourceMappingURL=42.0c0fe6e29aec2a78946c.js.map

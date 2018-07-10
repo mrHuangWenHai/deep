@@ -3,7 +3,6 @@ package com.deep.domain.service;
 import com.deep.api.request.DisinfectRequest;
 import com.deep.domain.model.DisinfectFilesModel;
 import com.deep.infra.persistence.sql.mapper.DisinfectFilesMapper;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +26,14 @@ public class DisinfectFilesService {
 
     public DisinfectFilesModel getDisinfectFilesModelById(long id) {
         return this.disinfectFilesMapper.getDisinfectFilesModelById(id);
+    }
+
+    public int getDisinfectFilesModelCount(BigInteger factoryNum) {
+        return this.disinfectFilesMapper.getDisinfectFilesModelCount(factoryNum);
+    }
+
+    public Long getDisinfectFilesModelOperator(Long id) {
+        return this.disinfectFilesMapper.getDisinfectFilesModelOperator(id);
     }
 
     public List<DisinfectFilesModel> getDisinfectFilesModelByTradeMarkEarTag(List<String[]> disinfectEartag, RowBounds bounds){

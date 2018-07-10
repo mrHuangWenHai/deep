@@ -30,6 +30,10 @@ public interface NutritionPlanMapper {
 
     NutritionPlanWithBLOBs selectByPrimaryKey(Integer id);
 
+    int getNutritionPlanModelCount(@Param("factoryNum") Long factoryNum);
+
+    Long getImmunePlanModelOperator(@Param("id") Long id);
+
     int updateByExampleSelective(@Param("record") NutritionPlanWithBLOBs record, @Param("example") NutritionPlanExample example);
 
     int updateByExampleWithBLOBs(@Param("record") NutritionPlanWithBLOBs record, @Param("example") NutritionPlanExample example);

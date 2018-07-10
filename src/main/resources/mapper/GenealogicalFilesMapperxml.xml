@@ -8,7 +8,6 @@
         <id property="id" column="id"/>
         <result property="factoryNum" column="factory_num"/>
         <result property="nativeEartag" column="native_eartag"/>
-        <result property="immuneEartag" column="immune_eartag"/>
         <result property="tradeMarkEartag" column="trademark_eartag"/>
         <result property="typeName" column="type_name"/>
         <result property="breedingSheepBase" column="breedingsheep_base"/>
@@ -35,7 +34,6 @@
         INSERT INTO genealogical_files(
           factory_num,
           native_eartag,
-          immune_eartag,
           trademark_eartag,
           type_name,
           breedingsheep_base,
@@ -60,7 +58,6 @@
         VALUES(
           #{genealogicalFilesModel.factoryNum},
           #{genealogicalFilesModel.nativeEartag},
-          #{genealogicalFilesModel.immuneEartag},
           #{genealogicalFilesModel.tradeMarkEartag},
           #{genealogicalFilesModel.typeName},
           #{genealogicalFilesModel.breedingSheepBase},
@@ -125,9 +122,6 @@
             </if>
             <if test="genealogicalFilesModel.nativeEartag != null and genealogicalFilesModel.nativeEartag !='' ">
                 AND native_eartag = #{genealogicalFilesModel.nativeEartag}
-            </if>
-            <if test="genealogicalFilesModel.immuneEartag!= null and genealogicalFilesModel.immuneEartag != '' ">
-                AND immune_eartag = #{genealogicalFilesModel.immuneEartag}
             </if>
             <if test="genealogicalFilesModel.tradeMarkEartag != null and genealogicalFilesModel.tradeMarkEartag != '' ">
                 AND trademark_eartag = #{genealogicalFilesModel.tradeMarkEartag}
@@ -260,9 +254,6 @@
         <set>
             <if test="genealogicalFilesModel.nativeEartag != null and genealogicalFilesModel.nativeEartag !=''">
                 native_eartag = #{genealogicalFilesModel.nativeEartag},
-            </if>
-            <if test="genealogicalFilesModel.immuneEartag!= null and genealogicalFilesModel.immuneEartag != '' ">
-                immune_eartag = #{genealogicalFilesModel.immuneEartag},
             </if>
             <if test="genealogicalFilesModel.tradeMarkEartag != null and genealogicalFilesModel.tradeMarkEartag != '' ">
                 trademark_eartag = #{genealogicalFilesModel.tradeMarkEartag},

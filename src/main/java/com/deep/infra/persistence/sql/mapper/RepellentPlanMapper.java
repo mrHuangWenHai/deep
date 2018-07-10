@@ -33,6 +33,10 @@ public interface RepellentPlanMapper {
                                                                            @Param("ispassSup")String ispassSup,
                                                                            RowBounds bounds);
 
+    int getRepellentPlanModelCount(@Param("factoryNum")BigInteger factoryNum);
+
+    int getRepellentPlanModelOperator (@Param("id") Long id);
+
     int updateRepellentPlanModelByProfessor(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel);
 
     int updateRepellentPlanModelBySupervisor(@Param("repellentPlanModel") RepellentPlanModel repellentPlanModel);

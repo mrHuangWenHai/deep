@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 
+import java.util.List;
+
 /**
  * create by zhongrui on 18-3-21.
  * Redis工具类
@@ -153,10 +155,19 @@ public class JedisUtil {
      * @param mobile_list 电话字符串
      * @param message 短信内容
      */
-    public static boolean redisSendMessage(String mobile_list, String message){
-        MobileAnnouncementModel mobileAnnouncementModel = new MobileAnnouncementModel(mobile_list,message);
-        //发送成功 返回true
-        return manyMessageSendResult(mobileAnnouncementModel);
+    public static boolean redisSendMessage(List<String> mobile_list, String message){
+        try {
+            for (String s : mobile_list) {
+                MobileAnnouncementModel model = new MobileAnnouncementModel();
+                model.setMobile(s);
+                model.setMessage(message);
+                oneMessageSendResult(model);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     /**

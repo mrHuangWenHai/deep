@@ -1,2 +1,0 @@
-webpackJsonp([27],{kLr2:function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var r={components:{Plan:n("1+a6").a}},l={render:function(){var e=this.$createElement,t=this._self._c||e;return t("div",[t("plan",{attrs:{"release-type":"welfare"}})],1)},staticRenderFns:[]},a=n("VU/8")(r,l,!1,null,null,null);t.default=a.exports}});
-//# sourceMappingURL=27.44648566f1353fdda723.js.map
