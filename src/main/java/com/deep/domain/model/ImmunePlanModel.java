@@ -40,6 +40,27 @@ public class ImmunePlanModel {
     private String gmtModified;  //修改时间
     private String gmtProfessor;    //技术审核时间 可空
     private String gmtSupervise;    //监督审核时间 可空
+
+    private String eartagFile;
+
+    private String immuneEartagFile;
+
+    public String getImmuneEartagFile() {
+        return immuneEartagFile;
+    }
+
+    public void setImmuneEartagFile(String immuneEartagFile) {
+        this.immuneEartagFile = immuneEartagFile;
+    }
+
+    public String getEartagFile() {
+        return eartagFile;
+    }
+
+    public void setEartagFile(String eartagFile) {
+        this.eartagFile = eartagFile;
+    }
+
     public Long getId() {
         return id;
     }

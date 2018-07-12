@@ -161,9 +161,11 @@ public class GenealogicalFilesResource {
         int pageSize = genealogicalRequest.getSize();
         int destIndex = (page+1) * pageSize > size + 1 ? size  : (page+1) * pageSize + 1;
         List<GenealogicalFilesModel> genealogicalFilesModels = totalList.subList(page * pageSize, destIndex);
-
         for (GenealogicalFilesModel genealogicalFilesModel : genealogicalFilesModels) {
-            String brief = this.typeBriefService.getTypeBrief(genealogicalFilesModel.getTypeName()).getBrief();
+            String brief = "";
+            if (this.typeBriefService.getTypeBrief(genealogicalFilesModel.getTypeName()) != null) {
+                brief = this.typeBriefService.getTypeBrief(genealogicalFilesModel.getTypeName()).getBrief();
+            }
             genealogicalFilesModel.setBrief(brief);
         }
 

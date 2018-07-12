@@ -13,6 +13,7 @@ import com.deep.domain.service.FactoryService;
 import com.deep.domain.service.RepellentPlanService;
 import com.deep.domain.service.UserService;
 import com.deep.domain.util.*;
+import com.sun.org.apache.regexp.internal.RE;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,14 +62,13 @@ public class RepellentPlanResource {
      * METHOD:POST
      * @param repellentPlanModel 驱虫类
      * @param bindingResult  异常抛出类
-     * @param repellentEartagFile   耳牌文件
      * @return  保存结果
      */
     @Permit(authorities = "increase_pest_repellent_implementation_control_files")
     @RequestMapping(value = "",method = RequestMethod.POST)
     public Response save(@Valid RepellentPlanModel repellentPlanModel,
-                         BindingResult bindingResult,
-                         @RequestParam("eartagFile") MultipartFile repellentEartagFile) {
+                         BindingResult bindingResult
+                         ) {
 
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("数据异常,请按照规范填写!");
@@ -78,14 +78,15 @@ public class RepellentPlanResource {
             return response;
         }
 
+        // @RequestParam("eartagFile") MultipartFile repellentEartagFile
         logger.info("invoke save {}", repellentPlanModel);
 
         //上传文件
         try {
-            String fileName = repellentEartagFile.getOriginalFilename();
-            String filePath = pathPre + repellentPlanModel.getFactoryNum().toString() + "/repellentEartag/";
-            fileName = UploadUtil.uploadFile(repellentEartagFile.getBytes(), filePath, fileName);
-            repellentPlanModel.setRepellentEartag(fileName);
+//            String fileName = repellentEartagFile.getOriginalFilename();
+//            String filePath = pathPre + repellentPlanModel.getFactoryNum().toString() + "/repellentEartag/";
+//            fileName = UploadUtil.uploadFile(repellentEartagFile.getBytes(), filePath, fileName);
+            repellentPlanModel.setRepellentEartag(repellentPlanModel.getEartagFile());
             int isSuccess = repellentPlanService.setRepellentPlanModel(repellentPlanModel);
             if (isSuccess == 0) {
                 return Responses.errorResponse("add error");
@@ -180,17 +181,13 @@ public class RepellentPlanResource {
       } else {
         return Responses.errorResponse("你没有权限");
       }
-
       logger.info("invoke rp/{} {}",id, repellentRequest);
-
       List<RepellentPlanModel> totalList = repellentPlanService.getRepellentPlanModel(repellentRequest);
-
       int size = totalList.size();
       int page = repellentRequest.getPage();
       int pageSize = repellentRequest.getSize();
       int destIndex = (page+1) * pageSize   > size ? size : (page+1) * pageSize;
       List<RepellentPlanModel> repellentPlanModels = totalList.subList(page * pageSize, destIndex);
-
       if (role == 1) {
         Map<String,Object> data = new HashMap<>();
         List<RepellentPlanModel> factorylist = new ArrayList<>();
@@ -198,13 +195,11 @@ public class RepellentPlanResource {
         List<RepellentPlanModel> others = new ArrayList<>();
         List<Long> directId = factoryMap.get((long) -1);
         for (RepellentPlanModel repellentPlanModel : repellentPlanModels) {
-
           if (directId.contains(repellentPlanModel.getFactoryNum())) {
             direct.add(repellentPlanModel);
           } else {
             others.add(repellentPlanModel);
           }
-
         }
         factorylist.addAll(direct);
         factorylist.addAll(others);
@@ -217,7 +212,6 @@ public class RepellentPlanResource {
       } else {
         return JudgeUtil.JudgeFind(repellentPlanModels,size);
       }
-
     }
 
     /**
@@ -419,9 +413,9 @@ public class RepellentPlanResource {
     @Permit(authorities = "modify_the_insect_repellent_implementation_control_file")
     @RequestMapping(value = "/{id}",method = RequestMethod.POST)
     public Response operatorUpdate(@PathVariable(value = "id")long id ,
-                                   RepellentPlanModel repellentPlanModel,
-                                   @RequestParam(value = "repellentEartag", required = false) MultipartFile repellentEartag) {
-
+                                   RepellentPlanModel repellentPlanModel
+                                   ) {
+        // @RequestParam(value = "repellentEartag", required = false) MultipartFile repellentEartag
         logger.info("invoke operatorUpdate {}", repellentPlanModel);
         repellentPlanModel.setId(id);
         if (repellentPlanModel.getId() == null) {
@@ -434,34 +428,32 @@ public class RepellentPlanResource {
                 return Responses.errorResponse("该条数据已被审核,无法修改");
             }
             repellentPlanModel.setIspassCheck("2");
-          if (repellentEartag != null) {
-            String filePath = pathPre + repellentPlanModel.getFactoryNum().toString() + "/repellentEartag/";
-
-            String fileName = repellentEartag.getOriginalFilename();
-            try {
-              fileName = UploadUtil.uploadFile(repellentEartag.getBytes(),filePath,fileName);
-            } catch (Exception e) {
-
-              return Responses.errorResponse("修改文件上传失败!");
-
-            }
-            String oldPath = filePath + repellentPlanModel.getRepellentEartag();
-            repellentPlanModel.setRepellentEartag(fileName);
-            int row = this.repellentPlanService.updateRepellentPlanModelByOperator(repellentPlanModel);
-            if (row == 1) {
-              File file = new File(oldPath);
-              file.delete();
-            } else {
-              String newPath = filePath + fileName;
-              File file = new File(newPath);
-              file.delete();
-            }
-            return JudgeUtil.JudgeUpdate(row);
-          } else {
+            repellentPlanModel.setRepellentEartag(repellentPlanModel.getEartagFile());
+//          if (repellentEartag != null) {
+//            String filePath = pathPre + repellentPlanModel.getFactoryNum().toString() + "/repellentEartag/";
+//            String fileName = repellentEartag.getOriginalFilename();
+//            try {
+//              fileName = UploadUtil.uploadFile(repellentEartag.getBytes(),filePath,fileName);
+//            } catch (Exception e) {
+//              return Responses.errorResponse("修改文件上传失败!");
+//            }
+//            String oldPath = filePath + repellentPlanModel.getRepellentEartag();
+//            repellentPlanModel.setRepellentEartag(fileName);
+//            int row = this.repellentPlanService.updateRepellentPlanModelByOperator(repellentPlanModel);
+//            if (row == 1) {
+//              File file = new File(oldPath);
+//              file.delete();
+//            } else {
+//              String newPath = filePath + fileName;
+//              File file = new File(newPath);
+//              file.delete();
+//            }
+//            return JudgeUtil.JudgeUpdate(row);
+//          } else {
             int row = this.repellentPlanService.updateRepellentPlanModelByOperator(repellentPlanModel);
             return JudgeUtil.JudgeUpdate(row);
           }
-        }
+//        }
     }
 
     /**

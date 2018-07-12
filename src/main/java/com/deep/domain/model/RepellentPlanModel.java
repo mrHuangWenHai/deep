@@ -39,6 +39,17 @@ public class RepellentPlanModel {
     private String gmtProfessor;
     private String gmtSupervise;
 
+    private String eartagFile;
+
+
+    public String getEartagFile() {
+        return eartagFile;
+    }
+
+    public void setEartagFile(String eartagFile) {
+        this.eartagFile = eartagFile;
+    }
+
     public String getName() {
         return name;
     }
