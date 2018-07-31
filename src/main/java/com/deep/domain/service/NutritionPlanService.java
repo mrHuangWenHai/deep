@@ -1,5 +1,6 @@
 package com.deep.domain.service;
 
+import com.deep.api.request.NutritionRequest;
 import com.deep.domain.model.NutritionPlanExample;
 import com.deep.domain.model.NutritionPlanWithBLOBs;
 import com.deep.infra.persistence.sql.mapper.NutritionPlanMapper;
@@ -50,12 +51,12 @@ public class NutritionPlanService {
     public List<NutritionPlanWithBLOBs> findPlanBetweenTimes(Date date1, Date date2, Integer number) {
         return this.nutritionPlanMapper.selectByTwoDate(date1, date2, number);
     }
-
-    public List<NutritionPlanWithBLOBs> findAllRecords(Long factory, Byte pass) {
-        return this.nutritionPlanMapper.findAllRecords(factory, pass);
+// Long factory, Byte pass, String startTime, String endTime, String factoryName, String earTag
+    public List<NutritionPlanWithBLOBs> findAllRecords(NutritionRequest nutritionRequest) {
+        return this.nutritionPlanMapper.findAllRecords(nutritionRequest);
     }
 
-    public List<NutritionPlanWithBLOBs> getAll(Long factory) {
-        return this.nutritionPlanMapper.getAll(factory);
+    public List<NutritionPlanWithBLOBs> getAll(NutritionRequest nutritionRequest) {
+        return this.nutritionPlanMapper.getAll(nutritionRequest);
     }
 }

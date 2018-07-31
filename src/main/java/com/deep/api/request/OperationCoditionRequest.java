@@ -20,7 +20,44 @@ public class OperationCoditionRequest {
   private String factoryName;
   private List<Long> factoryList;
   private int page = 0;
-  private int pageSize = 10;
+//  private int pageSize = 10;
+
+  private int size = 10;
+  private String startTime;
+  private String endTime;
+  private String earTag;
+
+  public int getSize() {
+    return size;
+  }
+
+  public void setSize(int size) {
+    this.size = size;
+  }
+
+  public String getStartTime() {
+    return startTime;
+  }
+
+  public void setStartTime(String startTime) {
+    this.startTime = startTime;
+  }
+
+  public String getEndTime() {
+    return endTime;
+  }
+
+  public void setEndTime(String endTime) {
+    this.endTime = endTime;
+  }
+
+  public String getEarTag() {
+    return earTag;
+  }
+
+  public void setEarTag(String earTag) {
+    this.earTag = earTag;
+  }
 
   public Integer getId() {
     return id;
@@ -87,13 +124,13 @@ public class OperationCoditionRequest {
     this.page = page;
   }
 
-  public int getPageSize() {
-    return pageSize;
-  }
-
-  public void setPageSize(int pageSize) {
-    this.pageSize = pageSize;
-  }
+//  public int getPageSize() {
+//    return pageSize;
+//  }
+//
+//  public void setPageSize(int pageSize) {
+//    this.pageSize = pageSize;
+//  }
 
   public Integer getIspassSup() {
     return ispassSup;
@@ -106,16 +143,19 @@ public class OperationCoditionRequest {
   @Override
   public String toString() {
     return "OperationCoditionRequest{" +
-        "id=" + id +
-        ", ispassCheck=" + ispassCheck +
-        ", ispassSup=" + ispassSup +
-        ", operationId=" + operationId +
-        ", checkTime=" + checkTime +
-        ", factoryNum=" + factoryNum +
-        ", factoryName='" + factoryName + '\'' +
-        ", factoryList=" + factoryList +
-        ", page=" + page +
-        ", pageSize=" + pageSize +
-        '}';
+            "id=" + id +
+            ", ispassCheck=" + ispassCheck +
+            ", ispassSup=" + ispassSup +
+            ", operationId=" + operationId +
+            ", checkTime=" + checkTime +
+            ", factoryNum=" + factoryNum +
+            ", factoryName='" + factoryName + '\'' +
+            ", factoryList=" + factoryList +
+            ", page=" + page +
+            ", size=" + size +
+            ", startTime='" + startTime + '\'' +
+            ", endTime='" + endTime + '\'' +
+            ", earTag='" + earTag + '\'' +
+            '}';
   }
 }

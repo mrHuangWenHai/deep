@@ -53,9 +53,8 @@ public class NutritionPlanExample {
         return criteria;
     }
 
-    protected Criteria createCriteriaInternal() {
-        Criteria criteria = new Criteria();
-        return criteria;
+    private Criteria createCriteriaInternal() {
+        return new Criteria();
     }
 
     public void clear() {
@@ -67,7 +66,7 @@ public class NutritionPlanExample {
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
 
-        protected GeneratedCriteria() {
+        GeneratedCriteria() {
             super();
             criteria = new ArrayList<Criterion>();
         }
@@ -84,21 +83,21 @@ public class NutritionPlanExample {
             return criteria;
         }
 
-        protected void addCriterion(String condition) {
+        void addCriterion(String condition) {
             if (condition == null) {
                 throw new RuntimeException("Value for condition cannot be null");
             }
             criteria.add(new Criterion(condition));
         }
 
-        protected void addCriterion(String condition, Object value, String property) {
+        void addCriterion(String condition, Object value, String property) {
             if (value == null) {
                 throw new RuntimeException("Value for " + property + " cannot be null");
             }
             criteria.add(new Criterion(condition, value));
         }
 
-        protected void addCriterion(String condition, Object value1, Object value2, String property) {
+        void addCriterion(String condition, Object value1, Object value2, String property) {
             if (value1 == null || value2 == null) {
                 throw new RuntimeException("Between values for " + property + " cannot be null");
             }
@@ -355,9 +354,8 @@ public class NutritionPlanExample {
             return (Criteria) this;
         }
 
-        public Criteria andFactoryNumEqualTo(Long value) {
+        public void andFactoryNumEqualTo(Long value) {
             addCriterion("factory_num =", value, "factoryNum");
-            return (Criteria) this;
         }
 
         public Criteria andFactoryNumNotEqualTo(Long value) {
@@ -403,6 +401,10 @@ public class NutritionPlanExample {
         public Criteria andFactoryNumNotBetween(Long value1, Long value2) {
             addCriterion("factory_num not between", value1, value2, "factoryNum");
             return (Criteria) this;
+        }
+
+        public void andFactoryNameEqualTo(String value) {
+            addCriterion("factory_name =", value, "factoryName");
         }
 
         public Criteria andBuildingIsNull() {
@@ -1095,9 +1097,8 @@ public class NutritionPlanExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsPassCheckEqualTo(Byte value) {
+        public void andIsPassCheckEqualTo(Byte value) {
             addCriterion("ispass_check =", value, "ispassCheck");
-            return (Criteria) this;
         }
 
         public Criteria andIsPassCheckNotEqualTo(Byte value) {
@@ -1377,14 +1378,14 @@ public class NutritionPlanExample {
             return typeHandler;
         }
 
-        protected Criterion(String condition) {
+        Criterion(String condition) {
             super();
             this.condition = condition;
             this.typeHandler = null;
             this.noValue = true;
         }
 
-        protected Criterion(String condition, Object value, String typeHandler) {
+        Criterion(String condition, Object value, String typeHandler) {
             super();
             this.condition = condition;
             this.value = value;
@@ -1396,11 +1397,11 @@ public class NutritionPlanExample {
             }
         }
 
-        protected Criterion(String condition, Object value) {
+        Criterion(String condition, Object value) {
             this(condition, value, null);
         }
 
-        protected Criterion(String condition, Object value, Object secondValue, String typeHandler) {
+        Criterion(String condition, Object value, Object secondValue, String typeHandler) {
             super();
             this.condition = condition;
             this.value = value;
@@ -1409,7 +1410,7 @@ public class NutritionPlanExample {
             this.betweenValue = true;
         }
 
-        protected Criterion(String condition, Object value, Object secondValue) {
+        Criterion(String condition, Object value, Object secondValue) {
             this(condition, value, secondValue, null);
         }
     }

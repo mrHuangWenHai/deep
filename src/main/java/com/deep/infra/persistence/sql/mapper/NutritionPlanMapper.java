@@ -1,5 +1,6 @@
 package com.deep.infra.persistence.sql.mapper;
 
+import com.deep.api.request.NutritionRequest;
 import com.deep.domain.model.NutritionPlan;
 import com.deep.domain.model.NutritionPlanExample;
 import com.deep.domain.model.NutritionPlanWithBLOBs;
@@ -48,7 +49,8 @@ public interface NutritionPlanMapper {
 
     List<NutritionPlanWithBLOBs> selectByTwoDate(@Param("date1") Date date1, @Param("date2") Date date2, @Param("number") Integer number);
 
-    List<NutritionPlanWithBLOBs> findAllRecords(@Param("factory") Long factory, @Param("pass") Byte pass);
+//    @Param("factory") Long factory, @Param("pass") Byte pass, @Param("startTime") String startTime, @Param("endTime") String endTime, @Param("factoryName") String factoryName, @Param("earTag") String earTag
+    List<NutritionPlanWithBLOBs> findAllRecords(@Param("nutritionRequest")NutritionRequest nutritionRequest);
 
-    List<NutritionPlanWithBLOBs> getAll(Long factory);
+    List<NutritionPlanWithBLOBs> getAll(@Param("nutritionRequest")NutritionRequest nutritionRequest);
 }

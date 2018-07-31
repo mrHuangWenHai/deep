@@ -59,6 +59,9 @@ public class BreedingAnotherResource {
                                   @RequestParam(value = "size", defaultValue = "10") String size,
                                   @RequestParam(value = "factoryName", defaultValue = "") String factoryName,
                                   @RequestParam(value = "ispassCheck", defaultValue = "-1") String ispassCheck,
+                                  @RequestParam(value = "startTime", defaultValue = "") String startTime,
+                                  @RequestParam(value = "endTime", defaultValue = "") String endTime,
+                                  @RequestParam(value = "earTag", defaultValue = "") String earTag,
                                   @PathVariable("id") String id, HttpServletRequest request) {
         logger.info("invoke getAllRecords, url is /b {}", id, page, size, factoryName, ispassCheck);
         Long uid = StringToLongUtil.stringToLong(id);
@@ -70,77 +73,97 @@ public class BreedingAnotherResource {
             return Responses.errorResponse("错误");
         }
         HashMap<String, Object> data = new HashMap<>();
+        List<Long> someResult = new ArrayList<>();
         if (flag == 0) {
             int count = 0;
-            List<BreedingPlanAnotherModel> models = null;
-            if (pass == -1) {
-                models = breedingPlanAnotherService.findAllRecords(uid);
-                count += breedingPlanAnotherService.queryCount(uid);
-            } else if (pass == 0 || pass == 1 || pass == 2) {
-                models = breedingPlanAnotherService.findAllRecordsByIsPassCheck(uid, pass);
-                count += breedingPlanAnotherService.queryCountByPass(uid, pass);
-            } else {
+            List<BreedingPlanAnotherModel> models;
+            if (pass == -1 || pass == 0 || pass == 1 || pass == 2) {
+                someResult.add(uid);
+                count = breedingPlanAnotherService.queryCountBySelective(someResult, pass, factoryName, startTime, endTime, earTag);
+                models = breedingPlanAnotherService.queryAllBySelective(someResult, upage, usize, pass, factoryName, startTime, endTime, earTag);
+                data.put("List", models);
+                data.put("size", count);
+            }
+//
+//            if (pass == -1) {
+//                models = breedingPlanAnotherService.findAllRecords(uid);
+//                count += breedingPlanAnotherService.queryCount(uid);
+//            } else if (pass == 0 || pass == 1 || pass == 2) {
+//                models = breedingPlanAnotherService.findAllRecordsByIsPassCheck(uid, pass);
+//                count += breedingPlanAnotherService.queryCountByPass(uid, pass);
+//            }
+            else {
                 return Responses.errorResponse("参数错误!");
             }
-            // 如果是羊场
-            List<BreedingPlanAnotherModel> result = new ArrayList<>();
-            if (models != null) {
-                for (int i = upage*usize; i < models.size() && i < upage*usize + usize; i++) {
-                    result.add(models.get(i));
-                }
-            }
-            data.put("List", result);
-            data.put("size", count);
+//            // 如果是羊场
+//            List<BreedingPlanAnotherModel> result = new ArrayList<>();
+//            if (models != null) {
+//                for (int i = upage*usize; i < models.size() && i < upage*usize + usize; i++) {
+//                    result.add(models.get(i));
+//                }
+//            }
         } else if (flag == 1) {
             if (pass  != -1 && pass != 0 && pass != 1 && pass != 2) return Responses.errorResponse("参数错误!");
             // 如果是代理，查询下级所有的羊场
             Map<Long, List<Long> > factories = AgentUtil.getAllSubordinateFactory(String.valueOf(uid));
             if (factories == null) {
-                return Responses.errorResponse("没有数据");
+                return Responses.errorResponse("当前代理下没有数据");
             } else {
                 List<BreedingPlanAnotherModel> models = new ArrayList<>();
-                long directCount = 0, undirectCount = 0;         // record number
+                Integer directCount = 0, undirectCount = 0;         // record number
                 // direct factories
                 List<Long> directFactories = factories.get((long)-1);
                 // undirect factories
                 List<Long> undirectFactories = factories.get((long)0);
-
+                // all factories
+                List<Long> allFactories = new ArrayList<>();
                 if (directFactories == null && undirectFactories == null) {
                     return Responses.errorResponse("该代理没有发展羊场和代理！");
                 }
-
-                List<BreedingPlanAnotherModel> directModels = new ArrayList<>();
-                if (directFactories != null) {
-                    for (Long directFactory : directFactories) {
-                        if (pass == 1 || pass == 0 || pass == 2) {
-                            directModels.addAll(breedingPlanAnotherService.findAllRecordsByIsPassCheck(directFactory, pass));
-                            directCount += breedingPlanAnotherService.queryCountByPass(directFactory, pass);
-                        } else {
-                            directModels.addAll(breedingPlanAnotherService.findAllRecords(directFactory));
-                            directCount += breedingPlanAnotherService.queryCount(directFactory);
-                        }
-                    }
+//                List<BreedingPlanAnotherModel> directModels = new ArrayList<>();
+//                directModels = breedingPlanAnotherService.queryAllBySelective(directFactories, upage, usize, pass, factoryName, startTime, endTime, earTag);
+//                if (directFactories != null) {
+//                    for (Long directFactory : directFactories) {
+//                        if (pass == 1 || pass == 0 || pass == 2) {
+//                            directModels.addAll(breedingPlanAnotherService.findAllRecordsByIsPassCheck(directFactory, pass));
+//                            directCount += breedingPlanAnotherService.queryCountByPass(directFactory, pass);
+//                        } else {
+//                            directModels.addAll(breedingPlanAnotherService.findAllRecords(directFactory));
+//                            directCount += breedingPlanAnotherService.queryCount(directFactory);
+//                        }
+//                    }
+//                }
+                if (directFactories != null && directFactories.size() != 0) {
+                    allFactories.addAll(directFactories);
+                    directCount = breedingPlanAnotherService.queryCountBySelective(directFactories, pass, factoryName, startTime, endTime, earTag);
+                    System.out.println("directCount = " + directCount);
                 }
-
-                List<BreedingPlanAnotherModel> undirectModels = new ArrayList<>();
-                if (undirectFactories != null) {
-                    for (Long undirectFactory : undirectFactories) {
-                        if (pass == 1 || pass == 0 || pass == 2) {
-                            undirectModels.addAll(breedingPlanAnotherService.findAllRecordsByIsPassCheck(undirectFactory, pass));
-                            undirectCount += breedingPlanAnotherService.queryCountByPass(undirectFactory, pass);
-                        } else {
-                            undirectModels.addAll(breedingPlanAnotherService.findAllRecords(undirectFactory));
-                            undirectCount += breedingPlanAnotherService.queryCount(undirectFactory);
-                        }
-                    }
+                if (undirectFactories != null && undirectFactories.size() != 0) {
+                    allFactories.addAll(undirectFactories);
+                    System.out.println(undirectFactories.toString());
+                    undirectCount = breedingPlanAnotherService.queryCountBySelective(undirectFactories, pass, factoryName, startTime, endTime, earTag);
+                    System.out.println("undirectCount = " + undirectCount);
                 }
-                models.addAll(directModels);
-                models.addAll(undirectModels);
-                List<BreedingPlanAnotherModel> result = new ArrayList<>();
-                for (int i = upage*usize; i < models.size() && i < upage*usize + usize; i++) {
-                    result.add(models.get(i));
-                }
-                data.put("List", result);
+//                List<BreedingPlanAnotherModel> undirectModels = new ArrayList<>();
+                models = breedingPlanAnotherService.queryAllBySelective(allFactories, upage, usize, pass, factoryName, startTime, endTime, earTag);
+//                if (undirectFactories != null) {
+//                    for (Long undirectFactory : undirectFactories) {
+//                        if (pass == 1 || pass == 0 || pass == 2) {
+//                            undirectModels.addAll(breedingPlanAnotherService.findAllRecordsByIsPassCheck(undirectFactory, pass));
+//                            undirectCount += breedingPlanAnotherService.queryCountByPass(undirectFactory, pass);
+//                        } else {
+//                            undirectModels.addAll(breedingPlanAnotherService.findAllRecords(undirectFactory));
+//                            undirectCount += breedingPlanAnotherService.queryCount(undirectFactory);
+//                        }
+//                    }
+//                }
+//                models.addAll(directModels);
+//                models.addAll(undirectModels);
+//                List<BreedingPlanAnotherModel> result = new ArrayList<>();
+//                for (int i = upage*usize; i < models.size() && i < upage*usize + usize; i++) {
+//                    result.add(models.get(i));
+//                }
+                data.put("List", models);
                 data.put("size", directCount + undirectCount);
                 data.put("directSize", directCount);
             }

@@ -3,6 +3,7 @@ package com.deep.infra.persistence.sql.mapper;
 import com.deep.api.request.BreedingModifyRequest;
 import com.deep.api.request.BreedingRequest;
 import com.deep.domain.model.BreedingPlanAnotherModel;
+import com.deep.infra.selective.BreedingPlanSelective;
 import org.apache.ibatis.annotations.*;
 
 import java.sql.Timestamp;
@@ -383,4 +384,50 @@ public interface BreedingPlanAnotherMapper {
      */
     @Delete("delete from breeding_plan_another where id = #{id}")
     Long deleteARecords(Long id);
+
+    // 按照条件查询个数
+    @SelectProvider(type = BreedingPlanSelective.class, method = "countBreedingPlanAnother")
+    Integer queryCountBySelective(List<Long> lists, Byte pass, String factoryName, String startTime, String endTime, String earTag);
+
+    @SelectProvider(type = BreedingPlanSelective.class, method = "findAllSelective")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "gmtCreate", column = "gmt_create"),
+            @Result(property = "gmtModify", column = "gmt_modify"),
+            @Result(property = "breedingTime", column = "breeding_time"),
+            @Result(property = "buildingAfterBreeding", column = "building_after_breeding"),
+            @Result(property = "ramSheepTrademark", column = "ram_sheep_trademark"),
+            @Result(property = "eweSheepTrademark", column = "ewe_sheep_trademark"),
+            @Result(property = "manageFlag", column = "manage_flag"),
+            @Result(property = "manageAverageTime", column = "manage_average_time"),
+            @Result(property = "nutritionBeforePregnancy", column = "nutrition_before_pregnancy"),
+            @Result(property = "isPregnancy", column = "is_pregnancy"),
+            @Result(property = "nutritionAfterPregnancy", column = "nutrition_after_pregnancy"),
+            @Result(property = "prenatalImmunityType", column = "prenatal_immunity_type"),
+            @Result(property = "prenatalImmunityTime", column = "prenatal_immunity_time"),
+            @Result(property = "buildingToBeRelocated", column = "building_to_be_relocated"),
+            @Result(property = "nutritionBeforeLambing", column = "nutrition_before_lambing"),
+            @Result(property = "lambingTime", column = "lambing_time"),
+            @Result(property = "lambingNumber", column = "lambing_number"),
+            @Result(property = "nutritionBreastFeeding", column = "nutrition_breast_feeding"),
+            @Result(property = "nutritionInsteadBreastFeeding", column = "nutrition_instead_breast_feeding"),
+            @Result(property = "nutritionBeforeCutBreastFeeding", column = "nutrition_before_cut_breast_feeding"),
+            @Result(property = "nutritionCutBreastFeeding", column = "nutrition_cut_breast_feeding"),
+            @Result(property = "operatorTime", column = "operator_time"),
+            @Result(property = "operatorId", column = "operator_id"),
+            @Result(property = "operatorName", column = "operator_name"),
+            @Result(property = "ispassSup", column = "is_pass_sup"),
+            @Result(property = "supervisorTime", column = "supervisor_time"),
+            @Result(property = "supervisorId", column = "supervisor_id"),
+            @Result(property = "supervisorName", column = "supervisor_name"),
+            @Result(property = "ispassCheck", column = "is_pass_check"),
+            @Result(property = "professorTime", column = "professor_time"),
+            @Result(property = "professorId", column = "professor_id"),
+            @Result(property = "professorName", column = "professor_name"),
+            @Result(property = "remark", column = "remark"),
+            @Result(property = "factoryNumber", column = "factory_number"),
+            @Result(property = "factoryName", column = "factory_name"),
+            @Result(property = "professorNotPassReason", column = "professor_not_pass_reason")
+    })
+    List<BreedingPlanAnotherModel> queryAllBySelective(List<Long> lists, Integer page, Byte size, Byte pass, String factoryName, String startTime, String endTime, String earTag);
 }

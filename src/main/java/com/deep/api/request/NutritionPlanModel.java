@@ -57,6 +57,16 @@ public class NutritionPlanModel extends NutritionPlan implements Serializable {
     private int size;
     private int page;
 
+    private String eartagFile;
+
+    public String getEartagFile() {
+        return eartagFile;
+    }
+
+    public void setEartagFile(String eartagFile) {
+        this.eartagFile = eartagFile;
+    }
+
     private static final long serialVersionUID = 1L;
     public String getMaterialA() {
         return materialA;

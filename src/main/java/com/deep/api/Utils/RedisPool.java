@@ -36,12 +36,12 @@ public final class RedisPool {
     static {
         try {
             JedisPoolConfig config = new JedisPoolConfig();
-        /*注意：
-            在高版本的jedis jar包，比如本版本2.9.0，JedisPoolConfig没有setMaxActive和setMaxWait属性了
-            这是因为高版本中官方废弃了此方法，用以下两个属性替换。
-            maxActive  ==>  maxTotal
-            maxWait==>  maxWaitMillis
-         */
+            /*注意：
+                在高版本的jedis jar包，比如本版本2.9.0，JedisPoolConfig没有setMaxActive和setMaxWait属性了
+                这是因为高版本中官方废弃了此方法，用以下两个属性替换。
+                maxActive  ==>  maxTotal
+                maxWait==>  maxWaitMillis
+            */
             config.setMaxTotal(MAX_TOTAL);
             config.setMaxIdle(MAX_IDLE);
             config.setMaxWaitMillis(MAX_WAIT_MILLIS);

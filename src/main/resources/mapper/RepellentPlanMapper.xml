@@ -91,6 +91,11 @@
         <if test="repellentPlanModel.factoryNum != null">
             AND factory_num = #{repellentPlanModel.factoryNum}
         </if>
+
+        <if test="repellentPlanModel.factoryName != null">
+            AND factory_name = #{repellentPlanModel.factoryName}
+        </if>
+
         <if test="repellentPlanModel.crowdNum != null and repellentPlanModel.crowdNum != '' ">
             AND crowd_num = #{repellentPlanModel.crowdNum}
         </if>

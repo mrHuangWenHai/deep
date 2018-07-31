@@ -1,4 +1,5 @@
 package com.deep.api.request;
+import com.deep.api.Utils.TimeUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.List;
@@ -227,6 +228,7 @@ public class DiagnosisRequest {
   }
 
   public void setStartTime(String startTime) {
+//    this.startTime = TimeUtil.translateToString(TimeUtil.getBeforeDay(TimeUtil.TranslateToDate(startTime)));
     this.startTime = startTime;
   }
 
@@ -235,6 +237,7 @@ public class DiagnosisRequest {
   }
 
   public void setEndTime(String endTime) {
+//    this.endTime = TimeUtil.translateToString(TimeUtil.getNextDay(TimeUtil.TranslateToDate(endTime)));
     this.endTime = endTime;
   }
 

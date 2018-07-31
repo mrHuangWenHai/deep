@@ -55,8 +55,8 @@
             AND operator_id = #{operationCoditionRequest.operationId}
         </if>
 
-        <if test="operationCoditionRequest.checkTime != null">
-            AND check_time &gt;= #{operationCoditionRequest.checkTime}
+        <if test="operationCoditionRequest.startTime != null">
+            AND check_time BETWEEN #{operationCoditionRequest.startTime} AND #{operationCoditionRequest.endTime}
         </if>
 
         <if test="operationCoditionRequest.ispassCheck != null">
@@ -67,8 +67,10 @@
             AND ispass_sup = #{operationCoditionRequest.ispassSup}
         </if>
 
+        <if test="operationCoditionRequest.factoryName != null">
+            AND factory_name = #{operationCoditionRequest.factoryName}
+        </if>
         order by gmt_modified desc
-
     </select>
 
     <select id = "getOperationFileById" resultMap="OperationFile">

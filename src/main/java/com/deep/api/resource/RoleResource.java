@@ -3,19 +3,24 @@ package com.deep.api.resource;
 import com.deep.api.Utils.PermitUtil;
 import com.deep.api.Utils.StringToLongUtil;
 import com.deep.api.authorization.annotation.Permit;
+import com.deep.api.authorization.token.TokenManagerRealization;
+import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.RoleRequest;
 
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.RoleModel;
+import com.deep.domain.model.UserModel;
 import com.deep.domain.service.RoleService;
 
+import com.deep.domain.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -31,6 +36,9 @@ public class RoleResource {
     @Resource
     private RoleService roleService;
 
+    @Resource
+    private UserService userService;
+
     /**
      * 查看所有的角色
      * @return json数据返回所有角色
@@ -40,9 +48,28 @@ public class RoleResource {
     public Response roleLists(
             @RequestParam(value = "size", defaultValue = "10") String size,
             @RequestParam(value = "page", defaultValue = "0") String page,
-            @PathVariable("id") String agentRank
+            @PathVariable("id") String agentRank, HttpServletRequest httpServletRequest
     ) {
         logger.info("invoke roleLists, url is role");
+
+        // 从header中获取token
+        String authorization = httpServletRequest.getHeader(Constants.AUTHORIZATION);
+        System.out.println(authorization);
+        TokenManagerRealization tokenManagerRealization = new TokenManagerRealization();
+        // 从authorization中获取用户名以及token
+        Long userID = tokenManagerRealization.getUserID(authorization);
+
+        System.out.println("size = [" + size + "], page = [" + page + "], agentRank = [" + agentRank + "], httpServletRequest = [" + httpServletRequest + "]");
+        System.out.println("userID = " + userID);
+
+        // 根据userID查找用户表
+        UserModel userModel = userService.getOneUser(userID);
+        Long factoryID = 0L;
+
+        if (userModel != null) {
+            factoryID = userModel.getUserFactory();
+        }
+
         Long upage = StringToLongUtil.stringToLong(page);
         Byte usize = StringToLongUtil.stringToByte(size);
         Byte rank;
@@ -68,7 +95,16 @@ public class RoleResource {
         if (usize < 0 || upage < 0) {
             return Responses.errorResponse("参数错误!");
         }
-        List<RoleModel> roleModels = roleService.getAll(usize*upage, usize, rank);
+        List<RoleModel> roleModels;
+        Long counts = (long)0;
+        if (rank == 18) {
+            roleModels = roleService.getAll(usize*upage, usize, rank, factoryID);
+            counts = roleService.findAnotherTheCount(rank, factoryID);
+        } else {
+            roleModels = roleService.getAnotherAll(usize*upage, usize, rank);
+            counts = roleService.findAllTheCount(rank);
+        }
+
         if (roleModels == null) {
             return Responses.errorResponse("获取角色信息失败");
         }
@@ -86,9 +122,7 @@ public class RoleResource {
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
         data.put("List", roleRequests);
-        System.out.println("rank = " + rank);
-        System.out.println("size" + roleService.findAllTheCount(rank));
-        data.put("size", roleService.findAllTheCount(rank));
+        data.put("size", counts);
         response.setData(data);
         return response;
     }
@@ -100,7 +134,7 @@ public class RoleResource {
      */
     @Permit(authorities = "add_role")
     @PostMapping(value = "")
-    public Response addRole(@Valid @RequestBody RoleRequest roleRequest, BindingResult bindingResult) {
+    public Response addRole(@Valid @RequestBody RoleRequest roleRequest, BindingResult bindingResult, HttpServletRequest httpServletRequest) {
         logger.info("invoke addRole{}, url is role", roleRequest, bindingResult);
         if (bindingResult.hasErrors()) {
             Response response =  Responses.errorResponse("数据校验失败, 请检查输入格式是否错误");
@@ -113,6 +147,21 @@ public class RoleResource {
                 System.out.println("权限为空!!!");
                 return Responses.errorResponse("失败!");
             }
+
+            // 从header中获取token
+            String authorization = httpServletRequest.getHeader(Constants.AUTHORIZATION);
+            System.out.println(authorization);
+            TokenManagerRealization tokenManagerRealization = new TokenManagerRealization();
+            // 从authorization中获取用户名以及token
+            Long userID = tokenManagerRealization.getUserID(authorization);
+            // 根据userID查找用户表
+            UserModel userModel = userService.getOneUser(userID);
+            Long factoryID = 0L;
+
+            if (userModel != null) {
+                factoryID = userModel.getUserFactory();
+            }
+
             RoleModel roleModel = new RoleModel();
             roleModel.setGmtCreate(new Timestamp(System.currentTimeMillis()));
             roleModel.setGmtModified(new Timestamp(System.currentTimeMillis()));
@@ -120,6 +169,7 @@ public class RoleResource {
             roleModel.setRoleDescription(roleRequest.getRoleDescription());
             roleModel.setTypeName(roleRequest.getTypeName());
             roleModel.setDefaultPermit(PermitUtil.stringArrayToString(roleRequest.getRolePermit()));
+            roleModel.setFactoryID(factoryID);
             Long success = roleService.addRole(roleModel);
             if (success <= 0) {
                 return Responses.errorResponse("添加失败");

@@ -2,10 +2,12 @@ package com.deep.api.resource;
 
 import com.deep.api.Utils.AgentUtil;
 import com.deep.api.Utils.StringToLongUtil;
+import com.deep.api.Utils.TimeUtil;
 import com.deep.api.Utils.TokenAnalysis;
 import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.NutritionPlanModel;
+import com.deep.api.request.NutritionRequest;
 import com.deep.api.request.ProfessorRequest;
 import com.deep.api.request.SupervisorRequest;
 import com.deep.api.response.Response;
@@ -75,7 +77,8 @@ public class NutritionResource {
             insert.setBuilding(planModel.getBuilding());
             insert.setQuantity(planModel.getQuantity());
             // 羊只均重, 后来不使用, 以后需要等待换成耳牌号附件
-            insert.setAverage(planModel.getAverage());
+//            insert.setAverage(planModel.getAverage());
+            insert.setAverage(planModel.getEartagFile());
             insert.setPeriod(planModel.getPeriod());
             insert.setWater(planModel.getWater());
             insert.setOperatorName(planModel.getOperatorName());
@@ -108,7 +111,6 @@ public class NutritionResource {
                 return Responses.errorResponse("插入失败");
             }
 //         TODO 再详细检查一下Redis
-
             short agentID = this.factoryService.queryOneAgentByID(planModel.getFactoryNum());
             String professorKey = agentID + "_professor";
             String supervisorKey = planModel.getFactoryNum().toString() + "_supervisor";
@@ -267,11 +269,14 @@ public class NutritionResource {
      */
     @Permit(authorities = "inquiry_phase_nutrition_file")
     @GetMapping(value = "/{id}")
-    public Response findAllOfOneFactory(@PathVariable("id") String id,
-                                        @RequestParam(value = "size", defaultValue = "10") String size,
+    public Response findAllOfOneFactory(@RequestParam(value = "size", defaultValue = "10") String size,
                                         @RequestParam(value = "page", defaultValue = "0") String page,
                                         @RequestParam(value = "factoryName", defaultValue = "") String factoryName,
-                                        @RequestParam(value = "ispassCheck", defaultValue = "-1") String ispassCheck, HttpServletRequest request) {
+                                        @RequestParam(value = "ispassCheck", defaultValue = "-1") String ispassCheck,
+                                        @RequestParam(value = "startTime", defaultValue = "") String startTime,
+                                        @RequestParam(value = "endTime", defaultValue = "") String endTime,
+                                        @RequestParam(value = "earTag", defaultValue = "") String earTag,
+                                        @PathVariable("id") String id, HttpServletRequest request) {
         logger.info("invoke findAllOfOneFactory, url is nutrition/{id} {}", id, size, page, factoryName, ispassCheck, request);
         if (size == null || page == null) {
             return Responses.errorResponse("失败");
@@ -288,13 +293,20 @@ public class NutritionResource {
             if (pass != -1) {
                 criteria.andIsPassCheckEqualTo(pass);
             }
+            if (! "".equals(startTime) && !"".equals(endTime)) {
+                criteria.andNutritionTBetween(TimeUtil.TranslateToDate(startTime), TimeUtil.TranslateToDate(endTime));
+            }
+            if (!"".equals(earTag)) {
+                criteria.andAverageEqualTo(earTag);
+            }
+            if (!"".equals(factoryName)) {
+                criteria.andFactoryNameEqualTo(factoryName);
+            }
             List<NutritionPlanWithBLOBs> select = nutritionPlanService.findPlanSelective(nutritionPlanExample,new RowBounds(0, 1000000));
-
             List<NutritionPlanWithBLOBs> results = new ArrayList<>();
             for (int i = upage*usize; i < select.size() && i < upage*usize + usize; i++) {
                 results.add(select.get(i));
             }
-
             Response response = Responses.successResponse();
             HashMap<String, Object> data = new HashMap<>();
             data.put("List",results);
@@ -303,13 +315,6 @@ public class NutritionResource {
             return response;
         } else if (which == 1) {
             int count = 0;
-            // user is a agent user
-            NutritionPlanExample nutritionPlanExample = new NutritionPlanExample();
-            NutritionPlanExample.Criteria criteria = nutritionPlanExample.createCriteria();
-
-            if (pass != -1) {
-                criteria.andIsPassCheckEqualTo(pass);
-            }
             // It's agent message
             // find his all subordinate factory
             Map<Long, List<Long> > factories = AgentUtil.getAllSubordinateFactory(String.valueOf(factoryOrAgentID));
@@ -327,14 +332,23 @@ public class NutritionResource {
                 return Responses.errorResponse("该代理没有发展羊场和代理！");
             }
 
+            NutritionRequest nutritionRequest = new NutritionRequest();
+            nutritionRequest.setStartTime(startTime);
+            nutritionRequest.setEndTime(endTime);
+            nutritionRequest.setEarTag(earTag);
+            nutritionRequest.setFactoryName(factoryName);
+
             List<NutritionPlanWithBLOBs> theOne = new ArrayList<>();
             if (allFactories != null) {
                 for (Long allFactory : allFactories) {
+                    nutritionRequest.setFactory(allFactory);
                     List<NutritionPlanWithBLOBs> temp = new ArrayList<>();
                     if (pass != -1) {
-                        temp = nutritionPlanService.findAllRecords(allFactory, pass);
+                        nutritionRequest.setPass(pass);
+                        System.out.println(pass + " = " + pass + "; startTime = " + startTime + "; endTime = " + endTime + "; factoryName = " + factoryName);
+                        temp = nutritionPlanService.findAllRecords(nutritionRequest);
                     } else {
-                        temp = nutritionPlanService.getAll(allFactory);
+                        temp = nutritionPlanService.getAll(nutritionRequest);
                     }
                     System.out.println("temp = " + temp.size());
                     theOne.addAll(temp);
@@ -346,11 +360,14 @@ public class NutritionResource {
             List<NutritionPlanWithBLOBs> theOther = new ArrayList<>();
             if (directFactories != null) {
                 for (Long directFactory : directFactories) {
+                    nutritionRequest.setFactory(directFactory);
                     List<NutritionPlanWithBLOBs> temp = new ArrayList<>();
                     if (pass != -1) {
-                        temp = nutritionPlanService.findAllRecords(directFactory, pass);
+                        nutritionRequest.setPass(pass);
+                        System.out.println(directFactory + " = " + pass + "; startTime = " + startTime + "; endTime = " + endTime + "; factoryName = " + factoryName);
+                        temp = nutritionPlanService.findAllRecords(nutritionRequest);
                     } else {
-                        temp = nutritionPlanService.getAll(directFactory);
+                        temp = nutritionPlanService.getAll(nutritionRequest);
                     }
                     System.out.println("temp = " + temp.size());
                     theOther.addAll(temp);

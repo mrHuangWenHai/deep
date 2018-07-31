@@ -19,6 +19,16 @@ public class RoleModel {
 
     private String defaultPermit;
 
+    private Long factoryID;
+
+    public Long getFactoryID() {
+        return factoryID;
+    }
+
+    public void setFactoryID(Long factoryID) {
+        this.factoryID = factoryID;
+    }
+
     public String getRoleDescription() {
         return roleDescription;
     }

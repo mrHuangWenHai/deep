@@ -16,6 +16,15 @@ public class TimeUtil {
         return date;
     }
 
+    //　获取前一天
+    public static Date getBeforeDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        date = calendar.getTime();
+        return date;
+    }
+
     // 将Timestamp类型转换为Date类型
     public static Date Translate(Timestamp timestamp) {
         // 将TimeStamp转化为字符串
@@ -49,5 +58,11 @@ public class TimeUtil {
             ex.printStackTrace();
         }
         return result;
+    }
+
+    // 将Date类型转换为String类型
+    public static String translateToString(Date date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return formatter.format(date);
     }
 }

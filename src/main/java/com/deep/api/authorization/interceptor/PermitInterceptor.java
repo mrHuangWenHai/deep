@@ -169,9 +169,9 @@ public class PermitInterceptor extends HandlerInterceptorAdapter{
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         logger.info("invoke preHandle of PermitInterceptor", request, response, handler);
+
         System.out.println("3333333333333333333333333333333");
         System.out.println("this is the preHandle of PermitInterceptor");
-
         if (request.getMethod().equals("OPTIONS")) {
             logger.info("PermitInterceptor:request type is OPTIONS");
             return true;

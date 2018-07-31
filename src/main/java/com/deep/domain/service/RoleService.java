@@ -18,16 +18,20 @@ public class RoleService {
     private PermitMapper permitMapper;
     /**
      * 获取所有的角色信息
-     * @return
+     * @return 所有角色列表
      */
-    public List<RoleModel> getAll(Long start, Byte size, Byte rank) {
-        return roleMapper.queryAllRole(start, size, rank);
+    public List<RoleModel> getAll(Long start, Byte size, Byte rank, Long factoryID) {
+        return roleMapper.queryAllRole(start, size, rank, factoryID);
+    }
+
+    public List<RoleModel> getAnotherAll(Long start, Byte size, Byte rank) {
+        return roleMapper.queryAnotherAllRole(start, size, rank);
     }
 
     /**
      * 根据角色主键次查询单个角色信息
-     * @param id
-     * @return
+     * @param id 角色主键
+     * @return  单个角色的信息
      */
     public RoleModel getOneRole(Long id) {
         System.out.println(id);
@@ -38,8 +42,8 @@ public class RoleService {
 
     /**
      * 根据pktypeID获取相应的单个角色的信息
-     * @param id
-     * @return
+     * @param id pktypeID
+     * @return 单个角色的信息
      */
     public RoleModel getOneRoleByRolePkTypeID(Long id) {
         return roleMapper.queryRoleByPkTypeId(id);
@@ -47,8 +51,8 @@ public class RoleService {
 
     /**
      * 插入一个新的角色
-     * @param roleModel
-     * @return
+     * @param roleModel 新的角色的模型类
+     * @return 是否插入成功标志
      */
     public Long addRole(RoleModel roleModel) {
         return roleMapper.insertRole(roleModel);
@@ -60,8 +64,8 @@ public class RoleService {
 
     /**
      * 修改单个角色
-     * @param roleModel
-     * @return
+     * @param roleModel 修改的单个角色的角色信息
+     * @return 是否修改成功的标志
      */
     public Long updateRole(RoleModel roleModel) {
         return roleMapper.updateRole(roleModel);
@@ -69,8 +73,8 @@ public class RoleService {
 
     /**
      * 删除单个角色
-     * @param id
-     * @return
+     * @param id 单个角色的ID
+     * @return 是否成功的标志
      */
     public Long deleteRole(Long id) {
         return roleMapper.deleteRole(id);
@@ -78,8 +82,8 @@ public class RoleService {
 
     /**
      * 获取角色的固定权限, 返回本身格式String
-     * @param id
-     * @return
+     * @param id 角色的ID
+     * @return 权限组合
      */
     public String findRoleDefaultPermits(long id) {
         RoleModel roleModel = roleMapper.queryRoleById(id);
@@ -91,9 +95,9 @@ public class RoleService {
     }
     /**
      * 获取某个角色固定的权限
-     * @return
+     * @return 权限组合
      */
-    public String findRolePermits(long id) {
+    String findRolePermits(long id) {
         RoleModel roleModel = roleMapper.queryRoleById(id);
         if (roleModel == null) {
             return null;
@@ -121,9 +125,13 @@ public class RoleService {
 
     /**
      * 获取所有角色的数量
-     * @return
+     * @return 所有角色的数量
      */
     public Long findAllTheCount(Byte rank) {
         return roleMapper.queryCount(rank);
+    }
+
+    public Long findAnotherTheCount(Byte rank, Long factoryID) {
+        return roleMapper.queryAnotherCount(rank, factoryID);
     }
 }

@@ -93,7 +93,7 @@ public class OperationFileResource {
       List<OperationFile> totalList = operationFileService.getOperationFile(operationCoditionRequest);
       int size = totalList.size();
       int page = operationCoditionRequest.getPage();
-      int pageSize = operationCoditionRequest.getPageSize();
+      int pageSize = operationCoditionRequest.getSize();
       int destIndex = (page+1) * pageSize + 1  > size ? size : (page+1) * pageSize + 1;
       List<OperationFile> list = totalList.subList(page * pageSize, destIndex);
 

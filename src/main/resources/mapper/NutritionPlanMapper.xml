@@ -829,17 +829,54 @@
     WHERE (nutrition_t BETWEEN #{date1} AND #{date2}) AND (factory_num = #{number})
   </select>
 
-  <select resultMap="ResultMapWithBLOBs" parameterType="com.deep.domain.model.NutritionPlanExample" id="findAllRecords">
+  <select resultMap="ResultMapWithBLOBs" parameterType="com.deep.api.request.NutritionRequest" id="findAllRecords">
     SELECT *
     FROM nutrition_plan
-    WHERE factory_num = #{factory} AND ispass_check = #{pass}
+    WHERE 1 = 1
+
+    <if test="nutritionRequest.factory != null">
+        AND factory_num = #{nutritionRequest.factory}
+    </if>
+
+    <if test="nutritionRequest.pass != null">
+        AND ispass_check = #{nutritionRequest.pass}
+    </if>
+
+    <if test="nutritionRequest.startTime != null">
+      AND nutrition_t BETWEEN #{nutritionRequest.startTime} AND #{nutritionRequest.endTime}
+    </if>
+
+    <if test="nutritionRequest.factoryName != null">
+      AND factory_name = #{nutritionRequest.factoryName}
+    </if>
+
+    <if test="nutritionRequest.earTag != null">
+      AND average = #{nutritionRequest.earTag}
+    </if>
+    order by gmt_modified desc
   </select>
 
-  <select resultMap="ResultMapWithBLOBs" parameterType="com.deep.domain.model.NutritionPlanExample" id="getAll">
+  <select resultMap="ResultMapWithBLOBs" parameterType="com.deep.api.request.NutritionRequest" id="getAll">
     SELECT *
     FROM nutrition_plan
-    WHERE factory_num = #{factory}
-    ORDER BY gmt_modified DESC
+    WHERE 1 = 1
+
+    <if test="nutritionRequest.factory != null">
+      AND factory_num = #{nutritionRequest.factory}
+    </if>
+
+    <if test="nutritionRequest.startTime != null">
+      AND nutrition_t BETWEEN #{nutritionRequest.startTime} AND #{nutritionRequest.endTime}
+    </if>
+
+    <if test="nutritionRequest.factoryName != null">
+      AND factory_name = #{nutritionRequest.factoryName}
+    </if>
+
+    <if test="nutritionRequest.earTag != null">
+      AND average = #{nutritionRequest.earTag}
+    </if>
+    order by gmt_modified desc
   </select>
 
   <select resultMap="BaseResultMap" parameterType="com.deep.domain.model.NutritionPlanExample" id="selectByExampleWithRowbounds" >

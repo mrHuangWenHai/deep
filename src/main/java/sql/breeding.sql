@@ -1,0 +1,1 @@
+select * from factory_manage where id in (30, 31, 31)

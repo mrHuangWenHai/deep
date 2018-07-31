@@ -30,8 +30,8 @@ public class TokenManagerRealization implements TokenManager{
 
     /**
      * 获取角色的ID
-     * @param authentication
-     * @return
+     * @param authentication header头上的信息
+     * @return 角色的id
      */
     public long getRoleID(String authentication) {
         System.out.println(authentication);
@@ -40,10 +40,25 @@ public class TokenManagerRealization implements TokenManager{
         }
         String[] param = authentication.split(":");
         System.out.println(param.length);
+        System.out.print(param[0]);
         if (param.length != 4) {
             return -1;
         }
         return Long.parseLong(param[2]);
+    }
+
+    public Long getUserID(String authentication) {
+        if (authentication == null || authentication.length() == 0) {
+            return  (long)(-1);
+        }
+        String[] param = authentication.split(":");
+
+        System.out.println(param[0]);
+
+        if (param.length != 4) {
+            return (long)(-1);
+        }
+        return Long.parseLong(param[0]);
     }
 
     @Override
