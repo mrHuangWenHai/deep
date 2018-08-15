@@ -3,9 +3,6 @@ package com.deep.domain.util;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 
-import com.deep.domain.model.EnvironmentTraceModel;
-
-
 import java.util.HashMap;
 import java.util.regex.Pattern;
 

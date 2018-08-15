@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--Mapper名称 对应infra中mapper类名-->
-<mapper namespace="com.deep.infra.persistence.sql.mapper.GenealogicalFilesMapper">
+<mapper namespace="com.deep.infra.persistence.sql.mapper.product_chain.GenealogicalFilesMapper">
 
     <resultMap id="GenealogicalFiles" type="com.deep.domain.model.GenealogicalFilesModel">
         <id property="id" column="id"/>

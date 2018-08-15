@@ -22,11 +22,11 @@
 
     <mappers>
         <mapper resource="mapper/TestMapper.xml"/>
-        <mapper class="com.deep.infra.persistence.sql.mapper.UserMapper"/>
-        <mapper class="com.deep.infra.persistence.sql.mapper.AgentMapper"/>
-        <mapper class="com.deep.infra.persistence.sql.mapper.RoleMapper" />
+        <mapper class="com.deep.infra.persistence.sql.mapper.role_permit.UserMapper"/>
+        <mapper class="com.deep.infra.persistence.sql.mapper.management_level.AgentMapper"/>
+        <mapper class="com.deep.infra.persistence.sql.mapper.role_permit.RoleMapper" />
         <mapper class="com.deep.infra.persistence.sql.mapper.NoticeMapper"/>
-        <mapper class="com.deep.infra.persistence.sql.mapper.BreedingPlanAnotherMapper"/>
+        <mapper class="com.deep.infra.persistence.sql.mapper.product_chain.BreedingPlanAnotherMapper"/>
 
         <mapper resource="mapper/DiagnosisPlanMapper.xml"/>
         <mapper resource="mapper/NutritionPlanMapper.xml"/>

@@ -30,6 +30,7 @@ import java.util.List;
 public class SheepInfoResource {
     private static Logger logger = LoggerFactory.getLogger(SheepInfoResource.class);
     @Resource
+    private
     SheepInfoService sheepInfoService;
 
     @PostMapping(value = "/update")
@@ -64,11 +65,10 @@ public class SheepInfoResource {
             if(!dir.exists()){
                 dir.mkdir();
             }
-            File tempFile = null;
+            File tempFile;
             tempFile = new File(fileAddress);
             FileUtils.copyInputStreamToFile(file.getInputStream(),tempFile);
             //多线程不安全
-            StringBuilder stringBuilder = new StringBuilder();
             List<List<Object>> excelList = ReadExcel.readExcel(tempFile);
             List<Object> list ;
             int count = 0;
@@ -112,8 +112,7 @@ public class SheepInfoResource {
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            Response response = Responses.errorResponse(e.getMessage());
-            return response;
+            return Responses.errorResponse(e.getMessage());
         }
     }
 
@@ -132,8 +131,6 @@ public class SheepInfoResource {
         response.setData(data);
         return response;
     }
-
-
 }
 
 

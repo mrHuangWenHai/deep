@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--Mapper名称 对应infra中mapper类名-->
-<mapper namespace="com.deep.infra.persistence.sql.mapper.GenealogicalFilesTransMapper">
+<mapper namespace="com.deep.infra.persistence.sql.mapper.product_chain.GenealogicalFilesTransMapper">
     <insert id="setGenealogicalFilesTransModel" parameterType="com.deep.domain.model.GenealogicalFilesTransModel">
         INSERT INTO genealogical_files_trans(
         before_owner_factory,

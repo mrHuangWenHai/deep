@@ -19,13 +19,11 @@ public class BuildingColumnService {
     public List<BuildingColumn> selectAllBudildings(BuildingColumnExample buildingColumnExample)
     {
 
-        List<BuildingColumn> buildings = buildingColumnMapper.selectByExample(buildingColumnExample);
-        return buildings;
+        return buildingColumnMapper.selectByExample(buildingColumnExample);
     }
     public List<BuildingColumn> selectAllCol(BuildingColumnExample buildingColumnExample)
     {
-        List<BuildingColumn> columns = buildingColumnMapper.selectByExample(buildingColumnExample);
-        return columns;
+        return buildingColumnMapper.selectByExample(buildingColumnExample);
     }
 
 }

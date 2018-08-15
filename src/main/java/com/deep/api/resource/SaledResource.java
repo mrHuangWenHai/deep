@@ -23,7 +23,7 @@ import java.util.List;
 public class SaledResource {
 
     @Resource
-    SaledService saledService;
+    private SaledService saledService;
 
     @GetMapping("/saledsheep")
     public Response getSaledSheep(@RequestBody FactoryModel factoryModel)

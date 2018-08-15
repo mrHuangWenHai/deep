@@ -2,9 +2,9 @@ package com.deep.api.Utils;
 
 import com.deep.domain.model.AgentModel;
 import com.deep.domain.model.UserModel;
-import com.deep.domain.service.AgentService;
-import com.deep.domain.service.FactoryService;
-import com.deep.domain.service.UserService;
+import com.deep.domain.service.management_level.AgentService;
+import com.deep.domain.service.management_level.FactoryService;
+import com.deep.domain.service.role_permit.UserService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;

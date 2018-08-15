@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.deep.infra.persistence.sql.mapper.NutritionPlanMapper" >
+<mapper namespace="com.deep.infra.persistence.sql.mapper.product_chain.NutritionPlanMapper" >
   <resultMap id="BaseResultMap" type="com.deep.domain.model.NutritionPlan" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />

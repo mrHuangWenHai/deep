@@ -1,8 +1,8 @@
 package com.deep.domain.service;
 
 import com.deep.domain.model.GenealogicalFilesModel;
-import com.deep.infra.persistence.sql.mapper.GenealogicalFilesMapper;
-import com.deep.infra.persistence.sql.mapper.GenealogicalFilesTransMapper;
+import com.deep.infra.persistence.sql.mapper.product_chain.GenealogicalFilesMapper;
+import com.deep.infra.persistence.sql.mapper.product_chain.GenealogicalFilesTransMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

@@ -6,12 +6,9 @@ import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.*;
 import com.deep.domain.service.*;
-import org.apache.ibatis.session.RowBounds;
+import com.deep.domain.service.product_chain.*;
+import com.deep.domain.service.role_permit.UserService;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -60,7 +57,7 @@ public class ExcelOutputUtil {
     @Resource
     private TypeBriefService typeBriefService;
     @Resource
-    private  UserService userService;
+    private UserService userService;
 
     private static ExcelOutputUtil excelOutputUtil;
 
