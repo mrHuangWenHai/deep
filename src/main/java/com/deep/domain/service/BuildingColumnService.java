@@ -16,11 +16,16 @@ public class BuildingColumnService {
     @Resource
     private BuildingColumnMapper buildingColumnMapper;
 
-    public List<BuildingColumn> selectAllBudildingsByFactoryId(BuildingColumnExample buildingColumnExample)
+    public List<BuildingColumn> selectAllBudildings(BuildingColumnExample buildingColumnExample)
     {
 
         List<BuildingColumn> buildings = buildingColumnMapper.selectByExample(buildingColumnExample);
         return buildings;
+    }
+    public List<BuildingColumn> selectAllCol(BuildingColumnExample buildingColumnExample)
+    {
+        List<BuildingColumn> columns = buildingColumnMapper.selectByExample(buildingColumnExample);
+        return columns;
     }
 
 }

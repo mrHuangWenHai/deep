@@ -15,7 +15,12 @@ public enum FileTypeEnum {
     MOV("6D6F6F76"),
     ASF("3026B27"),
     MP4_1("00000014"),
-    MP4("00000018");
+    MP4("00000018"),
+
+    /**************支持的EXCEL文件格式*******************/
+    XLSX("D0CF11E0"),
+    XLS("504B0304");
+
 
     public String value;
 
