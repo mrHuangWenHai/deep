@@ -5,6 +5,7 @@ import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -27,8 +28,8 @@ public class DeepApplication {
     //Jedis jedis = new Jedis("localhost");
     //System.out.println("connecting");
     //System.out.println("running"+jedis.ping());
-    SpringApplication application1 = new SpringApplication(DeepApplication.class);
-    application1.run(args);
+    //SpringApplication application1 = new SpringApplication(DeepApplication.class);
+    SpringApplication.run(DeepApplication.class, args);
     System.out.println("The project is starting up now");
   }
 }

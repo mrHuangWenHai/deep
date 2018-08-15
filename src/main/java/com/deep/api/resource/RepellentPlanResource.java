@@ -13,7 +13,6 @@ import com.deep.domain.service.FactoryService;
 import com.deep.domain.service.RepellentPlanService;
 import com.deep.domain.service.UserService;
 import com.deep.domain.util.*;
-import com.sun.org.apache.regexp.internal.RE;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

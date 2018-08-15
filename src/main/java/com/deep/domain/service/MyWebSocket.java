@@ -8,11 +8,13 @@ import org.apache.commons.beanutils.ConvertUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Component;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -72,13 +74,15 @@ public class MyWebSocket {
      * @param user_id 用户id
      */
     @OnClose
-    public void onClose(@PathParam("user_id") Long user_id) {
+    public void onClose(@PathParam("user_id") Long user_id, CloseReason closeReason) throws IOException {
         WebSocketUtil.remove(user_id);
+        this.session.close(closeReason);
+        logger.info(closeReason.toString());
         logger.info("Account " + user_id + " close!" + WebSocketUtil.getSize() + " online");
     }
 
     /**
-     * 收到客户端消息后调用的方法
+     * 收到客户端文本后调用的方法
      *
      * @param message 客户端发送过来的消息
      */
@@ -91,6 +95,14 @@ public class MyWebSocket {
         else
             this.getSession().getAsyncRemote().sendText(JSON.toJSONString(new ResponseBean("无专家在线", "error", null, null)));
     }
+
+//    @OnMessage
+//    public void onFile(InputStream stream, Session session) throws IOException {
+//    }
+
+//    @OnMessage
+//    public void onPong(PongMessage pongMessage, Session session) throws IOException {
+//    }
 
     /**
      * 发生错误时调用
