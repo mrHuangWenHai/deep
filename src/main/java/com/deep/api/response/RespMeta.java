@@ -11,7 +11,7 @@ public class RespMeta {
     return code;
   }
 
-  public void setCode(int code) {
+  void setCode(int code) {
     this.code = code;
   }
 
@@ -19,7 +19,7 @@ public class RespMeta {
     return errorMsg;
   }
 
-  public void setErrorMsg(String errorMsg) {
+  void setErrorMsg(String errorMsg) {
     this.errorMsg = errorMsg;
   }
 }
