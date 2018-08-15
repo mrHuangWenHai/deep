@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 
 public class JedisUtil {
-    public static int seconds = 3600;
+    private static int seconds = 3600;
     public static Logger logger = LoggerFactory.getLogger(JedisUtil.class);
 
     public static String getValue(String key) {
@@ -22,7 +22,6 @@ public class JedisUtil {
           }
         } catch (Exception e ) {
             logger.info("获取异常 {}",e.getMessage());
-       //   jedis.close();
         } finally {
             try {
                 jedis.close();
@@ -34,6 +33,11 @@ public class JedisUtil {
         return null;
     }
 
+    /**
+     * Redis数据库中存入String类型的变量
+     * @param key 键
+     * @param value 值
+     */
     public static void setValue(String key, String value) {
         Jedis jedis = RedisPool.getJedis();
         if (jedis != null) {
@@ -47,7 +51,6 @@ public class JedisUtil {
                 } catch (Exception e) {
                     logger.info("关闭异常 {}",e.getMessage());
                 }
-
             }
         }
     }
@@ -89,5 +92,25 @@ public class JedisUtil {
             }
         }
         return true;
+    }
+
+    // 设置一个key永不过期
+    static void doPersist(String key) {
+        Jedis jedis = RedisPool.getJedis();
+        if (jedis != null) {
+            try {
+                jedis.persist(key);
+                logger.info("设置成功！");
+
+            } catch (Exception e) {
+                logger.info("设置异常{}",e.getMessage());
+            } finally {
+                try {
+                    jedis.close();
+                } catch (Exception e) {
+                    logger.info("关闭异常 {}",e.getMessage());
+                }
+            }
+        }
     }
 }

@@ -31,8 +31,8 @@ public interface FactoryMapper {
     List<FactoryModel> getAllNoResponsibleFactory(Long userId);
 
     /**
-     * 列出羊场列表
-     * @return
+     * 列出羊场列表，分页查询
+     * @return 所有信息
      */
     @Select("select * from factory_manage limit #{start}, #{size}")
     @Results({
@@ -51,6 +51,28 @@ public interface FactoryMapper {
             @Result(property = "agent", column = "agent")
     })
     List<FactoryModel> queryAllFactory(@Param("start") Long start, @Param("size") Byte size);
+
+    /**
+     * 列出羊场列表
+     * @return 所有羊场
+     */
+    @Select("select * from factory_manage")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "gmtCreate", column = "gmt_create"),
+            @Result(property = "gmtModified", column = "gmt_modified"),
+            @Result(property = "pkNumber", column = "pk_number"),
+            @Result(property = "breedName", column = "breed_name"),
+            @Result(property = "breedLocation", column = "breed_location"),
+            @Result(property = "breedLocationDetail", column = "breed_location_detail"),
+            @Result(property = "createTime", column = "create_time"),
+            @Result(property = "responsiblePersonId", column = "responsible_person_id"),
+            @Result(property = "responsiblePersonName", column = "responsible_person_name"),
+            @Result(property = "remark", column = "remark"),
+            @Result(property = "disinfectP", column = "disinfect_p"),
+            @Result(property = "agent", column = "agent")
+    })
+    List<FactoryModel> getAll();
 
     /**
      * 查找某个代理下的所有羊场

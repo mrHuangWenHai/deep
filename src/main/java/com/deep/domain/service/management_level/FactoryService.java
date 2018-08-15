@@ -139,5 +139,8 @@ public class FactoryService {
         return factoryMapper.queryOneAgentByID(id);
     }
 
+    public List<FactoryModel> getAll() {
+        return factoryMapper.getAll();
+    }
 }
 
