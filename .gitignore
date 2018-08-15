@@ -65,4 +65,7 @@ hs_err_pid*
 *rdb
 LICENSE
 
+# sql files
+Sheep.tar.xz
+Sheep/
 
