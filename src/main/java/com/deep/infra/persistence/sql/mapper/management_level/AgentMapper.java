@@ -42,6 +42,20 @@ public interface AgentMapper {
     })
     List<AgentModel> queryAllAgent(@Param("start") Long start, @Param("size") Byte size);
 
+    @Select("select * from agent_factory")
+    @Results ({
+            @Result(property = "id", column = "id"),
+            @Result(property = "gmtCreate", column = "gmt_create"),
+            @Result(property = "gmtModified", column = "gmt_modified"),
+            @Result(property = "agentName", column = "agent_name"),
+            @Result(property = "agentArea", column = "agent_area"),
+            @Result(property = "agentFather", column = "agent_father"),
+            @Result(property = "agentRank", column = "agent_rank"),
+            @Result(property = "responsibleId", column = "responsible_id"),
+            @Result(property = "responsibleName", column = "responsible_name")
+    })
+    List<AgentModel> getAgents();
+
     /**
      * 获取所有的子代理
      * @param id
@@ -60,6 +74,12 @@ public interface AgentMapper {
             @Result(property = "responsibleName", column = "responsible_name")
     })
     List<AgentModel> getSons(int id);
+
+    @Select("select id from agent_factory where agent_father = #{id} order by agent_rank asc")
+    @Results ({
+            @Result(property = "id", column = "id"),
+    })
+    List<Long> getDirectSonsOfId(Long agent);
 
     /**
      * find all sons of agentID

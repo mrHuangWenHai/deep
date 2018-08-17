@@ -2,13 +2,15 @@ package com.deep.api.response;
 
 public class ClientDetailResponse {
     private String provincialPlatform;
-    private Integer factory;
+    private Long factory;
 
     private Integer provincialTotal;
     private Integer municipaTotal;
     private Integer countryTotal;
     private Integer sheepTotal;
+
     private Integer sheepNumber;
+
     private Integer ramTotal;
     private Integer eweTotal;
     private Integer commercialTotal;
@@ -16,20 +18,32 @@ public class ClientDetailResponse {
     private Integer reserveRamTotal;
     private Integer reserveEweTotal;
 
+    public ClientDetailResponse(String provincialPlatform, Long factory, Integer provincialTotal, Integer municipaTotal, Integer countryTotal, Integer sheepTotal, Integer sheepNumber, Integer ramTotal, Integer eweTotal, Integer commercialTotal, Integer lambTotal, Integer reserveRamTotal, Integer reserveEweTotal) {
+        this.provincialPlatform = provincialPlatform;
+        this.factory = factory;
+        this.provincialTotal = provincialTotal;
+        this.municipaTotal = municipaTotal;
+        this.countryTotal = countryTotal;
+        this.sheepTotal = sheepTotal;
+        this.sheepNumber = sheepNumber;
+        this.ramTotal = ramTotal;
+        this.eweTotal = eweTotal;
+        this.commercialTotal = commercialTotal;
+        this.lambTotal = lambTotal;
+        this.reserveRamTotal = reserveRamTotal;
+        this.reserveEweTotal = reserveEweTotal;
+    }
+
+    public ClientDetailResponse() {
+
+    }
+
     public String getProvincialPlatform() {
         return provincialPlatform;
     }
 
     public void setProvincialPlatform(String provincialPlatform) {
         this.provincialPlatform = provincialPlatform;
-    }
-
-    public Integer getFactory() {
-        return factory;
-    }
-
-    public void setFactory(Integer factory) {
-        this.factory = factory;
     }
 
     public Integer getProvincialTotal() {
@@ -118,6 +132,15 @@ public class ClientDetailResponse {
 
     public void setReserveEweTotal(Integer reserveEweTotal) {
         this.reserveEweTotal = reserveEweTotal;
+    }
+
+
+    public void setFactory(Long factory) {
+        this.factory = factory;
+    }
+
+    public Long getFactory() {
+        return factory;
     }
 
     @Override

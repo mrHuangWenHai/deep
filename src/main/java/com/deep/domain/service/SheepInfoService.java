@@ -18,16 +18,15 @@ public class SheepInfoService {
 
     public List<SheepInfo> selectNullBcId(SheepInfoExample sheepInfoExample)
     {
-        List<SheepInfo> sheepInfos = sheepInfoMapper.selectByExample(sheepInfoExample);
-        return sheepInfos;
+        return sheepInfoMapper.selectByExample(sheepInfoExample);
     }
 
     public Integer updateSheepInfoById(SheepInfo sheepInfo)
     {
          return sheepInfoMapper.updateByPrimaryKeySelective(sheepInfo);
     }
-    public Integer insertRecord(SheepInfo sheepInfo)
+    public void insertRecord(SheepInfo sheepInfo)
     {
-        return sheepInfoMapper.insert(sheepInfo);
+        sheepInfoMapper.insert(sheepInfo);
     }
 }

@@ -71,4 +71,6 @@ public interface BuildingColumnMapper {
     @Update("update sheep_info set bc=(select id from building_column where building=#{building} and col=#{col} and factory=#{factory}) where brand=#{brand}")
     Integer changeBuildingColumn(@Param("factory") Long factory, @Param("brand") String brand, @Param("building") int building, @Param("col") int col);
 
+    @Select("select count(*) from building_column where factory = #{factory} and type = #{type}")
+    Integer findTypeOfSheep(@Param("factory") Long factory, @Param("type") String type);
 }

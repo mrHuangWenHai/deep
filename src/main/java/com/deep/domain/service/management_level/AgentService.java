@@ -50,6 +50,10 @@ public class AgentService {
         return agentMapper.queryAllAgent(start, size);
     }
 
+    public List<AgentModel> getAgents() {
+        return agentMapper.getAgents();
+    }
+
     /**
      * 获取所有的子代理
      * @param id
@@ -59,6 +63,9 @@ public class AgentService {
         return agentMapper.getSons(id);
     }
 
+    List<Long> getDirectSonsOfId(Long agent) {
+        return agentMapper.getDirectSonsOfId(agent);
+    }
     /**
      * 获取所有的下级代理, 包括子代理的子代理, 采用递归方式
      * @param id

@@ -287,5 +287,4 @@ public interface FactoryMapper {
             @Result(property = "agent", column = "agent")
     })
     Short queryOneAgentByID(Long id);
-
 }

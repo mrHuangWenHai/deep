@@ -86,9 +86,7 @@ public class FactoryService {
 
     /**
      * 根据代理ID查找所有羊场的ID
-
      * @param id 代理号
-
      * @return
      */
     public long[] queryFactoryIDByAgentID(Long id) {

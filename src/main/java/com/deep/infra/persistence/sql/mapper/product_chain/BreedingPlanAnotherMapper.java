@@ -389,6 +389,7 @@ public interface BreedingPlanAnotherMapper {
     @SelectProvider(type = BreedingPlanSelective.class, method = "countBreedingPlanAnother")
     Integer queryCountBySelective(List<Long> lists, Byte pass, String factoryName, String startTime, String endTime, String earTag);
 
+    // 多条件查询
     @SelectProvider(type = BreedingPlanSelective.class, method = "findAllSelective")
     @Results({
             @Result(property = "id", column = "id"),

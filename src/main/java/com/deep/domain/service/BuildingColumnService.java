@@ -53,4 +53,8 @@ public class BuildingColumnService {
     public Integer changeBuildingColumn(long factory, String brand, int building, int col){
         return buildingColumnMapper.changeBuildingColumn(factory, brand, building, col);
     }
+
+    public Integer findTypeOfSheep(Long factory, String type) {
+        return buildingColumnMapper.findTypeOfSheep(factory, type);
+    }
 }

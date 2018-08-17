@@ -1,5 +1,7 @@
 package com.deep.application;
 
+import com.deep.api.Utils.ClientDetailUtil;
+import com.deep.domain.service.management_level.ClientDetailService;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
@@ -9,7 +11,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.Properties;
 
 
@@ -21,7 +25,6 @@ import java.util.Properties;
 @ComponentScan(basePackages={"com.deep"})
 @MapperScan("com.deep.infra")
 public class DeepApplication {
-
   public static void main(String[] args) throws Exception {
 
     //验证redis
