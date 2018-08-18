@@ -1,7 +1,5 @@
 package com.deep.api.resource.management_level;
 
-import com.deep.api.Utils.TokenAnalysis;
-import com.deep.api.authorization.tools.Constants;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.service.management_level.ClientDetailService;
@@ -11,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 
 @RestController

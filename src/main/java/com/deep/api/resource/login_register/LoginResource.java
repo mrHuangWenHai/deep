@@ -1,6 +1,5 @@
 package com.deep.api.resource.login_register;
 
-
 import com.deep.api.Utils.JedisUtil;
 import com.deep.api.Utils.MobileAnnouncementUtil;
 import com.deep.api.authorization.token.TokenModel;
@@ -133,7 +132,6 @@ public class LoginResource {
 
     /**
      *  通过电话号码找回并且返回相关的数据
-
      * @param usernameP 用户名
      * @return response
      */

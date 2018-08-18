@@ -33,6 +33,7 @@ public class ClientDetailService {
      */
     private void setClientOfAgent(Short agent, ClientDetailResponse clientDetailResponse, Byte flag) {
         // 首先查看Redis中是否存在该代理的信息
+        if (agent == 0) return;
         String value = ClientDetailUtil.getClientToRedis((long) agent, (byte) 1);
         AgentModel agentModel = agentService.getOneAgent((long)agent);
 
@@ -215,8 +216,7 @@ public class ClientDetailService {
 
                 ClientDetailUtil.setClientToRedis((long)agent.getId(), (byte) 1, clientDetailResponse);
                 // 根据羊场的上级代理去设置上级代理的相关信息
-                if (agent.getAgentFather() != 0)
-                    setClientOfAgent((short)agent.getAgentFather(), clientDetailResponse, agent.getAgentRank());
+                setClientOfAgent((short)agent.getAgentFather(), clientDetailResponse, agent.getAgentRank());
             }
         }
         // 加载标志
