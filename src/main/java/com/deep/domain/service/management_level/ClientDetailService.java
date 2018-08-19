@@ -216,7 +216,7 @@ public class ClientDetailService {
 
                 ClientDetailUtil.setClientToRedis((long)agent.getId(), (byte) 1, clientDetailResponse);
                 // 根据羊场的上级代理去设置上级代理的相关信息
-                setClientOfAgent((short)agent.getAgentFather(), clientDetailResponse, agent.getAgentRank());
+//                setClientOfAgent((short)agent.getAgentFather(), clientDetailResponse, agent.getAgentRank());
             }
         }
         // 加载标志

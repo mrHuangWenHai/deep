@@ -68,3 +68,6 @@ LICENSE
 # sql files
 Sheep.tar.xz
 Sheep/
+
+# c files
+*.c
