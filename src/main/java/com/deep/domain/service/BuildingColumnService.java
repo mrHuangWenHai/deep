@@ -20,7 +20,6 @@ public class BuildingColumnService {
 
     public List<BuildingColumn> selectAllBudildings(BuildingColumnExample buildingColumnExample)
     {
-
         return buildingColumnMapper.selectByExample(buildingColumnExample);
     }
     public List<BuildingColumn> selectAllCol(BuildingColumnExample buildingColumnExample) {

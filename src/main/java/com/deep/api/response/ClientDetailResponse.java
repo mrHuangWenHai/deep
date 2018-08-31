@@ -3,6 +3,7 @@ package com.deep.api.response;
 public class ClientDetailResponse {
     private String provincialPlatform;
     private Long factory;
+    private Byte rank;
 
     private Integer provincialTotal;
     private Integer municipaTotal;
@@ -18,9 +19,10 @@ public class ClientDetailResponse {
     private Integer reserveRamTotal;
     private Integer reserveEweTotal;
 
-    public ClientDetailResponse(String provincialPlatform, Long factory, Integer provincialTotal, Integer municipaTotal, Integer countryTotal, Integer sheepTotal, Integer sheepNumber, Integer ramTotal, Integer eweTotal, Integer commercialTotal, Integer lambTotal, Integer reserveRamTotal, Integer reserveEweTotal) {
+    public ClientDetailResponse(String provincialPlatform, Long factory, Byte rank, Integer provincialTotal, Integer municipaTotal, Integer countryTotal, Integer sheepTotal, Integer sheepNumber, Integer ramTotal, Integer eweTotal, Integer commercialTotal, Integer lambTotal, Integer reserveRamTotal, Integer reserveEweTotal) {
         this.provincialPlatform = provincialPlatform;
         this.factory = factory;
+        this.rank = rank;
         this.provincialTotal = provincialTotal;
         this.municipaTotal = municipaTotal;
         this.countryTotal = countryTotal;
@@ -36,6 +38,14 @@ public class ClientDetailResponse {
 
     public ClientDetailResponse() {
 
+    }
+
+    public Byte getRank() {
+        return rank;
+    }
+
+    public void setRank(Byte rank) {
+        this.rank = rank;
     }
 
     public String getProvincialPlatform() {
@@ -148,6 +158,7 @@ public class ClientDetailResponse {
         return "ClientDetailResponse{" +
                 "provincialPlatform='" + provincialPlatform + '\'' +
                 ", factory=" + factory +
+                ", rank=" + rank +
                 ", provincialTotal=" + provincialTotal +
                 ", municipaTotal=" + municipaTotal +
                 ", countryTotal=" + countryTotal +

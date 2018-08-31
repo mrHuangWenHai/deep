@@ -1,5 +1,6 @@
 package com.deep.api.resource;
 
+import com.deep.api.request.BCRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.*;
@@ -9,9 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.deep.domain.service.MoveRecordService;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.*;
 
 /**
@@ -40,6 +43,7 @@ public class BuildingColumnResource {
     @GetMapping(value = "/{factoryId}/buildings")
     public Response getBuildings(@PathVariable(value = "factoryId")Integer factoryId)
     {
+        System.out.println("factoryId = " + factoryId);
         BuildingColumnExample buildingColumnExample = new BuildingColumnExample();
         buildingColumnExample.setDistinct(true);
         BuildingColumnExample.Criteria criteria = buildingColumnExample.createCriteria();
@@ -95,14 +99,22 @@ public class BuildingColumnResource {
     }
 
     @PostMapping("/batchCreateBC")
-    public Response batchCreateBuildingColumn(long factory, int building, int colNum) {
+    public Response batchCreateBuildingColumn(@Valid @RequestBody BCRequest bcRequest, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            Response response = Responses.errorResponse("添加栏栋失败, 验证错误!");
+            Map<String, Object> data = new HashMap<>();
+            data.put("errorMessage", bindingResult.getAllErrors());
+            response.setData(data);
+            return response;
+        }
         List<BuildingColumn> list = new ArrayList<>();
-        Integer maxNum = buildingColumnService.getColumnNum(factory, building);
+        Integer maxNum = buildingColumnService.getColumnNum(bcRequest.getFactory(), bcRequest.getBuilding());
+        System.out.println("maxNumber = " + maxNum);
         Integer nowNum;
-        for (int i = maxNum + 1; i <= colNum; i++) {
+        for (int i = maxNum + 1; i <= bcRequest.getColNum(); i++) {
             BuildingColumn buildingColumn = new BuildingColumn();
-            buildingColumn.setFactory(factory);
-            buildingColumn.setBuilding(building);
+            buildingColumn.setFactory(bcRequest.getFactory());
+            buildingColumn.setBuilding(bcRequest.getColNum());
             buildingColumn.setCol(i);
             list.add(buildingColumn);
         }
@@ -110,9 +122,14 @@ public class BuildingColumnResource {
             nowNum = buildingColumnService.batchInsert(list);
         else
             return Responses.errorResponse("欲建栏数小于已有栏数");
-        return nowNum == colNum - maxNum ? Responses.successResponse() : Responses.errorResponse("insert error");
+        return nowNum == bcRequest.getColNum() - maxNum ? Responses.successResponse() : Responses.errorResponse("insert error");
     }
 
+    /**
+     * 查看羊只数目
+     * @param factory 羊场号码
+     * @return response
+     */
     @GetMapping("/getSheepBase/{factory}")
     public Response getSheepBase(@PathVariable("factory") Long factory) {
         HashMap<String, List<SheepBase>> map = new HashMap<>();

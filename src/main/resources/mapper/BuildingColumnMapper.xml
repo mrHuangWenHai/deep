@@ -86,6 +86,7 @@
       order by ${orderByClause}
     </if>
   </select>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />

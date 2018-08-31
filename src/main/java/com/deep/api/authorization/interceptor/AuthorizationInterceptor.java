@@ -41,7 +41,8 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
                 request.getRequestURI().equals("/ensureverify") ||request.getRequestURI().equals("/findpassword")||
                 request.getRequestURI().equals("/phonefind")||request.getRequestURI().equals("/ensurequestion") ||
                 request.getRequestURI().equals("/error") || request.getRequestURI().equals("/question") ||
-                request.getRequestURI().equals("/video/upload") || request.getRequestURI().equals("/messageBoard/insert")
+                request.getRequestURI().equals("/video/upload") || request.getRequestURI().equals("/messageBoard/insert") ||
+                request.getRequestURI().equals("/video/find") || request.getRequestURI().equals("/liveBroadcast/getLiveStat")
                 ) {
             logger.info("AuthorizationInterceptor:don't need to interceptor");
             return true;

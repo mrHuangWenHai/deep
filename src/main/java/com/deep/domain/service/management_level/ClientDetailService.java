@@ -41,6 +41,7 @@ public class ClientDetailService {
             // 需要进行存入操作
             clientDetailResponse.setProvincialPlatform(agentModel.getAgentName());
             clientDetailResponse.setFactory((long)agent);
+            clientDetailResponse.setRank(agentModel.getAgentRank());
 
             // 判断代理的级别
             switch (agentModel.getAgentRank()) {
@@ -192,6 +193,7 @@ public class ClientDetailService {
                 ClientDetailResponse clientDetailResponse = new ClientDetailResponse(
                         list.getBreedName(),
                         list.getId(),
+                        (byte) 4,
                         0, 0, 0, 0,
                         ramTotal + eweTotal + commercialTotal + lambTotal + reserveEweTotal + reserveRamTotal,
                         ramTotal, eweTotal, commercialTotal, lambTotal, reserveRamTotal, reserveEweTotal
@@ -210,6 +212,7 @@ public class ClientDetailService {
                 ClientDetailResponse clientDetailResponse = new ClientDetailResponse(
                         agent.getAgentName(),
                         (long)agent.getId(),
+                        agent.getAgentRank(),
                         0, 0, 0, 0, 0,
                         0, 0, 0, 0, 0, 0
                 );
