@@ -44,8 +44,6 @@ public class BuildingColumnResource {
         data.put("buildings", buildings);
         response.setData(data);
         return response;
-
-
     }
 
 //    @PostMapping("/insertBC")

@@ -64,6 +64,7 @@ public class MyWebSocket {
     @OnOpen
     public void onOpen(@PathParam("user_id") Long user_id, Session session) {
         this.session = session;
+        //WebSocketUtil.put(Long.parseLong(session.getPathParameters().get("user_id")), this);
         WebSocketUtil.put(user_id, this);
         logger.info(user_id + " 进入！当前在线人数为" + WebSocketUtil.getSize());
     }
