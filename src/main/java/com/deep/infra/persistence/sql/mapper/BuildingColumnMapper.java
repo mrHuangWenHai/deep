@@ -41,22 +41,22 @@ public interface BuildingColumnMapper {
 
     @Select("SELECT building,col,building_column.type,count(bc) as sheepNum\n" +
             "FROM building_column\n" +
-            "INNER JOIN sheep_info\n" +
-            "ON building_column.id = sheep_info.bc AND building_column.factory = #{factory}\n" +
-            "GROUP BY bc")
+            "LEFT JOIN sheep_info\n" +
+            "ON building_column.id = sheep_info.bc WHERE building_column.factory = #{factory}\n" +
+            "GROUP BY building_column.id")
     List<SheepBase> selectColumnBase(@Param("factory") long factory);
 
     @Select("SELECT building,count(bc) as sheepNum\n" +
             "FROM building_column\n" +
-            "INNER JOIN sheep_info\n" +
-            "ON building_column.id = sheep_info.bc AND building_column.factory = #{factory}\n" +
+            "LEFT JOIN sheep_info\n" +
+            "ON building_column.id = sheep_info.bc WHERE building_column.factory = #{factory}\n" +
             "GROUP BY building")
     List<SheepBase> selectBuildingBase(@Param("factory") long factory);
 
     @Select("SELECT building_column.type,count(bc) as sheepNum\n" +
             "FROM building_column\n" +
-            "INNER JOIN sheep_info\n" +
-            "ON building_column.id = sheep_info.bc AND building_column.factory = #{factory}\n" +
+            "LEFT JOIN sheep_info\n" +
+            "ON building_column.id = sheep_info.bc WHERE building_column.factory = #{factory}\n" +
             "GROUP BY building_column.type")
     List<SheepBase> selectTypeBase(@Param("factory") long factory);
 
