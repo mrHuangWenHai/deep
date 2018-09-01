@@ -2,7 +2,7 @@ package com.deep.domain.service;
 
 import com.deep.domain.model.Saled;
 import com.deep.domain.model.SaledExample;
-import com.deep.infra.persistence.sql.mapper.SaledMapper;
+import com.deep.infra.persistence.sql.mapper.sheepInfo.SaledMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -18,7 +18,6 @@ public class SaledService {
 
     public List<Saled> selectSrc(SaledExample saledExample)
     {
-        List<Saled> saleds = saledMapper.selectByExample(saledExample);
-        return saleds;
+        return saledMapper.selectByExample(saledExample);
     }
 }

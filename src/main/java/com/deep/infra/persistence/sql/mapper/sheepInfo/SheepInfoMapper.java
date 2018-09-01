@@ -1,4 +1,4 @@
-package com.deep.infra.persistence.sql.mapper;
+package com.deep.infra.persistence.sql.mapper.sheepInfo;
 
 import com.deep.domain.model.SheepInfo;
 import com.deep.domain.model.SheepInfoExample;

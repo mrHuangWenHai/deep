@@ -1,14 +1,23 @@
-package com.deep.api.request;
+package com.deep.domain.model.sheepInfo;
 
 import javax.validation.constraints.NotNull;
 
-public class BCRequest {
+public class BuildingColumnModel {
+    private Long id;
     @NotNull
     private Long factory;
     @NotNull
     private Integer building;
     @NotNull
-    private Integer colNum;
+    private Integer col;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getFactory() {
         return factory;
@@ -26,20 +35,21 @@ public class BCRequest {
         this.building = building;
     }
 
-    public Integer getColNum() {
-        return colNum;
+    public Integer getCol() {
+        return col;
     }
 
-    public void setColNum(Integer colNum) {
-        this.colNum = colNum;
+    public void setCol(Integer col) {
+        this.col = col;
     }
 
     @Override
     public String toString() {
-        return "BCRequest{" +
-                "factory=" + factory +
+        return "BuildingColumnModel{" +
+                "id=" + id +
+                ", factory=" + factory +
                 ", building=" + building +
-                ", colNum=" + colNum +
+                ", col=" + col +
                 '}';
     }
 }

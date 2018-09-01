@@ -1,4 +1,4 @@
-package com.deep.api.resource;
+package com.deep.api.resource.SheepInfo;
 
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
@@ -19,13 +19,13 @@ import java.util.List;
  * Created By LeeBoom On 2018/7/26 19:57
  */
 @RestController
-@RequestMapping(value = "/sale")
+@RequestMapping(value = "/s")
 public class SaledResource {
 
     @Resource
     private SaledService saledService;
 
-    @GetMapping("/saledsheep")
+    @GetMapping("/ss")
     public Response getSaledSheep(@RequestBody FactoryModel factoryModel)
     {
         Integer facotoryId = factoryModel.getId().intValue();
@@ -41,7 +41,7 @@ public class SaledResource {
         return response;
     }
 
-    @GetMapping("/buysheep")
+    @GetMapping("/bs")
     public Response getBuySheep(@RequestBody FactoryModel factoryModel)
     {
         Integer facotoryId = factoryModel.getId().intValue();

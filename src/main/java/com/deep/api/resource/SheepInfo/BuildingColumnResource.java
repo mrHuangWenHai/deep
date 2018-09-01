@@ -1,4 +1,4 @@
-package com.deep.api.resource;
+package com.deep.api.resource.SheepInfo;
 
 import com.deep.api.request.BCRequest;
 import com.deep.api.response.Response;
@@ -24,7 +24,7 @@ import java.util.*;
 @Service
 @RequestMapping(value = "/bc")
 public class BuildingColumnResource {
-    private static final Logger loggr = LoggerFactory.getLogger(BuildingColumnResource.class);
+    private static final Logger logger = LoggerFactory.getLogger(BuildingColumnResource.class);
 
     @Resource
     private BuildingColumnService buildingColumnService;
@@ -98,49 +98,49 @@ public class BuildingColumnResource {
         return response;
     }
 
-    @PostMapping("/batchCreateBC")
-    public Response batchCreateBuildingColumn(@Valid @RequestBody BCRequest bcRequest, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            Response response = Responses.errorResponse("添加栏栋失败, 验证错误!");
-            Map<String, Object> data = new HashMap<>();
-            data.put("errorMessage", bindingResult.getAllErrors());
-            response.setData(data);
-            return response;
-        }
-        List<BuildingColumn> list = new ArrayList<>();
-        Integer maxNum = buildingColumnService.getColumnNum(bcRequest.getFactory(), bcRequest.getBuilding());
-        System.out.println("maxNumber = " + maxNum);
-        Integer nowNum;
-        for (int i = maxNum + 1; i <= bcRequest.getColNum(); i++) {
-            BuildingColumn buildingColumn = new BuildingColumn();
-            buildingColumn.setFactory(bcRequest.getFactory());
-            buildingColumn.setBuilding(bcRequest.getColNum());
-            buildingColumn.setCol(i);
-            list.add(buildingColumn);
-        }
-        if (list.size() > 0)
-            nowNum = buildingColumnService.batchInsert(list);
-        else
-            return Responses.errorResponse("欲建栏数小于已有栏数");
-        return nowNum == bcRequest.getColNum() - maxNum ? Responses.successResponse() : Responses.errorResponse("insert error");
-    }
+//    @PostMapping("/batchCreateBC")
+//    public Response batchCreateBuildingColumn(@Valid @RequestBody BCRequest bcRequest, BindingResult bindingResult) {
+//        if (bindingResult.hasErrors()) {
+//            Response response = Responses.errorResponse("添加栏栋失败, 验证错误!");
+//            Map<String, Object> data = new HashMap<>();
+//            data.put("errorMessage", bindingResult.getAllErrors());
+//            response.setData(data);
+//            return response;
+//        }
+//        List<BuildingColumn> list = new ArrayList<>();
+//        Integer maxNum = buildingColumnService.getColumnNum(bcRequest.getFactory(), bcRequest.getBuilding());
+//        System.out.println("maxNumber = " + maxNum);
+//        Integer nowNum;
+//        for (int i = maxNum + 1; i <= bcRequest.getColNum(); i++) {
+//            BuildingColumn buildingColumn = new BuildingColumn();
+//            buildingColumn.setFactory(bcRequest.getFactory());
+//            buildingColumn.setBuilding(bcRequest.getColNum());
+//            buildingColumn.setCol(i);
+//            list.add(buildingColumn);
+//        }
+//        if (list.size() > 0)
+//            nowNum = buildingColumnService.batchInsert(list);
+//        else
+//            return Responses.errorResponse("欲建栏数小于已有栏数");
+//        return nowNum == bcRequest.getColNum() - maxNum ? Responses.successResponse() : Responses.errorResponse("insert error");
+//    }
 
-    /**
-     * 查看羊只数目
-     * @param factory 羊场号码
-     * @return response
-     */
-    @GetMapping("/getSheepBase/{factory}")
-    public Response getSheepBase(@PathVariable("factory") Long factory) {
-        HashMap<String, List<SheepBase>> map = new HashMap<>();
-        List<SheepBase> columnBase = buildingColumnService.getColumnBase(factory);
-        map.put("columnBase", columnBase);
-        List<SheepBase> buildingBase = buildingColumnService.getBuildingBase(factory);
-        map.put("buildingBase", buildingBase);
-        List<SheepBase> typeBase = buildingColumnService.getTypeBase(factory);
-        map.put("typeBase", typeBase);
-        return Responses.successResponse(map);
-    }
+//    /**
+//     * 查看羊只数目
+//     * @param factory 羊场号码
+//     * @return response
+//     */
+//    @GetMapping("/getSheepBase/{factory}")
+//    public Response getSheepBase(@PathVariable("factory") Long factory) {
+//        HashMap<String, List<SheepBase>> map = new HashMap<>();
+//        List<SheepBase> columnBase = buildingColumnService.getColumnBase(factory);
+//        map.put("columnBase", columnBase);
+//        List<SheepBase> buildingBase = buildingColumnService.getBuildingBase(factory);
+//        map.put("buildingBase", buildingBase);
+//        List<SheepBase> typeBase = buildingColumnService.getTypeBase(factory);
+//        map.put("typeBase", typeBase);
+//        return Responses.successResponse(map);
+//    }
 
     @PostMapping("/changeBC")
     public Response changeBC(@RequestBody MoveRecord moveRecord) {

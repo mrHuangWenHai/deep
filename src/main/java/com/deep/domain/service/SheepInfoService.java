@@ -2,7 +2,7 @@ package com.deep.domain.service;
 
 import com.deep.domain.model.SheepInfo;
 import com.deep.domain.model.SheepInfoExample;
-import com.deep.infra.persistence.sql.mapper.SheepInfoMapper;
+import com.deep.infra.persistence.sql.mapper.sheepInfo.SheepInfoMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
