@@ -1,5 +1,6 @@
 package com.deep.infra.persistence.sql.mapper.management_level;
 
+import com.deep.api.response.FactoryIdAndNameResponse;
 import com.deep.api.response.FactoryResponse;
 import com.deep.domain.model.FactoryModel;
 import org.apache.ibatis.annotations.*;
@@ -287,4 +288,15 @@ public interface FactoryMapper {
             @Result(property = "agent", column = "agent")
     })
     Short queryOneAgentByID(Long id);
+
+    /**
+     * 获取所有羊场的id和名称
+     * @return 返回所有的信息
+     */
+    @Select("select id, breed_name from factory_manage")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "breed_name", column = "breedName")
+    })
+    List<FactoryIdAndNameResponse> queryFactoriesId();
 }

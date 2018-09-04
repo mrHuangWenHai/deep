@@ -6,6 +6,7 @@ import com.deep.api.Utils.TokenAnalysis;
 import com.deep.api.authorization.annotation.Permit;
 import com.deep.api.authorization.tools.Constants;
 import com.deep.api.request.FactoryRequest;
+import com.deep.api.response.FactoryIdAndNameResponse;
 import com.deep.api.response.FactoryResponse;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
@@ -46,10 +47,10 @@ public class FactoryResouce {
             @PathVariable("id") String id, HttpServletRequest request
     ) {
         logger.info("invoke factoryLists, url is factory/");
-        Long uid = StringToLongUtil.stringToLong(id);
-        Long upage = StringToLongUtil.stringToLong(page);
-        Byte usize = StringToLongUtil.stringToByte(size);
-        Byte which = StringToLongUtil.stringToByte(TokenAnalysis.getFlag(request.getHeader(Constants.AUTHORIZATION)));
+        long uid = StringToLongUtil.stringToLong(id);
+        long upage = StringToLongUtil.stringToLong(page);
+        byte usize = StringToLongUtil.stringToByte(size);
+        byte which = StringToLongUtil.stringToByte(TokenAnalysis.getFlag(request.getHeader(Constants.AUTHORIZATION)));
         if (uid < 0 || upage < 0 || usize < 0) {
             return Responses.errorResponse("错误");
         }
@@ -124,8 +125,8 @@ public class FactoryResouce {
         if (uid == -1) {
             return Responses.errorResponse("查询错误");
         }
-        Long upage = StringToLongUtil.stringToLong(page);
-        Byte usize = StringToLongUtil.stringToByte(size);
+        long upage = StringToLongUtil.stringToLong(page);
+        byte usize = StringToLongUtil.stringToByte(size);
         Long start = upage*usize;
         if (upage < 0 || usize < 0) {
             return Responses.errorResponse("错误");
@@ -328,6 +329,16 @@ public class FactoryResouce {
         List<FactoryModel> factoryModels = factoryService.findAllNoResponsibleFactory(userId);
         data.put("List", factoryModels);
         data.put("size", factoryModels.size());
+        response.setData(data);
+        return response;
+    }
+
+    @GetMapping(value = "/in")
+    public Response findIdAndNameOfFactories() {
+        Response response = Responses.successResponse();
+        HashMap<String, Object> data = new HashMap<>();
+        List<FactoryIdAndNameResponse> models = factoryService.getIdAndNameOfFactory();
+        data.put("data", models);
         response.setData(data);
         return response;
     }

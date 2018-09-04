@@ -14,6 +14,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/bc")
@@ -71,7 +72,7 @@ public class BuildingFactoryResource {
      * @param factory 羊场号
      * @return 返回信息
      */
-    @GetMapping("/getSheepBase/{factory}")
+    @GetMapping(value = "/getSheepBase/{factory}")
     public Response getSheepBase(@PathVariable("factory") Long factory) {
         HashMap<String, Object> map = new HashMap<>();
         List<BuildingColResponse> columnBase = buildingFactoryService.getBuildingAndColumn(factory);
@@ -88,7 +89,7 @@ public class BuildingFactoryResource {
      * @param bindingResult 相应结果
      * @return 响应
      */
-    @PostMapping("/changeBC/{id}")
+    @PostMapping(value = "/changeBC/{id}")
     public Response changeBC(@Valid @RequestBody BCRequest bcRequest, @PathVariable("id") Long id, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             Response response = Responses.errorResponse("羊场号, 栏号，栋号不能为空!");
@@ -105,5 +106,21 @@ public class BuildingFactoryResource {
         } else {
             return Responses.successResponse();
         }
+    }
+
+    @GetMapping(value = "/b/{factory}")
+    public Response getBuildings(@PathVariable("factory") Long factory) {
+        Set<Integer> data = buildingFactoryService.getBuildings(factory);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("data", data);
+        return Responses.successResponse(map);
+    }
+
+    @GetMapping(value = "/b/{factory}/{building}")
+    public Response getCols(@PathVariable("factory") Long factory, @PathVariable("building") Integer building) {
+        List<Integer> data = buildingFactoryService.getCols(factory, building);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("data", data);
+        return Responses.successResponse(map);
     }
 }

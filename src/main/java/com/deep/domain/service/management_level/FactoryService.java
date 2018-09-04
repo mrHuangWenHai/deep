@@ -1,6 +1,7 @@
 package com.deep.domain.service.management_level;
 
 
+import com.deep.api.response.FactoryIdAndNameResponse;
 import com.deep.api.response.FactoryResponse;
 import com.deep.domain.model.FactoryModel;
 import com.deep.domain.model.UserModel;
@@ -103,9 +104,9 @@ public class FactoryService {
     }
 
     /**
-     * 删除一个羊场的信息
-     * @param factoryModel
-     * @return
+     * 添加一个羊场的信息
+     * @param factoryModel 羊场的信息
+     * @return 标志
      */
 
     public int addFactory(FactoryModel factoryModel) {
@@ -115,8 +116,8 @@ public class FactoryService {
 
     /**
      * 修改单个羊场的信息
-     * @param factoryModel
-     * @return
+     * @param factoryModel 羊场的具体信息
+     * @return 修改结果
      */
     public Long updateFactory(FactoryModel factoryModel) {
         return factoryMapper.updateFactory(factoryModel);
@@ -124,8 +125,8 @@ public class FactoryService {
 
     /**
      * 删除羊场的信息
-     * @param id
-     * @return
+     * @param id 羊场的id
+     * @return 删除结果
      */
     public Long deleteFactory(Long id) {
         // 删除此羊场下面的所有用户
@@ -139,6 +140,10 @@ public class FactoryService {
 
     public List<FactoryModel> getAll() {
         return factoryMapper.getAll();
+    }
+
+    public List<FactoryIdAndNameResponse> getIdAndNameOfFactory() {
+        return factoryMapper.queryFactoriesId();
     }
 }
 

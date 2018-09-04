@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class BuildingFactoryService {
@@ -66,5 +67,15 @@ public class BuildingFactoryService {
             return null;
         }
         return sheepInformationMapper.updateSheepInformation(waiting, id);
+    }
+
+    // 获取某个羊场的栏栋信息
+    public Set<Integer> getBuildings(Long factory) {
+        return buildingColMapper.selectFactoryBuilding(factory);
+    }
+
+    // 获取某个羊场某个栋的所有栏
+    public List<Integer> getCols(Long factory, Integer building) {
+        return buildingColMapper.selectFactoryBuildingColumn(factory, building);
     }
 }

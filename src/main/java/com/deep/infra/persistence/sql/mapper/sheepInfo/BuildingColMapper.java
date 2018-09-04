@@ -6,6 +6,7 @@ import com.deep.domain.model.sheepInfo.BuildingColumnModel;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Mapper
 public interface BuildingColMapper {
@@ -23,7 +24,8 @@ public interface BuildingColMapper {
             "from building_factory join sheep_information " +
             "on sheep_information.building_column = building_factory.id and sheep_information.factory = #{factory} " +
             "group by sheep_information.building_column " +
-            "having count(sheep_information.building_column)"
+            "having count(sheep_information.building_column) " +
+            "order by building_factory.building, building_factory.col asc"
     )
     @Results({
             @Result(property = "id", column = "id"),
@@ -33,7 +35,7 @@ public interface BuildingColMapper {
     })
     List<BuildingColResponse> selectBuildingAndColumn(Long factory);
 
-    @Select("select * from building_factory where factory = #{factory}")
+    @Select("select * from building_factory where factory = #{factory} order by building, col asc")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "building", column = "building"),
@@ -41,6 +43,12 @@ public interface BuildingColMapper {
             @Result(property = "factory", column = "factory")
     })
     List<BuildingColumnModel> selectAllBuildingAndColumn(Long factory);
+
+    @Select("select building from building_factory where factory = #{factory} order by building asc")
+    Set<Integer> selectFactoryBuilding(Long factory);
+
+    @Select("select col from building_factory where factory = #{factory} and building = #{building} order by col asc")
+    List<Integer> selectFactoryBuildingColumn(@Param("factory") Long factory, @Param("building") Integer building);
 
     @Select("select max(col) as max from building_factory where factory = #{factory} and building = #{building}")
     Integer selectTheBigOne(Long factory, Integer building);

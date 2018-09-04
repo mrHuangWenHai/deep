@@ -74,6 +74,7 @@ public class DeadSaleInfoResource {
      */
     @PatchMapping(value = "/d/d")
     public Response updateOneSheepToDead(@RequestBody DeadSheepRequest deadSheepRequest) {
+        System.out.println(deadSheepRequest.toString());
         deadSheepRequest.setDead((byte)1);
         deadSheepRequest.setDate(new Timestamp(System.currentTimeMillis()));
         Long update = sheepInformationService.updateDeadSheepInformation(deadSheepRequest.getDead(), deadSheepRequest.getReason(), deadSheepRequest.getMethod(), deadSheepRequest.getDate(), deadSheepRequest.getId());

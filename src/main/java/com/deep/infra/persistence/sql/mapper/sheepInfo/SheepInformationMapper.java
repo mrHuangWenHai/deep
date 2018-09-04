@@ -55,7 +55,7 @@ public interface SheepInformationMapper {
     @Select("select count(*) from sheep_information where factory = #{factory} and dead = 1")
     public Long countDeadSheep(Long factory);
 
-    @Select("select sheep_information.trademark_ear_tag, sheep_information.immune_ear_tag, building_factory.building, building_factory.col from sheep_information, building_factory where sheep_information.factory = #{factory} and sheep_information.dead != 1 and sheep_information.sale = 0 and sheep_information.building_column = building_factory.id limit #{start}, #{size}")
+    @Select("select sheep_information.trademark_ear_tag, sheep_information.immune_ear_tag, building_factory.building, building_factory.col, sheep_information.id from sheep_information, building_factory where sheep_information.factory = #{factory} and sheep_information.dead != 1 and sheep_information.sale = 0 and sheep_information.building_column = building_factory.id limit #{start}, #{size}")
     @Results ({
             @Result(property = "trademarkEarTag", column = "trademark_ear_tag"),
             @Result(property = "immuneEarTag", column = "immune_ear_tag"),
