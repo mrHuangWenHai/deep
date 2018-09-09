@@ -6,6 +6,10 @@ public class SheepInformationModel {
     private Long id;
     private Long factory;
     private Long buildingColumn;
+
+    private Integer building;
+    private Integer col;
+
     private String type;
     private String trademarkEarTag;
     private String immuneEarTag;
@@ -101,6 +105,22 @@ public class SheepInformationModel {
 
     public void setSale(Byte sale) {
         this.sale = sale;
+    }
+
+    public Integer getBuilding() {
+        return building;
+    }
+
+    public void setBuilding(Integer building) {
+        this.building = building;
+    }
+
+    public Integer getCol() {
+        return col;
+    }
+
+    public void setCol(Integer col) {
+        this.col = col;
     }
 
     @Override

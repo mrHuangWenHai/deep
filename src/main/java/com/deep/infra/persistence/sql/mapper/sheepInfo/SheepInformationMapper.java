@@ -1,8 +1,11 @@
 package com.deep.infra.persistence.sql.mapper.sheepInfo;
 
+import com.deep.api.request.NoBuildingRequest;
 import com.deep.api.response.DeadSheepInformationResponse;
+import com.deep.api.response.NoBuildingColResponse;
 import com.deep.api.response.SheepInformationResponse;
 import com.deep.domain.model.sheepInfo.SheepInformationModel;
+import com.deep.infra.selective.NoBuildingSelective;
 import org.apache.ibatis.annotations.*;
 
 import java.sql.Timestamp;
@@ -78,4 +81,19 @@ public interface SheepInformationMapper {
 
     @Select("select count(*) from sheep_information, building_factory where sheep_information.factory = #{factory} and sheep_information.dead != 1 and sheep_information.sale = 0 and sheep_information.building_column = building_factory.id")
     public Long countAllSheep(Long factory);
+
+    @Select("select id, trademark_ear_tag, type from sheep_information where building_column IS NULL and factory = #{factory}")
+    @Results({
+            @Result(property = "trademarkEarTag", column = "trademark_ear_tag"),
+            @Result(property = "id", column = "id"),
+            @Result(property = "type", column = "type")
+    })
+    List<NoBuildingColResponse> getNoBuildingSheep(@Param("factory") Long factory);
+
+//    @Update("update sheep_information set " +
+//            "building_column = #{buildingCol} " +
+//            "where factory = #{factory} and id in (#{sheeps})"
+//    )
+    @SelectProvider(type = NoBuildingSelective.class, method = "setBuildingAndCol")
+    public void setBuildingSheep(String sheeps, Long buildingCol, Long factory);
 }

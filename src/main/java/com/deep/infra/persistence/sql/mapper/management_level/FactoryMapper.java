@@ -293,10 +293,10 @@ public interface FactoryMapper {
      * 获取所有羊场的id和名称
      * @return 返回所有的信息
      */
-    @Select("select id, breed_name from factory_manage")
+    @Select("select id, breed_name from factory_manage where id != #{factory}")
     @Results({
             @Result(property = "id", column = "id"),
-            @Result(property = "breed_name", column = "breedName")
+            @Result(property = "breedName", column = "breed_name")
     })
-    List<FactoryIdAndNameResponse> queryFactoriesId();
+    List<FactoryIdAndNameResponse> queryFactoriesId(@Param("factory") Long factory);
 }

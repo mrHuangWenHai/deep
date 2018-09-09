@@ -53,6 +53,9 @@ public interface BuildingColMapper {
     @Select("select max(col) as max from building_factory where factory = #{factory} and building = #{building}")
     Integer selectTheBigOne(Long factory, Integer building);
 
-    @Select("select id from building_factory where factory = #{factory} and building = #{building} and col = #{col}")
+    @Select("select id from building_factory where factory = #{factory} and building = #{building} and col = #{colNum}")
     Long selectBuildingFactoryId(BCRequest bcRequest);
+
+    @Select("select id from building_factory where factory = #{factory} and building = #{building} and col = #{col}")
+    Long findIdByBuildingAndCol(@Param("factory") Long factory, @Param("building") Integer building, @Param("col") Integer col);
 }

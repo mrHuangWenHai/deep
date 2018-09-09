@@ -333,11 +333,11 @@ public class FactoryResouce {
         return response;
     }
 
-    @GetMapping(value = "/in")
-    public Response findIdAndNameOfFactories() {
+    @GetMapping(value = "/in/{factory}")
+    public Response findIdAndNameOfFactories(@PathVariable("factory") Long factory) {
         Response response = Responses.successResponse();
         HashMap<String, Object> data = new HashMap<>();
-        List<FactoryIdAndNameResponse> models = factoryService.getIdAndNameOfFactory();
+        List<FactoryIdAndNameResponse> models = factoryService.getIdAndNameOfFactory(factory);
         data.put("data", models);
         response.setData(data);
         return response;

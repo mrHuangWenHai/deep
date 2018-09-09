@@ -142,8 +142,8 @@ public class FactoryService {
         return factoryMapper.getAll();
     }
 
-    public List<FactoryIdAndNameResponse> getIdAndNameOfFactory() {
-        return factoryMapper.queryFactoriesId();
+    public List<FactoryIdAndNameResponse> getIdAndNameOfFactory(Long factory) {
+        return factoryMapper.queryFactoriesId(factory);
     }
 }
 

@@ -78,4 +78,10 @@ public class BuildingFactoryService {
     public List<Integer> getCols(Long factory, Integer building) {
         return buildingColMapper.selectFactoryBuildingColumn(factory, building);
     }
+
+    // 根据羊场栋号和栏号获取栏栋的id
+    public Long findIdByBuildingAndCol(Long factory, Integer building, Integer col) {
+
+        return buildingColMapper.findIdByBuildingAndCol(factory, building, col);
+    }
 }

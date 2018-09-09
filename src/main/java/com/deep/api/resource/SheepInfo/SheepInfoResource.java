@@ -3,24 +3,28 @@ package com.deep.api.resource.SheepInfo;
 import com.deep.api.Utils.FileUtil;
 import com.deep.api.Utils.ReadExcel;
 import com.deep.api.Utils.TimeUtil;
+import com.deep.api.request.NoBuildingRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.constant.FileTypeEnum;
-import com.deep.domain.model.SheepInfo;
 import com.deep.domain.model.sheepInfo.SheepInformationModel;
+import com.deep.domain.service.SheepInfo.BuildingFactoryService;
 import com.deep.domain.service.SheepInfo.SheepInformationService;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created By LeeBoom On 2018/7/26 19:02
@@ -31,6 +35,8 @@ public class SheepInfoResource {
     private static Logger logger = LoggerFactory.getLogger(SheepInfoResource.class);
     @Resource
     private SheepInformationService sheepInformationService;
+    @Resource
+    private BuildingFactoryService buildingFactoryService;
 
 //    @PostMapping(value = "/u")
 //    public Response updateLamb2Sheep(@RequestBody SheepInfo sheepInfo) {
@@ -79,14 +85,19 @@ public class SheepInfoResource {
             List<Object> list ;
             int count = 0;
             for(int i =1;i < excelList.size();i++) {
+                System.out.println("excelList = " + excelList.size());
+                System.out.println("list = " + excelList.get(i).size());
                 list = excelList.get(i);
                 SheepInformationModel model = new SheepInformationModel();
                 for (int j = 0; j< list.size();j++) {
                     if(j == 0) {
+                        System.out.println(list.get(j).toString());
                         model.setTrademarkEarTag(list.get(j).toString());
                     } else if(j == 1) {
+                        System.out.println(list.get(j).toString());
                         model.setImmuneEarTag(list.get(j).toString());
                     } else if(j == 2) {
+                        System.out.println(list.get(j).toString());
                         model.setType(list.get(j).toString());
                     }
 
@@ -120,6 +131,9 @@ public class SheepInfoResource {
      */
     @PostMapping(value = "/sp")
     public Response addSheep(@RequestBody SheepInformationModel model) {
+        // 根据栋号栏号找到id
+        Long buildingAndColId = buildingFactoryService.findIdByBuildingAndCol(model.getFactory(), model.getBuilding(), model.getCol());
+        model.setBuildingColumn(buildingAndColId);
         Long insert = sheepInformationService.insertSheepInformation(model);
 
         Response response = Responses.successResponse();
@@ -127,6 +141,40 @@ public class SheepInfoResource {
         data.put("add", insert);
         response.setData(data);
         return response;
+    }
+
+    /**
+     * 获取没有分配栏栋的羊
+     * @param id 羊场号
+     * @return 返回羊只列表
+     */
+    @GetMapping(value = "/n/{id}")
+    public Response getNoBuilding(@PathVariable("id") Long id) {
+        Response response = Responses.successResponse();
+        Map<String, Object> data = new HashMap<>();
+        data.put("data", sheepInformationService.getNoBuildingColumn(id));
+        response.setData(data);
+        return response;
+    }
+
+    /**
+     * 给一群羊分配栏栋
+     * @param request 前端请求
+     * @return 返回结果
+     */
+    @PostMapping(value = "/s")
+    public Response setBuildings(@RequestBody @Valid NoBuildingRequest request, BindingResult bindingResult) {
+        System.out.println(request.toString());
+        if (bindingResult.hasErrors()) {
+            Response response = Responses.errorResponse("分配栏栋失败, 验证错误!");
+            Map<String, Object> data = new HashMap<>();
+            data.put("errorMessage", bindingResult.getAllErrors());
+            response.setData(data);
+            return response;
+        }
+        Long buildingAndColId = buildingFactoryService.findIdByBuildingAndCol(request.getFactory(), request.getBuilding(), request.getCol());
+        sheepInformationService.setNoBuildingColumn(request.getSheeps(), buildingAndColId, request.getFactory());
+        return Responses.successResponse();
     }
 }
 

@@ -1,6 +1,8 @@
 package com.deep.domain.service.SheepInfo;
 
+import com.deep.api.request.NoBuildingRequest;
 import com.deep.api.response.DeadSheepInformationResponse;
+import com.deep.api.response.NoBuildingColResponse;
 import com.deep.api.response.SheepInformationResponse;
 import com.deep.domain.model.sheepInfo.SheepInformationModel;
 import com.deep.infra.persistence.sql.mapper.sheepInfo.SheepInformationMapper;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -94,5 +97,23 @@ public class SheepInformationService {
      */
     public Long countDeadSheep(Long factory) {
         return sheepInformationMapper.countDeadSheep(factory);
+    }
+
+    /**
+     * 查看没有分配栏栋的羊只
+     * @param factory 羊场编号
+     * @return 返回所有的羊只
+     */
+    public List<NoBuildingColResponse> getNoBuildingColumn(Long factory) {
+        return sheepInformationMapper.getNoBuildingSheep(factory);
+    }
+
+    /**
+     * 批量设置栏栋
+     * @param sheeps 所选羊只
+     * @return 响应
+     */
+    public void setNoBuildingColumn(List<Long> sheeps, Long buildingCol, Long factory) {
+        sheepInformationMapper.setBuildingSheep(sheeps.toString(), buildingCol, factory);
     }
 }

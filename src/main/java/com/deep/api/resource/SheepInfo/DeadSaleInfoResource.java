@@ -1,6 +1,7 @@
 package com.deep.api.resource.SheepInfo;
 
 import com.deep.api.request.DeadSheepRequest;
+import com.deep.api.request.SalesRecordRequest;
 import com.deep.api.response.DeadSheepInformationResponse;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
@@ -11,6 +12,7 @@ import com.deep.domain.service.SheepInfo.SheepInformationService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -129,13 +131,13 @@ public class DeadSaleInfoResource {
 
     /**
      * 进行羊只出售操作
-     * @param id 羊只的id
-     * @param salesRecordModel 出售的信息
+     * @param salesRecordRequest 出售的信息
      * @return 返回相关信息
      */
-    @PostMapping(value = "/ds/{id}")
-    public Response doSales(@PathVariable("id") Long id, @RequestBody SalesRecordModel salesRecordModel) {
-        if (salesRecordService.doSales(id, salesRecordModel)) {
+    @PostMapping(value = "/ds")
+    public Response doSales(@RequestBody @Valid SalesRecordRequest salesRecordRequest) {
+        System.out.println(salesRecordRequest.toString());
+        if (salesRecordService.doSales(salesRecordRequest)) {
             return Responses.successResponse();
         } else {
             return Responses.errorResponse("销售羊只失败！");

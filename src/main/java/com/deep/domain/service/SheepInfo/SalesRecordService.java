@@ -1,5 +1,6 @@
 package com.deep.domain.service.SheepInfo;
 
+import com.deep.api.request.SalesRecordRequest;
 import com.deep.domain.model.sheepInfo.SalesRecordModel;
 import com.deep.domain.model.sheepInfo.SheepInformationModel;
 import com.deep.infra.persistence.sql.mapper.sheepInfo.SalesRecordMapper;
@@ -39,28 +40,44 @@ public class SalesRecordService {
 
     /**
      * 进行销售
-     * @param id 羊只在原厂信息的id
      * @return 是否成功的结果
      */
-    public Boolean doSales(Long id, SalesRecordModel salesRecordModel) {
-        // 首先修改羊只的置位信息, flag为1表示售出
-        Long modifySheepInFactory = sheepInformationMapper.updateSaleSheepInformation(id, (byte)1);
-        if (modifySheepInFactory < 0) return false;
-        // 添加一条记录到销售记录表中
-        Long insertSalesRecords = salesRecordMapper.insertRecord(salesRecordModel);
-        if (insertSalesRecords < 0) {
-            sheepInformationMapper.updateSaleSheepInformation(id, (byte)0);
+    public Boolean doSales(SalesRecordRequest salesRecordRequest) {
+
+        if (salesRecordRequest.getSheep() == null) {
             return false;
         }
-        // 首先查找出原来羊的信息
-        SheepInformationModel sheepBefore = sheepInformationMapper.getOneSheep(id);
-        // 新建一只羊信息
-        sheepBefore.setFactory(salesRecordModel.getEndFactory());
-        sheepBefore.setId(null);
-        sheepBefore.setBuildingColumn(null);
-        sheepBefore.setSale((byte)0);
+        SalesRecordModel model = new SalesRecordModel();
 
-        Long insertSheep = sheepInformationMapper.insertSheepInformation(sheepBefore);
-        return insertSheep > 0;
+        model.setStartFactory(salesRecordRequest.getStartFactory());
+        model.setStartName(salesRecordRequest.getStartName());
+        model.setEndFactory(salesRecordRequest.getEndFactory());
+        model.setEndName(salesRecordRequest.getEndName());
+
+        for (int i = 0; i < salesRecordRequest.getSheep().size(); i++) {
+            // 首先修改羊只的置位信息, flag为1表示售出
+            Long modifySheepInFactory = sheepInformationMapper.updateSaleSheepInformation(salesRecordRequest.getSheep().get(i).getId(), (byte)1);
+            if (modifySheepInFactory < 0) return false;
+            // 添加一条记录到销售记录表中
+
+            model.setImmuneEarTag(salesRecordRequest.getSheep().get(i).getImmuneEarTag());
+            model.setTrademarkEarTag(salesRecordRequest.getSheep().get(i).getTrademarkEarTag());
+
+            Long insertSalesRecords = salesRecordMapper.insertRecord(model);
+            if (insertSalesRecords < 0) {
+                sheepInformationMapper.updateSaleSheepInformation(salesRecordRequest.getSheep().get(i).getId(), (byte)0);
+                return false;
+            }
+            // 首先查找出原来羊的信息
+            SheepInformationModel sheepBefore = sheepInformationMapper.getOneSheep(salesRecordRequest.getSheep().get(i).getId());
+            // 新建一只羊信息
+            sheepBefore.setFactory(salesRecordRequest.getEndFactory());
+            sheepBefore.setId(null);
+            sheepBefore.setBuildingColumn(null);
+            sheepBefore.setSale((byte)0);
+
+            sheepInformationMapper.insertSheepInformation(sheepBefore);
+        }
+        return true;
     }
 }
