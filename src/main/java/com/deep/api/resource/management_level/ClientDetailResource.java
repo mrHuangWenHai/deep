@@ -19,7 +19,7 @@ public class ClientDetailResource {
 
     @GetMapping(value = "/{factory}/role/{flag}")
     public Response readAll(@PathVariable("factory") Long factory, @PathVariable("flag") Byte flag) {
-        // 羊场为0， 代理为1，其他为2
+        // 羊场为0，代理为1，其他为2
         if (flag == 2) {
             return Responses.errorResponse("无权限");
         } else {

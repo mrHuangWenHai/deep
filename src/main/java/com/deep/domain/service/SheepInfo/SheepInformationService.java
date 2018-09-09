@@ -1,6 +1,7 @@
 package com.deep.domain.service.SheepInfo;
 
 import com.deep.api.request.NoBuildingRequest;
+import com.deep.api.request.SheepUpdateRequest;
 import com.deep.api.response.DeadSheepInformationResponse;
 import com.deep.api.response.NoBuildingColResponse;
 import com.deep.api.response.SheepInformationResponse;
@@ -111,9 +112,12 @@ public class SheepInformationService {
     /**
      * 批量设置栏栋
      * @param sheeps 所选羊只
-     * @return 响应
      */
     public void setNoBuildingColumn(List<Long> sheeps, Long buildingCol, Long factory) {
         sheepInformationMapper.setBuildingSheep(sheeps.toString(), buildingCol, factory);
+    }
+
+    public Long updateSheepInfo(SheepUpdateRequest request) {
+        return sheepInformationMapper.updateTag(request.getFactory(), request.getSheepid(), request.getBreedingSheepBase(), request.getTradeMarkEartag());
     }
 }

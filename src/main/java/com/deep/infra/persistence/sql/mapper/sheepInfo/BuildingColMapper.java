@@ -51,7 +51,7 @@ public interface BuildingColMapper {
     List<Integer> selectFactoryBuildingColumn(@Param("factory") Long factory, @Param("building") Integer building);
 
     @Select("select max(col) as max from building_factory where factory = #{factory} and building = #{building}")
-    Integer selectTheBigOne(Long factory, Integer building);
+    Integer selectTheBigOne(@Param("factory") Long factory, @Param("building") Integer building);
 
     @Select("select id from building_factory where factory = #{factory} and building = #{building} and col = #{colNum}")
     Long selectBuildingFactoryId(BCRequest bcRequest);

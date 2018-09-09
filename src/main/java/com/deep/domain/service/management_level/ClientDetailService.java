@@ -108,6 +108,7 @@ public class ClientDetailService {
         } else {
             // 已经存入Redis，进行重置
             ClientDetailResponse waiting = JSON.parseObject(value, ClientDetailResponse.class);
+            System.out.println("sheep total = " + waiting.getSheepTotal());
             // 判断代理的级别
             switch (agentModel.getAgentRank()) {
                 case 3: {

@@ -4,6 +4,7 @@ import com.deep.api.Utils.FileUtil;
 import com.deep.api.Utils.ReadExcel;
 import com.deep.api.Utils.TimeUtil;
 import com.deep.api.request.NoBuildingRequest;
+import com.deep.api.request.SheepUpdateRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.constant.FileTypeEnum;
@@ -175,6 +176,21 @@ public class SheepInfoResource {
         Long buildingAndColId = buildingFactoryService.findIdByBuildingAndCol(request.getFactory(), request.getBuilding(), request.getCol());
         sheepInformationService.setNoBuildingColumn(request.getSheeps(), buildingAndColId, request.getFactory());
         return Responses.successResponse();
+    }
+
+    @PostMapping(value = "/u")
+    public Response updateSheepInfo(@RequestBody @Valid SheepUpdateRequest request, BindingResult bindingResult) {
+        System.out.println(request.toString());
+        if (bindingResult.hasErrors()) {
+            Response response = Responses.errorResponse("修改羊只信息失败！");
+            Map<String, Object> data = new HashMap<>();
+            data.put("errorMessage", bindingResult.getAllErrors());
+            response.setData(data);
+            return response;
+        }
+        Long buildingAndColId = sheepInformationService.updateSheepInfo(request);
+        if (buildingAndColId > 0) return Responses.successResponse();
+        else return Responses.errorResponse("修改羊只信息失败");
     }
 }
 

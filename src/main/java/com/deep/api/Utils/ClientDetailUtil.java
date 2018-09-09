@@ -16,7 +16,9 @@ public class ClientDetailUtil {
 
     // 讲客户关系一览表中的数据存入Redis
     public static void setClientToRedis(Long factory, Byte flag, ClientDetailResponse clientDetailResponse) {
+        // 首先判断该条信息是否已经存在到redis数据库中，如果已经存在，则不进行存储
         String key = preString + "-" + factory + "-" + flag;
+        if (JedisUtil.getValue(key) != null) return;
         JedisUtil.setValue(key, JSON.toJSONString(clientDetailResponse));
         JedisUtil.doPersist(key);
     }
