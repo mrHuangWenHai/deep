@@ -24,7 +24,7 @@ public class FactoryService {
 
     /**
      * 获取所有的羊场信息
-     * @return
+     * @return result
      */
     public List<FactoryModel> getAll(Long start, Byte size) {
         System.out.println(start);
@@ -34,7 +34,7 @@ public class FactoryService {
 
     /**
      * 获取所有的没有负责人的羊场信息, 主要是羊场的编号和羊场的名称
-     * @return
+     * @return result
      */
     public List<FactoryModel> findAllNoResponsibleFactory(Long userId) {
         UserModel userModel = userService.getOneUser(userId);
@@ -46,8 +46,8 @@ public class FactoryService {
 
     /**
      * 根据羊场的ID单个查询羊场的信息
-     * @param id
-     * @return
+     * @param id id
+     * @return result
      */
     public FactoryModel getOneFactory(Long id) {
         return factoryMapper.queryFactoryByID(id);
@@ -60,7 +60,7 @@ public class FactoryService {
     /**
      * 根据代理号查询所有的羊场(包括分页)
      * @param id 代理号
-     * @return
+     * @return result
      */
     public List<FactoryModel> getAllFactoryOfOneAgent(Long id) {
         return factoryMapper.queryFactoryByAgentID(id);

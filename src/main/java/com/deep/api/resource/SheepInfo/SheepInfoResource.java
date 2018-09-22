@@ -5,6 +5,7 @@ import com.deep.api.Utils.ReadExcel;
 import com.deep.api.Utils.TimeUtil;
 import com.deep.api.request.NoBuildingRequest;
 import com.deep.api.request.SheepUpdateRequest;
+import com.deep.api.request.TradeMarkEarTagRequest;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.constant.FileTypeEnum;
@@ -22,10 +23,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.File;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created By LeeBoom On 2018/7/26 19:02
@@ -191,6 +189,54 @@ public class SheepInfoResource {
         Long buildingAndColId = sheepInformationService.updateSheepInfo(request);
         if (buildingAndColId > 0) return Responses.successResponse();
         else return Responses.errorResponse("修改羊只信息失败");
+    }
+
+    @PostMapping(value = "/t")
+    public Response getSheepTradeMarkEarTag(@RequestBody @Valid TradeMarkEarTagRequest trade, BindingResult bindingResult) {
+        if (bindingResult.hasErrors() || trade.getBuildings() == null) {
+            Response response = Responses.errorResponse("查询栏栋信息失败！");
+            Map<String, Object> data = new HashMap<>();
+            data.put("errorMessage", bindingResult.getAllErrors());
+            response.setData(data);
+            return response;
+        }
+        // 首先查询所有的栏栋信息
+        List<Long> buildings = new LinkedList<>();
+
+        for (int i = 0; i < trade.getBuildings().size(); i++) {
+            Long buildingAndColId = buildingFactoryService.findIdByBuildingAndCol(trade.getFactory(), trade.getBuildings().get(i).getBuilding(), trade.getBuildings().get(i).getColumn());
+            if (buildingAndColId != null)
+            buildings.add(buildingAndColId);
+        }
+
+        List<String> data = sheepInformationService.getSheepEarTag(trade.getFactory(), buildings);
+        HashMap<String, List<String>> result = new HashMap<>();
+        result.put("models", data);
+        return Responses.successResponse(result);
+    }
+
+    @PostMapping(value = "/i")
+    public Response getSheepImmuneMarkEarTag(@RequestBody @Valid TradeMarkEarTagRequest trade, BindingResult bindingResult) {
+        if (bindingResult.hasErrors() || trade.getBuildings() == null) {
+            Response response = Responses.errorResponse("查询栏栋信息并获取免疫信息失败！");
+            Map<String, Object> data = new HashMap<>();
+            data.put("errorMessage", bindingResult.getAllErrors());
+            response.setData(data);
+            return response;
+        }
+        // 首先查询所有的栏栋信息
+        List<Long> buildings = new LinkedList<>();
+
+        for (int i = 0; i < trade.getBuildings().size(); i++) {
+            Long buildingAndColId = buildingFactoryService.findIdByBuildingAndCol(trade.getFactory(), trade.getBuildings().get(i).getBuilding(), trade.getBuildings().get(i).getColumn());
+            if (buildingAndColId != null)
+                buildings.add(buildingAndColId);
+        }
+
+        List<String> data = sheepInformationService.getSheepImmuneTag(trade.getFactory(), buildings);
+        HashMap<String, List<String>> result = new HashMap<>();
+        result.put("models", data);
+        return Responses.successResponse(result);
     }
 }
 

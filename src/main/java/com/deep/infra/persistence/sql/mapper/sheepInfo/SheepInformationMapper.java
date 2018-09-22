@@ -1,6 +1,5 @@
 package com.deep.infra.persistence.sql.mapper.sheepInfo;
 
-import com.deep.api.request.NoBuildingRequest;
 import com.deep.api.response.DeadSheepInformationResponse;
 import com.deep.api.response.NoBuildingColResponse;
 import com.deep.api.response.SheepInformationResponse;
@@ -75,7 +74,6 @@ public interface SheepInformationMapper {
             @Result(property = "buildingColumn", column = "building_column"),
             @Result(property = "type", column = "type"),
             @Result(property = "factory", column = "factory")
-
     })
     public SheepInformationModel getOneSheep(Long id);
 
@@ -102,4 +100,10 @@ public interface SheepInformationMapper {
             "immune_ear_tag = #{breedingSheepBase} " +
             "where id = #{sheep} and factory = #{factory}")
     public Long updateTag(@Param("factory") Long factory, @Param("sheep") Long sheep, @Param("tradeMarkEartag") String tradeMarkEartag, @Param("breedingSheepBase") String breedingSheepBase);
+
+    @SelectProvider(type = NoBuildingSelective.class, method = "getSheepEarTag")
+    List<String> getAllTrademarkByFactoryIDAndBuildingColumn(Long factory, List<Long> buildingColumn);
+
+    @SelectProvider(type = NoBuildingSelective.class, method = "getSheepImmuneTag")
+    List<String> getAllImmuneMarkByFactoryIDAndBuildingColumn(Long factory, List<Long> buildingColumn);
 }

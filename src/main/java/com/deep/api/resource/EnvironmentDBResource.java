@@ -30,7 +30,7 @@ import java.text.SimpleDateFormat;
 @Configuration
 @EnableScheduling
 @RestController
-@RequestMapping(value = "/envir")
+@RequestMapping(value = "/e")
 public class EnvironmentDBResource {
 
     private final Logger logger = LoggerFactory.getLogger(EnvironmentDBResource.class);
@@ -49,9 +49,8 @@ public class EnvironmentDBResource {
         logger.info("invoke getLatest {}" , factoryNum);
         EnvironmentTraceModel environmentTraceModel = this.environmentTraceService.getEnvironmentTraceModelLatestByFactoryNum(factoryNum);
         EnvironmentTraceReturnModel environmentTraceReturnModel = new EnvironmentTraceReturnModel(environmentTraceModel);
-        return JudgeUtil.JudgeFind(environmentTraceReturnModel , environmentTraceModel );
+        return JudgeUtil.JudgeFind(environmentTraceReturnModel , environmentTraceModel);
     }
-
 
     /**
      * 定时任务

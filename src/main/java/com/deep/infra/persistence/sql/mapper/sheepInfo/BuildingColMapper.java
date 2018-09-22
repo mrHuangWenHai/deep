@@ -12,7 +12,7 @@ import java.util.Set;
 public interface BuildingColMapper {
 
     @Insert("<script>\n" +
-        "insert into  building_factory(factory,building,col)\n" +
+        "insert into building_factory(factory,building,col)\n" +
         "<foreach collection='buildingColumnModels' item='buildingColumnModel' open='VALUES' separator=',' close=';'>\n" +
         "(#{buildingColumnModel.factory}, #{buildingColumnModel.building}, #{buildingColumnModel.col})\n" +
         "</foreach>\n" +

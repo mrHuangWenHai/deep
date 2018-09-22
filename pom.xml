@@ -18,6 +18,9 @@
     <properties>
         <mybatis.version>3.4.1</mybatis.version>
         <mysql.version>5.1.39</mysql.version>
+        <start-class>com.deep.application.DeepApplication</start-class>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <!-- Additional lines to be added here... -->

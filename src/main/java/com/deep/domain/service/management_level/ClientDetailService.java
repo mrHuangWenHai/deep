@@ -9,12 +9,11 @@ import com.deep.domain.model.AgentModel;
 import com.deep.domain.model.FactoryModel;
 import com.deep.domain.service.BuildingColumnService;
 import org.springframework.stereotype.Service;
+import sun.management.Agent;
+import sun.rmi.runtime.Log;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ClientDetailService {
@@ -227,6 +226,87 @@ public class ClientDetailService {
         JedisUtil.setValue("clientDetail", "success");
     }
 
+    private ClientDetailResponse getAllDetailsOfAgentsAndFactories(Long factory, Byte flag) {
+        Integer ramTotal = 0;
+        Integer eweTotal = 0;
+        Integer commercialTotal = 0;
+        Integer lambTotal = 0;
+        Integer reserveRamTotal = 0;
+        Integer reserveEweTotal = 0;
+        int provincialTotal = 0;
+        int municipaTotal = 0;
+        int countryTotal = 0;
+        int sheepTotal = 0;
+        if (flag == 0) {
+            // 这是羊场
+            ramTotal = buildingColumnService.findTypeOfSheep(factory, "种公羊");
+            eweTotal = buildingColumnService.findTypeOfSheep(factory, "种母羊");
+            commercialTotal = buildingColumnService.findTypeOfSheep(factory, "商品羊");
+            lambTotal = buildingColumnService.findTypeOfSheep(factory, "羔羊");
+            reserveRamTotal = buildingColumnService.findTypeOfSheep(factory, "后备种公羊");
+            reserveEweTotal = buildingColumnService.findTypeOfSheep(factory, "后备种母羊");
+            FactoryModel model = factoryService.getOneFactory(factory);
+            if (model == null) return null;
+            return new ClientDetailResponse(
+                    factoryService.getOneFactory(factory).getBreedName(),
+                    factory,
+                    (byte) 4,
+                    0, 0, 0, 0,
+                    ramTotal + eweTotal + commercialTotal + lambTotal + reserveEweTotal + reserveRamTotal,
+                    ramTotal, eweTotal, commercialTotal, lambTotal, reserveRamTotal, reserveEweTotal
+            );
+        }
+        if (flag == 1) {
+            // 这是代理
+            // 查找所有的子代理信息
+            List<AgentModel> agents = agentService.getSons(Integer.valueOf(String.valueOf(factory)));
+            // 递归查找所有的值
+            for (AgentModel agent : agents) {
+                switch (agent.getAgentRank()) {
+                    case 1:
+                        provincialTotal += 1;
+                        break;
+                    case 2:
+                        municipaTotal += 1;
+                        break;
+                    case 3:
+                        countryTotal += 1;
+                        break;
+                }
+
+                ClientDetailResponse client = getAllDetailsOfAgentsAndFactories((long) agent.getId(), (byte) 1);
+                if (client == null) continue;
+                ramTotal += client.getRamTotal();
+                eweTotal += client.getEweTotal();
+                commercialTotal += client.getCommercialTotal();
+                lambTotal += client.getLambTotal();
+                reserveEweTotal += client.getEweTotal();
+                reserveRamTotal += client.getRamTotal();
+            }
+            // 查找所有的子羊场信息
+            List<FactoryModel> factories = factoryService.getAllFactoryOfOneAgent(factory);
+            for (FactoryModel f : factories) {
+                ramTotal += buildingColumnService.findTypeOfSheep(f.getId(), "种公羊");
+                eweTotal += buildingColumnService.findTypeOfSheep(f.getId(), "种母羊");
+                commercialTotal += buildingColumnService.findTypeOfSheep(f.getId(), "商品羊");
+                lambTotal += buildingColumnService.findTypeOfSheep(f.getId(), "羔羊");
+                reserveRamTotal += buildingColumnService.findTypeOfSheep(f.getId(), "后备种公羊");
+                reserveEweTotal += buildingColumnService.findTypeOfSheep(f.getId(), "后备种母羊");
+            }
+            sheepTotal += factories.size();
+
+            return new ClientDetailResponse(
+                    agentService.getOneAgent(factory).getAgentName(),
+                    factory,
+                    (byte) 1,
+                    provincialTotal, municipaTotal, countryTotal, sheepTotal,
+                    ramTotal + eweTotal + commercialTotal + lambTotal + reserveEweTotal + reserveRamTotal,
+                    ramTotal, eweTotal, commercialTotal, lambTotal, reserveRamTotal, reserveEweTotal
+            );
+        }
+        return new ClientDetailResponse();
+    }
+
     /**
      * 通过一个方法获取所有的信息，数据全部从Redis中获取
      * @param factory 羊场ID号码
@@ -234,14 +314,13 @@ public class ClientDetailService {
      * @return 结果列表
      */
     public Map<String, List<ClientDetailResponse> > getAllDetails(Long factory, Byte flag) {
+        if (flag == 2) return null;
+
         Map<String, List<ClientDetailResponse> > result = new HashMap<>();
-
         List<ClientDetailResponse> value = new ArrayList<>();
-        String firstValue = ClientDetailUtil.getClientToRedis(factory, flag);
-        ClientDetailResponse first = JSON.parseObject(firstValue, ClientDetailResponse.class);
-        value.add(first);
+        ClientDetailResponse clientItSelf = getAllDetailsOfAgentsAndFactories(factory, flag);
+        if (clientItSelf != null) value.add(clientItSelf);
         result.put("itself", value);
-
         if (flag == 0) {
             return result;
         }
@@ -255,18 +334,16 @@ public class ClientDetailService {
         if (directAgent != null) {
             value = new ArrayList<>();
             for(Long list: directAgent) {
-                String secondValue = ClientDetailUtil.getClientToRedis(list, (byte)1);
-                ClientDetailResponse second = JSON.parseObject(secondValue, ClientDetailResponse.class);
-                value.add(second);
+                ClientDetailResponse clientAgent = getAllDetailsOfAgentsAndFactories(list, (byte) 1);
+                if (clientAgent != null) value.add(clientAgent);
             }
             result.put("agents", value);
         }
         if (directFactory != null) {
             value = new ArrayList<>();
             for (long aDirectFactory : directFactory) {
-                String secondValue = ClientDetailUtil.getClientToRedis(aDirectFactory, (byte) 0);
-                ClientDetailResponse second = JSON.parseObject(secondValue, ClientDetailResponse.class);
-                value.add(second);
+                ClientDetailResponse clientFactory = getAllDetailsOfAgentsAndFactories(aDirectFactory, (byte) 0);
+                if (clientFactory != null) value.add(clientFactory);
             }
             result.put("factories", value);
         }

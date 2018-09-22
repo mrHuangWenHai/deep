@@ -21,10 +21,6 @@ public class AgentService {
     @Resource
     private UserService userService;
 
-    public Long queryCount() {
-        return agentMapper.queryCount();
-    }
-
     /**
      * find MinusSign
      * @return agentModel's List
@@ -44,20 +40,20 @@ public class AgentService {
 
     /**
      * 获取所有的代理信息
-     * @return
+     * @return result
      */
     public List<AgentModel> getAll(Long start, Byte size) {
         return agentMapper.queryAllAgent(start, size);
     }
 
-    public List<AgentModel> getAgents() {
+    List<AgentModel> getAgents() {
         return agentMapper.getAgents();
     }
 
     /**
      * 获取所有的子代理
-     * @param id
-     * @return
+     * @param id id
+     * @return result
      */
     public List<AgentModel> getSons(int id) {
         return agentMapper.getSons(id);
@@ -68,8 +64,8 @@ public class AgentService {
     }
     /**
      * 获取所有的下级代理, 包括子代理的子代理, 采用递归方式
-     * @param id
-     * @return
+     * @param id id
+     * @return result
      */
     public Map<String, Object> getAllSons(int id) {
         Map<String, Object> map = new HashMap<>();
@@ -86,8 +82,8 @@ public class AgentService {
 
     /**
      * 查询一个代理的直属上级
-     * @param id
-     * @return
+     * @param id agent id
+     * @return result
      */
     public AgentModel getFather(Long id) {
         AgentModel agentModel = agentMapper.queryAgentByID(id);
@@ -118,8 +114,8 @@ public class AgentService {
 
     /**
      * 根据代理的主键查询单个代理信息
-     * @param id
-     * @return
+     * @param id primary key
+     * @return result
      */
     public AgentModel getOneAgent(Long id) {
         return agentMapper.queryAgentByID(id);
@@ -127,8 +123,8 @@ public class AgentService {
 
     /**
      * 插入一个新的代理
-     * @param agentModel
-     * @return
+     * @param agentModel agent
+     * @return result
      */
     public Long addAgent(AgentModel agentModel) {
         return agentMapper.insertAgent(agentModel);
@@ -142,11 +138,11 @@ public class AgentService {
     public Long deleteAgent(Long id) {
         AgentModel agentModel = agentMapper.queryAgentByID(id);
         // 获取其父亲信息
-        Integer father = agentModel.getAgentFather();
+        int father = agentModel.getAgentFather();
         // 获取此代理的所有下级代理
         List<AgentModel> lists = agentMapper.getSons(Integer.valueOf(String.valueOf(id)));
         for (AgentModel list : lists) {
-            agentMapper.updateAgentFather(Long.valueOf(father), (long) list.getId());
+            agentMapper.updateAgentFather((long) father, (long) list.getId());
         }
         // 删除此代理下面的所有用户
         userService.deleteUserByFactoryNumber(id, (byte)1);

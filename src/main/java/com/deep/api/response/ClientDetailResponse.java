@@ -1,23 +1,23 @@
 package com.deep.api.response;
 
 public class ClientDetailResponse {
-    private String provincialPlatform;
-    private Long factory;
-    private Byte rank;
+    private String provincialPlatform;// 平台名称
+    private Long factory;             // 编号
+    private Byte rank;                // 等级
 
-    private Integer provincialTotal;
-    private Integer municipaTotal;
-    private Integer countryTotal;
-    private Integer sheepTotal;
+    private Integer provincialTotal; // 省级代理数目
+    private Integer municipaTotal;   // 市级代理数目
+    private Integer countryTotal;    // 县级代理数目
+    private Integer sheepTotal;      // 羊场数目
 
-    private Integer sheepNumber;
+    private Integer sheepNumber;     // 羊场总数
 
-    private Integer ramTotal;
-    private Integer eweTotal;
-    private Integer commercialTotal;
-    private Integer lambTotal;
-    private Integer reserveRamTotal;
-    private Integer reserveEweTotal;
+    private Integer ramTotal;        // 种公羊
+    private Integer eweTotal;        // 种母羊
+    private Integer commercialTotal; // 商品羊
+    private Integer lambTotal;       // 羔羊
+    private Integer reserveRamTotal; // 后备种公羊
+    private Integer reserveEweTotal; // 后背种母羊
 
     public ClientDetailResponse(String provincialPlatform, Long factory, Byte rank, Integer provincialTotal, Integer municipaTotal, Integer countryTotal, Integer sheepTotal, Integer sheepNumber, Integer ramTotal, Integer eweTotal, Integer commercialTotal, Integer lambTotal, Integer reserveRamTotal, Integer reserveEweTotal) {
         this.provincialPlatform = provincialPlatform;

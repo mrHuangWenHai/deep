@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -117,7 +118,34 @@ public class SheepInformationService {
         sheepInformationMapper.setBuildingSheep(sheeps.toString(), buildingCol, factory);
     }
 
+    /**
+     * 更新羊只的信息
+     * @param request 相关请求
+     * @return 返回成功或者失败的标志
+     */
     public Long updateSheepInfo(SheepUpdateRequest request) {
         return sheepInformationMapper.updateTag(request.getFactory(), request.getSheepid(), request.getBreedingSheepBase(), request.getTradeMarkEartag());
+    }
+
+    /**
+     * 获取羊的商标耳牌号
+     * @param factory 羊场号
+     * @param buildingColumn 栏栋号列表
+     * @return 返回羊的商标耳牌号码
+     */
+    public List<String> getSheepEarTag(Long factory, List<Long> buildingColumn) {
+        if (buildingColumn == null) return new LinkedList<>();
+        return sheepInformationMapper.getAllTrademarkByFactoryIDAndBuildingColumn(factory, buildingColumn);
+    }
+
+    /**
+     * 获取羊的免疫耳牌号
+     * @param factory 羊场号
+     * @param buildingColumn 栏栋号列表
+     * @return 返回羊的商标耳牌号码
+     */
+    public List<String> getSheepImmuneTag(Long factory, List<Long> buildingColumn) {
+        if (buildingColumn == null) return new LinkedList<>();
+        return sheepInformationMapper.getAllImmuneMarkByFactoryIDAndBuildingColumn(factory, buildingColumn);
     }
 }
