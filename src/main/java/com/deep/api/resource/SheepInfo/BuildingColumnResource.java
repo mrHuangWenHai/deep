@@ -61,7 +61,7 @@ public class BuildingColumnResource {
      *
      * @param factoryId 本厂编号
      * @param buildingId  栋号
-     * @return
+     * @return response
      */
     @GetMapping(value = "/{factoryId}/buildings/{buildingId}")
     public Response getCol(@PathVariable(value = "factoryId")Integer factoryId,

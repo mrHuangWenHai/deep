@@ -134,7 +134,7 @@ public class SheepInformationService {
      * @return 返回羊的商标耳牌号码
      */
     public List<String> getSheepEarTag(Long factory, List<Long> buildingColumn) {
-        if (buildingColumn == null) return new LinkedList<>();
+        if (buildingColumn.size() == 0) return new LinkedList<>();
         return sheepInformationMapper.getAllTrademarkByFactoryIDAndBuildingColumn(factory, buildingColumn);
     }
 

@@ -11,6 +11,8 @@ public class BuildingColumnModel {
     @NotNull
     private Integer col;
 
+    private String type;
+
     public Long getId() {
         return id;
     }
@@ -43,6 +45,14 @@ public class BuildingColumnModel {
         this.col = col;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "BuildingColumnModel{" +
@@ -50,6 +60,7 @@ public class BuildingColumnModel {
                 ", factory=" + factory +
                 ", building=" + building +
                 ", col=" + col +
+                ", type='" + type + '\'' +
                 '}';
     }
 }

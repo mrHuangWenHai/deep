@@ -35,12 +35,23 @@ public interface BuildingColMapper {
     })
     List<BuildingColResponse> selectBuildingAndColumn(Long factory);
 
-    @Select("select * from building_factory where factory = #{factory} order by building, col asc")
+//    @Select("select * from building_factory where factory = #{factory} order by building, col asc")
+
+    @Select("select building_factory.factory, building_factory.building, building_factory.col, sheep_information.type\n" +
+            " from building_factory\n" +
+            "        left join sheep_information on sheep_information.building_column = building_factory.id\n" +
+            "                                         and sheep_information.id = (select max(sheep_information.id)\n" +
+            "                                                                       from sheep_information\n" +
+            "                                                                       where sheep_information.factory = #{factory}\n" +
+            "                                                                         and sheep_information.building_column = building_factory.id)\n" +
+            "where building_factory.factory = #{factory}\n" +
+            "\n" +
+            "order by building_factory.building, building_factory.col asc")
     @Results({
-            @Result(property = "id", column = "id"),
             @Result(property = "building", column = "building"),
             @Result(property = "col", column = "col"),
-            @Result(property = "factory", column = "factory")
+            @Result(property = "factory", column = "factory"),
+            @Result(property = "type", column = "type")
     })
     List<BuildingColumnModel> selectAllBuildingAndColumn(Long factory);
 
