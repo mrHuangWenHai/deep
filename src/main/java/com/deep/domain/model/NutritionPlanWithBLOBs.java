@@ -31,6 +31,8 @@ public class NutritionPlanWithBLOBs extends NutritionPlan implements Serializabl
 
     private String pickingO;
 
+    private String earTagFile;
+
     private static final long serialVersionUID = 1L;
 
     public String getRoughageO() {
@@ -143,5 +145,34 @@ public class NutritionPlanWithBLOBs extends NutritionPlan implements Serializabl
 
     public void setPickingO(String pickingO) {
         this.pickingO = pickingO == null ? null : pickingO.trim();
+    }
+
+    public String getEarTagFile() {
+        return earTagFile;
+    }
+
+    public void setEarTagFile(String earTagFile) {
+        this.earTagFile = earTagFile;
+    }
+
+    @Override
+    public String toString() {
+        return "NutritionPlanWithBLOBs{" +
+                "materialA='" + materialA + '\'' +
+                ", materialM='" + materialM + '\'' +
+                ", materialO='" + materialO + '\'' +
+                ", materialWM='" + materialWM + '\'' +
+                ", materialWO='" + materialWO + '\'' +
+                ", roughageP='" + roughageP + '\'' +
+                ", roughageD='" + roughageD + '\'' +
+                ", roughageO='" + roughageO + '\'' +
+                ", roughageWP='" + roughageWP + '\'' +
+                ", roughageWD='" + roughageWD + '\'' +
+                ", roughageWO='" + roughageWO + '\'' +
+                ", pickingM='" + pickingM + '\'' +
+                ", pickingR='" + pickingR + '\'' +
+                ", pickingO='" + pickingO + '\'' +
+                ", earTagFile='" + earTagFile + '\'' +
+                '}';
     }
 }

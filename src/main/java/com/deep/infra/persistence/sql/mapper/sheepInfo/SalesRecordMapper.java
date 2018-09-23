@@ -34,7 +34,7 @@ public interface SalesRecordMapper {
      * @param factory 羊场编号
      * @return 返回售出的羊只信息
      */
-    @Select("select * from sales_record where start_factory = #{factory} limit #{start}, #{size}")
+    @Select("select * from sales_record where start_factory = #{factory} order by sales_time desc limit #{start}, #{size}")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "startFactory", column = "start_factory"),
@@ -60,7 +60,7 @@ public interface SalesRecordMapper {
      * @param factory 羊场编号
      * @return 返回买入的羊只信息
      */
-    @Select("select * from sales_record where end_factory = #{factory} limit #{start}, #{size}")
+    @Select("select * from sales_record where end_factory = #{factory} order by sales_time desc limit #{start}, #{size}")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "startFactory", column = "start_factory"),

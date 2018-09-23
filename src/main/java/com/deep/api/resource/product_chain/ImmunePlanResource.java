@@ -71,7 +71,6 @@ public class ImmunePlanResource {
     @RequestMapping(value = "", method = RequestMethod.POST)
     public Response saveShow(@Valid ImmunePlanModel immunePlanModel,
                              BindingResult bindingResult)  {
-        //  @RequestParam("eartagFile") MultipartFile immuneEartagFile
         if (bindingResult.hasErrors()) {
             Response response = Responses.successResponse();
             Map<String, Object> data = new HashMap<String, Object>();
@@ -109,7 +108,7 @@ public class ImmunePlanResource {
 
                     if (phone.size() != 0) {
                       if (JedisUtil.redisSendMessage(phone, JedisUtil.getCertainKeyValue("Message"))) {
-                        JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
+                        JedisUtil.setCertainKeyValueWithExpireTime(testSendProfessor, "1", Integer.parseInt(Objects.requireNonNull(JedisUtil.getCertainKeyValue("ExpireTime"))) * 24 * 60 * 60);
                       }
                     }
                 }
@@ -120,7 +119,7 @@ public class ImmunePlanResource {
                     if (phone.size() != 0) {
                       if (JedisUtil.redisSendMessage(phone, JedisUtil.getCertainKeyValue("Message"))) {
                         System.out.println("发送成功！");
-                        JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor, "1", Integer.parseInt(JedisUtil.getCertainKeyValue("ExpireTime")) * 24 * 60 * 60);
+                        JedisUtil.setCertainKeyValueWithExpireTime(testSendSupervisor, "1", Integer.parseInt(Objects.requireNonNull(JedisUtil.getCertainKeyValue("ExpireTime"))) * 24 * 60 * 60);
                       }
                     }
                 }
@@ -153,7 +152,7 @@ public class ImmunePlanResource {
       if (roleString == null) {
         return Responses.errorResponse("认证信息错误");
       }
-      Byte role = Byte.parseByte(roleString);
+      byte role = Byte.parseByte(roleString);
 
 
       if (role == 0) {

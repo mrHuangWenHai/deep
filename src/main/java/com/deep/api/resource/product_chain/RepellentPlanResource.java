@@ -74,19 +74,16 @@ public class RepellentPlanResource {
             return response;
         }
 
-        // @RequestParam("eartagFile") MultipartFile repellentEartagFile
         logger.info("invoke save {}", repellentPlanModel);
 
         //上传文件
         try {
-//            String fileName = repellentEartagFile.getOriginalFilename();
-//            String filePath = pathPre + repellentPlanModel.getFactoryNum().toString() + "/repellentEartag/";
-//            fileName = UploadUtil.uploadFile(repellentEartagFile.getBytes(), filePath, fileName);
             repellentPlanModel.setRepellentEartag(repellentPlanModel.getEartagFile());
             int isSuccess = repellentPlanService.setRepellentPlanModel(repellentPlanModel);
             if (isSuccess == 0) {
                 return Responses.errorResponse("add error");
             }
+
             short agentID = this.factoryService.queryOneAgentByID(repellentPlanModel.getFactoryNum().longValue());
             String professorKey = agentID + "_professor";
             String supervisorKey = repellentPlanModel.getFactoryNum().toString() + "_supervisor";

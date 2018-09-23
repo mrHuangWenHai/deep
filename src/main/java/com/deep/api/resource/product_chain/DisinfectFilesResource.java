@@ -86,6 +86,12 @@ public class DisinfectFilesResource {
             //System.out.println("mysql执行前");
 
             disinfectFilesModel.setDisinfectEartag(disinfectFilesModel.getEartagFile());
+            if (disinfectFilesModel.getPlace() == null && disinfectFilesModel.getEartagFile() == null) {
+                disinfectFilesModel.setPlace("全场消毒");
+            }
+            if (disinfectFilesModel.getEartagFile() == null && disinfectFilesModel.getPlace() != null) {
+                disinfectFilesModel.setEartagFile("全栏栋消毒 ");
+            }
             disinfectFilesService.setDisinfectFilesModel(disinfectFilesModel);
 
             //数据插入redis

@@ -11,7 +11,7 @@ public class DisinfectFilesModel {
 
     private Long id;      //id
 
-    @NotBlank
+//    @NotBlank
     private String place;
 
     @Min(0)

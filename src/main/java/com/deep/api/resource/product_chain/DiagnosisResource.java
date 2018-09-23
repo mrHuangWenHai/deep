@@ -70,6 +70,8 @@ public class DiagnosisResource {
                 return Responses.errorResponse("插入错误");
             }
             // TODO　Ｒｅｄｉｓ需要修改
+            System.out.println("factoryNumber = ");
+            System.out.println("buildingNumber = " + diagnosisPlanModel.getBuildingNum());
             short agentID = this.factoryService.queryOneAgentByID(diagnosisPlanModel.getFactoryNum().longValue());
 
             String professorKey = agentID + "_professor";

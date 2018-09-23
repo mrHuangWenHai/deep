@@ -40,6 +40,7 @@
     <result column="picking_m" property="pickingM" jdbcType="LONGVARCHAR" />
     <result column="picking_r" property="pickingR" jdbcType="LONGVARCHAR" />
     <result column="picking_o" property="pickingO" jdbcType="LONGVARCHAR" />
+    <result column="ear_tag_file" property="earTagFile" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -106,7 +107,7 @@
   </sql>
   <sql id="Blob_Column_List" >
     material_a, material_m, material_o, material_w_m, material_w_o, roughage_p, roughage_d, roughage_o,
-    roughage_w_p, roughage_w_d, roughage_w_o, picking_m, picking_r, picking_o
+    roughage_w_p, roughage_w_d, roughage_w_o, picking_m, picking_r, picking_o, ear_tag_file
   </sql>
   <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.deep.domain.model.NutritionPlanExample" >
     select
@@ -183,7 +184,7 @@
       id, gmt_create, gmt_modified, gmt_supervised, factory_num, factory_name, building, nutrition_t,
       quantity, average, period, water, operator_name, professor_name, supervisor_name, operator_id, professor_id, supervisor_id , remark, ispass_check,
       upass_reason, ispass_sup, material_a, material_m, material_o, material_w_m, material_w_o, roughage_p, roughage_d, roughage_o,
-      roughage_w_p, roughage_w_d, roughage_w_o, picking_m, picking_r, picking_o
+      roughage_w_p, roughage_w_d, roughage_w_o, picking_m, picking_r, picking_o, ear_tag_file
     )
     values (#{id,jdbcType=INTEGER}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, 
       #{gmtSupervised,jdbcType=TIMESTAMP}, #{factoryNum,jdbcType=BIGINT}, #{factoryName,jdbcType=VARCHAR},
@@ -196,7 +197,7 @@
       #{materialWM,jdbcType=LONGVARCHAR}, #{materialWO,jdbcType=LONGVARCHAR}, #{roughageP,jdbcType=LONGVARCHAR}, 
       #{roughageD,jdbcType=LONGVARCHAR}, #{roughageO,jdbcType=LONGVARCHAR}, #{roughageWP,jdbcType=LONGVARCHAR}, #{roughageWD,jdbcType=LONGVARCHAR},
       #{roughageWO,jdbcType=LONGVARCHAR}, #{pickingM,jdbcType=LONGVARCHAR}, #{pickingR,jdbcType=LONGVARCHAR}, 
-      #{pickingO,jdbcType=LONGVARCHAR})
+      #{pickingO,jdbcType=LONGVARCHAR}, #{earTagFile,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.deep.domain.model.NutritionPlanWithBLOBs" >
     insert into nutrition_plan
@@ -424,6 +425,9 @@
       <if test="pickingO != null" >
         #{pickingO,jdbcType=LONGVARCHAR},
       </if>
+      <if test="earTagFile != null" >
+        #{earTagFile,jdbcType=LONGVARCHAR},
+      </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.deep.domain.model.NutritionPlanExample" resultType="java.lang.Integer" >
@@ -590,7 +594,8 @@
       roughage_w_o = #{record.roughageWO,jdbcType=LONGVARCHAR},
       picking_m = #{record.pickingM,jdbcType=LONGVARCHAR},
       picking_r = #{record.pickingR,jdbcType=LONGVARCHAR},
-      picking_o = #{record.pickingO,jdbcType=LONGVARCHAR}
+      picking_o = #{record.pickingO,jdbcType=LONGVARCHAR},
+      ear_tag_file = #{record.earTagFile, jdbcType=LONGVARCHAR}
     where id = #{record.id,jdbcType=INTEGER}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -777,7 +782,8 @@
     roughage_w_o = #{record.roughageWO,jdbcType=LONGVARCHAR},
     picking_m = #{record.pickingM,jdbcType=LONGVARCHAR},
     picking_r = #{record.pickingR,jdbcType=LONGVARCHAR},
-    picking_o = #{record.pickingO,jdbcType=LONGVARCHAR}
+    picking_o = #{record.pickingO,jdbcType=LONGVARCHAR},
+    ear_tag_file = #{record.earTagFile, jdbcType=LONGVARCHAR}
     where id = #{record.id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.deep.domain.model.NutritionPlan" >

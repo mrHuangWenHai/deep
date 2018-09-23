@@ -78,7 +78,7 @@ public class NutritionResource {
             insert.setQuantity(planModel.getQuantity());
             // 羊只均重, 后来不使用, 以后需要等待换成耳牌号附件
 //            insert.setAverage(planModel.getAverage());
-            insert.setAverage(planModel.getEartagFile());
+            insert.setEarTagFile(planModel.getEartagFile());
             insert.setPeriod(planModel.getPeriod());
             insert.setWater(planModel.getWater());
             insert.setOperatorName(planModel.getOperatorName());
@@ -100,6 +100,7 @@ public class NutritionResource {
             insert.setNutritionT(planModel.getNutritionT());
             insert.setAverage(planModel.getAverage());
             insert.setGmtCreate(new Date());
+            insert.setGmtModified(new Date());
 
             Byte zero = 2;
             insert.setGmtCreate(new Date());
@@ -285,7 +286,7 @@ public class NutritionResource {
         int upage = StringToLongUtil.stringToInt(page);
         byte pass = StringToLongUtil.stringToByte(ispassCheck);
         Long factoryOrAgentID = StringToLongUtil.stringToLong(id);
-        Byte which = StringToLongUtil.stringToByte(TokenAnalysis.getFlag(request.getHeader(Constants.AUTHORIZATION)));
+        byte which = StringToLongUtil.stringToByte(TokenAnalysis.getFlag(request.getHeader(Constants.AUTHORIZATION)));
         if (which == 0) {
             NutritionPlanExample nutritionPlanExample = new NutritionPlanExample();
             NutritionPlanExample.Criteria criteria = nutritionPlanExample.createCriteria();
