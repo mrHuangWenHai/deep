@@ -9,12 +9,43 @@ public class EnvironmentTraceModel {
     private long id;
     private String time;
     private BigInteger factoryNum;
-    private float tempIndoor;
+
     private float tempWater;
     private float ph;
-    private float hum;
+
     private float pm;
+
+    private float tempSoil;
+    private float humSoil;
+
+    private float tempIndoor;
+    private float humIndoor;
+
     private float nh3;
+
+    public float getTempSoil() {
+        return tempSoil;
+    }
+
+    public void setTempSoil(float tempSoil) {
+        this.tempSoil = tempSoil;
+    }
+
+    public float getHumIndoor() {
+        return humIndoor;
+    }
+
+    public void setHumIndoor(float humIndoor) {
+        this.humIndoor = humIndoor;
+    }
+
+    public float getHumSoil() {
+        return humSoil;
+    }
+
+    public void setHumSoil(float humSoil) {
+        this.humSoil = humSoil;
+    }
 
     public long getId() {
         return id;
@@ -64,14 +95,6 @@ public class EnvironmentTraceModel {
         this.ph = ph;
     }
 
-    public float getHum() {
-        return hum;
-    }
-
-    public void setHum(float hum) {
-        this.hum = hum;
-    }
-
     public float getPm() {
         return pm;
     }
@@ -86,5 +109,22 @@ public class EnvironmentTraceModel {
 
     public void setNh3(float nh3) {
         this.nh3 = nh3;
+    }
+
+    @Override
+    public String toString() {
+        return "EnvironmentTraceModel{" +
+                "id=" + id +
+                ", time='" + time + '\'' +
+                ", factoryNum=" + factoryNum +
+                ", tempIndoor=" + tempIndoor +
+                ", tempWater=" + tempWater +
+                ", tempSoil=" + tempSoil +
+                ", humIndoor=" + humIndoor +
+                ", humSoil=" + humSoil +
+                ", ph=" + ph +
+                ", pm=" + pm +
+                ", nh3=" + nh3 +
+                '}';
     }
 }

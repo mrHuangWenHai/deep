@@ -81,8 +81,8 @@ public class JudgeUtil {
      */
     public static Response JudgeFind(Object object1 ,Object object2) {
         HashMap<String,Object> data = new HashMap<>();
-        data.put("model1",object1);
-        data.put("model2",object2);
+        data.put("models",object1);
+        data.put("size",object2);
         return Responses.successResponse(data);
     }
     /**

@@ -149,7 +149,7 @@ public class ExcelOutputUtil {
             }
             case "5":{
                 data.setName("env_trace");
-                List<EnvironmentTraceModel> list = excelOutputUtil.environmentTraceService.getEnvironmentTraceModelByFactoryNum(new BigInteger(factoryNum));
+                List<EnvironmentTraceModel> list = excelOutputUtil.environmentTraceService.getEnvironmentTraceModelByFactoryNum(new BigInteger(factoryNum), 0L, 100000L);
                 EnvironmentTraceModel environmentTraceModel;
                 List<List<Object>> rows = new ArrayList<>();
                 List<String> titles = new ArrayList<>();

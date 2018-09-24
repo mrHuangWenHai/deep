@@ -184,11 +184,10 @@
 
     <select id="getImmunePlanModelCount">
         SELECT
-        COUNT (*)
+        COUNT(*)
         FROM
         immune_plan
-        WHERE
-        ispass_check = 0 AND factory_num = #{factoryNum}
+        WHERE ispass_check = 0 AND factory_num = #{factoryNum}
     </select>
 
     <select id="getImmunePlanModelOperator">

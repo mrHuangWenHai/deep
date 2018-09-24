@@ -162,7 +162,7 @@
 
   <select id="getNutritionPlanModelCount">
     SELECT
-    COUNT (*)
+    COUNT(*)
     FROM
     nutrition_plan
     WHERE

@@ -180,7 +180,7 @@
 
     <select id="getRepellentPlanModelCount" >
         SELECT
-        COUNT (*)
+        COUNT(*)
         FROM
         repellent_plan
         WHERE

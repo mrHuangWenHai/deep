@@ -1,7 +1,5 @@
 package com.deep.api.resource;
 
-import com.deep.api.authorization.annotation.Permit;
-
 import com.deep.api.response.Response;
 import com.deep.domain.model.EnvironmentTraceModel;
 import com.deep.domain.model.EnvironmentTraceReturnModel;
@@ -23,10 +21,8 @@ import javax.annotation.Resource;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
-/**
- * create by zhongrui on 18-4-16.
- */
 @Configuration
 @EnableScheduling
 @RestController
@@ -43,13 +39,16 @@ public class EnvironmentDBResource {
      * @param factoryNum 工厂号
      * @return 最新数据
      */
-    @Permit(authorities = {"front_view_organic_environment", "rear_view_organic_environment"})
-    @RequestMapping(value = "/get/{factoryNum}",method = RequestMethod.GET)
-    public Response getLatest(@PathVariable(value = "factoryNum")BigInteger factoryNum){
+//    @Permit(authorities = {"front_view_organic_environment", "rear_view_organic_environment"})
+    @RequestMapping(value = "/g/{factory}/{page}",method = RequestMethod.GET)
+    public Response getLatest(@PathVariable(value = "factory")BigInteger factoryNum, @PathVariable(value = "page") Byte page){
         logger.info("invoke getLatest {}" , factoryNum);
-        EnvironmentTraceModel environmentTraceModel = this.environmentTraceService.getEnvironmentTraceModelLatestByFactoryNum(factoryNum);
-        EnvironmentTraceReturnModel environmentTraceReturnModel = new EnvironmentTraceReturnModel(environmentTraceModel);
-        return JudgeUtil.JudgeFind(environmentTraceReturnModel , environmentTraceModel);
+        factoryNum = BigInteger.valueOf(30);
+        long startRecord = page*5;
+        List<EnvironmentTraceModel> environmentTraceModel = this.environmentTraceService.getEnvironmentTraceModelByFactoryNum(factoryNum, startRecord, 5L);
+        List<EnvironmentTraceReturnModel> environmentTraceReturnModel = environmentTraceService.getReturn(environmentTraceModel);
+        return JudgeUtil.JudgeFind(environmentTraceReturnModel, environmentTraceService.getCount(Long.valueOf(String.valueOf(factoryNum))));
+
     }
 
     /**
@@ -67,23 +66,10 @@ public class EnvironmentDBResource {
         String savePath = "../DatabaseStatics/";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhMMss");
         if (BackupUtil.sqlBackup(savePath+"EnvironmentTrace/",hostIP,username,password,database,"env_trace_",simpleDateFormat.format(new Timestamp(System.currentTimeMillis())))){
-//删除数据
-//            if (co2DataMapper.deleteCO2Data() == 1
-//                    && humDataMapper.deleteHumData() == 1
-//                    && tempDataMapper.deleteTempData() == 1
-//                    && nh3DataMapper.deleteNH3Data() == 1){
-//                System.out.println("Success");
-//            }
             System.out.println("Success");
 
         }else {
             System.out.println("Fail");
         }
-    }
-
-    @Permit(authorities = "download_database")
-    @GetMapping("/download")
-    public Response download(){
-        return null;
     }
 }
