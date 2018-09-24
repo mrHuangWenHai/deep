@@ -11,6 +11,8 @@ import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.BreedingPlanAnotherModel;
 import com.deep.domain.model.NutritionPlanWithBLOBs;
+import com.deep.domain.service.SheepInfo.BuildingFactoryService;
+import com.deep.domain.service.SheepInfo.SheepInformationService;
 import com.deep.domain.service.product_chain.BreedingPlanAnotherService;
 import com.deep.domain.service.management_level.FactoryService;
 import com.deep.domain.service.product_chain.NutritionPlanService;
@@ -42,6 +44,10 @@ public class BreedingAnotherResource {
     private FactoryService factoryService;
     @Resource
     private UserService userService;
+    @Resource
+    private BuildingFactoryService buildingFactoryService;
+    @Resource
+    private SheepInformationService sheepInformationService;
 
     /**
      * 查询某个羊场或者某个代理下面的所有记录（包括子代理）
@@ -67,8 +73,8 @@ public class BreedingAnotherResource {
         Long uid = StringToLongUtil.stringToLong(id);
         Integer upage = StringToLongUtil.stringToInt(page);
         Byte usize = StringToLongUtil.stringToByte(size);
-        Byte pass = StringToLongUtil.stringToByte(ispassCheck);
-        Byte flag = Byte.valueOf(TokenAnalysis.getFlag(request.getHeader(Constants.AUTHORIZATION)));
+        byte pass = StringToLongUtil.stringToByte(ispassCheck);
+        byte flag = Byte.parseByte(TokenAnalysis.getFlag(request.getHeader(Constants.AUTHORIZATION)));
         if (uid < 0 || upage < 0 || usize < 0) {
             return Responses.errorResponse("错误");
         }
@@ -84,24 +90,9 @@ public class BreedingAnotherResource {
                 data.put("List", models);
                 data.put("size", count);
             }
-//
-//            if (pass == -1) {
-//                models = breedingPlanAnotherService.findAllRecords(uid);
-//                count += breedingPlanAnotherService.queryCount(uid);
-//            } else if (pass == 0 || pass == 1 || pass == 2) {
-//                models = breedingPlanAnotherService.findAllRecordsByIsPassCheck(uid, pass);
-//                count += breedingPlanAnotherService.queryCountByPass(uid, pass);
-//            }
             else {
                 return Responses.errorResponse("参数错误!");
             }
-//            // 如果是羊场
-//            List<BreedingPlanAnotherModel> result = new ArrayList<>();
-//            if (models != null) {
-//                for (int i = upage*usize; i < models.size() && i < upage*usize + usize; i++) {
-//                    result.add(models.get(i));
-//                }
-//            }
         } else if (flag == 1) {
             if (pass  != -1 && pass != 0 && pass != 1 && pass != 2) return Responses.errorResponse("参数错误!");
             // 如果是代理，查询下级所有的羊场
@@ -120,19 +111,6 @@ public class BreedingAnotherResource {
                 if (directFactories == null && undirectFactories == null) {
                     return Responses.errorResponse("该代理没有发展羊场和代理！");
                 }
-//                List<BreedingPlanAnotherModel> directModels = new ArrayList<>();
-//                directModels = breedingPlanAnotherService.queryAllBySelective(directFactories, upage, usize, pass, factoryName, startTime, endTime, earTag);
-//                if (directFactories != null) {
-//                    for (Long directFactory : directFactories) {
-//                        if (pass == 1 || pass == 0 || pass == 2) {
-//                            directModels.addAll(breedingPlanAnotherService.findAllRecordsByIsPassCheck(directFactory, pass));
-//                            directCount += breedingPlanAnotherService.queryCountByPass(directFactory, pass);
-//                        } else {
-//                            directModels.addAll(breedingPlanAnotherService.findAllRecords(directFactory));
-//                            directCount += breedingPlanAnotherService.queryCount(directFactory);
-//                        }
-//                    }
-//                }
                 if (directFactories != null && directFactories.size() != 0) {
                     allFactories.addAll(directFactories);
                     directCount = breedingPlanAnotherService.queryCountBySelective(directFactories, pass, factoryName, startTime, endTime, earTag);
@@ -144,25 +122,7 @@ public class BreedingAnotherResource {
                     undirectCount = breedingPlanAnotherService.queryCountBySelective(undirectFactories, pass, factoryName, startTime, endTime, earTag);
                     System.out.println("undirectCount = " + undirectCount);
                 }
-//                List<BreedingPlanAnotherModel> undirectModels = new ArrayList<>();
                 models = breedingPlanAnotherService.queryAllBySelective(allFactories, upage, usize, pass, factoryName, startTime, endTime, earTag);
-//                if (undirectFactories != null) {
-//                    for (Long undirectFactory : undirectFactories) {
-//                        if (pass == 1 || pass == 0 || pass == 2) {
-//                            undirectModels.addAll(breedingPlanAnotherService.findAllRecordsByIsPassCheck(undirectFactory, pass));
-//                            undirectCount += breedingPlanAnotherService.queryCountByPass(undirectFactory, pass);
-//                        } else {
-//                            undirectModels.addAll(breedingPlanAnotherService.findAllRecords(undirectFactory));
-//                            undirectCount += breedingPlanAnotherService.queryCount(undirectFactory);
-//                        }
-//                    }
-//                }
-//                models.addAll(directModels);
-//                models.addAll(undirectModels);
-//                List<BreedingPlanAnotherModel> result = new ArrayList<>();
-//                for (int i = upage*usize; i < models.size() && i < upage*usize + usize; i++) {
-//                    result.add(models.get(i));
-//                }
                 data.put("List", models);
                 data.put("size", directCount + undirectCount);
                 data.put("directSize", directCount);
@@ -319,6 +279,40 @@ public class BreedingAnotherResource {
             return response;
         }
 
+        if (breedingRequest.getBuildingAfterBreeding() != null) {
+            // 设置配种后移至栏栋
+            System.out.println(breedingRequest.getBuildingAfterBreeding().length());
+            // 栏的信息：col
+            int col = breedingRequest.getBuildingAfterBreeding().charAt(0) - '0';
+            // 栋的信息：building
+            int building = breedingRequest.getBuildingAfterBreeding().charAt(3) - '0';
+            System.out.println("col = " + col + " and building = " + building);
+
+            BCRequest bcRequest = new BCRequest();
+            bcRequest.setFactory(Long.valueOf(String.valueOf(breedingRequest.getFactoryNum())));
+            bcRequest.setBuilding(building);
+            bcRequest.setColNum(col);
+
+            // 根据商标耳牌号获取羊的耳牌号码
+            Long sheepId = sheepInformationService.getSheepIdByTradeMarkTag(breedingRequest.getRamSheepTrademark(), bcRequest.getFactory());
+            if (sheepId == null) {
+                return Responses.errorResponse("错误，羊只信息不存在");
+            }
+
+            Long updateBreeding = buildingFactoryService.moveSheep(bcRequest, sheepId);
+            // 设置待产后移至栏栋
+            Long locationBreeding = buildingFactoryService.moveSheep(bcRequest, sheepId);
+            if (updateBreeding == null) {
+                return Responses.errorResponse("配种后移至栏栋错误，待搬迁栏栋不存在！");
+            } else if (locationBreeding == null) {
+                return Responses.errorResponse("配种后移至栏栋错误，待搬迁栏栋不存在！");
+            } else if (updateBreeding < 0) {
+                return Responses.errorResponse("待产栏栋错误，待搬迁栏栋失败！");
+            } else if (locationBreeding < 0) {
+                return Responses.errorResponse("待产栏栋错误，待搬迁栏栋失败！");
+            }
+        }
+
         breedingRequest.setGmtCreate(new Timestamp(System.currentTimeMillis()));
         breedingRequest.setGmtModify(new Timestamp(System.currentTimeMillis()));
         breedingRequest.setOperatorTime(new Timestamp(System.currentTimeMillis()));
@@ -383,7 +377,7 @@ public class BreedingAnotherResource {
             response.setData(data);
             return response;
         }
-        Long uid = StringToLongUtil.stringToLong(id);
+        long uid = StringToLongUtil.stringToLong(id);
         if (uid <= 0) {
             return Responses.errorResponse("修改第一阶段信息失败！");
         }
@@ -447,7 +441,7 @@ public class BreedingAnotherResource {
             response.setData(data);
             return response;
         }
-        Long uid = StringToLongUtil.stringToLong(id);
+        long uid = StringToLongUtil.stringToLong(id);
         if (uid < 0) {
             return Responses.errorResponse("监督员审核错误!");
         }
@@ -486,7 +480,7 @@ public class BreedingAnotherResource {
             response.setData(data);
             return response;
         }
-        Long uid = StringToLongUtil.stringToLong(id);
+        long uid = StringToLongUtil.stringToLong(id);
         if (uid < 0) {
             return Responses.errorResponse("error!");
         }

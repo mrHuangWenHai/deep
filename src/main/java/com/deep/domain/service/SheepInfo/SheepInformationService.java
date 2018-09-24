@@ -1,6 +1,5 @@
 package com.deep.domain.service.SheepInfo;
 
-import com.deep.api.request.NoBuildingRequest;
 import com.deep.api.request.SheepUpdateRequest;
 import com.deep.api.response.DeadSheepInformationResponse;
 import com.deep.api.response.NoBuildingColResponse;
@@ -11,9 +10,10 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class SheepInformationService {
@@ -147,5 +147,32 @@ public class SheepInformationService {
     public List<String> getSheepImmuneTag(Long factory, List<Long> buildingColumn) {
         if (buildingColumn == null) return new LinkedList<>();
         return sheepInformationMapper.getAllImmuneMarkByFactoryIDAndBuildingColumn(factory, buildingColumn);
+    }
+
+    /**
+     * 根据羊的商标耳牌号和羊场号获取羊的id信息
+     * @param tradeMarkTagTag 商标耳牌号
+     * @param factory 羊场
+     * @return return
+     */
+    public Long getSheepIdByTradeMarkTag(String tradeMarkTagTag, Long factory) {
+        // 首先要使用正则表达式验证商标耳牌的合法性
+        // 编译正则表达式的合法性
+        Pattern pattern = Pattern.compile("^M[0-9]{6}+$");
+        // 要验证的表达式
+        Matcher matcher = pattern.matcher(tradeMarkTagTag);
+        // 判断合法性
+        System.out.println(matcher.matches());
+        if (matcher.matches()) {
+            // 耳牌号合法
+            // 如果超过一个耳牌号，进行异常处理
+            try {
+                return sheepInformationMapper.getSheepIdByTradeMarkTag(tradeMarkTagTag, factory);
+            } catch (Exception ex) {
+                System.out.println("羊场耳牌号重复！");
+                return null;
+            }
+        }
+        return null;
     }
 }

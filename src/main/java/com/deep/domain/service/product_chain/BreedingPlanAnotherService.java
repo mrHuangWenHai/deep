@@ -122,64 +122,10 @@ public class BreedingPlanAnotherService {
     }
 
     public Integer queryCountBySelective(List<Long> lists, Byte pass, String factoryName, String startTime, String endTime, String earTag) {
-//        String options = "select count(*) from breeding_plan_another where ";
-//        String factoryNameOptions = " factory_name = " + factoryName;
-//        String timeOptions = " breeding_time_date between " + startTime + " and " + endTime;
-//        String earTags = " ram_sheep_trademark = " + earTag + " or " + "ewe_sheep_trademark = " + earTag;
-//
-//        // 将lists集合转换为字符串
-//        String allDirectFactories = lists.toString();
-//        allDirectFactories = allDirectFactories.substring(1, allDirectFactories.length()-1);
-//
-//        String factoryOptions = " factory_number in (" + allDirectFactories + ")";
-//        System.out.println("factoryNameOptions = " + factoryOptions);
-//        String passOptions = " is_pass_check = " + pass;
-//        if (!"".equals(factoryName)) {
-//            options += " and" + factoryNameOptions;
-//        }
-//        if (!"".equals(startTime) || !"".equals(endTime)) {
-//            options += " and" + timeOptions;
-//        }
-//        if (!"".equals(earTag)) {
-//            options += " and" + earTags;
-//        }
-//        if (pass != -1) {
-//            options += " and" + passOptions;
-//        }
-//        options += factoryOptions;
-//        System.out.println("count option is = " + options);
-//        System.out.println(breedingPlanAnotherMapper.queryCountBySelective(options));
         return breedingPlanAnotherMapper.queryCountBySelective(lists,pass, factoryName, startTime, endTime, earTag);
     }
 
     public List<BreedingPlanAnotherModel> queryAllBySelective(List<Long> lists, Integer page, Byte size, Byte pass, String factoryName, String startTime, String endTime, String earTag) {
-//        String options = "";
-//        String factoryNameOptions = " factory_name = " + factoryName;
-//        String timeOptions = " breeding_time_date between " + startTime + " and " + endTime;
-//        String earTags = " ram_sheep_trademark = " + earTag + " or " + "ewe_sheep_trademark = " + earTag;
-//
-//        // 将lists集合转换为字符串
-//        String allDirectFactories = lists.toString();
-//        allDirectFactories = allDirectFactories.substring(1, allDirectFactories.length()-1);
-//
-//        String factoryOptions = " factory_number in (" + allDirectFactories + ")";
-//        String pageSize = " limit " + page*size + ", " + size;
-//        String passOptions = " is_pass_check = " + pass;
-//
-//        if (!"".equals(factoryName)) {
-//            options += " and" + factoryNameOptions;
-//        }
-//        if (!"".equals(startTime) || !"".equals(endTime)) {
-//            options += " and" + timeOptions;
-//        }
-//        if (!"".equals(earTag)) {
-//            options += " and" + earTags;
-//        }
-//        if (pass != -1) {
-//            options += " and" + passOptions;
-//        }
-//        options += factoryOptions +pageSize;
-//        System.out.println("options = " + options);
         return breedingPlanAnotherMapper.queryAllBySelective(lists, page, size, pass, factoryName, startTime, endTime, earTag);
     }
 }

@@ -13,7 +13,7 @@ import java.util.List;
 @Mapper
 public interface SheepInformationMapper {
     /**
-     * fuck Laowang, playing taoLu, maLeGeJi
+     * fuck laoWang, playing taoLu, maLeGeJi
      */
     @Insert("insert into sheep_information(" +
             "factory, " +
@@ -45,7 +45,7 @@ public interface SheepInformationMapper {
             "where id = #{id}")
     public Long updateDeadSheepInformation(@Param("dead") Byte dead, @Param("reason") String reason, @Param("method") String method, @Param("date")Timestamp date, @Param("id") Long id);
 
-    @Select("select * from sheep_information where factory = #{factory} and dead = 1 limit #{start}, #{size}")
+    @Select("select * from sheep_information where factory = #{factory} and dead = 1 order by date desc limit #{start}, #{size}")
     @Results ({
             @Result(property = "trademarkEarTag", column = "trademark_ear_tag"),
             @Result(property = "reason", column = "reason"),
@@ -88,10 +88,6 @@ public interface SheepInformationMapper {
     })
     List<NoBuildingColResponse> getNoBuildingSheep(@Param("factory") Long factory);
 
-//    @Update("update sheep_information set " +
-//            "building_column = #{buildingCol} " +
-//            "where factory = #{factory} and id in (#{sheeps})"
-//    )
     @SelectProvider(type = NoBuildingSelective.class, method = "setBuildingAndCol")
     public void setBuildingSheep(String sheeps, Long buildingCol, Long factory);
 
@@ -106,4 +102,7 @@ public interface SheepInformationMapper {
 
     @SelectProvider(type = NoBuildingSelective.class, method = "getSheepImmuneTag")
     List<String> getAllImmuneMarkByFactoryIDAndBuildingColumn(Long factory, List<Long> buildingColumn);
+
+    @Select("select id from sheep_information where trademark_ear_tag = #{tradeMarkTag} and factory = #{factory}")
+    Long getSheepIdByTradeMarkTag(@Param("tradeMarkTag") String tradeMarkTag, @Param("factory") Long factory);
 }

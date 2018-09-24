@@ -22,13 +22,13 @@ public class BreedingRequest {
     // 母羊商标耳牌
     @NotNull(message = "母羊商标耳牌不能为空")
     @Size(min = 7, max = 7)
-    @Pattern(regexp = "^M[0-9]{6}+$", message = "母羊免疫耳牌由M+5位数字组成")
+    @Pattern(regexp = "^M[0-9]{6}+$", message = "母羊免疫耳牌由M+6位数字组成")
     private String ramSheepTrademark;
 
     // 公羊商标耳牌
     @NotNull(message = "公羊商标耳牌不能为空")
     @Size(min = 7, max = 7)
-    @Pattern(regexp = "^G[0-9]{6}+$", message = "公羊免疫耳牌由G+5位数字组成")
+    @Pattern(regexp = "^G[0-9]{6}+$", message = "公羊免疫耳牌由G+6位数字组成")
     private String eweSheepTrademark;
 
     // 管理批次（int类型）
@@ -79,18 +79,18 @@ public class BreedingRequest {
     // 备注
     private String remark;
 
-    // 羊场编号，Userdetail接口返回的FactoryNumber字段
+    // 羊场编号，userDetail接口返回的FactoryNumber字段
     private Integer factoryNum;
-    // 羊场名称，Userdetail接口返回的FactoryName字段
+    // 羊场名称，userDetail接口返回的FactoryName字段
     private String factoryName;
 
     // 操作员提交记录时间，前端不传
     private Timestamp operatorTime;
 
-    // 操作员ID，Userdetail接口返回的id字段
+    // 操作员ID，userDetail接口返回的id字段
     private Integer operatorId;
 
-    // 操作员姓名，Userdetail接口返回的UserRealname字段
+    // 操作员姓名，userDetail接口返回的userRealName字段
     private String operatorName;
 
     public Timestamp getGmtCreate() {
