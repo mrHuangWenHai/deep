@@ -9,8 +9,6 @@ import com.deep.domain.model.AgentModel;
 import com.deep.domain.model.FactoryModel;
 import com.deep.domain.service.BuildingColumnService;
 import org.springframework.stereotype.Service;
-import sun.management.Agent;
-import sun.rmi.runtime.Log;
 
 import javax.annotation.Resource;
 import java.util.*;
