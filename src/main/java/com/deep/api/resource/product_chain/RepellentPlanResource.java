@@ -115,8 +115,6 @@ public class RepellentPlanResource {
 
             if (!("1".equals(JedisUtil.getCertainKeyValue(testSendSupervisor)))) {
                 if (JedisUtil.redisJudgeTime(supervisorKey)) {
-
-
                     List<String> phone = userService.getSuperiorTelephoneByFactoryNum(repellentPlanModel.getFactoryNum());
                     if (phone.size() != 0) {
                       if (JedisUtil.redisSendMessage(phone, JedisUtil.getCertainKeyValue("Message"))) {
@@ -153,7 +151,7 @@ public class RepellentPlanResource {
       if (roleString == null) {
         return Responses.errorResponse("认证信息错误");
       }
-      Byte role = Byte.parseByte(roleString);
+      byte role = Byte.parseByte(roleString);
 
       if (role == 0) {
 

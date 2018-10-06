@@ -115,10 +115,8 @@ public class NutritionResource {
             short agentID = this.factoryService.queryOneAgentByID(planModel.getFactoryNum());
             String professorKey = agentID + "_professor";
             String supervisorKey = planModel.getFactoryNum().toString() + "_supervisor";
-
             String testSendProfessor = agentID + "_professor_AlreadySend";
             String testSendSupervisor = planModel.getFactoryNum().toString() + "_supervisor_AlreadySend";
-
             JedisUtil.redisSaveProfessorSupervisorWorks(professorKey);
             JedisUtil.redisSaveProfessorSupervisorWorks(supervisorKey);
 
