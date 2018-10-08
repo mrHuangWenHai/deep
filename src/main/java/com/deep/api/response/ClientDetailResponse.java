@@ -10,16 +10,16 @@ public class ClientDetailResponse {
     private Integer countryTotal;    // 县级代理数目
     private Integer sheepTotal;      // 羊场数目
 
-    private Integer sheepNumber;     // 羊场总数
+    private Long sheepNumber;     // 羊场总数
 
-    private Integer ramTotal;        // 种公羊
-    private Integer eweTotal;        // 种母羊
-    private Integer commercialTotal; // 商品羊
-    private Integer lambTotal;       // 羔羊
-    private Integer reserveRamTotal; // 后备种公羊
-    private Integer reserveEweTotal; // 后背种母羊
+    private Long ramTotal;        // 种公羊
+    private Long eweTotal;        // 种母羊
+    private Long commercialTotal; // 商品羊
+    private Long lambTotal;       // 羔羊
+    private Long reserveRamTotal; // 后备种公羊
+    private Long reserveEweTotal; // 后背种母羊
 
-    public ClientDetailResponse(String provincialPlatform, Long factory, Byte rank, Integer provincialTotal, Integer municipaTotal, Integer countryTotal, Integer sheepTotal, Integer sheepNumber, Integer ramTotal, Integer eweTotal, Integer commercialTotal, Integer lambTotal, Integer reserveRamTotal, Integer reserveEweTotal) {
+    public ClientDetailResponse(String provincialPlatform, Long factory, Byte rank, Integer provincialTotal, Integer municipaTotal, Integer countryTotal, Integer sheepTotal, Long sheepNumber, Long ramTotal, Long eweTotal, Long commercialTotal, Long lambTotal, Long reserveRamTotal, Long reserveEweTotal) {
         this.provincialPlatform = provincialPlatform;
         this.factory = factory;
         this.rank = rank;
@@ -88,62 +88,61 @@ public class ClientDetailResponse {
         this.sheepTotal = sheepTotal;
     }
 
-    public Integer getSheepNumber() {
+    public Long getSheepNumber() {
         return sheepNumber;
     }
 
-    public void setSheepNumber(Integer sheepNumber) {
+    public void setSheepNumber(Long sheepNumber) {
         this.sheepNumber = sheepNumber;
     }
 
-    public Integer getRamTotal() {
+    public Long getRamTotal() {
         return ramTotal;
     }
 
-    public void setRamTotal(Integer ramTotal) {
+    public void setRamTotal(Long ramTotal) {
         this.ramTotal = ramTotal;
     }
 
-    public Integer getEweTotal() {
+    public Long getEweTotal() {
         return eweTotal;
     }
 
-    public void setEweTotal(Integer eweTotal) {
+    public void setEweTotal(Long eweTotal) {
         this.eweTotal = eweTotal;
     }
 
-    public Integer getCommercialTotal() {
+    public Long getCommercialTotal() {
         return commercialTotal;
     }
 
-    public void setCommercialTotal(Integer commercialTotal) {
+    public void setCommercialTotal(Long commercialTotal) {
         this.commercialTotal = commercialTotal;
     }
 
-    public Integer getLambTotal() {
+    public Long getLambTotal() {
         return lambTotal;
     }
 
-    public void setLambTotal(Integer lambTotal) {
+    public void setLambTotal(Long lambTotal) {
         this.lambTotal = lambTotal;
     }
 
-    public Integer getReserveRamTotal() {
+    public Long getReserveRamTotal() {
         return reserveRamTotal;
     }
 
-    public void setReserveRamTotal(Integer reserveRamTotal) {
+    public void setReserveRamTotal(Long reserveRamTotal) {
         this.reserveRamTotal = reserveRamTotal;
     }
 
-    public Integer getReserveEweTotal() {
+    public Long getReserveEweTotal() {
         return reserveEweTotal;
     }
 
-    public void setReserveEweTotal(Integer reserveEweTotal) {
+    public void setReserveEweTotal(Long reserveEweTotal) {
         this.reserveEweTotal = reserveEweTotal;
     }
-
 
     public void setFactory(Long factory) {
         this.factory = factory;

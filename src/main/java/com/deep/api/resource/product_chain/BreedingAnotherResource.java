@@ -10,12 +10,12 @@ import com.deep.api.request.*;
 import com.deep.api.response.Response;
 import com.deep.api.response.Responses;
 import com.deep.domain.model.BreedingPlanAnotherModel;
-import com.deep.domain.model.NutritionPlanWithBLOBs;
+import com.deep.domain.model.NutritionAnotherPlanModel;
 import com.deep.domain.service.SheepInfo.BuildingFactoryService;
 import com.deep.domain.service.SheepInfo.SheepInformationService;
 import com.deep.domain.service.product_chain.BreedingPlanAnotherService;
 import com.deep.domain.service.management_level.FactoryService;
-import com.deep.domain.service.product_chain.NutritionPlanService;
+import com.deep.domain.service.product_chain.NutritionPlanAnotherService;
 import com.deep.domain.service.role_permit.UserService;
 import com.deep.domain.util.JedisUtil;
 import org.slf4j.Logger;
@@ -39,7 +39,7 @@ public class BreedingAnotherResource {
     @Resource
     private BreedingPlanAnotherService breedingPlanAnotherService;
     @Resource
-    private NutritionPlanService nutritionPlanService;
+    private NutritionPlanAnotherService nutritionPlanAnotherService;
     @Resource
     private FactoryService factoryService;
     @Resource
@@ -254,7 +254,7 @@ public class BreedingAnotherResource {
         // 获取执行妊娠前期营养标准
         date = TimeUtil.TranslateToDate(breedingNutritionRequest.getTime());
         nextDate = TimeUtil.getNextDay(date);
-        List<NutritionPlanWithBLOBs> models = nutritionPlanService.findPlanBetweenTimes(date, nextDate, breedingNutritionRequest.getFactoryNumber());
+        List<NutritionAnotherPlanModel> models = nutritionPlanAnotherService.selectRecordByNutritionT(date, nextDate, Long.valueOf(breedingNutritionRequest.getFactoryNumber()));
         data.put("List", models);
         data.put("size", models.size());
         response.setData(data);

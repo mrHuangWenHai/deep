@@ -105,4 +105,7 @@ public interface SheepInformationMapper {
 
     @Select("select id from sheep_information where trademark_ear_tag = #{tradeMarkTag} and factory = #{factory}")
     Long getSheepIdByTradeMarkTag(@Param("tradeMarkTag") String tradeMarkTag, @Param("factory") Long factory);
+
+    @Select("select count(*) from sheep_information where factory = #{factory} and type = #{type}")
+    Long getSheepNumbersByType(@Param("factory") Long factory, @Param("type") String type);
 }

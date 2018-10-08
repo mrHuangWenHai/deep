@@ -1,10 +1,14 @@
 package com.deep.infra.persistence.sql.mapper.product_chain;
 
 import com.deep.api.request.NutritionRequest;
+import com.deep.domain.model.NutritionAnotherPlanModel;
 import com.deep.domain.model.NutritionPlan;
 import com.deep.domain.model.NutritionPlanExample;
 import com.deep.domain.model.NutritionPlanWithBLOBs;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.session.RowBounds;
 
 import java.util.Date;

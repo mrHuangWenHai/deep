@@ -175,4 +175,8 @@ public class SheepInformationService {
         }
         return null;
     }
+
+    public Long getSheepNumbersByType(Long factory, String type) {
+        return sheepInformationMapper.getSheepNumbersByType(factory, type);
+    }
 }

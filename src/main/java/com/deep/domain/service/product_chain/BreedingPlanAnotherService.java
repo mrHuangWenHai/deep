@@ -122,7 +122,7 @@ public class BreedingPlanAnotherService {
     }
 
     public Integer queryCountBySelective(List<Long> lists, Byte pass, String factoryName, String startTime, String endTime, String earTag) {
-        return breedingPlanAnotherMapper.queryCountBySelective(lists,pass, factoryName, startTime, endTime, earTag);
+        return breedingPlanAnotherMapper.queryCountBySelective(lists, pass, factoryName, startTime, endTime, earTag);
     }
 
     public List<BreedingPlanAnotherModel> queryAllBySelective(List<Long> lists, Integer page, Byte size, Byte pass, String factoryName, String startTime, String endTime, String earTag) {

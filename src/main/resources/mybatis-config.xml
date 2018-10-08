@@ -26,11 +26,12 @@
         <mapper class="com.deep.infra.persistence.sql.mapper.management_level.AgentMapper"/>
         <mapper class="com.deep.infra.persistence.sql.mapper.role_permit.RoleMapper" />
         <mapper class="com.deep.infra.persistence.sql.mapper.NoticeMapper"/>
-        <mapper class="com.deep.infra.persistence.sql.mapper.product_chain.BreedingPlanAnotherMapper"/>
+        <mapper class="com.deep.infra.persistence.sql.mapper.product_chain.BreedingPlanAnotherMapper" />
+        <mapper class="com.deep.infra.persistence.sql.mapper.product_chain.NutritionAnotherPlanMapper" />
 
         <mapper resource="mapper/DiagnosisPlanMapper.xml"/>
-        <mapper resource="mapper/NutritionPlanMapper.xml"/>
-        <!--<mapper resource="mapper/NoticePlanMapper.xml"/>-->
+        <!--<mapper resource="mapper/NutritionPlanMapper.xml"/>-->
+        <mapper resource="mapper/NoticePlanMapper.xml"/>
         <mapper resource="mapper/PicMapper.xml"/>
         <mapper resource="mapper/MessageMapper.xml"/>
         <mapper resource="mapper/GenealogicalFilesMapperxml.xml" />

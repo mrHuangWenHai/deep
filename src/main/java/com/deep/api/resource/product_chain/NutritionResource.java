@@ -35,7 +35,7 @@ import java.util.*;
  */
 @RestController
 
-@RequestMapping(value = "nutrition")
+@RequestMapping(value = "nutrition1")
 public class NutritionResource {
 
     private final Logger logger = LoggerFactory.getLogger(NutritionResource.class);
@@ -83,17 +83,20 @@ public class NutritionResource {
             insert.setWater(planModel.getWater());
             insert.setOperatorName(planModel.getOperatorName());
             insert.setOperatorId(planModel.getOperatorId());
+
             insert.setMaterialA(planModel.getMaterialA());
             insert.setMaterialM(planModel.getMaterialM());
             insert.setMaterialO(planModel.getMaterialO());
             insert.setMaterialWM(planModel.getMaterialWM());
             insert.setMaterialWO(planModel.getMaterialWO());
+
             insert.setRoughageP(planModel.getRoughageP());
             insert.setRoughageD(planModel.getRoughageD());
             insert.setRoughageO(planModel.getRoughageO());
             insert.setRoughageWP(planModel.getRoughageWP());
             insert.setRoughageWD(planModel.getRoughageWD());
             insert.setRoughageWO(planModel.getRoughageWO());
+
             insert.setPickingM(planModel.getPickingM());
             insert.setPickingR(planModel.getPickingR());
             insert.setPickingO(planModel.getPickingO());
@@ -111,7 +114,8 @@ public class NutritionResource {
             if (success <= 0) {
                 return Responses.errorResponse("插入失败");
             }
-//         TODO 再详细检查一下Redis
+
+            // TODO 再详细检查一下Redis
             short agentID = this.factoryService.queryOneAgentByID(planModel.getFactoryNum());
             String professorKey = agentID + "_professor";
             String supervisorKey = planModel.getFactoryNum().toString() + "_supervisor";

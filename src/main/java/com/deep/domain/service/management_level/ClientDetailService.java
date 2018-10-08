@@ -7,7 +7,7 @@ import com.deep.api.Utils.JedisUtil;
 import com.deep.api.response.ClientDetailResponse;
 import com.deep.domain.model.AgentModel;
 import com.deep.domain.model.FactoryModel;
-import com.deep.domain.service.BuildingColumnService;
+import com.deep.domain.service.SheepInfo.SheepInformationService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,7 +20,7 @@ public class ClientDetailService {
     @Resource
     private FactoryService factoryService;
     @Resource
-    private BuildingColumnService buildingColumnService;
+    private SheepInformationService sheepInformationService;
 
     /**
      * 代理的客户关系一览表设置
@@ -181,12 +181,12 @@ public class ClientDetailService {
             // 首先将羊场的信息加入
             for (FactoryModel list : lists) {
                 // 得到每种羊的数目，总共有6种羊
-                Integer ramTotal = buildingColumnService.findTypeOfSheep(list.getId(), "种公羊");
-                Integer eweTotal = buildingColumnService.findTypeOfSheep(list.getId(), "种母羊");
-                Integer commercialTotal = buildingColumnService.findTypeOfSheep(list.getId(), "商品羊");
-                Integer lambTotal = buildingColumnService.findTypeOfSheep(list.getId(), "羔羊");
-                Integer reserveRamTotal = buildingColumnService.findTypeOfSheep(list.getId(), "后备种公羊");
-                Integer reserveEweTotal = buildingColumnService.findTypeOfSheep(list.getId(), "后备种母羊");
+                Long ramTotal = sheepInformationService.getSheepNumbersByType(list.getId(), "种公羊");
+                Long eweTotal = sheepInformationService.getSheepNumbersByType(list.getId(), "种母羊");
+                Long commercialTotal = sheepInformationService.getSheepNumbersByType(list.getId(), "商品羊");
+                Long lambTotal = sheepInformationService.getSheepNumbersByType(list.getId(), "羔羊");
+                Long reserveRamTotal = sheepInformationService.getSheepNumbersByType(list.getId(), "后备种公羊");
+                Long reserveEweTotal = sheepInformationService.getSheepNumbersByType(list.getId(), "后备种母羊");
 
                 ClientDetailResponse clientDetailResponse = new ClientDetailResponse(
                         list.getBreedName(),
@@ -211,8 +211,8 @@ public class ClientDetailService {
                         agent.getAgentName(),
                         (long)agent.getId(),
                         agent.getAgentRank(),
-                        0, 0, 0, 0, 0,
-                        0, 0, 0, 0, 0, 0
+                        0, 0, 0, 0, 0L,
+                        0L, 0L, 0L, 0L, 0L, 0L
                 );
 
                 ClientDetailUtil.setClientToRedis((long)agent.getId(), (byte) 1, clientDetailResponse);
@@ -225,24 +225,24 @@ public class ClientDetailService {
     }
 
     private ClientDetailResponse getAllDetailsOfAgentsAndFactories(Long factory, Byte flag) {
-        Integer ramTotal = 0;
-        Integer eweTotal = 0;
-        Integer commercialTotal = 0;
-        Integer lambTotal = 0;
-        Integer reserveRamTotal = 0;
-        Integer reserveEweTotal = 0;
+        Long ramTotal = 0L;
+        Long eweTotal = 0L;
+        Long commercialTotal = 0L;
+        Long lambTotal = 0L;
+        Long reserveRamTotal = 0L;
+        Long reserveEweTotal = 0L;
         int provincialTotal = 0;
         int municipaTotal = 0;
         int countryTotal = 0;
         int sheepTotal = 0;
         if (flag == 0) {
             // 这是羊场
-            ramTotal = buildingColumnService.findTypeOfSheep(factory, "种公羊");
-            eweTotal = buildingColumnService.findTypeOfSheep(factory, "种母羊");
-            commercialTotal = buildingColumnService.findTypeOfSheep(factory, "商品羊");
-            lambTotal = buildingColumnService.findTypeOfSheep(factory, "羔羊");
-            reserveRamTotal = buildingColumnService.findTypeOfSheep(factory, "后备种公羊");
-            reserveEweTotal = buildingColumnService.findTypeOfSheep(factory, "后备种母羊");
+            ramTotal = sheepInformationService.getSheepNumbersByType(factory, "种公羊");
+            eweTotal = sheepInformationService.getSheepNumbersByType(factory, "种母羊");
+            commercialTotal = sheepInformationService.getSheepNumbersByType(factory, "商品羊");
+            lambTotal = sheepInformationService.getSheepNumbersByType(factory, "羔羊");
+            reserveRamTotal = sheepInformationService.getSheepNumbersByType(factory, "后备种公羊");
+            reserveEweTotal = sheepInformationService.getSheepNumbersByType(factory, "后备种母羊");
             FactoryModel model = factoryService.getOneFactory(factory);
             if (model == null) return null;
             return new ClientDetailResponse(
@@ -284,12 +284,12 @@ public class ClientDetailService {
             // 查找所有的子羊场信息
             List<FactoryModel> factories = factoryService.getAllFactoryOfOneAgent(factory);
             for (FactoryModel f : factories) {
-                ramTotal += buildingColumnService.findTypeOfSheep(f.getId(), "种公羊");
-                eweTotal += buildingColumnService.findTypeOfSheep(f.getId(), "种母羊");
-                commercialTotal += buildingColumnService.findTypeOfSheep(f.getId(), "商品羊");
-                lambTotal += buildingColumnService.findTypeOfSheep(f.getId(), "羔羊");
-                reserveRamTotal += buildingColumnService.findTypeOfSheep(f.getId(), "后备种公羊");
-                reserveEweTotal += buildingColumnService.findTypeOfSheep(f.getId(), "后备种母羊");
+                ramTotal += sheepInformationService.getSheepNumbersByType(f.getId(), "种公羊");
+                eweTotal += sheepInformationService.getSheepNumbersByType(f.getId(), "种母羊");
+                commercialTotal += sheepInformationService.getSheepNumbersByType(f.getId(), "商品羊");
+                lambTotal += sheepInformationService.getSheepNumbersByType(f.getId(), "羔羊");
+                reserveRamTotal += sheepInformationService.getSheepNumbersByType(f.getId(), "后备种公羊");
+                reserveEweTotal += sheepInformationService.getSheepNumbersByType(f.getId(), "后备种母羊");
             }
             sheepTotal += factories.size();
 

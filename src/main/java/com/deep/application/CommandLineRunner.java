@@ -13,12 +13,12 @@ public class CommandLineRunner implements org.springframework.boot.CommandLineRu
 
     @Override
     public void run(String... args) throws Exception {
-        clientDetailService.clientDetailLoading();
-
-        if (ClientDetailUtil.isLoad()) {
-          System.out.println("信息加载完毕！");
-        } else {
-          System.out.println("信息加载失败！");
-        }
+//        clientDetailService.clientDetailLoading();
+//
+//        if (ClientDetailUtil.isLoad()) {
+//          System.out.println("信息加载完毕！");
+//        } else {
+//          System.out.println("信息加载失败！");
+//        }
     }
 }
